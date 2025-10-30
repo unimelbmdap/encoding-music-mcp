@@ -1,7 +1,21 @@
 [project]
 name = "encoding-music-mcp"
 version = "0.1.0"
-description = "Developing MCP tools for analysis of MEI files"
+description = "MCP server for analysis of MEI (Music Encoding Initiative) files"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "mcp>=1.0.0",
+]
+
+[project.scripts]
+encoding-music-mcp = "encoding_music_mcp.server:main"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.8.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.9.6,<0.10.0"]
+build-backend = "uv_build"
