@@ -1,8 +1,9 @@
 """MEI metadata extraction tool."""
 
 import xml.etree.ElementTree as ET
-from pathlib import Path
 from typing import Any
+
+from .helpers import get_mei_filepath
 
 __all__ = ["get_mei_metadata"]
 
@@ -19,9 +20,7 @@ def get_mei_metadata(filename: str) -> dict[str, Any]:
     Returns:
         Dictionary containing metadata fields
     """
-    # Convert filename to filepath
-    resources_dir = Path(__file__).parent.parent / "resources"
-    filepath = resources_dir / filename
+    filepath = get_mei_filepath(filename)
 
     ns = {'mei': 'http://www.music-encoding.org/ns/mei'}
     tree = ET.parse(filepath)
