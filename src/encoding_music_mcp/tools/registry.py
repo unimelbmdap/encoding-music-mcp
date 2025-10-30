@@ -2,7 +2,9 @@
 
 from ..server import mcp
 from .metadata import get_mei_metadata
+from .discovery import list_available_mei_files
 
 # Register all tools here
 # To add a new tool: import it, then add mcp.tool()(your_tool) below
+mcp.tool()(list_available_mei_files)
 mcp.tool()(get_mei_metadata)

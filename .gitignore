@@ -10,3 +10,5 @@ wheels/
 .venv
 
 notebooks
+
+.DS_Store

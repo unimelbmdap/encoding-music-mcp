@@ -1,23 +1,28 @@
 """MEI metadata extraction tool."""
 
 import xml.etree.ElementTree as ET
+from pathlib import Path
 from typing import Any
 
 __all__ = ["get_mei_metadata"]
 
 
-def get_mei_metadata(filepath: str) -> dict[str, Any]:
-    """Extract detailed metadata from MEI (Music Encoding Initiative) files.
+def get_mei_metadata(filename: str) -> dict[str, Any]:
+    """Extract detailed metadata from built-in MEI files.
 
     Returns information including title, composer, editors, analysts,
     publication date, and more.
 
     Args:
-        filepath: Absolute path to the MEI file to analyse
+        filename: Name of the MEI file (e.g., "Bartok_Mikrokosmos_001.mei")
 
     Returns:
         Dictionary containing metadata fields
     """
+    # Convert filename to filepath
+    resources_dir = Path(__file__).parent.parent / "resources"
+    filepath = resources_dir / filename
+
     ns = {'mei': 'http://www.music-encoding.org/ns/mei'}
     tree = ET.parse(filepath)
     root = tree.getroot()

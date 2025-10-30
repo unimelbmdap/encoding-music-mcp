@@ -1,0 +1,1517 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-model href="https://music-encoding.org/schema/5.0/mei-all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="https://music-encoding.org/schema/5.0/mei-all.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<mei meiversion="5.0" xmlns="http://www.music-encoding.org/ns/mei">
+ <meiHead xml:id="mzmzq7p">
+  <fileDesc>
+   <titleStmt>
+    <title>
+     Invention No. 2 in C minor, BWV 773
+    </title>
+    <respStmt>
+     <persName auth="VIAF" auth.uri="https://viaf.org/viaf/12304462/" role="composer">
+      Bach, Johann Sebastian
+     </persName>
+     <persName role="xml_editor">
+      Schölkopf, Tobias
+     </persName>
+     <persName role="mei_editor">
+      Freedman, Richard
+     </persName>
+     <persName role="analyst">
+      Sarma, Rohan
+     </persName>
+    </respStmt>
+   </titleStmt>
+   <pubStmt>
+    <publisher/>
+    <distributor/>
+    <date isodate="2024-11-19"/>
+    <availability>
+     The content and works published on this website are governed by the copyright laws of Germany. Any duplication, processing, distribution or any form of utilisation beyond the scope of copyright law shall require the prior written consent of the author or authors in question.
+    </availability>
+   </pubStmt>
+  </fileDesc>
+  <encodingDesc>
+   <appInfo>
+    <application>
+     <name>
+      MEI Soup Updater 2024
+     </name>
+    </application>
+   </appInfo>
+  </encodingDesc>
+  <workList>
+   <work>
+    <title>
+     Invention No. 2 in C minor
+    </title>
+    <identifier/>
+    <composer auth="VIAF" auth.uri="https://viaf.org/viaf/12304462/">
+     Bach, Johann Sebastian
+    </composer>
+   </work>
+  </workList>
+ </meiHead>
+ <music>
+  <body>
+   <mdiv xml:id="m1gwck82">
+    <score xml:id="svfsd5">
+     <scoreDef xml:id="s11mdyqc">
+      <staffGrp xml:id="s129tyk2">
+       <staffGrp bar.thru="true" xml:id="P1">
+        <grpSym symbol="brace" xml:id="g8v8p98"/>
+        <instrDef midi.channel="0" midi.instrnum="1" xml:id="i1sxlwxv"/>
+        <staffDef lines="5" n="1" ppq="480" xml:id="s1vfmex8">
+         <clef line="2" shape="G" xml:id="cuklt79"/>
+         <keySig mode="major" sig="3f" xml:id="kp8lj9z"/>
+         <meterSig count="4" unit="4" xml:id="ma1fduw"/>
+        </staffDef>
+        <staffDef lines="5" n="2" ppq="480" xml:id="s1mvbsoi">
+         <clef line="4" shape="F" xml:id="cuklt81"/>
+         <keySig mode="major" sig="3f" xml:id="klruzwp"/>
+         <meterSig count="4" unit="4" xml:id="m91k274"/>
+        </staffDef>
+       </staffGrp>
+      </staffGrp>
+     </scoreDef>
+     <section xml:id="s1oo5nj9">
+      <pb xml:id="p8llflw"/>
+      <measure n="1" xml:id="m19uomx3">
+       <staff n="1" xml:id="s1dil0l">
+        <layer n="1" xml:id="l1h0jyib">
+         <rest dur="8" dur.ppq="240" xml:id="r5mhxsb"/>
+         <beam xml:id="bpig29l">
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1t9hc5l"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="b" xml:id="njxj0i">
+           <accid accid="n" xml:id="a1ctcoax"/>
+          </note>
+         </beam>
+         <beam xml:id="b1t9v67x">
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="nyqocg"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n76mvau"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n45t30a"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="nxdtcax"/>
+         </beam>
+         <beam xml:id="bnnfx46">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="a" xml:id="n18uyerm"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n9t0ecs">
+           <accid accid="f" xml:id="a1g26s6k"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="a" xml:id="n1bnzsvl"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="ng9b9z5"/>
+         </beam>
+         <beam xml:id="br2i1g9">
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n1kl325w"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n4s2vld"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n13bxqc"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n15jr6r9"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="swwtvy3">
+        <layer n="2" xml:id="l1dvocg7">
+         <mRest xml:id="m13k8c0"/>
+        </layer>
+       </staff>
+       <tempo midi.bpm="55.000000" staff="1" tstamp="1.000000" xml:id="t9ytgkl"/>
+      </measure>
+      <measure n="2" xml:id="m48ct8d">
+       <staff n="1" xml:id="s1l2dulu">
+        <layer n="1" xml:id="lxa8pxf">
+         <beam xml:id="b7yaxj4">
+          <note dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n15phg3n">
+           <accid accid="n" xml:id="aebv6w0"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="a" xml:id="n1s3cs21"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="nx7urog"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="nj9d6d1"/>
+         </beam>
+         <beam xml:id="bkihpsv">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1o80uya"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n1e6rhi3"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="nmbr8md"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n17qfybz"/>
+         </beam>
+         <beam xml:id="b1ir5mfl">
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1tln33i"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n1813io8"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="nxlxuq6"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n78vymu"/>
+         </beam>
+         <beam xml:id="bvvgkev">
+          <note dots="1" dur="8" dur.ppq="360" oct="5" pname="d" xml:id="n174evjv"/>
+          <note dur="32" dur.ppq="60" oct="5" pname="c" xml:id="n1fo4b8p"/>
+          <note dur="32" dur.ppq="60" oct="5" pname="d" xml:id="n1toye9j"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="snnus1i">
+        <layer n="2" xml:id="lcrvd53">
+         <mRest xml:id="mxc3tb5"/>
+        </layer>
+       </staff>
+       <trill place="above" staff="1" startid="#n174evjv" xml:id="t9dwo0d"/>
+      </measure>
+      <sb xml:id="s1w395g7"/>
+      <measure n="3" xml:id="m1h3un10">
+       <staff n="1" xml:id="s1oge52v">
+        <layer n="1" xml:id="l15xsueo">
+         <beam xml:id="b1aq9kv8">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1veezl2"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="nqflrl"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1bxnzam"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n182qjjd"/>
+         </beam>
+         <beam xml:id="bumfc69">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1jz0awp"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n1r9ujcv"/>
+          <note dur="8" dur.ppq="240" oct="5" pname="g" xml:id="n12stsyi"/>
+         </beam>
+         <beam xml:id="b15z08r4">
+          <note dur="8" dur.ppq="240" oct="5" pname="g" xml:id="n19ogiva"/>
+          <note dur="8" dur.ppq="240" oct="5" pname="f" xml:id="nnwcdue"/>
+         </beam>
+         <rest dur="8" dur.ppq="240" xml:id="r1j4db0"/>
+         <note dur="8" dur.ppq="240" oct="5" pname="f" xml:id="nbmqpmj"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="s1w4yg68">
+        <layer n="2" xml:id="lfvplau">
+         <rest dur="8" dur.ppq="240" xml:id="r1sibsgu"/>
+         <beam xml:id="b19pm6a1">
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n1yterbo"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n8nas7v">
+           <accid accid="n" xml:id="a18qegj6"/>
+          </note>
+         </beam>
+         <beam xml:id="b1td8afv">
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n1igp76d"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="ne3d9e0"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="nlpi752"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="n1b7s1ci"/>
+         </beam>
+         <beam xml:id="b185sfa6">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="a" xml:id="n1x03945"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n17lhwve">
+           <accid accid="f" xml:id="a16p7z1k"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="a" xml:id="n1facfyx"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="n1tai95s"/>
+         </beam>
+         <beam xml:id="bqklsc3">
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n1efi0sh"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n1em194n"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n1p329v5"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n6icmi7"/>
+         </beam>
+        </layer>
+       </staff>
+       <mordent form="upper" place="above" staff="1" startid="#n19ogiva" xml:id="m1hkbpwk"/>
+      </measure>
+      <measure n="4" xml:id="m1jji2ac">
+       <staff n="1" xml:id="s18pnc07">
+        <layer n="1" xml:id="l1ay0k7z">
+         <beam xml:id="bgtocxn">
+          <note dur="8" dur.ppq="240" oct="5" pname="f" xml:id="n3abtoz"/>
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="5" pname="e" xml:id="n2x7xkv"/>
+         </beam>
+         <rest dur="8" dur.ppq="240" xml:id="r15l6vuj"/>
+         <note dur="8" dur.ppq="240" oct="5" pname="d" xml:id="n1vihxmh"/>
+         <beam xml:id="b1bnr7p9">
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="5" pname="e" xml:id="n1ak8wta"/>
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="4" pname="a" xml:id="nctistp"/>
+         </beam>
+         <beam xml:id="b1he2u2w">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="a" xml:id="n1tx0puy"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n9kr4i0"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n1cqv43e"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n15wz7es"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="s1dru7lj">
+        <layer n="2" xml:id="la726w2">
+         <beam xml:id="b1lwnn7d">
+          <note dur="16" dur.ppq="120" oct="3" pname="b" xml:id="ncjdmp">
+           <accid accid="n" xml:id="aipt6qy"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="a" xml:id="nspwp69"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="nx6zjyt"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n48e061"/>
+         </beam>
+         <beam xml:id="be8m4hr">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n1ld0su5"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="nicguv1"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n1t9do2p"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n1lyafi2"/>
+         </beam>
+         <beam xml:id="b8c4for">
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n1n3hlfi"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n4mr3ge"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n1gninaw"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="ncor6tw"/>
+         </beam>
+         <beam xml:id="bil1zza">
+          <note dots="1" dur="8" dur.ppq="360" oct="4" pname="d" xml:id="no5esv4"/>
+          <note dur="32" dur.ppq="60" oct="4" pname="c" xml:id="n56sa3q"/>
+          <note dur="32" dur.ppq="60" oct="4" pname="d" xml:id="n1jaycjb"/>
+         </beam>
+         <clef line="2" shape="G" xml:id="c10ie497"/>
+        </layer>
+       </staff>
+       <mordent form="upper" place="above" staff="1" startid="#n3abtoz" xml:id="mvypv93"/>
+       <tie endid="#n1tx0puy" startid="#nctistp" xml:id="t1qecqhb"/>
+       <mordent form="upper" place="above" staff="2" startid="#no5esv4" xml:id="mna11zb"/>
+      </measure>
+      <sb xml:id="s11qvdux"/>
+      <measure n="5" xml:id="m1qwnzs8">
+       <staff n="1" xml:id="s1spsnzk">
+        <layer n="1" xml:id="lhfv1vb">
+         <beam xml:id="bqr8cp">
+          <note dur="8" dur.ppq="240" oct="4" pname="g" xml:id="n1gtakwr"/>
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="5" pname="e" xml:id="ntnq8ls"/>
+         </beam>
+         <beam xml:id="bnouukc">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1pydnm4"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="nzudn6k"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n10u102k"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n189qkd1"/>
+         </beam>
+         <beam xml:id="bm9555i">
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n12l48pc"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="nnlyqfl"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="a" xml:id="n14bmt2q"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="nfecf3e"/>
+         </beam>
+         <beam xml:id="bw02a2p">
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n1dbb5w8"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="nqibkfa"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n1shxoq1"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="ne1bags"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="s59wuc7">
+        <layer n="2" xml:id="l14l8fu">
+         <beam xml:id="bdjc4uz">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n45u7eg"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n1nb4n3d"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n8b2tgx"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n16luho"/>
+         </beam>
+         <beam xml:id="bqq9f0l">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n1k6o7ah"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n1nwerz7"/>
+          <note dur="8" dur.ppq="240" oct="4" pname="g" xml:id="n11lnzj2"/>
+         </beam>
+         <beam xml:id="b1atpr8e">
+          <note dur="8" dur.ppq="240" oct="4" pname="g" xml:id="n1copyrb"/>
+          <note dur="8" dur.ppq="240" oct="4" pname="f" xml:id="n17km4g2"/>
+         </beam>
+         <rest dur="8" dur.ppq="240" xml:id="r1449f62"/>
+         <note dur="8" dur.ppq="240" oct="4" pname="f" xml:id="n19nr3kb"/>
+        </layer>
+       </staff>
+       <tie endid="#n1pydnm4" startid="#ntnq8ls" xml:id="tqxt3gi"/>
+       <mordent form="upper" place="above" staff="2" startid="#n1copyrb" xml:id="m189a7ru"/>
+      </measure>
+      <measure n="6" xml:id="m2bu4ua">
+       <staff n="1" xml:id="sugu7xh">
+        <layer n="1" xml:id="l1o7xxnk">
+         <beam xml:id="b11w5zys">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n1ilfhey"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="na718fc"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="n8hphx2"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="ntedp2f"/>
+         </beam>
+         <beam xml:id="b1ch8tss">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1nculpt"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="nii0c8x"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n13gkcks"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="nuyexoc"/>
+         </beam>
+         <beam xml:id="b11o2kl7">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="a" xml:id="n1n7rj7n"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="nn79mh6"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="nnjf0c1"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1gp0le2"/>
+         </beam>
+         <beam xml:id="b1u3veeh">
+          <note dots="1" dur="8" dur.ppq="360" oct="5" pname="d" xml:id="n1mxdccf"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n12fhil5"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="s1fzqnv">
+        <layer n="2" xml:id="lgwq633">
+         <beam xml:id="bzibz64">
+          <note dur="8" dur.ppq="240" oct="4" pname="f" xml:id="n1vrgn2p"/>
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="4" pname="e" xml:id="n1kdvggq"/>
+         </beam>
+         <rest dur="8" dur.ppq="240" xml:id="r1te2gt8"/>
+         <note dur="8" dur.ppq="240" oct="4" pname="d" xml:id="n1htl78l"/>
+         <beam xml:id="bgunpa8">
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="4" pname="e" xml:id="n52xqd1"/>
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="3" pname="a" xml:id="nqxlw35"/>
+         </beam>
+         <beam xml:id="bk5nh04">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="a" xml:id="n1mf8v11"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="n1sul3kn"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n1fo6xgp"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="n13bnuq2"/>
+         </beam>
+        </layer>
+       </staff>
+       <mordent form="upper" place="above" staff="2" startid="#n1vrgn2p" xml:id="msregfm"/>
+       <tie endid="#n1mf8v11" startid="#nqxlw35" xml:id="t1wfdvpf"/>
+      </measure>
+      <measure n="7" xml:id="m1tc5we6">
+       <staff n="1" xml:id="sgz8hl2">
+        <layer n="1" xml:id="l1t1qevz">
+         <beam xml:id="bsfdqpp">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1wm00ye"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="nc07igw"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1he46mt"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="ny7pfw8"/>
+         </beam>
+         <note dur="4" dur.ppq="480" oct="5" pname="g" xml:id="n1363zff"/>
+         <beam xml:id="b1t5mfkf">
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="nesns3t"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n1x7l6qa"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n122ll9k"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n1uepy8u"/>
+         </beam>
+         <note accid.ges="f" dur="4" dur.ppq="480" oct="5" pname="a" xml:id="nqtsihr"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="se26rcd">
+        <layer n="2" xml:id="l11x0aoe">
+         <beam xml:id="b1yo8la8">
+          <note dur="8" dur.ppq="240" oct="3" pname="g" xml:id="n1vuwxg4"/>
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="4" pname="e" xml:id="nx8f21g"/>
+         </beam>
+         <beam xml:id="b1gtperc">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n10yi6lb"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n17p4rd2"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n6vobxr"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n1kye6f4"/>
+         </beam>
+         <beam xml:id="b1k3diub">
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n2t4p9y"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="nzn5roe"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="a" xml:id="n1ef24ni"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="nrgbhi5"/>
+         </beam>
+         <beam xml:id="b1m8zzcp">
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n1hlcifj"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n1tmy7u9"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n1erafly"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n1htg09g"/>
+         </beam>
+        </layer>
+       </staff>
+       <tie endid="#nesns3t" startid="#n1363zff" xml:id="t12ujw55"/>
+       <tie endid="#n9gtgdt" startid="#nqtsihr" xml:id="t13zutdu"/>
+       <tie endid="#n10yi6lb" startid="#nx8f21g" xml:id="t19qm028"/>
+      </measure>
+      <sb xml:id="s1cceiii"/>
+      <measure n="8" xml:id="m1jy7wyr">
+       <staff n="1" xml:id="s84ipqm">
+        <layer n="1" xml:id="l1l83v0u">
+         <beam xml:id="b1i3t6xf">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="a" xml:id="n9gtgdt"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n10fn608"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1vz9k7y"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n96bioc"/>
+         </beam>
+         <beam xml:id="b7i1zva">
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="n1b6qjdc"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n8fogeh"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="a" xml:id="n1imwhx5"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="ntnmj3"/>
+         </beam>
+         <beam xml:id="b3bgpch">
+          <note dur="16" dur.ppq="120" oct="6" pname="c" xml:id="n1w8fpxl"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="b" xml:id="n1nvl9c8"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="a" xml:id="n315scr"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="nj2txoh"/>
+         </beam>
+         <beam xml:id="b1w12glu">
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="nw665n"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="b" xml:id="npko438"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="a" xml:id="ncynjih"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="b" xml:id="n16g5m06"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="s1p74yc9">
+        <layer n="2" xml:id="lzp0h7k">
+         <beam xml:id="bg6a9k9">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n12nlh51"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="nyyy4ai"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="n55592d"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n1usb14g"/>
+         </beam>
+         <beam xml:id="bc904zf">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n1ple04n"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n1h4lbso"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="nzdadd2"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="nq722j1"/>
+         </beam>
+         <beam xml:id="b1ldnl0g">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="a" xml:id="n2yypmp"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n5yl0p7"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n1wny34e"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n1cfi3et"/>
+         </beam>
+         <beam xml:id="bdf4n6n">
+          <note dots="1" dur="8" dur.ppq="360" oct="4" pname="d" xml:id="n19cnrax"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n11nqc4k"/>
+         </beam>
+        </layer>
+       </staff>
+       <mordent form="upper" place="above" staff="2" startid="#n11nqc4k" xml:id="m9lbbrh"/>
+      </measure>
+      <measure n="9" xml:id="mb0n64d">
+       <staff n="1" xml:id="s91es8t">
+        <layer n="1" xml:id="lkaxerb">
+         <beam xml:id="bauys3n">
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="ngoc2x5"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="b" xml:id="n1fnarp8"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="a" xml:id="nd1uzxo"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="b" xml:id="ngkfkrz"/>
+         </beam>
+         <beam xml:id="b1x7idty">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="nztq2t5"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="n1kl0iy"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n1n2bxf4"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="n18n3a6n"/>
+         </beam>
+         <beam xml:id="bgvywqu">
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1oklr43"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n1if96b4"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1384m35"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n1ghtjpl"/>
+         </beam>
+         <beam xml:id="b10w3u8h">
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n14fv8nf"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1c0f0r9"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="nlr1yea"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="n1cy0jlf"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="s1nmhf1p">
+        <layer n="2" xml:id="l1iy3x0q">
+         <beam xml:id="b38guci">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n1vbjgql"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n1rnsku5"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="nhohyvn"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n1sn7p04"/>
+         </beam>
+         <note dur="4" dur.ppq="480" oct="4" pname="g" xml:id="n1yviun9"/>
+         <beam xml:id="b1wt3zl0">
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="nn85zig"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="nlqj1kx"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n1btv22b"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n1x6bz0k"/>
+         </beam>
+         <note accid.ges="f" dur="4" dur.ppq="480" oct="4" pname="a" xml:id="n1b7k9bi"/>
+        </layer>
+       </staff>
+       <tie endid="#nn85zig" startid="#n1yviun9" xml:id="t1avb98p"/>
+       <tie endid="#n1sbiw8s" startid="#n1b7k9bi" xml:id="t1amv4h8"/>
+      </measure>
+      <measure n="10" xml:id="mbsi4q6">
+       <staff n="1" xml:id="sqs1stl">
+        <layer n="1" xml:id="l1tnu03s">
+         <beam xml:id="bcdx57">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1xgsfwl"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="nx3tq4g"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="nomg525"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="a" xml:id="n1iteks4"/>
+         </beam>
+         <beam xml:id="bewm2r3">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="b" xml:id="n1mmh7qw"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="a" xml:id="ngkvkwk"/>
+          <note dur="16" dur.ppq="120" oct="6" pname="c" xml:id="n1h7ga88"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="b" xml:id="n14nvxx9"/>
+         </beam>
+         <beam xml:id="b1a2cpvp">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="a" xml:id="n1rz5wnv"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="n1e59jgu"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n89fnvp"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="a" xml:id="nrdkqam"/>
+         </beam>
+         <note dur="4" dur.ppq="480" oct="5" pname="d" xml:id="n1o5od3y"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="sbprv01">
+        <layer n="2" xml:id="lbc8wq7">
+         <beam xml:id="b818t6u">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="a" xml:id="n1sbiw8s"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n1u2ktx0"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n3pd4y2"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n1ppvhay"/>
+         </beam>
+         <beam xml:id="b1y20s8e">
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="n2lvr03"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n1002l76"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="a" xml:id="n1sxwosb"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="nc61vsi"/>
+         </beam>
+         <beam xml:id="bftds53">
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="nrq87bw"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="nokv5vf"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="a" xml:id="n10c09c3"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="n1bhtx5v"/>
+         </beam>
+         <beam xml:id="bzmkshi">
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="ntc24vn"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="ncnqgg3"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="a" xml:id="nhbqvci"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="njbrfc0"/>
+         </beam>
+         <clef line="4" shape="F" xml:id="c10olcyk"/>
+        </layer>
+       </staff>
+      </measure>
+      <sb xml:id="s1e9otdh"/>
+      <measure n="11" xml:id="m1gupve2">
+       <staff n="1" xml:id="sewft78">
+        <layer n="1" xml:id="lg9sjtg">
+         <beam xml:id="b149w0l5">
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n8f5y8w"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="nxu6n33"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="n1i7f9z4"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="nyl98oh"/>
+         </beam>
+         <beam xml:id="b1s6gb0h">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n143jnyg"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="ni5xst6"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n3c3z8s"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n1lwje2a"/>
+         </beam>
+         <note dur="4" dur.ppq="480" oct="5" pname="c" xml:id="n6wz1pe"/>
+         <beam xml:id="b3okutq">
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1a2ezq0"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="n1x3tt9o"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n1xtpdjg">
+           <accid accid="s" xml:id="a1f6io94"/>
+          </note>
+          <note dur="16" dur.ppq="120" oct="5" pname="a" xml:id="n11wi90w">
+           <accid accid="n" xml:id="a1k6wnul"/>
+          </note>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="s4n99hk">
+        <layer n="2" xml:id="l1s6iqwm">
+         <beam xml:id="b183ph47">
+          <note dur="8" dur.ppq="240" oct="4" pname="g" xml:id="n11zngpc"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="e" xml:id="ns3roee"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="n1d1qc9q"/>
+         </beam>
+         <beam xml:id="bd70va">
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="nzltlnl"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="n1wgcbnn">
+           <accid accid="n" xml:id="aj6clv5"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n1k08zz4"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="d" xml:id="nngu0rf"/>
+         </beam>
+         <beam xml:id="b1olyxg1">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="e" xml:id="n1oqczbx"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="n1ogwnhj"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="e" xml:id="n1nzjz0h"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="c" xml:id="n18hd2fz"/>
+         </beam>
+         <beam xml:id="b134q9am">
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="naxxszt"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n80ialc"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="nox0dze"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="n1cqycp6"/>
+         </beam>
+        </layer>
+       </staff>
+       <tie endid="#n1a2ezq0" startid="#n6wz1pe" xml:id="t1429tcb"/>
+      </measure>
+      <measure n="12" xml:id="mdq727l">
+       <staff n="1" xml:id="s4hofzz">
+        <layer n="1" xml:id="leoa2vw">
+         <beam xml:id="bnmbid4">
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n366pwp"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n1awgxd4"/>
+          <note dur="8" dur.ppq="240" oct="5" pname="c" xml:id="n98bktg"/>
+         </beam>
+         <beam xml:id="b1486v9k">
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="nyikl81"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n1zdq9y">
+           <accid accid="s" xml:id="azh38wm"/>
+          </note>
+          <note dur="16" dur.ppq="120" oct="5" pname="e" xml:id="nn97jkk">
+           <accid accid="n" xml:id="a1f9ggan"/>
+          </note>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n44zirz"/>
+         </beam>
+         <beam xml:id="b1s8pj0q">
+          <note accid.ges="f" dots="1" dur="8" dur.ppq="360" oct="5" pname="b" xml:id="n1kg86ix"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="e" xml:id="ndlj85g"/>
+         </beam>
+         <beam xml:id="b1kh2mco">
+          <note accid.ges="s" dots="1" dur="8" dur.ppq="360" oct="5" pname="f" xml:id="n1iajxq6"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="n1661qdi"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="s1v4epdt">
+        <layer n="2" xml:id="lzl2alv">
+         <beam xml:id="b1eu8tjy">
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="n1jqysfi">
+           <accid accid="s" xml:id="a19vp8m2"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n1vwab8y"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="nvejraq"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="ny35994"/>
+         </beam>
+         <beam xml:id="btgenl9">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n14ybm9x"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="n1q00bsv">
+           <accid accid="n" xml:id="a17z9seq"/>
+          </note>
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="ned9nuc"/>
+          <note accid.ges="s" dur="16" dur.ppq="120" oct="3" pname="f" xml:id="n18j3q8o"/>
+         </beam>
+         <beam xml:id="b11p7mbe">
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="n12s4y8i"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="n1osplja"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="n1uahelp"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="n2h1vsy"/>
+         </beam>
+         <beam xml:id="b83g4lp">
+          <note dots="1" dur="8" dur.ppq="360" oct="3" pname="a" xml:id="nb7au6y"/>
+          <note dur="32" dur.ppq="60" oct="3" pname="g" xml:id="n1sr0qbf"/>
+          <note dur="32" dur.ppq="60" oct="3" pname="a" xml:id="nr68q6p"/>
+         </beam>
+        </layer>
+       </staff>
+       <tie endid="#nyikl81" startid="#n98bktg" xml:id="tw9858h"/>
+       <mordent form="upper" place="above" staff="2" startid="#nb7au6y" xml:id="m10h736v"/>
+      </measure>
+      <sb xml:id="s18qolru"/>
+      <measure n="13" xml:id="mzkf23y">
+       <staff n="1" xml:id="smitfd5">
+        <layer n="1" xml:id="lckwk2y">
+         <beam xml:id="b6rcd4y">
+          <note dur="8" dur.ppq="240" oct="5" pname="g" xml:id="nnrm1gg"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="n71di1p"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n1dvxk24">
+           <accid accid="s" xml:id="a10lcbpu"/>
+          </note>
+         </beam>
+         <beam xml:id="bxiepqh">
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="n1xznpk"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="a" xml:id="n1wpq8rk">
+           <accid accid="n" xml:id="a1l7h5yf"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n1u1ejor"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n1ldjxqd"/>
+         </beam>
+         <beam xml:id="b1fslytc">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n58kwf9"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n14y35g8">
+           <accid accid="n" xml:id="ago13ha"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n1oqa8nu"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n620hfa"/>
+         </beam>
+         <beam xml:id="b8ycqez">
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1v3wfo5"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n1piikfc"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="a" xml:id="n1k8sjg2"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="n1ghl2hj"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="s1ti1pn4">
+        <layer n="2" xml:id="li882fu">
+         <beam xml:id="b80jhlk">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n1nd1biw"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="nn4nlfu">
+           <accid accid="n" xml:id="a15m6bxx"/>
+          </note>
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="n48ugtz"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="nffgr8n"/>
+         </beam>
+         <beam xml:id="b1upolb8">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n1x2scny"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n151cmt9"/>
+          <note dur="8" dur.ppq="240" oct="4" pname="d" xml:id="nol3rjt"/>
+         </beam>
+         <beam xml:id="b1k9dy6e">
+          <note dur="8" dur.ppq="240" oct="4" pname="d" xml:id="nz643c4"/>
+          <note dur="8" dur.ppq="240" oct="4" pname="c" xml:id="nst6ndb"/>
+         </beam>
+         <rest dur="8" dur.ppq="240" xml:id="r111mbv7"/>
+         <note dur="8" dur.ppq="240" oct="4" pname="c" xml:id="n1lnx9p8"/>
+        </layer>
+       </staff>
+       <mordent form="upper" place="above" staff="2" startid="#nz643c4" xml:id="mnl29d"/>
+      </measure>
+      <measure n="14" xml:id="m15mkr8m">
+       <staff n="1" xml:id="s1pziink">
+        <layer n="1" xml:id="l1qwcqub">
+         <beam xml:id="b563gzi">
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n1i9ndo9">
+           <accid accid="s" xml:id="awwrq6a"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1w90yxj"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n2ck345"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1mismbz"/>
+         </beam>
+         <beam xml:id="b1k173ac">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n8wpd7f"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="a" xml:id="nmksw7k">
+           <accid accid="n" xml:id="awpuwg3"/>
+          </note>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="nwyvhqd"/>
+          <note accid.ges="s" dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n1j0onkr"/>
+         </beam>
+         <beam xml:id="b1axvx6k">
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="nismnez"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="a" xml:id="n1bnotfh"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="nqapojn"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="a" xml:id="ntrhlx2"/>
+         </beam>
+         <beam xml:id="b1lc6uai">
+          <note dots="1" dur="8" dur.ppq="360" oct="4" pname="a" xml:id="n1r5gy6m"/>
+          <note dur="32" dur.ppq="60" oct="4" pname="g" xml:id="n1cyum3s"/>
+          <note dur="32" dur.ppq="60" oct="4" pname="a" xml:id="n7jcn9"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="s2do80z">
+        <layer n="2" xml:id="la7t09t">
+         <beam xml:id="bdpjhsd">
+          <note dur="8" dur.ppq="240" oct="4" pname="c" xml:id="nvis54m"/>
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="3" pname="b" xml:id="notdmht"/>
+         </beam>
+         <rest dur="8" dur.ppq="240" xml:id="rpucl7z"/>
+         <note dur="8" dur.ppq="240" oct="3" pname="a" xml:id="n1pshsfw">
+          <accid accid="n" xml:id="al259m6"/>
+         </note>
+         <beam xml:id="blpga4r">
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="3" pname="b" xml:id="nikstd2"/>
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="3" pname="e" xml:id="nv37yl6"/>
+         </beam>
+         <beam xml:id="b1jy8u50">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="e" xml:id="ns5z0fa"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="c" xml:id="n1yzmi0"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="nfw3xsq"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="c" xml:id="nwrhxpy"/>
+         </beam>
+        </layer>
+       </staff>
+       <mordent form="upper" place="above" staff="2" startid="#nvis54m" xml:id="m1tit9g3"/>
+       <tie endid="#ns5z0fa" startid="#nv37yl6" xml:id="tn7z5nk"/>
+      </measure>
+      <sb xml:id="s6s81ck"/>
+      <measure n="15" xml:id="mqvog99">
+       <staff n="1" xml:id="sye7dfe">
+        <layer n="1" xml:id="l14eognc">
+         <beam xml:id="b1tl5btc">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="nipvbmk"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="a" xml:id="n11x3trp">
+           <accid accid="n" xml:id="ak0vkjn"/>
+          </note>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="n1jvddqe"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="a" xml:id="nbhywgt"/>
+         </beam>
+         <beam xml:id="bbc3z2n">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n15ty5kl"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1shnf7j"/>
+          <note dur="8" dur.ppq="240" oct="5" pname="d" xml:id="nhwxlh6"/>
+         </beam>
+         <beam xml:id="bj2e1ui">
+          <note dur="8" dur.ppq="240" oct="5" pname="d" xml:id="n19prlxp"/>
+          <note dur="8" dur.ppq="240" oct="5" pname="c" xml:id="nlvn23"/>
+         </beam>
+         <rest dur="8" dur.ppq="240" xml:id="r13hcyos"/>
+         <note dur="8" dur.ppq="240" oct="5" pname="c" xml:id="n1974eji"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="sy5zk3n">
+        <layer n="2" xml:id="lkb7twr">
+         <beam xml:id="b10f6dx9">
+          <note dur="8" dur.ppq="240" oct="3" pname="d" xml:id="n13mxmrw"/>
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="3" pname="b" xml:id="n1mrot87"/>
+         </beam>
+         <beam xml:id="b13vo45i">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n123qmye"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="npdkdll">
+           <accid accid="n" xml:id="a1pevfrh"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n71vm5y"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="n3c8zmc"/>
+         </beam>
+         <beam xml:id="b19e9ikp">
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="nbo896j"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n1kwjxin"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="nn6zi6r"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="ns9aqiw"/>
+         </beam>
+         <beam xml:id="b19qsk91">
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n8ihq00"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n5opumu"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="n15sknc6"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="n1le26nj"/>
+         </beam>
+        </layer>
+       </staff>
+       <mordent form="upper" place="above" staff="1" startid="#n19prlxp" xml:id="m1ccynab"/>
+       <tie endid="#n123qmye" startid="#n1mrot87" xml:id="td0v706"/>
+      </measure>
+      <measure n="16" xml:id="mkt505x">
+       <staff n="1" xml:id="scacj1m">
+        <layer n="1" xml:id="lbbi8k6">
+         <beam xml:id="b1iv3hfh">
+          <note dur="8" dur.ppq="240" oct="5" pname="c" xml:id="ni286dk"/>
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="4" pname="b" xml:id="n10r1dpf"/>
+         </beam>
+         <rest dur="8" dur.ppq="240" xml:id="r15h8km9"/>
+         <note dur="8" dur.ppq="240" oct="4" pname="a" xml:id="nstm801">
+          <accid accid="n" xml:id="a1awf5cm"/>
+         </note>
+         <beam xml:id="b1v2zjmg">
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="4" pname="b" xml:id="ngnuo2g"/>
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="4" pname="e" xml:id="nweroj3"/>
+         </beam>
+         <beam xml:id="b1jgbslj">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n1vjiztq"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="nuy7bep"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n1y20oke"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="nionhc2"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="sit65ep">
+        <layer n="2" xml:id="l1y7hn9q">
+         <beam xml:id="b1lwq7f8">
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="ng99ims"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="nlg0vse">
+           <accid accid="n" xml:id="ax74gd2"/>
+          </note>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="nupyau7"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n15yw69v"/>
+         </beam>
+         <beam xml:id="b9fjz5c">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n12r5x2l"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="n1ugn26e"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="n1e8xagp"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="noknt4q"/>
+         </beam>
+         <beam xml:id="bvbjdot">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="e" xml:id="nn3wm8n"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="nm8slfj"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n1cxtj4y"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="n1oqme0t"/>
+         </beam>
+         <beam xml:id="bt0tikb">
+          <note dots="1" dur="8" dur.ppq="360" oct="3" pname="a" xml:id="ngc8bk2"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="nflvbfy"/>
+         </beam>
+        </layer>
+       </staff>
+       <mordent form="upper" place="above" staff="1" startid="#ni286dk" xml:id="m1f2tm2n"/>
+       <tie endid="#n1vjiztq" startid="#nweroj3" xml:id="t1mvnoao"/>
+       <mordent form="upper" place="above" staff="2" startid="#ngc8bk2" xml:id="maxngrt"/>
+      </measure>
+      <sb xml:id="swb1lw8"/>
+      <measure n="17" xml:id="mvvcpr5">
+       <staff n="1" xml:id="s1wi50ee">
+        <layer n="1" xml:id="l19wxlo2">
+         <beam xml:id="bfky85r">
+          <note dur="8" dur.ppq="240" oct="4" pname="d" xml:id="n64994v"/>
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="4" pname="b" xml:id="n1paktig"/>
+         </beam>
+         <beam xml:id="b18vy1fw">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="nsfi45h"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="a" xml:id="n119paqk">
+           <accid accid="n" xml:id="a3moq8t"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="ngvg7fv"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n2ofq53"/>
+         </beam>
+         <beam xml:id="b4wrath">
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="n137bd3n"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n1nd9gi9"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1u1qdsn"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n1iiuvh5"/>
+         </beam>
+         <beam xml:id="b1cbpaip">
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1h8aco"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="nje1fvq"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="a" xml:id="nof2tsl"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="n14nsje8"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="s13v8xkq">
+        <layer n="2" xml:id="lekpyxp">
+         <beam xml:id="b1enlkr1">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="nrd8gnw"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="nfrvthd"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="n1fdmt1c"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="nkmpvf4"/>
+         </beam>
+         <note dur="4" dur.ppq="480" oct="4" pname="d" xml:id="n1d7i1m5"/>
+         <beam xml:id="b1cc8jtq">
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="nltwuyv"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="ns5tqwh"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="nzi7t0h"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="nn78x3b"/>
+         </beam>
+         <note accid.ges="f" dur="4" dur.ppq="480" oct="4" pname="e" xml:id="n1uniurv"/>
+        </layer>
+       </staff>
+       <tie endid="#nsfi45h" startid="#n1paktig" xml:id="t1vw2kab"/>
+       <tie endid="#nltwuyv" startid="#n1d7i1m5" xml:id="t1yyul5m"/>
+       <tie endid="#n1hzb065" startid="#n1uniurv" xml:id="tje6rgy"/>
+      </measure>
+      <measure n="18" xml:id="me1r39m">
+       <staff n="1" xml:id="s1s7kexo">
+        <layer n="1" xml:id="l1rkpujt">
+         <beam xml:id="b5lyds">
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="nvnk0jx"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="a" xml:id="n1cjgff">
+           <accid accid="n" xml:id="amjml9s"/>
+          </note>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n1q815rc"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1qwe5r8"/>
+         </beam>
+         <beam xml:id="b1jh3c9u">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="nkqriul"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="a" xml:id="nznp5ek"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="nfognuq"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="nca9pri"/>
+         </beam>
+         <beam xml:id="b5fkmwm">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n133opfd"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="n139z8vo"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n8vad17"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="n1n21ez2"/>
+         </beam>
+         <beam xml:id="br9762y">
+          <note dots="1" dur="8" dur.ppq="360" oct="4" pname="a" xml:id="nwx2dcg"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="a" xml:id="nqc3bpp"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="sl5brfb">
+        <layer n="2" xml:id="lyg5xaj">
+         <beam xml:id="b1rzczhz">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n1hzb065"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="n11v5vlh"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="nx6ewex"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="n15a9om3">
+           <accid accid="n" xml:id="aark0xq"/>
+          </note>
+         </beam>
+         <beam xml:id="b1puhvj6">
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n1uq8m42"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n1cltlv1"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n3k8mmi"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n13ij2qs"/>
+         </beam>
+         <beam xml:id="b1gqwonz">
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="np2ewme"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n1x6ndzd"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n9vfgcm"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="nd21yfh"/>
+         </beam>
+         <beam xml:id="bs9l9k">
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="nyj5dtc"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n115pwm"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n1iw6193"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n3q94z2"/>
+         </beam>
+        </layer>
+       </staff>
+      </measure>
+      <sb xml:id="s1l5lwsg"/>
+      <measure n="19" xml:id="m14g8fbs">
+       <staff n="1" xml:id="s1xfbsme">
+        <layer n="1" xml:id="l1vxj205">
+         <beam xml:id="bqcdntb">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n1fuyd4w"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n9ii01q"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="n1wh7vn0"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n1va0bx2"/>
+         </beam>
+         <note dur="4" dur.ppq="480" oct="5" pname="d" xml:id="n1trfyzv"/>
+         <beam xml:id="b10pq527">
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n1287g5f"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n1molaw"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="n1vi63e"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="nilotrw"/>
+         </beam>
+         <note accid.ges="f" dur="4" dur.ppq="480" oct="5" pname="e" xml:id="n71xg0z"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="suqtt6g">
+        <layer n="2" xml:id="l1hm840x">
+         <beam xml:id="b1ddgnf">
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n2kw6wh"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n5r2lby"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n13vglyj"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="nin9ugv"/>
+         </beam>
+         <beam xml:id="b1l0rhti">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="nnhdk61"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n17xsmcf"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="nnldr32"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n1bs2wqe"/>
+         </beam>
+         <beam xml:id="b1on1ee6">
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="n19cre8"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="n1qww5rn">
+           <accid accid="n" xml:id="a1o513ph"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="niok13s"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n4qqzwj"/>
+         </beam>
+         <beam xml:id="bpygmdl">
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="n8cpqj5"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n14ql5d"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n1ttvk14"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="nimtsgx"/>
+         </beam>
+        </layer>
+       </staff>
+       <tie endid="#n1287g5f" startid="#n1trfyzv" xml:id="t1yjqnlg"/>
+       <tie endid="#nn2t2p8" startid="#n71xg0z" xml:id="t1qch65o"/>
+      </measure>
+      <measure n="20" xml:id="m18qg6os">
+       <staff n="1" xml:id="s4wk4f8">
+        <layer n="1" xml:id="lfymuo2">
+         <beam xml:id="b3chtsn">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="nn2t2p8"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n1sx63yo"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n1hl1j9z"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="a" xml:id="nfnls6d">
+           <accid accid="n" xml:id="a19u2ezz"/>
+          </note>
+         </beam>
+         <beam xml:id="b14e7gsz">
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n2bc8la"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1opbncx"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1k3r9xx"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="nvz7yen"/>
+         </beam>
+         <beam xml:id="b1kbmcr">
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="n17d5oy5"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n1qqlvy4"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1sxuuvm"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n1k6c9x0"/>
+         </beam>
+         <beam xml:id="b16plgb8">
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n91j6yf"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n1ndibkh"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1ig0gtk"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="noklk6w"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="s17pgzno">
+        <layer n="2" xml:id="l1admdia">
+         <beam xml:id="b1gbz50v">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n3a9mmq"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n14ynx8k"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n1f5ljzz"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n71uqqy"/>
+         </beam>
+         <beam xml:id="b46rqln">
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n1s2p3vu"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="newaowc"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="n1nza9o"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="nvw35oq"/>
+         </beam>
+         <beam xml:id="b14v700b">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n1weg3ls"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="no5uyxc"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n11eu735"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="ngbvo5l"/>
+         </beam>
+         <note dur="4" dur.ppq="480" oct="3" pname="a" xml:id="ng8a4al">
+          <accid accid="n" xml:id="a1tv81um"/>
+         </note>
+        </layer>
+       </staff>
+       <tie endid="#nvjnpyn" startid="#ng8a4al" xml:id="t1018ahw"/>
+      </measure>
+      <sb xml:id="sgv57d5"/>
+      <measure n="21" xml:id="m1uf7p51">
+       <staff n="1" xml:id="scvsyzd">
+        <layer n="1" xml:id="ljirmji">
+         <beam xml:id="b5750ap">
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="nwqrkl9"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="nmk18eb"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n160l5z6"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="a" xml:id="nr08p1x">
+           <accid accid="n" xml:id="ab2jn1g"/>
+          </note>
+         </beam>
+         <beam xml:id="b2rhhk5">
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n1rkwzgg"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n7tfejm"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1d6stly"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n1fxp4zr"/>
+         </beam>
+         <beam xml:id="b1d5d7mh">
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="nchbt30"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n1iyeusb"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="a" xml:id="n1bvb23j"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1ipprmf"/>
+         </beam>
+         <note dur="4" dur.ppq="480" oct="5" pname="f" xml:id="n155vsva"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="srbfdwd">
+        <layer n="2" xml:id="l1102oax">
+         <beam xml:id="b1wkvqiq">
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="nvjnpyn"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="d" xml:id="n1tp1z6l"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="noq0tq2"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="nl3oq02">
+           <accid accid="s" xml:id="adjp93"/>
+          </note>
+         </beam>
+         <beam xml:id="byceirg">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="ng4jjo3"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="nd7ozue"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n1rwmzt7"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="nowcc13"/>
+         </beam>
+         <beam xml:id="b1iuvwot">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="n8gxtaz"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n83uzw3"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="nkhwqvv"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="b" xml:id="n6lx903"/>
+         </beam>
+         <beam xml:id="byhi2lz">
+          <note dur="16" dur.ppq="120" oct="3" pname="a" xml:id="n18gs9ag"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="nsx3y2f"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="n1dcf73"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="ns8i8z"/>
+         </beam>
+        </layer>
+       </staff>
+       <tie endid="#n1j5yt1p" startid="#n155vsva" xml:id="tkn2yhq"/>
+      </measure>
+      <measure n="22" xml:id="m1dducyb">
+       <staff n="1" xml:id="s1d3hili">
+        <layer n="1" xml:id="li67zxx">
+         <beam xml:id="b18eyymj">
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n1j5yt1p"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="ngai4p2"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="nci6qy7"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n2rpvzq">
+           <accid accid="n" xml:id="agc68gn"/>
+          </note>
+         </beam>
+         <beam xml:id="bkjthtz">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n112wx6c"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="nal7ill"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n15s6oq6"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="nd3d21r"/>
+         </beam>
+         <beam xml:id="bimgcr5">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="a" xml:id="ntlsdt0"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="nc6bho7"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n1mpxdsg"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="ns37c2n"/>
+         </beam>
+         <beam xml:id="bcfh94v">
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="ngaxeol"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="n16dgjyb"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="nfd7q7g"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="n1j3wlig"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="srtgwu6">
+        <layer n="2" xml:id="l1xk8jk6">
+         <beam xml:id="b116f41g">
+          <note dur="16" dur.ppq="120" oct="3" pname="b" xml:id="nszmebb">
+           <accid accid="n" xml:id="a1r66onu"/>
+          </note>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n1kmd92p"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="e" xml:id="nnws4of"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="d" xml:id="n1w7whnu"/>
+         </beam>
+         <beam xml:id="b579z8c">
+          <note dur="16" dur.ppq="120" oct="4" pname="c" xml:id="nz2w0m"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="b" xml:id="nxvwis2">
+           <accid accid="f" xml:id="a1f8d1hx"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="a" xml:id="n10hu6l5"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="n1a2pf2a"/>
+         </beam>
+         <beam xml:id="btvbp2c">
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="n1b74rri"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="e" xml:id="n8caoak"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="d" xml:id="n1cp5nun"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="c" xml:id="n94xs3o"/>
+         </beam>
+         <beam xml:id="b1fjtabr">
+          <note dur="8" dur.ppq="240" oct="3" pname="g" xml:id="n1aeydtp"/>
+          <note dur="8" dur.ppq="240" oct="2" pname="g" xml:id="n1lcma03"/>
+         </beam>
+        </layer>
+       </staff>
+      </measure>
+      <sb xml:id="s98fz7m"/>
+      <measure n="23" xml:id="m5onlt4">
+       <staff n="1" xml:id="s150fbhd">
+        <layer n="1" xml:id="l1azuxx8">
+         <beam xml:id="b7j96wo">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n7049a6"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="nkl1jtj"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1p6d8w5"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="b" xml:id="nzg64ms">
+           <accid accid="n" xml:id="alp77vk"/>
+          </note>
+         </beam>
+         <beam xml:id="bb6f857">
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1ykdpjt"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n39nnbz"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1p969x7"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="g" xml:id="n114n540"/>
+         </beam>
+         <beam xml:id="b3miwti">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="a" xml:id="nn0l2wj"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n18tjya8">
+           <accid accid="f" xml:id="a1cqrczh"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="4" pname="a" xml:id="n1v8t6pw"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="f" xml:id="n10wr8q5"/>
+         </beam>
+         <beam xml:id="bugghnd">
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="nbhqg40"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1cwxof2"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n1r5ul82"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1yprlyo"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="s1pzlgew">
+        <layer n="2" xml:id="l1hgepqa">
+         <beam xml:id="bmy6s44">
+          <note dots="1" dur="8" dur.ppq="360" oct="3" pname="c" xml:id="nxcmzty"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="d" xml:id="n16ac0qx"/>
+         </beam>
+         <beam xml:id="b104jane">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="e" xml:id="ns9fets"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="nr0wahd"/>
+          <note dur="8" dur.ppq="240" oct="3" pname="g" xml:id="noz1mlm"/>
+         </beam>
+         <beam xml:id="biqolli">
+          <note dur="8" dur.ppq="240" oct="3" pname="g" xml:id="nrjqq3n"/>
+          <note dur="8" dur.ppq="240" oct="3" pname="f" xml:id="n133kmsk"/>
+         </beam>
+         <rest dur="8" dur.ppq="240" xml:id="rha7q5o"/>
+         <note dur="8" dur.ppq="240" oct="3" pname="f" xml:id="n1acbvwx"/>
+        </layer>
+       </staff>
+       <mordent form="upper" place="above" staff="2" startid="#nrjqq3n" xml:id="m5mv5km"/>
+      </measure>
+      <measure n="24" xml:id="myxme25">
+       <staff n="1" xml:id="s4ro6gi">
+        <layer n="1" xml:id="l1k55gyf">
+         <beam xml:id="b1ds4hx1">
+          <note dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n1umbup6">
+           <accid accid="n" xml:id="a1je6fak"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="a" xml:id="n1ldvd40"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="nup0ob2"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n1tcphlb"/>
+         </beam>
+         <beam xml:id="b1ehspvp">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1des4xi"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="nb34hle"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="nqvjyme"/>
+          <note dur="16" dur.ppq="120" oct="4" pname="b" xml:id="n1eswdgb"/>
+         </beam>
+         <beam xml:id="b1hi7j89">
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1ph4pu9"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n14v1h7v"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1496wjs"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n1hlewxu"/>
+         </beam>
+         <beam xml:id="bbbpmer">
+          <note dots="1" dur="8" dur.ppq="360" oct="5" pname="d" xml:id="nw77avs"/>
+          <note dur="32" dur.ppq="60" oct="5" pname="c" xml:id="nhacevy"/>
+          <note dur="32" dur.ppq="60" oct="5" pname="d" xml:id="nr5j1px"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="s1x4argz">
+        <layer n="2" xml:id="lw3xz52">
+         <beam xml:id="b254x4w">
+          <note dur="8" dur.ppq="240" oct="3" pname="f" xml:id="n1otwae3"/>
+          <note accid.ges="f" dur="8" dur.ppq="240" oct="3" pname="e" xml:id="n178wsk4"/>
+         </beam>
+         <beam xml:id="b39zwqr">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="e" xml:id="n14dc5rf"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="nkz451"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="e" xml:id="nfy8luh"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="d" xml:id="n3hozkx"/>
+         </beam>
+         <beam xml:id="b14obv0b">
+          <note dur="16" dur.ppq="120" oct="3" pname="c" xml:id="n10j3cz6"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="2" pname="b" xml:id="n1hvr7l8"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="2" pname="a" xml:id="nag6kg8"/>
+          <note dur="16" dur.ppq="120" oct="2" pname="g" xml:id="n1c0dxg4"/>
+         </beam>
+         <beam xml:id="b1ale6nm">
+          <note dur="16" dur.ppq="120" oct="2" pname="f" xml:id="n12gcvt0"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="2" pname="e" xml:id="nnw5l4p"/>
+          <note dur="16" dur.ppq="120" oct="2" pname="f" xml:id="n1w11ejz"/>
+          <note dur="16" dur.ppq="120" oct="2" pname="g" xml:id="nysbizd"/>
+         </beam>
+        </layer>
+       </staff>
+       <mordent form="upper" place="above" staff="1" startid="#nw77avs" xml:id="mik3a4k"/>
+       <mordent form="upper" place="above" staff="2" startid="#n1otwae3" xml:id="m1900kg"/>
+       <tie endid="#n14dc5rf" startid="#n178wsk4" xml:id="ty2vd1u"/>
+      </measure>
+      <sb xml:id="syotng"/>
+      <measure n="25" xml:id="mugjfq1">
+       <staff n="1" xml:id="s1prn59z">
+        <layer n="1" xml:id="l1cmrm1g">
+         <beam xml:id="bnhgiho">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1lrr6qa"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="n1dj991i"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1p1ssrc"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="ngc1ifi"/>
+         </beam>
+         <beam xml:id="bodylhf">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1gujmtd"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n15vlmes"/>
+          <note dur="8" dur.ppq="240" oct="5" pname="g" xml:id="n1mta4x6"/>
+         </beam>
+         <beam xml:id="b1616uia">
+          <note dur="8" dur.ppq="240" oct="5" pname="g" xml:id="nkvhfkz"/>
+          <note dur="8" dur.ppq="240" oct="5" pname="f" xml:id="n115bzat"/>
+         </beam>
+         <rest dur="8" dur.ppq="240" xml:id="r1h6fing"/>
+         <note dur="8" dur.ppq="240" oct="5" pname="f" xml:id="n1bxum01"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="s1gj3cb3">
+        <layer n="2" xml:id="l61q0ku">
+         <beam xml:id="b199fqiq">
+          <note dur="8" dur.ppq="240" oct="2" pname="c" xml:id="n1cszy9r"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="c" xml:id="n1bwre0m"/>
+          <note dur="16" dur.ppq="120" oct="2" pname="b" xml:id="n1ps8dde">
+           <accid accid="n" xml:id="a1k05f6n"/>
+          </note>
+         </beam>
+         <beam xml:id="b1mipchf">
+          <note dur="16" dur.ppq="120" oct="3" pname="c" xml:id="n6tshx8"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="d" xml:id="ngihnxw"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="e" xml:id="nnjv2ni"/>
+          <note dur="16" dur.ppq="120" oct="2" pname="g" xml:id="n16jljyr"/>
+         </beam>
+         <beam xml:id="b1dhxor0">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="2" pname="a" xml:id="n1mpoe8i"/>
+          <note dur="16" dur.ppq="120" oct="2" pname="b" xml:id="n1gx1hjo">
+           <accid accid="f" xml:id="a148gwh5"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="2" pname="a" xml:id="ny1vjtp"/>
+          <note dur="16" dur.ppq="120" oct="2" pname="f" xml:id="nrde3al"/>
+         </beam>
+         <beam xml:id="b14lwdkm">
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="nghjepd"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="e" xml:id="n1r9nm7c"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="d" xml:id="n1qazrar"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="c" xml:id="n5g6nbe"/>
+         </beam>
+        </layer>
+       </staff>
+       <mordent form="upper" place="above" staff="1" startid="#nkvhfkz" xml:id="m1yl046g"/>
+      </measure>
+      <measure n="26" xml:id="m1c36ii3">
+       <staff n="1" xml:id="skw9dd2">
+        <layer n="1" xml:id="l1i45ip0">
+         <beam xml:id="bubq7k4">
+          <note dur="8" dur.ppq="240" oct="5" pname="f" xml:id="n1mri3tt"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="e" xml:id="n1na84cy"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="d" xml:id="nguxn4x"/>
+         </beam>
+         <beam xml:id="bhhnpv0">
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="nr5rhn5"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="f" xml:id="n1wm8qwn"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="a" xml:id="n1dtj9lq"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="g" xml:id="n12tz4j8"/>
+         </beam>
+         <beam xml:id="b1y070qd">
+          <note dots="1" dur="8" dur.ppq="360" oct="5" pname="g" xml:id="ndtml12"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="5" pname="a" xml:id="nxkn4y0"/>
+         </beam>
+         <beam xml:id="boeyovj">
+          <note dots="1" dur="8" dur.ppq="360" oct="5" pname="d" xml:id="nz9agbf"/>
+          <note dur="16" dur.ppq="120" oct="5" pname="c" xml:id="n1x9johz"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="srrc9xy">
+        <layer n="2" xml:id="l1ns1ew5">
+         <beam xml:id="bwmeu5e">
+          <note dur="16" dur.ppq="120" oct="2" pname="b" xml:id="n17txpsb">
+           <accid accid="n" xml:id="a18ihfzd"/>
+          </note>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="a" xml:id="nm79szs"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="g" xml:id="n16fp0p9"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="f" xml:id="n1d1k0wr"/>
+         </beam>
+         <beam xml:id="b17481w7">
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="3" pname="e" xml:id="n1plnnxd"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="d" xml:id="n1n5ju5f"/>
+          <note dur="16" dur.ppq="120" oct="3" pname="c" xml:id="ncg4han"/>
+          <note dur="16" dur.ppq="120" oct="2" pname="b" xml:id="n1er3jad"/>
+         </beam>
+         <beam xml:id="bhw9r4n">
+          <note dur="16" dur.ppq="120" oct="3" pname="c" xml:id="nfpqtro"/>
+          <note dur="16" dur.ppq="120" oct="2" pname="g" xml:id="n17mbpl0"/>
+          <note accid.ges="f" dur="16" dur.ppq="120" oct="2" pname="a" xml:id="n1wbp77l"/>
+          <note dur="16" dur.ppq="120" oct="2" pname="f" xml:id="n1iw3ddv"/>
+         </beam>
+         <beam xml:id="b17rmon7">
+          <note dur="8" dur.ppq="240" oct="2" pname="g" xml:id="n1b23rem"/>
+          <note dur="8" dur.ppq="240" oct="2" pname="g" xml:id="n1bkmtu6"/>
+         </beam>
+        </layer>
+       </staff>
+       <mordent form="upper" place="above" staff="1" startid="#n1mri3tt" xml:id="mh6bcjm"/>
+       <mordent form="upper" place="above" staff="1" startid="#nz9agbf" xml:id="mdgdx58"/>
+      </measure>
+      <measure n="27" right="end" xml:id="mmncx3w">
+       <staff n="1" xml:id="s1e6hsxl">
+        <layer n="1" xml:id="l2co4vp">
+         <note dur="1" dur.ppq="1920" oct="5" pname="c" xml:id="n1xzuido"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="sg3unj4">
+        <layer n="2" xml:id="lhuhr1e">
+         <note dur="1" dur.ppq="1920" oct="2" pname="c" xml:id="n1ct6jg8"/>
+        </layer>
+       </staff>
+      </measure>
+     </section>
+    </score>
+   </mdiv>
+  </body>
+ </music>
+</mei>

@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mei meiversion="4.0.1" xml:id="m-1" xmlns="http://www.music-encoding.org/ns/mei" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <meiHead xml:id="m-2">
+  <fileDesc>
+   <titleStmt>
+    <title>
+     Mikrokosmos No. 31: Little Dance in Canon Form, SZ 107: 31
+    </title>
+    <respStmt>
+     <persName auth="VIAF" auth.uri="https://viaf.org/viaf/89006617/" role="composer">
+      Bartók, Béla
+     </persName>
+     <persName role="xml_editor">
+      Ramoneda, Pedro
+     </persName>
+     <persName role="mei_editor">
+      Freedman, Richard
+     </persName>
+     <persName role="analyst">
+      Kogawara, Maika
+     </persName>
+    </respStmt>
+   </titleStmt>
+   <pubStmt>
+    <publisher/>
+    <distributor/>
+    <date isodate="2024-11-19"/>
+    <availability>
+     Mikrokosmos expired copy-right edition. Transcribed by Pedro Ramoneda to MusicXML
+    </availability>
+   </pubStmt>
+  </fileDesc>
+  <encodingDesc>
+   <appInfo>
+    <application>
+     <name>
+      MEI Soup Updater 2024
+     </name>
+    </application>
+   </appInfo>
+  </encodingDesc>
+  <workList>
+   <work>
+    <title>
+     Mikrokosmos No. 31: Little Dance in Canon Form
+    </title>
+    <identifier/>
+    <composer auth="VIAF" auth.uri="https://viaf.org/viaf/89006617/">
+     Bartók, Béla
+    </composer>
+   </work>
+  </workList>
+ </meiHead>
+ <music xml:id="m-23">
+  <body xml:id="m-24">
+   <mdiv xml:id="m-25">
+    <score xml:id="m-27">
+     <scoreDef lyric.name="Times New Roman" meter.count="4" meter.unit="4" music.name="Helsinki Std" page.botmar="15mm" page.height="123.2mm" page.leftmar="15mm" page.rightmar="15mm" page.topmar="15mm" page.width="222.6mm" ppq="256" spacing.staff="18" spacing.system="24" text.name="Times New Roman" vu.height="0.875mm" xml:id="m-28">
+      <staffGrp xml:id="m-29">
+       <staffDef clef.line="2" clef.shape="G" key.mode="major" key.sig="0" lines="5" n="1" xml:id="m-30">
+        <label xml:id="m-31">
+        </label>
+        <labelAbbr xml:id="m-32">
+        </labelAbbr>
+        <!-- keyboard.piano.grand.bright -->
+        <instrDef midi.channel="1" midi.pan="63" midi.volume="100" xml:id="m-34"/>
+       </staffDef>
+       <staffDef clef.line="4" clef.shape="F" key.mode="major" key.sig="0" lines="5" n="2" xml:id="m-35">
+        <label xml:id="m-36">
+        </label>
+        <labelAbbr xml:id="m-37">
+        </labelAbbr>
+        <!-- keyboard.piano.grand.bright -->
+        <instrDef midi.channel="1" midi.pan="63" midi.volume="100" xml:id="m-39"/>
+       </staffDef>
+      </staffGrp>
+     </scoreDef>
+     <section xml:id="m-40">
+      <pb xml:id="m-22"/>
+      <sb xml:id="m-42"/>
+      <measure n="1" xml:id="m-41">
+       <staff n="1" xml:id="m-43">
+        <layer n="1" xml:id="m-44">
+         <note artic="acc" dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:00" vel="0" xml:id="m-45"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="c" pnum="60" stem.dir="up" tstamp.real="00:00:00.375" vel="0" xml:id="m-46"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:00.75" vel="0" xml:id="m-47"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:00:01.125" vel="0" xml:id="m-48"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-51">
+        <layer n="1" xml:id="m-52">
+         <mRest tstamp.real="00:00:00" xml:id="m-53"/>
+        </layer>
+       </staff>
+       <slur endid="#m-67" layer="1" staff="1" startid="#m-45" tstamp="1" tstamp2="1m+3" xml:id="m-49"/>
+       <dynam layer="1" staff="1" tstamp="1" xml:id="m-50">
+        f
+       </dynam>
+       <tempo layer="1" tstamp="1" xml:id="m-54">
+        <rend fontsize="4.5vu" xml:id="m-55">
+         q
+        </rend>
+        <rend fontsize="4.5vu" xml:id="m-56">
+         = 160
+        </rend>
+       </tempo>
+       <anchoredText xml:id="m-57">
+        <persName role="Composer" xml:id="m-58">
+         Béla Bártok
+        </persName>
+       </anchoredText>
+       <anchoredText xml:id="m-59">
+        <title xml:id="m-60">
+         <title xml:id="m-61">
+          Little Dance in Canon Form, Mikrokosmos, Sz. 107
+         </title>
+        </title>
+       </anchoredText>
+      </measure>
+      <measure n="2" xml:id="m-62">
+       <staff n="1" xml:id="m-63">
+        <layer n="1" xml:id="m-64">
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:01.5" vel="0" xml:id="m-65"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:00:01.875" vel="0" xml:id="m-66"/>
+         <note dur="2" dur.ppq="512" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:02.25" vel="0" xml:id="m-67"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-68">
+        <layer n="1" xml:id="m-69">
+         <note artic="acc" dur="4" dur.ppq="256" oct="3" pname="d" pnum="50" stem.dir="down" tstamp.real="00:00:01.5" vel="0" xml:id="m-70"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="c" pnum="48" stem.dir="up" tstamp.real="00:00:01.875" vel="0" xml:id="m-71"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="d" pnum="50" stem.dir="down" tstamp.real="00:00:02.25" vel="0" xml:id="m-72"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="e" pnum="52" stem.dir="down" tstamp.real="00:00:02.625" vel="0" xml:id="m-73"/>
+        </layer>
+       </staff>
+       <slur endid="#m-86" layer="1" staff="2" startid="#m-70" tstamp="1" tstamp2="1m+2" xml:id="m-74"/>
+      </measure>
+      <measure n="3" xml:id="m-75">
+       <staff n="1" xml:id="m-76">
+        <layer n="1" xml:id="m-77">
+         <note artic="acc" dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:03" vel="0" xml:id="m-78"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:00:03.375" vel="0" xml:id="m-79"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:03.75" vel="0" xml:id="m-80"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="c" pnum="60" stem.dir="up" tstamp.real="00:00:04.125" vel="0" xml:id="m-81"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-83">
+        <layer n="1" xml:id="m-84">
+         <note dur="4" dur.ppq="256" oct="3" pname="f" pnum="53" stem.dir="down" tstamp.real="00:00:03" vel="0" xml:id="m-85"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="e" pnum="52" stem.dir="down" tstamp.real="00:00:03.375" vel="0" xml:id="m-86"/>
+         <note dur="2" dur.ppq="512" oct="3" pname="d" pnum="50" stem.dir="down" tstamp.real="00:00:03.75" vel="0" xml:id="m-87"/>
+        </layer>
+       </staff>
+       <slur endid="#m-91" layer="1" staff="1" startid="#m-78" tstamp="1" tstamp2="1m+1" xml:id="m-82"/>
+      </measure>
+      <measure n="4" xml:id="m-88">
+       <staff n="1" xml:id="m-89">
+        <layer n="1" xml:id="m-90">
+         <note artic="acc" dur="2" dur.ppq="512" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:04.5" vel="0" xml:id="m-91"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:05.25" vel="0" xml:id="m-92"/>
+         <rest dur="4" dur.ppq="256" tstamp.real="00:00:05.625" xml:id="m-93"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-94">
+        <layer n="1" xml:id="m-95">
+         <note artic="acc" dur="4" dur.ppq="256" oct="3" pname="d" pnum="50" stem.dir="down" tstamp.real="00:00:04.5" vel="0" xml:id="m-96"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="e" pnum="52" stem.dir="down" tstamp.real="00:00:04.875" vel="0" xml:id="m-97"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="f" pnum="53" stem.dir="down" tstamp.real="00:00:05.25" vel="0" xml:id="m-98"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="c" pnum="48" stem.dir="up" tstamp.real="00:00:05.625" vel="0" xml:id="m-99"/>
+        </layer>
+       </staff>
+       <slur endid="#m-111" layer="1" staff="2" startid="#m-96" tstamp="1" tstamp2="1m+1" xml:id="m-100"/>
+      </measure>
+      <measure n="5" xml:id="m-101">
+       <staff n="1" xml:id="m-102">
+        <layer n="1" xml:id="m-103">
+         <note artic="acc" dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:06" vel="0" xml:id="m-104"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:06.375" vel="0" xml:id="m-105"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:06.75" vel="0" xml:id="m-106"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:00:07.125" vel="0" xml:id="m-107"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-109">
+        <layer n="1" xml:id="m-110">
+         <note artic="acc" dur="2" dur.ppq="512" oct="3" pname="d" pnum="50" stem.dir="down" tstamp.real="00:00:06" vel="0" xml:id="m-111"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="d" pnum="50" stem.dir="down" tstamp.real="00:00:06.75" vel="0" xml:id="m-112"/>
+         <rest dur="4" dur.ppq="256" tstamp.real="00:00:07.125" xml:id="m-113"/>
+        </layer>
+       </staff>
+       <slur endid="#m-119" layer="1" staff="1" startid="#m-104" tstamp="1" tstamp2="1m+3" xml:id="m-108"/>
+      </measure>
+      <measure n="6" xml:id="m-114">
+       <staff n="1" xml:id="m-115">
+        <layer n="1" xml:id="m-116">
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:07.5" vel="0" xml:id="m-117"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:00:07.875" vel="0" xml:id="m-118"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:08.25" vel="0" xml:id="m-119"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="c" pnum="60" stem.dir="up" tstamp.real="00:00:08.625" vel="0" xml:id="m-120"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-121">
+        <layer n="1" xml:id="m-122">
+         <note artic="acc" dur="4" dur.ppq="256" oct="3" pname="d" pnum="50" stem.dir="down" tstamp.real="00:00:07.5" vel="0" xml:id="m-123"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="g" pnum="55" stem.dir="down" tstamp.real="00:00:07.875" vel="0" xml:id="m-124"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="f" pnum="53" stem.dir="down" tstamp.real="00:00:08.25" vel="0" xml:id="m-125"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="e" pnum="52" stem.dir="down" tstamp.real="00:00:08.625" vel="0" xml:id="m-126"/>
+        </layer>
+       </staff>
+       <slur endid="#m-139" layer="1" staff="2" startid="#m-123" tstamp="1" tstamp2="1m+1" xml:id="m-127"/>
+      </measure>
+      <pb n="2" xml:id="m-130"/>
+      <sb xml:id="m-129"/>
+      <measure n="7" xml:id="m-128">
+       <staff n="1" xml:id="m-131">
+        <layer n="1" xml:id="m-132">
+         <note artic="acc" dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:09" vel="0" xml:id="m-133"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:00:09.375" vel="0" xml:id="m-134"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:09.75" vel="0" xml:id="m-135"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:10.125" vel="0" xml:id="m-136"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-137">
+        <layer n="1" xml:id="m-138">
+         <note dur="4" dur.ppq="256" oct="3" pname="f" pnum="53" stem.dir="down" tstamp.real="00:00:09" vel="0" xml:id="m-139"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="e" pnum="52" stem.dir="down" tstamp.real="00:00:09.375" vel="0" xml:id="m-140"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="d" pnum="50" stem.dir="down" tstamp.real="00:00:09.75" vel="0" xml:id="m-141"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="c" pnum="48" stem.dir="up" tstamp.real="00:00:10.125" vel="0" xml:id="m-142"/>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="8" xml:id="m-143">
+       <staff n="1" xml:id="m-144">
+        <layer n="1" xml:id="m-145">
+         <note artic="acc" dur="2" dur.ppq="512" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:10.5" vel="0" xml:id="m-146"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:11.25" vel="0" xml:id="m-147"/>
+         <rest dur="4" dur.ppq="256" tstamp.real="00:00:11.625" xml:id="m-148"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-149">
+        <layer n="1" xml:id="m-150">
+         <note artic="acc" dur="4" dur.ppq="256" oct="3" pname="d" pnum="50" stem.dir="down" tstamp.real="00:00:10.5" vel="0" xml:id="m-151"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="e" pnum="52" stem.dir="down" tstamp.real="00:00:10.875" vel="0" xml:id="m-152"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="f" pnum="53" stem.dir="down" tstamp.real="00:00:11.25" vel="0" xml:id="m-153"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="g" pnum="55" stem.dir="down" tstamp.real="00:00:11.625" vel="0" xml:id="m-154"/>
+        </layer>
+       </staff>
+      </measure>
+      <measure left="rptstart" n="9" xml:id="m-155">
+       <staff n="1" xml:id="m-156">
+        <layer n="1" xml:id="m-157">
+         <note artic="acc" dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:12" vel="0" xml:id="m-158"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="71" stem.dir="down" tstamp.real="00:00:12.375" vel="0" xml:id="m-159"/>
+         <note dur="2" dur.ppq="512" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:00:12.75" vel="0" xml:id="m-160"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-162">
+        <layer n="1" xml:id="m-163">
+         <rest dur="2" dur.ppq="512" tstamp.real="00:00:12" xml:id="m-164"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="a" pnum="57" stem.dir="down" tstamp.real="00:00:12.75" vel="0" xml:id="m-165"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="b" pnum="59" stem.dir="down" tstamp.real="00:00:13.125" vel="0" xml:id="m-166"/>
+        </layer>
+       </staff>
+       <slur endid="#m-173" layer="1" staff="1" startid="#m-159" tstamp="2" tstamp2="1m+3" xml:id="m-161"/>
+       <slur endid="#m-188" layer="1" staff="2" startid="#m-165" tstamp="3" tstamp2="2m+1" xml:id="m-167"/>
+      </measure>
+      <measure n="10" xml:id="m-168">
+       <staff n="1" xml:id="m-169">
+        <layer n="1" xml:id="m-170">
+         <note artic="acc" dur="4" dur.ppq="256" oct="4" pname="b" pnum="71" stem.dir="down" tstamp.real="00:00:13.5" vel="0" xml:id="m-171"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:13.875" vel="0" xml:id="m-172"/>
+         <note dur="2" dur.ppq="512" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:14.25" vel="0" xml:id="m-173"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-174">
+        <layer n="1" xml:id="m-175">
+         <note artic="acc" dur="2" dur.ppq="512" oct="4" pname="c" pnum="60" stem.dir="down" tstamp.real="00:00:13.5" vel="0" xml:id="m-176"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="b" pnum="59" stem.dir="down" tstamp.real="00:00:14.25" vel="0" xml:id="m-177"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="a" pnum="57" stem.dir="down" tstamp.real="00:00:14.625" vel="0" xml:id="m-178"/>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="11" xml:id="m-179">
+       <staff n="1" xml:id="m-180">
+        <layer n="1" xml:id="m-181">
+         <note artic="acc" dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:15" vel="0" xml:id="m-182"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="71" stem.dir="down" tstamp.real="00:00:15.375" vel="0" xml:id="m-183"/>
+         <note dur="4" dur.ppq="256" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:00:15.75" vel="0" xml:id="m-184"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:16.125" vel="0" xml:id="m-185"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-186">
+        <layer n="1" xml:id="m-187">
+         <note artic="acc" dur="2" dur.ppq="512" oct="3" pname="g" pnum="55" stem.dir="down" tstamp.real="00:00:15" vel="0" xml:id="m-188"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="a" pnum="57" stem.dir="down" tstamp.real="00:00:15.75" vel="0" xml:id="m-189"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="b" pnum="59" stem.dir="down" tstamp.real="00:00:16.125" vel="0" xml:id="m-190"/>
+        </layer>
+       </staff>
+      </measure>
+      <pb n="3" xml:id="m-193"/>
+      <sb xml:id="m-192"/>
+      <measure n="12" xml:id="m-191">
+       <staff n="1" xml:id="m-194">
+        <layer n="1" xml:id="m-195">
+         <note dur="2" dur.ppq="512" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:16.5" vel="0" xml:id="m-196"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:17.25" vel="0" xml:id="m-197"/>
+         <rest dur="4" dur.ppq="256" tstamp.real="00:00:17.625" xml:id="m-198"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-199">
+        <layer n="1" xml:id="m-200">
+         <note dur="4" dur.ppq="256" oct="4" pname="c" pnum="60" stem.dir="down" tstamp.real="00:00:16.5" vel="0" xml:id="m-201"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="g" pnum="55" stem.dir="down" tstamp.real="00:00:16.875" vel="0" xml:id="m-202"/>
+         <note dur="2" dur.ppq="512" oct="3" pname="a" pnum="57" stem.dir="down" tstamp.real="00:00:17.25" vel="0" xml:id="m-203"/>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="13" xml:id="m-204">
+       <staff n="1" xml:id="m-205">
+        <layer n="1" xml:id="m-206">
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:18" vel="0" xml:id="m-207"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:18.375" vel="0" xml:id="m-208"/>
+         <note artic="acc" dur="2" dur.ppq="512" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:18.75" vel="0" xml:id="m-209"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-211">
+        <layer n="1" xml:id="m-212">
+         <rest dur="2" dur.ppq="512" tstamp.real="00:00:18" xml:id="m-213"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="f" pnum="53" stem.dir="down" tstamp.real="00:00:18.75" vel="0" xml:id="m-214"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="g" pnum="55" stem.dir="down" tstamp.real="00:00:19.125" vel="0" xml:id="m-215"/>
+        </layer>
+       </staff>
+       <slur endid="#m-220" layer="1" staff="1" startid="#m-208" tstamp="2" tstamp2="1m+1" xml:id="m-210"/>
+       <slur endid="#m-226" layer="1" staff="2" startid="#m-214" tstamp="3" tstamp2="1m+3" xml:id="m-216"/>
+      </measure>
+      <measure n="14" xml:id="m-217">
+       <staff n="1" xml:id="m-218">
+        <layer n="1" xml:id="m-219">
+         <note dur="4" dur.ppq="256" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:00:19.5" vel="0" xml:id="m-220"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:19.875" vel="0" xml:id="m-221"/>
+         <note artic="acc" dur="2" dur.ppq="512" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:20.25" vel="0" xml:id="m-222"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-223">
+        <layer n="1" xml:id="m-224">
+         <note artic="acc" dur="2" dur.ppq="512" oct="3" pname="a" pnum="57" stem.dir="down" tstamp.real="00:00:19.5" vel="0" xml:id="m-225"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="e" pnum="52" stem.dir="down" tstamp.real="00:00:20.25" vel="0" xml:id="m-226"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="f" pnum="53" stem.dir="down" tstamp.real="00:00:20.625" vel="0" xml:id="m-227"/>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="15" xml:id="m-228">
+       <staff n="1" xml:id="m-229">
+        <layer n="1" xml:id="m-230">
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:21" vel="0" xml:id="m-231"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:00:21.375" vel="0" xml:id="m-232"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:21.75" vel="0" xml:id="m-233"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:22.125" vel="0" xml:id="m-234"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-235">
+        <layer n="1" xml:id="m-236">
+         <note dur="2" dur.ppq="512" oct="3" pname="g" pnum="55" stem.dir="down" tstamp.real="00:00:21" vel="0" xml:id="m-237"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="f" pnum="53" stem.dir="down" tstamp.real="00:00:21.75" vel="0" xml:id="m-238"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="e" pnum="52" stem.dir="down" tstamp.real="00:00:22.125" vel="0" xml:id="m-239"/>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="16" right="end" xml:id="m-240">
+       <staff n="1" xml:id="m-241">
+        <layer n="1" xml:id="m-242">
+         <note artic="acc" dur="2" dur.ppq="512" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:22.5" vel="0" xml:id="m-243"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:23.25" vel="0" xml:id="m-244"/>
+         <rest dur="4" dur.ppq="256" tstamp.real="00:00:23.625" xml:id="m-245"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-246">
+        <layer n="1" xml:id="m-247">
+         <note artic="acc" dur="2" dur.ppq="512" oct="3" pname="d" pnum="50" stem.dir="down" tstamp.real="00:00:22.5" vel="0" xml:id="m-248"/>
+         <note dur="4" dur.ppq="256" oct="3" pname="d" pnum="50" stem.dir="down" tstamp.real="00:00:23.25" vel="0" xml:id="m-249"/>
+         <rest dur="4" dur.ppq="256" tstamp.real="00:00:23.625" xml:id="m-250"/>
+        </layer>
+       </staff>
+      </measure>
+     </section>
+     <annot type="duration" xml:id="m-26">
+      00:00:24
+     </annot>
+    </score>
+   </mdiv>
+  </body>
+ </music>
+</mei>

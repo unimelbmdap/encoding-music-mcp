@@ -5,7 +5,7 @@ from mcp.server.fastmcp import FastMCP
 # Create MCP server
 mcp = FastMCP("encoding-music-mcp")
 
-# Import registry to trigger tool registration
+# Import tools to trigger registration
 from .tools import registry
 
 

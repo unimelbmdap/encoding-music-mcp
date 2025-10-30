@@ -1,0 +1,2617 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mei meiversion="4.0.1" xml:id="m-1" xmlns="http://www.music-encoding.org/ns/mei" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <meiHead xml:id="m-2">
+  <fileDesc>
+   <titleStmt>
+    <title>
+     Lo hear another, RISM A/I: M 3701.  No. 6
+    </title>
+    <respStmt>
+     <persName auth="VIAF" auth.uri="https://viaf.org/viaf/77117535" role="composer">
+      Morley, Thomas
+     </persName>
+     <persName role="xml_editor">
+      André Vierendeels
+     </persName>
+     <persName role="mei_editor">
+      Richard Freedman
+     </persName>
+     <persName role="analyst">
+      Kogawara, Maika
+     </persName>
+    </respStmt>
+   </titleStmt>
+   <pubStmt>
+    <publisher/>
+    <distributor/>
+    <date isodate="2024-11-19"/>
+    <availability>
+     Copyright André Vierendeels (transcription) and Richard Freedman (MEI), available on a Creative Commons 4.0 license.  NC CC SA
+    </availability>
+   </pubStmt>
+  </fileDesc>
+  <encodingDesc>
+   <appInfo>
+    <application>
+     <name>
+      MEI Soup Updater 2024
+     </name>
+    </application>
+   </appInfo>
+  </encodingDesc>
+  <workList>
+   <work>
+    <title>
+     Lo hear another
+    </title>
+    <identifier/>
+    <composer auth="VIAF" auth.uri="https://viaf.org/viaf/77117535">
+     Morley, Thomas
+    </composer>
+   </work>
+  </workList>
+ </meiHead>
+ <music xml:id="m-23">
+  <body xml:id="m-24">
+   <mdiv xml:id="m-25">
+    <score xml:id="m-27">
+     <scoreDef lyric.name="Times New Roman" meter.count="4" meter.sym="common" meter.unit="4" music.name="Helsinki Std" page.botmar="15mm" page.height="297mm" page.leftmar="15mm" page.rightmar="15mm" page.topmar="15mm" page.width="210mm" ppq="256" spacing.staff="18" spacing.system="24" text.name="Times New Roman" vu.height="0.875mm" xml:id="m-28">
+      <staffGrp xml:id="m-29">
+       <staffGrp n="1" symbol="bracket" xml:id="m-40">
+        <staffDef clef.line="2" clef.shape="G" key.mode="major" key.sig="1f" label="Soprano" lines="5" n="1" xml:id="m-30">
+         <label xml:id="m-31">
+          Soprano 1
+         </label>
+         <labelAbbr xml:id="m-32">
+          S.
+         </labelAbbr>
+         <!-- voice.female.soprano.ensemble.ah -->
+         <instrDef midi.channel="1" midi.pan="26" midi.volume="100" xml:id="m-34"/>
+        </staffDef>
+        <staffDef clef.line="2" clef.shape="G" key.mode="major" key.sig="1f" label="Soprano" lines="5" n="2" xml:id="m-35">
+         <label xml:id="m-36">
+          Soprano 2
+         </label>
+         <labelAbbr xml:id="m-37">
+          S.
+         </labelAbbr>
+         <!-- voice.female.soprano.ensemble.ah -->
+         <instrDef midi.channel="1" midi.pan="26" midi.volume="100" xml:id="m-39"/>
+        </staffDef>
+       </staffGrp>
+      </staffGrp>
+     </scoreDef>
+     <section xml:id="m-41">
+      <pb xml:id="m-22"/>
+      <sb xml:id="m-43"/>
+      <measure n="1" xml:id="m-42">
+       <staff n="1" xml:id="m-44">
+        <layer n="1" xml:id="m-45">
+         <mRest tstamp.real="00:00:00" xml:id="m-46"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-47">
+        <layer n="1" xml:id="m-48">
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:00" vel="0" xml:id="m-49">
+          <verse n="1" xml:id="m-55">
+           <syl xml:id="m-56">
+            Loe
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:00.6" vel="0" xml:id="m-50">
+          <verse n="1" xml:id="m-57">
+           <syl xml:id="m-58">
+            heere
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="4" pname="f" pnum="66" stem.dir="up" tstamp.real="00:00:00.9" vel="0" xml:id="m-51">
+          <accid accid="s" xml:id="m-52"/>
+          <verse n="1" xml:id="m-59">
+           <syl con="d" wordpos="i" xml:id="m-60">
+            an
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:01.2" vel="0" xml:id="m-53">
+          <verse n="1" xml:id="m-61">
+           <syl con="d" wordpos="m" xml:id="m-62">
+            o
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:01.8" vel="0" xml:id="m-54">
+          <verse n="1" xml:id="m-63">
+           <syl wordpos="t" xml:id="m-64">
+            ther
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <anchoredText xml:id="m-65">
+        <title xml:id="m-66">
+         <rend fontfam="Times New Roman" fontsize="9.6875vu" xml:id="m-67">
+          Loe heere another love
+         </rend>
+        </title>
+       </anchoredText>
+       <anchoredText xml:id="m-68">
+        <rend fontfam="Times New Roman" fontsize="4.8125vu" xml:id="m-69">
+         Thomas Morley
+        </rend>
+       </anchoredText>
+      </measure>
+      <measure n="2" xml:id="m-70">
+       <staff n="1" xml:id="m-71">
+        <layer n="1" xml:id="m-72">
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:02.4" vel="0" xml:id="m-73">
+          <verse n="1" xml:id="m-79">
+           <syl xml:id="m-80">
+            Loe
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:03" vel="0" xml:id="m-74">
+          <verse n="1" xml:id="m-81">
+           <syl xml:id="m-82">
+            heere
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="4" pname="f" pnum="66" stem.dir="up" tstamp.real="00:00:03.3" vel="0" xml:id="m-75">
+          <accid accid="s" xml:id="m-76"/>
+          <verse n="1" xml:id="m-83">
+           <syl con="d" wordpos="i" xml:id="m-84">
+            an
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:03.6" vel="0" xml:id="m-77">
+          <verse n="1" xml:id="m-85">
+           <syl con="d" wordpos="m" xml:id="m-86">
+            o
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:04.2" vel="0" xml:id="m-78">
+          <verse n="1" xml:id="m-87">
+           <syl wordpos="t" xml:id="m-88">
+            ther
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-89">
+        <layer n="1" xml:id="m-90">
+         <note dur="2" dur.ppq="512" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:02.4" vel="0" xml:id="m-91">
+          <accid accid.ges="f" xml:id="m-92"/>
+          <verse n="1" xml:id="m-94">
+           <syl xml:id="m-95">
+            love,
+           </syl>
+          </verse>
+         </note>
+         <rest dur="2" dur.ppq="512" tstamp.real="00:00:03.6" xml:id="m-93"/>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="3" xml:id="m-96">
+       <staff n="1" xml:id="m-97">
+        <layer n="1" xml:id="m-98">
+         <note dur="2" dur.ppq="512" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:04.8" vel="0" xml:id="m-99">
+          <accid accid.ges="f" xml:id="m-100"/>
+          <verse n="1" xml:id="m-102">
+           <syl xml:id="m-103">
+            love,
+           </syl>
+          </verse>
+         </note>
+         <rest dur="2" dur.ppq="512" tstamp.real="00:00:06" xml:id="m-101"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-104">
+        <layer n="1" xml:id="m-105">
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:04.8" vel="0" xml:id="m-106">
+          <verse n="1" xml:id="m-112">
+           <syl xml:id="m-113">
+            loe
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:05.4" vel="0" xml:id="m-107">
+          <verse n="1" xml:id="m-114">
+           <syl xml:id="m-115">
+            heere
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="4" pname="f" pnum="66" stem.dir="up" tstamp.real="00:00:05.7" vel="0" xml:id="m-108">
+          <accid accid="s" xml:id="m-109"/>
+          <verse n="1" xml:id="m-116">
+           <syl con="d" wordpos="i" xml:id="m-117">
+            an
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:06" vel="0" xml:id="m-110">
+          <verse n="1" xml:id="m-118">
+           <syl con="d" wordpos="m" xml:id="m-119">
+            o
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:06.6" vel="0" xml:id="m-111">
+          <verse n="1" xml:id="m-120">
+           <syl wordpos="t" xml:id="m-121">
+            ther
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="4" xml:id="m-122">
+       <staff n="1" xml:id="m-123">
+        <layer n="1" xml:id="m-124">
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:07.2" vel="0" xml:id="m-125">
+          <verse n="1" xml:id="m-130">
+           <syl xml:id="m-131">
+            loe
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:07.8" vel="0" xml:id="m-126">
+          <verse n="1" xml:id="m-132">
+           <syl xml:id="m-133">
+            heere
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:00:08.1" vel="0" xml:id="m-127">
+          <verse n="1" xml:id="m-153">
+           <syl con="d" wordpos="i" xml:id="m-154">
+            an
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:08.4" vel="0" xml:id="m-128">
+          <verse n="1" xml:id="m-155">
+           <syl con="d" wordpos="m" xml:id="m-156">
+            o
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="e" pnum="76" stem.dir="down" tstamp.real="00:00:09" vel="0" xml:id="m-129"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-134">
+        <layer n="1" xml:id="m-135">
+         <note dur="2" dur.ppq="512" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:07.2" vel="0" xml:id="m-136">
+          <accid accid.ges="f" xml:id="m-137"/>
+          <verse n="1" xml:id="m-140">
+           <syl xml:id="m-141">
+            love,
+           </syl>
+          </verse>
+         </note>
+         <rest dur="4" dur.ppq="256" tstamp.real="00:00:08.4" xml:id="m-138"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:09" vel="0" xml:id="m-139">
+          <verse n="1" xml:id="m-142">
+           <syl xml:id="m-143">
+            from
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <sb xml:id="m-145"/>
+      <measure n="5" xml:id="m-144">
+       <staff n="1" xml:id="m-146">
+        <layer n="1" xml:id="m-147">
+         <note dur="4" dur.ppq="256" oct="5" pname="f" pnum="77" stem.dir="down" tstamp.real="00:00:09.6" vel="0" xml:id="m-148">
+          <verse n="1" xml:id="m-157">
+           <syl wordpos="t" xml:id="m-158">
+            ther
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:10.2" vel="0" xml:id="m-149">
+          <verse n="1" xml:id="m-159">
+           <syl xml:id="m-160">
+            love,
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:10.8" vel="0" xml:id="m-150">
+          <verse n="1" xml:id="m-161">
+           <syl xml:id="m-162">
+            from
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:11.4" vel="0" xml:id="m-151">
+          <accid accid.ges="f" xml:id="m-152"/>
+          <verse n="1" xml:id="m-163">
+           <syl xml:id="m-164">
+            heaven
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-165">
+        <layer n="1" xml:id="m-166">
+         <note dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:09.6" vel="0" xml:id="m-167">
+          <verse n="1" xml:id="m-174">
+           <syl xml:id="m-175">
+            heaven
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:10.2" vel="0" xml:id="m-168">
+          <verse n="1" xml:id="m-219">
+           <syl con="d" wordpos="i" xml:id="m-220">
+            de
+           </syl>
+          </verse>
+         </note>
+         <beam xml:id="m-170">
+          <note dur="8" dur.ppq="128" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:00:10.8" vel="0" xml:id="m-169"/>
+          <note dur="8" dur.ppq="128" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:11.1" vel="0" xml:id="m-171"/>
+         </beam>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:11.4" vel="0" xml:id="m-172"/>
+        </layer>
+       </staff>
+       <tie endid="#m-190" startid="#m-172" xml:id="m-173"/>
+      </measure>
+      <measure n="6" xml:id="m-176">
+       <staff n="1" xml:id="m-177">
+        <layer n="1" xml:id="m-178">
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:12" vel="0" xml:id="m-179">
+          <verse n="1" xml:id="m-204">
+           <syl con="d" wordpos="i" xml:id="m-205">
+            de
+           </syl>
+          </verse>
+         </note>
+         <note dots="1" dur="4" dur.ppq="384" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:12.6" vel="0" xml:id="m-180">
+          <verse n="1" xml:id="m-206">
+           <syl con="d" wordpos="m" xml:id="m-207">
+            fe
+           </syl>
+          </verse>
+         </note>
+         <beam xml:id="m-183">
+          <note dur="16" dur.ppq="64" oct="5" pname="c" pnum="73" stem.dir="down" tstamp.real="00:00:13.5" vel="0" xml:id="m-181">
+           <accid accid="s" xml:id="m-182"/>
+          </note>
+          <note dur="16" dur.ppq="64" oct="4" pname="b" pnum="71" stem.dir="down" tstamp.real="00:00:13.65" vel="0" xml:id="m-184">
+           <accid accid="n" xml:id="m-185"/>
+          </note>
+         </beam>
+         <note dur="4" dur.ppq="256" oct="5" pname="c" pnum="73" stem.dir="down" tstamp.real="00:00:13.8" vel="0" xml:id="m-186">
+          <accid accid.ges="s" xml:id="m-187"/>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-188">
+        <layer n="1" xml:id="m-189">
+         <beam xml:id="m-191">
+          <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:12" vel="0" xml:id="m-190"/>
+          <note dur="8" dur.ppq="128" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:12.3" vel="0" xml:id="m-192"/>
+         </beam>
+         <beam xml:id="m-194">
+          <note dur="8" dur.ppq="128" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:12.6" vel="0" xml:id="m-193"/>
+          <note dur="16" dur.ppq="64" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:00:12.9" vel="0" xml:id="m-195"/>
+          <note dur="16" dur.ppq="64" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:13.05" vel="0" xml:id="m-196"/>
+         </beam>
+         <note dur="2" dur.ppq="512" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:00:13.2" vel="0" xml:id="m-197">
+          <verse n="1" xml:id="m-221">
+           <syl con="d" wordpos="m" xml:id="m-222">
+            fen
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="7" xml:id="m-198">
+       <staff n="1" xml:id="m-199">
+        <layer n="1" xml:id="m-200">
+         <note dur="2" dur.ppq="512" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:14.4" vel="0" xml:id="m-201">
+          <verse n="1" xml:id="m-208">
+           <syl wordpos="t" xml:id="m-209">
+            ded,
+           </syl>
+          </verse>
+         </note>
+         <rest dur="4" dur.ppq="256" tstamp.real="00:00:15.6" xml:id="m-202"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:16.2" vel="0" xml:id="m-203">
+          <verse n="1" xml:id="m-210">
+           <syl xml:id="m-211">
+            from
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-212">
+        <layer n="1" xml:id="m-213">
+         <note dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:14.4" vel="0" xml:id="m-214">
+          <verse n="1" xml:id="m-223">
+           <syl wordpos="t" xml:id="m-224">
+            ded,
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:15" vel="0" xml:id="m-215">
+          <verse n="1" xml:id="m-225">
+           <syl xml:id="m-226">
+            from
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:15.6" vel="0" xml:id="m-216">
+          <verse n="1" xml:id="m-227">
+           <syl xml:id="m-228">
+            heavec
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:16.2" vel="0" xml:id="m-217">
+          <accid accid.ges="f" xml:id="m-218"/>
+          <verse n="1" xml:id="m-260">
+           <syl con="d" wordpos="i" xml:id="m-261">
+            de
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="8" xml:id="m-229">
+       <staff n="1" xml:id="m-230">
+        <layer n="1" xml:id="m-231">
+         <note dur="4" dur.ppq="256" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:00:16.8" vel="0" xml:id="m-232">
+          <verse n="1" xml:id="m-236">
+           <syl xml:id="m-237">
+            heaven
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:17.4" vel="0" xml:id="m-233">
+          <accid accid.ges="f" xml:id="m-234"/>
+          <verse n="1" xml:id="m-251">
+           <syl con="d" wordpos="i" xml:id="m-252">
+            de
+           </syl>
+          </verse>
+         </note>
+         <note dur="2" dur.ppq="512" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:18" vel="0" xml:id="m-235">
+          <verse n="1" xml:id="m-253">
+           <syl con="d" wordpos="m" xml:id="m-254">
+            fen
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-238">
+        <layer n="1" xml:id="m-239">
+         <beam xml:id="m-241">
+          <note dur="8" dur.ppq="128" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:16.8" vel="0" xml:id="m-240"/>
+          <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:17.1" vel="0" xml:id="m-242"/>
+         </beam>
+         <note dur="2" dur.ppq="512" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:17.4" vel="0" xml:id="m-243">
+          <verse n="1" xml:id="m-262">
+           <syl con="d" wordpos="m" xml:id="m-263">
+            fen
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="66" stem.dir="up" tstamp.real="00:00:18.6" vel="0" xml:id="m-244">
+          <accid accid="s" xml:id="m-245"/>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="9" xml:id="m-246">
+       <staff n="1" xml:id="m-247">
+        <layer n="1" xml:id="m-248">
+         <note dur="1" dur.ppq="1024" oct="4" pname="b" pnum="71" stem.dir="down" tstamp.real="00:00:19.2" vel="0" xml:id="m-249">
+          <accid accid="n" xml:id="m-250"/>
+          <verse n="1" xml:id="m-255">
+           <syl wordpos="t" xml:id="m-256">
+            ded,
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-257">
+        <layer n="1" xml:id="m-258">
+         <note dur="1" dur.ppq="1024" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:19.2" vel="0" xml:id="m-259">
+          <verse n="1" xml:id="m-264">
+           <syl wordpos="t" xml:id="m-265">
+            ded,
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <sb xml:id="m-267"/>
+      <measure n="10" xml:id="m-266">
+       <staff n="1" xml:id="m-268">
+        <layer n="1" xml:id="m-269">
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:21.6" vel="0" xml:id="m-270">
+          <verse n="1" xml:id="m-276">
+           <syl xml:id="m-277">
+            loe
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:22.2" vel="0" xml:id="m-271">
+          <verse n="1" xml:id="m-278">
+           <syl xml:id="m-279">
+            heere
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="4" pname="f" pnum="66" stem.dir="up" tstamp.real="00:00:22.5" vel="0" xml:id="m-272">
+          <accid accid="s" xml:id="m-273"/>
+          <verse n="1" xml:id="m-280">
+           <syl con="d" wordpos="i" xml:id="m-281">
+            an
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:22.8" vel="0" xml:id="m-274">
+          <verse n="1" xml:id="m-282">
+           <syl con="d" wordpos="m" xml:id="m-283">
+            o
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:23.4" vel="0" xml:id="m-275">
+          <verse n="1" xml:id="m-284">
+           <syl wordpos="t" xml:id="m-285">
+            ther
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-286">
+        <layer n="1" xml:id="m-287">
+         <mRest tstamp.real="00:00:21.6" xml:id="m-288"/>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="11" xml:id="m-289">
+       <staff n="1" xml:id="m-290">
+        <layer n="1" xml:id="m-291">
+         <note dur="2" dur.ppq="512" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:24" vel="0" xml:id="m-292">
+          <accid accid.ges="f" xml:id="m-293"/>
+          <verse n="1" xml:id="m-295">
+           <syl xml:id="m-296">
+            love,
+           </syl>
+          </verse>
+         </note>
+         <rest dur="2" dur.ppq="512" tstamp.real="00:00:25.2" xml:id="m-294"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-297">
+        <layer n="1" xml:id="m-298">
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:24" vel="0" xml:id="m-299">
+          <verse n="1" xml:id="m-305">
+           <syl xml:id="m-306">
+            loe
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:24.6" vel="0" xml:id="m-300">
+          <verse n="1" xml:id="m-307">
+           <syl xml:id="m-308">
+            heere
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="4" pname="f" pnum="66" stem.dir="up" tstamp.real="00:00:24.9" vel="0" xml:id="m-301">
+          <accid accid="s" xml:id="m-302"/>
+          <verse n="1" xml:id="m-309">
+           <syl con="d" wordpos="i" xml:id="m-310">
+            an
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:25.2" vel="0" xml:id="m-303">
+          <verse n="1" xml:id="m-311">
+           <syl con="d" wordpos="m" xml:id="m-312">
+            o
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:25.8" vel="0" xml:id="m-304">
+          <verse n="1" xml:id="m-313">
+           <syl wordpos="t" xml:id="m-314">
+            ther
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="12" xml:id="m-315">
+       <staff n="1" xml:id="m-316">
+        <layer n="1" xml:id="m-317">
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:26.4" vel="0" xml:id="m-318">
+          <verse n="1" xml:id="m-324">
+           <syl xml:id="m-325">
+            loe
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:27" vel="0" xml:id="m-319">
+          <verse n="1" xml:id="m-326">
+           <syl xml:id="m-327">
+            heere
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="4" pname="f" pnum="66" stem.dir="up" tstamp.real="00:00:27.3" vel="0" xml:id="m-320">
+          <accid accid="s" xml:id="m-321"/>
+          <verse n="1" xml:id="m-328">
+           <syl con="d" wordpos="i" xml:id="m-329">
+            an
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:27.6" vel="0" xml:id="m-322">
+          <verse n="1" xml:id="m-330">
+           <syl con="d" wordpos="m" xml:id="m-331">
+            o
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:28.2" vel="0" xml:id="m-323">
+          <verse n="1" xml:id="m-332">
+           <syl wordpos="t" xml:id="m-333">
+            ther
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-334">
+        <layer n="1" xml:id="m-335">
+         <note dur="2" dur.ppq="512" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:26.4" vel="0" xml:id="m-336">
+          <accid accid.ges="f" xml:id="m-337"/>
+          <verse n="1" xml:id="m-339">
+           <syl xml:id="m-340">
+            love,
+           </syl>
+          </verse>
+         </note>
+         <rest dur="2" dur.ppq="512" tstamp.real="00:00:27.6" xml:id="m-338"/>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="13" xml:id="m-341">
+       <staff n="1" xml:id="m-342">
+        <layer n="1" xml:id="m-343">
+         <note dur="2" dur.ppq="512" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:28.8" vel="0" xml:id="m-344">
+          <accid accid.ges="f" xml:id="m-345"/>
+          <verse n="1" xml:id="m-348">
+           <syl xml:id="m-349">
+            love,
+           </syl>
+          </verse>
+         </note>
+         <rest dur="4" dur.ppq="256" tstamp.real="00:00:30" xml:id="m-346"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:30.6" vel="0" xml:id="m-347">
+          <verse n="1" xml:id="m-350">
+           <syl xml:id="m-351">
+            from
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-352">
+        <layer n="1" xml:id="m-353">
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:28.8" vel="0" xml:id="m-354">
+          <verse n="1" xml:id="m-359">
+           <syl xml:id="m-360">
+            loe
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:29.4" vel="0" xml:id="m-355">
+          <verse n="1" xml:id="m-361">
+           <syl xml:id="m-362">
+            heere
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:00:29.7" vel="0" xml:id="m-356">
+          <verse n="1" xml:id="m-363">
+           <syl con="d" wordpos="i" xml:id="m-364">
+            an
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:30" vel="0" xml:id="m-357">
+          <verse n="1" xml:id="m-365">
+           <syl con="d" wordpos="m" xml:id="m-366">
+            o
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="e" pnum="76" stem.dir="down" tstamp.real="00:00:30.6" vel="0" xml:id="m-358">
+          <verse n="1" xml:id="m-367">
+           <syl wordpos="t" xml:id="m-368">
+            ther
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="14" xml:id="m-369">
+       <staff n="1" xml:id="m-370">
+        <layer n="1" xml:id="m-371">
+         <note dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:31.2" vel="0" xml:id="m-372">
+          <verse n="1" xml:id="m-379">
+           <syl xml:id="m-380">
+            heaven
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:31.8" vel="0" xml:id="m-373">
+          <verse n="1" xml:id="m-425">
+           <syl con="d" wordpos="i" xml:id="m-426">
+            de
+           </syl>
+          </verse>
+         </note>
+         <beam xml:id="m-375">
+          <note dur="8" dur.ppq="128" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:00:32.4" vel="0" xml:id="m-374"/>
+          <note dur="8" dur.ppq="128" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:32.7" vel="0" xml:id="m-376"/>
+         </beam>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:33" vel="0" xml:id="m-377"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-381">
+        <layer n="1" xml:id="m-382">
+         <note dur="4" dur.ppq="256" oct="5" pname="f" pnum="77" stem.dir="down" tstamp.real="00:00:31.2" vel="0" xml:id="m-383">
+          <verse n="1" xml:id="m-388">
+           <syl xml:id="m-389">
+            love,
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:31.8" vel="0" xml:id="m-384">
+          <verse n="1" xml:id="m-390">
+           <syl xml:id="m-391">
+            from
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:32.4" vel="0" xml:id="m-385">
+          <verse n="1" xml:id="m-392">
+           <syl xml:id="m-393">
+            heaven
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:33" vel="0" xml:id="m-386">
+          <accid accid.ges="f" xml:id="m-387"/>
+          <verse n="1" xml:id="m-440">
+           <syl con="d" wordpos="i" xml:id="m-441">
+            de
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <tie endid="#m-398" startid="#m-377" xml:id="m-378"/>
+      </measure>
+      <sb xml:id="m-395"/>
+      <measure n="15" xml:id="m-394">
+       <staff n="1" xml:id="m-396">
+        <layer n="1" xml:id="m-397">
+         <beam xml:id="m-399">
+          <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:33.6" vel="0" xml:id="m-398"/>
+          <note dur="8" dur.ppq="128" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:33.9" vel="0" xml:id="m-400"/>
+         </beam>
+         <beam xml:id="m-402">
+          <note dur="8" dur.ppq="128" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:34.2" vel="0" xml:id="m-401"/>
+          <note dur="16" dur.ppq="64" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:00:34.5" vel="0" xml:id="m-403"/>
+          <note dur="16" dur.ppq="64" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:34.65" vel="0" xml:id="m-404"/>
+         </beam>
+         <note dur="2" dur.ppq="512" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:00:34.8" vel="0" xml:id="m-405">
+          <verse n="1" xml:id="m-427">
+           <syl con="d" wordpos="m" xml:id="m-428">
+            fen
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-406">
+        <layer n="1" xml:id="m-407">
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:33.6" vel="0" xml:id="m-408">
+          <verse n="1" xml:id="m-442">
+           <syl con="d" wordpos="m" xml:id="m-443">
+            fen
+           </syl>
+          </verse>
+         </note>
+         <note dots="1" dur="4" dur.ppq="384" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:34.2" vel="0" xml:id="m-409"/>
+         <beam xml:id="m-412">
+          <note dur="16" dur.ppq="64" oct="5" pname="c" pnum="73" stem.dir="down" tstamp.real="00:00:35.1" vel="0" xml:id="m-410">
+           <accid accid="s" xml:id="m-411"/>
+          </note>
+          <note dur="16" dur.ppq="64" oct="4" pname="b" pnum="71" stem.dir="down" tstamp.real="00:00:35.25" vel="0" xml:id="m-413">
+           <accid accid="n" xml:id="m-414"/>
+          </note>
+         </beam>
+         <note dur="4" dur.ppq="256" oct="5" pname="c" pnum="73" stem.dir="down" tstamp.real="00:00:35.4" vel="0" xml:id="m-415">
+          <accid accid.ges="s" xml:id="m-416"/>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="16" xml:id="m-417">
+       <staff n="1" xml:id="m-418">
+        <layer n="1" xml:id="m-419">
+         <note dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:36" vel="0" xml:id="m-420">
+          <verse n="1" xml:id="m-429">
+           <syl wordpos="t" xml:id="m-430">
+            ded,
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:36.6" vel="0" xml:id="m-421">
+          <verse n="1" xml:id="m-431">
+           <syl xml:id="m-432">
+            from
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:37.2" vel="0" xml:id="m-422">
+          <verse n="1" xml:id="m-433">
+           <syl xml:id="m-434">
+            hevan
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:37.8" vel="0" xml:id="m-423">
+          <accid accid.ges="f" xml:id="m-424"/>
+          <verse n="1" xml:id="m-471">
+           <syl con="d" wordpos="i" xml:id="m-472">
+            de
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-435">
+        <layer n="1" xml:id="m-436">
+         <note dur="2" dur.ppq="512" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:36" vel="0" xml:id="m-437">
+          <verse n="1" xml:id="m-444">
+           <syl wordpos="t" xml:id="m-445">
+            ded,
+           </syl>
+          </verse>
+         </note>
+         <rest dur="4" dur.ppq="256" tstamp.real="00:00:37.2" xml:id="m-438"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:37.8" vel="0" xml:id="m-439">
+          <verse n="1" xml:id="m-446">
+           <syl xml:id="m-447">
+            from
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="17" xml:id="m-448">
+       <staff n="1" xml:id="m-449">
+        <layer n="1" xml:id="m-450">
+         <beam xml:id="m-452">
+          <note dur="8" dur.ppq="128" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:38.4" vel="0" xml:id="m-451"/>
+          <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:38.7" vel="0" xml:id="m-453"/>
+         </beam>
+         <note dur="2" dur.ppq="512" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:39" vel="0" xml:id="m-454">
+          <verse n="1" xml:id="m-473">
+           <syl con="d" wordpos="m" xml:id="m-474">
+            fen
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="66" stem.dir="up" tstamp.real="00:00:40.2" vel="0" xml:id="m-455">
+          <accid accid="s" xml:id="m-456"/>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-457">
+        <layer n="1" xml:id="m-458">
+         <note dur="4" dur.ppq="256" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:00:38.4" vel="0" xml:id="m-459">
+          <verse n="1" xml:id="m-463">
+           <syl xml:id="m-464">
+            heaven
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:39" vel="0" xml:id="m-460">
+          <accid accid.ges="f" xml:id="m-461"/>
+          <verse n="1" xml:id="m-488">
+           <syl con="d" wordpos="i" xml:id="m-489">
+            de
+           </syl>
+          </verse>
+         </note>
+         <note dur="2" dur.ppq="512" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:39.6" vel="0" xml:id="m-462">
+          <verse n="1" xml:id="m-490">
+           <syl con="d" wordpos="m" xml:id="m-491">
+            fen
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="18" xml:id="m-465">
+       <staff n="1" xml:id="m-466">
+        <layer n="1" xml:id="m-467">
+         <note dur="2" dur.ppq="512" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:40.8" vel="0" xml:id="m-468">
+          <verse n="1" xml:id="m-475">
+           <syl wordpos="t" xml:id="m-476">
+            ded,
+           </syl>
+          </verse>
+         </note>
+         <rest dur="4" dur.ppq="256" tstamp.real="00:00:42" xml:id="m-469"/>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:42.6" vel="0" xml:id="m-470">
+          <verse n="1" xml:id="m-477">
+           <syl xml:id="m-478">
+            that
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-479">
+        <layer n="1" xml:id="m-480">
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="71" stem.dir="down" tstamp.real="00:00:40.8" vel="0" xml:id="m-481">
+          <accid accid="n" xml:id="m-482"/>
+          <verse n="1" xml:id="m-492">
+           <syl wordpos="t" xml:id="m-493">
+            ded,
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:41.4" vel="0" xml:id="m-483">
+          <verse n="1" xml:id="m-494">
+           <syl xml:id="m-495">
+            that
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:42" vel="0" xml:id="m-484">
+          <verse n="1" xml:id="m-496">
+           <syl xml:id="m-497">
+            with
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:42.6" vel="0" xml:id="m-485">
+          <accid accid="f" xml:id="m-486"/>
+          <verse n="1" xml:id="m-498">
+           <syl xml:id="m-499">
+            for
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <tie endid="#m-517" startid="#m-485" xml:id="m-487"/>
+      </measure>
+      <measure n="19" xml:id="m-500">
+       <staff n="1" xml:id="m-501">
+        <layer n="1" xml:id="m-502">
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:43.2" vel="0" xml:id="m-503">
+          <verse n="1" xml:id="m-507">
+           <syl xml:id="m-508">
+            with
+           </syl>
+          </verse>
+         </note>
+         <note dots="1" dur="4" dur.ppq="384" oct="5" pname="f" pnum="77" stem.dir="down" tstamp.real="00:00:43.8" vel="0" xml:id="m-504">
+          <verse n="1" xml:id="m-509">
+           <syl con="d" wordpos="i" xml:id="m-510">
+            for
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="5" pname="f" pnum="77" stem.dir="down" tstamp.real="00:00:44.7" vel="0" xml:id="m-505">
+          <verse n="1" xml:id="m-511">
+           <syl wordpos="t" xml:id="m-512">
+            ces
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="e" pnum="76" stem.dir="down" tstamp.real="00:00:45" vel="0" xml:id="m-506">
+          <verse n="1" xml:id="m-513">
+           <syl xml:id="m-514">
+            a
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-515">
+        <layer n="1" xml:id="m-516">
+         <note dur="8" dur.ppq="128" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:43.2" vel="0" xml:id="m-517">
+          <accid accid.ges="f" xml:id="m-518"/>
+         </note>
+         <note dur="8" dur.ppq="128" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:43.5" vel="0" xml:id="m-519">
+          <accid accid.ges="f" xml:id="m-520"/>
+          <verse n="1" xml:id="m-525">
+           <syl xml:id="m-526">
+            ces
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:43.8" vel="0" xml:id="m-521">
+          <verse n="1" xml:id="m-527">
+           <syl xml:id="m-528">
+            a
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:44.4" vel="0" xml:id="m-522">
+          <accid accid.ges="f" xml:id="m-523"/>
+          <verse n="1" xml:id="m-529">
+           <syl xml:id="m-530">
+            new
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:45" vel="0" xml:id="m-524">
+          <verse n="1" xml:id="m-531">
+           <syl xml:id="m-532">
+            and
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <pb n="2" xml:id="m-535"/>
+      <sb xml:id="m-534"/>
+      <measure n="20" xml:id="m-533">
+       <staff n="1" xml:id="m-536">
+        <layer n="1" xml:id="m-537">
+         <note dur="4" dur.ppq="256" oct="5" pname="f" pnum="77" stem.dir="down" tstamp.real="00:00:45.6" vel="0" xml:id="m-538">
+          <verse n="1" xml:id="m-543">
+           <syl xml:id="m-544">
+            ,new
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:46.2" vel="0" xml:id="m-539">
+          <verse n="1" xml:id="m-545">
+           <syl xml:id="m-546">
+            and
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="e" pnum="76" stem.dir="down" tstamp.real="00:00:46.8" vel="0" xml:id="m-540">
+          <verse n="1" xml:id="m-547">
+           <syl xml:id="m-548">
+            with
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="f" pnum="78" stem.dir="down" tstamp.real="00:00:47.4" vel="0" xml:id="m-541">
+          <accid accid="s" xml:id="m-542"/>
+          <verse n="1" xml:id="m-549">
+           <syl xml:id="m-550">
+            new
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-551">
+        <layer n="1" xml:id="m-552">
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:45.6" vel="0" xml:id="m-553">
+          <verse n="1" xml:id="m-558">
+           <syl xml:id="m-559">
+            with
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:46.2" vel="0" xml:id="m-554">
+          <accid accid.ges="f" xml:id="m-555"/>
+          <verse n="1" xml:id="m-560">
+           <syl xml:id="m-561">
+            new
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:00:46.8" vel="0" xml:id="m-556">
+          <verse n="1" xml:id="m-625">
+           <syl con="d" wordpos="i" xml:id="m-626">
+            dar
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:47.4" vel="0" xml:id="m-557"/>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="21" xml:id="m-562">
+       <staff n="1" xml:id="m-563">
+        <layer n="1" xml:id="m-564">
+         <note dur="4" dur.ppq="256" oct="5" pname="g" pnum="79" stem.dir="down" tstamp.real="00:00:48" vel="0" xml:id="m-565">
+          <verse n="1" xml:id="m-610">
+           <syl con="d" wordpos="i" xml:id="m-611">
+            dar
+           </syl>
+          </verse>
+         </note>
+         <beam xml:id="m-567">
+          <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:48.6" vel="0" xml:id="m-566"/>
+          <note dur="8" dur.ppq="128" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:48.9" vel="0" xml:id="m-568"/>
+         </beam>
+         <beam xml:id="m-571">
+          <note dur="8" dur.ppq="128" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:49.2" vel="0" xml:id="m-569">
+           <accid accid.ges="f" xml:id="m-570"/>
+          </note>
+          <note dur="8" dur.ppq="128" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:00:49.5" vel="0" xml:id="m-572"/>
+         </beam>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:49.8" vel="0" xml:id="m-573"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-574">
+        <layer n="1" xml:id="m-575">
+         <beam xml:id="m-577">
+          <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:48" vel="0" xml:id="m-576"/>
+          <note dur="8" dur.ppq="128" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:48.3" vel="0" xml:id="m-578"/>
+          <note dur="8" dur.ppq="128" oct="4" pname="b" pnum="70" stem.dir="up" tstamp.real="00:00:48.6" vel="0" xml:id="m-579">
+           <accid accid.ges="f" xml:id="m-580"/>
+          </note>
+          <note dur="8" dur.ppq="128" oct="5" pname="c" pnum="72" stem.dir="up" tstamp.real="00:00:48.9" vel="0" xml:id="m-581"/>
+         </beam>
+         <beam xml:id="m-583">
+          <note dur="8" dur.ppq="128" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:49.2" vel="0" xml:id="m-582"/>
+          <note dur="8" dur.ppq="128" oct="5" pname="e" pnum="76" stem.dir="down" tstamp.real="00:00:49.5" vel="0" xml:id="m-584"/>
+         </beam>
+         <note dur="4" dur.ppq="256" oct="5" pname="f" pnum="77" stem.dir="down" tstamp.real="00:00:49.8" vel="0" xml:id="m-585"/>
+        </layer>
+       </staff>
+       <anchoredText xml:id="m-586">
+        <title xml:id="m-587">
+         <rend fontfam="Times New Roman" fontsize="4.8125vu" xml:id="m-588">
+          Loe heere another love
+         </rend>
+        </title>
+       </anchoredText>
+      </measure>
+      <measure n="22" xml:id="m-589">
+       <staff n="1" xml:id="m-590">
+        <layer n="1" xml:id="m-591">
+         <note dur="4" dur.ppq="256" oct="5" pname="c" pnum="73" stem.dir="down" tstamp.real="00:00:50.4" vel="0" xml:id="m-592">
+          <accid accid="s" xml:id="m-593"/>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:51" vel="0" xml:id="m-594"/>
+         <note dur="2" dur.ppq="512" oct="5" pname="e" pnum="76" stem.dir="down" tstamp.real="00:00:51.6" vel="0" xml:id="m-595"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-596">
+        <layer n="1" xml:id="m-597">
+         <note dur="4" dur.ppq="256" oct="5" pname="e" pnum="76" stem.dir="down" tstamp.real="00:00:50.4" vel="0" xml:id="m-598"/>
+         <note dur="2" dur.ppq="512" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:51" vel="0" xml:id="m-599"/>
+         <note dur="4" dur.ppq="256" oct="5" pname="c" pnum="73" stem.dir="down" tstamp.real="00:00:52.2" vel="0" xml:id="m-600">
+          <accid accid="s" xml:id="m-601"/>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="23" xml:id="m-602">
+       <staff n="1" xml:id="m-603">
+        <layer n="1" xml:id="m-604">
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:52.8" vel="0" xml:id="m-605">
+          <verse n="1" xml:id="m-612">
+           <syl wordpos="t" xml:id="m-613">
+            ting,
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:53.4" vel="0" xml:id="m-606">
+          <verse n="1" xml:id="m-614">
+           <syl xml:id="m-615">
+            doth
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:00:54" vel="0" xml:id="m-607">
+          <verse n="1" xml:id="m-616">
+           <syl xml:id="m-617">
+            wound
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="66" stem.dir="up" tstamp.real="00:00:54.6" vel="0" xml:id="m-608">
+          <accid accid="s" xml:id="m-609"/>
+          <verse n="1" xml:id="m-618">
+           <syl xml:id="m-619">
+            the
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-620">
+        <layer n="1" xml:id="m-621">
+         <note dur="2" dur.ppq="512" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:52.8" vel="0" xml:id="m-622">
+          <verse n="1" xml:id="m-627">
+           <syl wordpos="t" xml:id="m-628">
+            ting,
+           </syl>
+          </verse>
+         </note>
+         <rest dur="4" dur.ppq="256" tstamp.real="00:00:54" xml:id="m-623"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:00:54.6" vel="0" xml:id="m-624">
+          <verse n="1" xml:id="m-629">
+           <syl xml:id="m-630">
+            doth
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="24" xml:id="m-631">
+       <staff n="1" xml:id="m-632">
+        <layer n="1" xml:id="m-633">
+         <note dur="2" dur.ppq="512" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:55.2" vel="0" xml:id="m-634">
+          <verse n="1" xml:id="m-637">
+           <syl xml:id="m-638">
+            heart,
+           </syl>
+          </verse>
+         </note>
+         <rest dur="4" dur.ppq="256" tstamp.real="00:00:56.4" xml:id="m-635"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:57" vel="0" xml:id="m-636">
+          <verse n="1" xml:id="m-639">
+           <syl xml:id="m-640">
+            doth
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-641">
+        <layer n="1" xml:id="m-642">
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:00:55.2" vel="0" xml:id="m-643">
+          <accid accid.ges="f" xml:id="m-644"/>
+          <verse n="1" xml:id="m-647">
+           <syl xml:id="m-648">
+            wound
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:55.8" vel="0" xml:id="m-645">
+          <verse n="1" xml:id="m-649">
+           <syl xml:id="m-650">
+            the
+           </syl>
+          </verse>
+         </note>
+         <note dur="2" dur.ppq="512" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:00:56.4" vel="0" xml:id="m-646">
+          <verse n="1" xml:id="m-651">
+           <syl xml:id="m-652">
+            heart,
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <sb xml:id="m-654"/>
+      <measure n="25" xml:id="m-653">
+       <staff n="1" xml:id="m-655">
+        <layer n="1" xml:id="m-656">
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:00:57.6" vel="0" xml:id="m-657">
+          <verse n="1" xml:id="m-661">
+           <syl xml:id="m-662">
+            wound
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:00:58.2" vel="0" xml:id="m-658">
+          <verse n="1" xml:id="m-663">
+           <syl xml:id="m-664">
+            the
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:00:58.8" vel="0" xml:id="m-659">
+          <verse n="1" xml:id="m-665">
+           <syl xml:id="m-666">
+            heart
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:00:59.4" vel="0" xml:id="m-660">
+          <verse n="1" xml:id="m-667">
+           <syl xml:id="m-668">
+            and
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-669">
+        <layer n="1" xml:id="m-670">
+         <rest dur="4" dur.ppq="256" tstamp.real="00:00:57.6" xml:id="m-671"/>
+         <note dur="4" dur.ppq="256" oct="5" pname="g" pnum="79" stem.dir="down" tstamp.real="00:00:58.2" vel="0" xml:id="m-672">
+          <verse n="1" xml:id="m-675">
+           <syl xml:id="m-676">
+            doth
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="f" pnum="77" stem.dir="down" tstamp.real="00:00:58.8" vel="0" xml:id="m-673">
+          <verse n="1" xml:id="m-677">
+           <syl xml:id="m-678">
+            wound
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="e" pnum="76" stem.dir="down" tstamp.real="00:00:59.4" vel="0" xml:id="m-674">
+          <verse n="1" xml:id="m-679">
+           <syl xml:id="m-680">
+            the
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="26" xml:id="m-681">
+       <staff n="1" xml:id="m-682">
+        <layer n="1" xml:id="m-683">
+         <note dots="1" dur="4" dur.ppq="384" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:00" vel="0" xml:id="m-684">
+          <accid accid.ges="f" xml:id="m-685"/>
+          <verse n="1" xml:id="m-691">
+           <syl xml:id="m-692">
+            yet
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:00.9" vel="0" xml:id="m-686">
+          <verse n="1" xml:id="m-693">
+           <syl xml:id="m-694">
+            doth
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:01.2" vel="0" xml:id="m-687">
+          <verse n="1" xml:id="m-695">
+           <syl xml:id="m-696">
+            breed
+           </syl>
+          </verse>
+         </note>
+         <beam xml:id="m-689">
+          <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:01.8" vel="0" xml:id="m-688">
+           <verse n="1" xml:id="m-697">
+            <syl con="u" xml:id="m-698">
+             no
+            </syl>
+           </verse>
+          </note>
+          <note dur="8" dur.ppq="128" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:01:02.1" vel="0" xml:id="m-690"/>
+         </beam>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-699">
+        <layer n="1" xml:id="m-700">
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:00" vel="0" xml:id="m-701">
+          <verse n="1" xml:id="m-706">
+           <syl xml:id="m-707">
+            heart
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:00.6" vel="0" xml:id="m-702">
+          <verse n="1" xml:id="m-708">
+           <syl xml:id="m-709">
+            and
+           </syl>
+          </verse>
+         </note>
+         <note dots="1" dur="4" dur.ppq="384" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:01.2" vel="0" xml:id="m-703">
+          <accid accid.ges="f" xml:id="m-704"/>
+          <verse n="1" xml:id="m-710">
+           <syl xml:id="m-711">
+            yet
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:02.1" vel="0" xml:id="m-705">
+          <verse n="1" xml:id="m-712">
+           <syl xml:id="m-713">
+            doth
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="27" xml:id="m-714">
+       <staff n="1" xml:id="m-715">
+        <layer n="1" xml:id="m-716">
+         <beam xml:id="m-719">
+          <note dur="8" dur.ppq="128" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:02.4" vel="0" xml:id="m-717">
+           <accid accid.ges="f" xml:id="m-718"/>
+          </note>
+          <note dur="8" dur.ppq="128" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:02.7" vel="0" xml:id="m-720"/>
+         </beam>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:03" vel="0" xml:id="m-721"/>
+         <note dur="4" dur.ppq="256" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:03.6" vel="0" xml:id="m-722"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:04.2" vel="0" xml:id="m-723">
+          <accid accid.ges="f" xml:id="m-724"/>
+          <verse n="1" xml:id="m-750">
+           <syl con="d" wordpos="i" xml:id="m-751">
+            smar
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-726">
+        <layer n="1" xml:id="m-727">
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:02.4" vel="0" xml:id="m-728">
+          <verse n="1" xml:id="m-734">
+           <syl xml:id="m-735">
+            breed
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:03" vel="0" xml:id="m-729">
+          <accid accid.ges="f" xml:id="m-730"/>
+          <verse n="1" xml:id="m-736">
+           <syl xml:id="m-737">
+            doth
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="e" pnum="75" stem.dir="down" tstamp.real="00:01:03.6" vel="0" xml:id="m-731">
+          <accid accid="f" xml:id="m-732"/>
+          <verse n="1" xml:id="m-738">
+           <syl xml:id="m-739">
+            breed
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:04.2" vel="0" xml:id="m-733">
+          <verse n="1" xml:id="m-740">
+           <syl xml:id="m-741">
+            no
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <tie endid="#m-745" startid="#m-723" xml:id="m-725"/>
+      </measure>
+      <measure n="28" xml:id="m-742">
+       <staff n="1" xml:id="m-743">
+        <layer n="1" xml:id="m-744">
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:04.8" vel="0" xml:id="m-745">
+          <accid accid.ges="f" xml:id="m-746"/>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:01:05.4" vel="0" xml:id="m-747"/>
+         <note dur="2" dur.ppq="512" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:06" vel="0" xml:id="m-748">
+          <accid accid.ges="f" xml:id="m-749"/>
+          <verse n="1" xml:id="m-752">
+           <syl wordpos="t" xml:id="m-753">
+            ting,
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-754">
+        <layer n="1" xml:id="m-755">
+         <note dur="2" dur.ppq="512" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:04.8" vel="0" xml:id="m-756">
+          <verse n="1" xml:id="m-760">
+           <syl con="d" wordpos="i" xml:id="m-761">
+            smar
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:06" vel="0" xml:id="m-757">
+          <accid accid.ges="f" xml:id="m-758"/>
+          <verse n="1" xml:id="m-762">
+           <syl wordpos="t" xml:id="m-763">
+            ting,
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:06.6" vel="0" xml:id="m-759">
+          <verse n="1" xml:id="m-764">
+           <syl xml:id="m-765">
+            doth
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <sb xml:id="m-767"/>
+      <measure n="29" xml:id="m-766">
+       <staff n="1" xml:id="m-768">
+        <layer n="1" xml:id="m-769">
+         <rest dur="4" dur.ppq="256" tstamp.real="00:01:07.2" xml:id="m-770"/>
+         <note dur="4" dur.ppq="256" oct="5" pname="g" pnum="79" stem.dir="down" tstamp.real="00:01:07.8" vel="0" xml:id="m-771">
+          <verse n="1" xml:id="m-774">
+           <syl xml:id="m-775">
+            doth
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="f" pnum="77" stem.dir="down" tstamp.real="00:01:08.4" vel="0" xml:id="m-772">
+          <verse n="1" xml:id="m-776">
+           <syl xml:id="m-777">
+            wound
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="e" pnum="76" stem.dir="down" tstamp.real="00:01:09" vel="0" xml:id="m-773">
+          <verse n="1" xml:id="m-778">
+           <syl xml:id="m-779">
+            the
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-780">
+        <layer n="1" xml:id="m-781">
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:01:07.2" vel="0" xml:id="m-782">
+          <verse n="1" xml:id="m-786">
+           <syl xml:id="m-787">
+            wound
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:01:07.8" vel="0" xml:id="m-783">
+          <verse n="1" xml:id="m-788">
+           <syl xml:id="m-789">
+            the
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:01:08.4" vel="0" xml:id="m-784">
+          <verse n="1" xml:id="m-790">
+           <syl xml:id="m-791">
+            heart
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:09" vel="0" xml:id="m-785">
+          <verse n="1" xml:id="m-792">
+           <syl xml:id="m-793">
+            and
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="30" xml:id="m-794">
+       <staff n="1" xml:id="m-795">
+        <layer n="1" xml:id="m-796">
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:09.6" vel="0" xml:id="m-797">
+          <verse n="1" xml:id="m-802">
+           <syl xml:id="m-803">
+            heart,
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:10.2" vel="0" xml:id="m-798">
+          <verse n="1" xml:id="m-804">
+           <syl xml:id="m-805">
+            doth
+           </syl>
+          </verse>
+         </note>
+         <note dots="1" dur="4" dur.ppq="384" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:10.8" vel="0" xml:id="m-799">
+          <accid accid.ges="f" xml:id="m-800"/>
+          <verse n="1" xml:id="m-806">
+           <syl xml:id="m-807">
+            wound
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:11.7" vel="0" xml:id="m-801">
+          <verse n="1" xml:id="m-808">
+           <syl xml:id="m-809">
+            the
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-810">
+        <layer n="1" xml:id="m-811">
+         <note dots="1" dur="4" dur.ppq="384" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:09.6" vel="0" xml:id="m-812">
+          <accid accid.ges="f" xml:id="m-813"/>
+          <verse n="1" xml:id="m-817">
+           <syl xml:id="m-818">
+            yet
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:10.5" vel="0" xml:id="m-814">
+          <verse n="1" xml:id="m-819">
+           <syl xml:id="m-820">
+            doth
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:10.8" vel="0" xml:id="m-815">
+          <verse n="1" xml:id="m-821">
+           <syl xml:id="m-822">
+            breed
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:11.4" vel="0" xml:id="m-816">
+          <verse n="1" xml:id="m-823">
+           <syl xml:id="m-824">
+            no
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="31" xml:id="m-825">
+       <staff n="1" xml:id="m-826">
+        <layer n="1" xml:id="m-827">
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:12" vel="0" xml:id="m-828">
+          <verse n="1" xml:id="m-833">
+           <syl xml:id="m-834">
+            hart
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:12.6" vel="0" xml:id="m-829">
+          <verse n="1" xml:id="m-835">
+           <syl xml:id="m-836">
+            and
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:01:13.2" vel="0" xml:id="m-830">
+          <verse n="1" xml:id="m-837">
+           <syl xml:id="m-838">
+            yet
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:13.8" vel="0" xml:id="m-831">
+          <accid accid.ges="f" xml:id="m-832"/>
+          <verse n="1" xml:id="m-839">
+           <syl xml:id="m-840">
+            doth
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-841">
+        <layer n="1" xml:id="m-842">
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:01:12" vel="0" xml:id="m-843">
+          <verse n="1" xml:id="m-848">
+           <syl con="d" wordpos="i" xml:id="m-849">
+            smar
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:12.6" vel="0" xml:id="m-844">
+          <accid accid.ges="f" xml:id="m-845"/>
+          <verse n="1" xml:id="m-850">
+           <syl wordpos="t" xml:id="m-851">
+            tin,
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:01:13.2" vel="0" xml:id="m-846">
+          <verse n="1" xml:id="m-852">
+           <syl xml:id="m-853">
+            no
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:13.8" vel="0" xml:id="m-847">
+          <verse n="1" xml:id="m-894">
+           <syl con="d" wordpos="i" xml:id="m-895">
+            smar
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="32" xml:id="m-854">
+       <staff n="1" xml:id="m-855">
+        <layer n="1" xml:id="m-856">
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:01:14.4" vel="0" xml:id="m-857">
+          <verse n="1" xml:id="m-860">
+           <syl xml:id="m-861">
+            breed
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:15" vel="0" xml:id="m-858">
+          <verse n="1" xml:id="m-862">
+           <syl xml:id="m-863">
+            no
+           </syl>
+          </verse>
+         </note>
+         <note dur="2" dur.ppq="512" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:01:15.6" vel="0" xml:id="m-859">
+          <verse n="1" xml:id="m-881">
+           <syl con="d" wordpos="i" xml:id="m-882">
+            smar
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-864">
+        <layer n="1" xml:id="m-865">
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="66" stem.dir="up" tstamp.real="00:01:14.4" vel="0" xml:id="m-866">
+          <accid accid="s" xml:id="m-867"/>
+         </note>
+         <note dur="2" dur.ppq="512" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:15" vel="0" xml:id="m-868"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="66" stem.dir="up" tstamp.real="00:01:16.2" vel="0" xml:id="m-869">
+          <accid accid.ges="s" xml:id="m-870"/>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="33" xml:id="m-871">
+       <staff n="1" xml:id="m-872">
+        <layer n="1" xml:id="m-873">
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="71" stem.dir="down" tstamp.real="00:01:16.8" vel="0" xml:id="m-874">
+          <accid accid="n" xml:id="m-875"/>
+          <verse n="1" xml:id="m-883">
+           <syl wordpos="t" xml:id="m-884">
+            ting,
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:17.4" vel="0" xml:id="m-876">
+          <verse n="1" xml:id="m-885">
+           <syl xml:id="m-886">
+            that
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:18" vel="0" xml:id="m-877">
+          <verse n="1" xml:id="m-887">
+           <syl xml:id="m-888">
+            with
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:18.6" vel="0" xml:id="m-878">
+          <accid accid="f" xml:id="m-879"/>
+          <verse n="1" xml:id="m-912">
+           <syl con="d" wordpos="i" xml:id="m-913">
+            for
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-889">
+        <layer n="1" xml:id="m-890">
+         <note dur="2" dur.ppq="512" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:16.8" vel="0" xml:id="m-891">
+          <verse n="1" xml:id="m-896">
+           <syl wordpos="t" xml:id="m-897">
+            ting,
+           </syl>
+          </verse>
+         </note>
+         <rest dur="4" dur.ppq="256" tstamp.real="00:01:18" xml:id="m-892"/>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:18.6" vel="0" xml:id="m-893">
+          <verse n="1" xml:id="m-898">
+           <syl xml:id="m-899">
+            that
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <tie endid="#m-904" startid="#m-878" xml:id="m-880"/>
+      </measure>
+      <sb xml:id="m-901"/>
+      <measure n="34" xml:id="m-900">
+       <staff n="1" xml:id="m-902">
+        <layer n="1" xml:id="m-903">
+         <note dur="8" dur.ppq="128" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:19.2" vel="0" xml:id="m-904">
+          <accid accid.ges="f" xml:id="m-905"/>
+         </note>
+         <note dur="8" dur.ppq="128" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:19.5" vel="0" xml:id="m-906">
+          <accid accid.ges="f" xml:id="m-907"/>
+          <verse n="1" xml:id="m-914">
+           <syl wordpos="t" xml:id="m-915">
+            ces
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:01:19.8" vel="0" xml:id="m-908">
+          <verse n="1" xml:id="m-916">
+           <syl xml:id="m-917">
+            a
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:20.4" vel="0" xml:id="m-909">
+          <accid accid.ges="f" xml:id="m-910"/>
+          <verse n="1" xml:id="m-918">
+           <syl xml:id="m-919">
+            new
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:21" vel="0" xml:id="m-911">
+          <verse n="1" xml:id="m-920">
+           <syl xml:id="m-921">
+            and
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-922">
+        <layer n="1" xml:id="m-923">
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:19.2" vel="0" xml:id="m-924">
+          <verse n="1" xml:id="m-928">
+           <syl xml:id="m-929">
+            with
+           </syl>
+          </verse>
+         </note>
+         <note dots="1" dur="4" dur.ppq="384" oct="5" pname="f" pnum="77" stem.dir="down" tstamp.real="00:01:19.8" vel="0" xml:id="m-925">
+          <verse n="1" xml:id="m-930">
+           <syl con="d" wordpos="i" xml:id="m-931">
+            for
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="5" pname="f" pnum="77" stem.dir="down" tstamp.real="00:01:20.7" vel="0" xml:id="m-926">
+          <verse n="1" xml:id="m-932">
+           <syl wordpos="t" xml:id="m-933">
+            ces
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="e" pnum="76" stem.dir="down" tstamp.real="00:01:21" vel="0" xml:id="m-927">
+          <verse n="1" xml:id="m-934">
+           <syl xml:id="m-935">
+            a
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="35" xml:id="m-936">
+       <staff n="1" xml:id="m-937">
+        <layer n="1" xml:id="m-938">
+         <note dur="4" dur.ppq="256" fontsize="small" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:01:21.6" vel="0" visible="false" xml:id="m-939">
+          <verse n="1" xml:id="m-945">
+           <syl xml:id="m-946">
+            with
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:22.2" vel="0" xml:id="m-941">
+          <accid accid.ges="f" xml:id="m-942"/>
+          <verse n="1" xml:id="m-947">
+           <syl xml:id="m-948">
+            new
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:22.8" vel="0" xml:id="m-943">
+          <verse n="1" xml:id="m-1007">
+           <syl con="d" wordpos="i" xml:id="m-1008">
+            dar
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:01:23.4" vel="0" xml:id="m-944"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-949">
+        <layer n="1" xml:id="m-950">
+         <note dur="4" dur.ppq="256" oct="5" pname="f" pnum="77" stem.dir="down" tstamp.real="00:01:21.6" vel="0" xml:id="m-951">
+          <verse n="1" xml:id="m-956">
+           <syl xml:id="m-957">
+            new
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:22.2" vel="0" xml:id="m-952">
+          <verse n="1" xml:id="m-958">
+           <syl xml:id="m-959">
+            and
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="e" pnum="76" stem.dir="down" tstamp.real="00:01:22.8" vel="0" xml:id="m-953">
+          <verse n="1" xml:id="m-960">
+           <syl xml:id="m-961">
+            with
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="f" pnum="78" stem.dir="down" tstamp.real="00:01:23.4" vel="0" xml:id="m-954">
+          <accid accid="s" xml:id="m-955"/>
+          <verse n="1" xml:id="m-962">
+           <syl xml:id="m-963">
+            new
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <tie endid="#m-944" startid="#m-939" xml:id="m-940"/>
+      </measure>
+      <measure n="36" xml:id="m-964">
+       <staff n="1" xml:id="m-965">
+        <layer n="1" xml:id="m-966">
+         <beam xml:id="m-968">
+          <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:24" vel="0" xml:id="m-967"/>
+          <note dur="8" dur.ppq="128" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:01:24.3" vel="0" xml:id="m-969"/>
+          <note dur="8" dur.ppq="128" oct="4" pname="b" pnum="70" stem.dir="up" tstamp.real="00:01:24.6" vel="0" xml:id="m-970">
+           <accid accid.ges="f" xml:id="m-971"/>
+          </note>
+          <note dur="8" dur.ppq="128" oct="5" pname="c" pnum="72" stem.dir="up" tstamp.real="00:01:24.9" vel="0" xml:id="m-972"/>
+         </beam>
+         <beam xml:id="m-974">
+          <note dur="8" dur.ppq="128" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:25.2" vel="0" xml:id="m-973"/>
+          <note dur="8" dur.ppq="128" oct="5" pname="e" pnum="76" stem.dir="down" tstamp.real="00:01:25.5" vel="0" xml:id="m-975"/>
+         </beam>
+         <note dur="4" dur.ppq="256" oct="5" pname="f" pnum="77" stem.dir="down" tstamp.real="00:01:25.8" vel="0" xml:id="m-976"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-977">
+        <layer n="1" xml:id="m-978">
+         <note dur="4" dur.ppq="256" oct="5" pname="g" pnum="79" stem.dir="down" tstamp.real="00:01:24" vel="0" xml:id="m-979">
+          <verse n="1" xml:id="m-1020">
+           <syl con="d" wordpos="i" xml:id="m-1021">
+            dar
+           </syl>
+          </verse>
+         </note>
+         <beam xml:id="m-981">
+          <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:24.6" vel="0" xml:id="m-980"/>
+          <note dur="8" dur.ppq="128" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:01:24.9" vel="0" xml:id="m-982"/>
+         </beam>
+         <beam xml:id="m-985">
+          <note dur="8" dur.ppq="128" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:25.2" vel="0" xml:id="m-983">
+           <accid accid.ges="f" xml:id="m-984"/>
+          </note>
+          <note dur="8" dur.ppq="128" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:25.5" vel="0" xml:id="m-986"/>
+         </beam>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:25.8" vel="0" xml:id="m-987"/>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="37" xml:id="m-988">
+       <staff n="1" xml:id="m-989">
+        <layer n="1" xml:id="m-990">
+         <note dur="4" dur.ppq="256" oct="5" pname="e" pnum="76" stem.dir="down" tstamp.real="00:01:26.4" vel="0" xml:id="m-991"/>
+         <note dur="2" dur.ppq="512" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:27" vel="0" xml:id="m-992"/>
+         <note dur="4" dur.ppq="256" oct="5" pname="c" pnum="73" stem.dir="down" tstamp.real="00:01:28.2" vel="0" xml:id="m-993">
+          <accid accid="s" xml:id="m-994"/>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-995">
+        <layer n="1" xml:id="m-996">
+         <note dur="4" dur.ppq="256" oct="5" pname="c" pnum="73" stem.dir="down" tstamp.real="00:01:26.4" vel="0" xml:id="m-997">
+          <accid accid="s" xml:id="m-998"/>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:27" vel="0" xml:id="m-999"/>
+         <note dur="2" dur.ppq="512" oct="5" pname="e" pnum="76" stem.dir="down" tstamp.real="00:01:27.6" vel="0" xml:id="m-1000"/>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="38" xml:id="m-1001">
+       <staff n="1" xml:id="m-1002">
+        <layer n="1" xml:id="m-1003">
+         <note dur="2" dur.ppq="512" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:28.8" vel="0" xml:id="m-1004">
+          <verse n="1" xml:id="m-1009">
+           <syl wordpos="t" xml:id="m-1010">
+            ting,
+           </syl>
+          </verse>
+         </note>
+         <rest dur="4" dur.ppq="256" tstamp.real="00:01:30" xml:id="m-1005"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:01:30.6" vel="0" xml:id="m-1006">
+          <verse n="1" xml:id="m-1011">
+           <syl xml:id="m-1012">
+            doth
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-1013">
+        <layer n="1" xml:id="m-1014">
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:28.8" vel="0" xml:id="m-1015">
+          <verse n="1" xml:id="m-1022">
+           <syl wordpos="t" xml:id="m-1023">
+            ting,
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:01:29.4" vel="0" xml:id="m-1016">
+          <verse n="1" xml:id="m-1024">
+           <syl xml:id="m-1025">
+            doth
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:01:30" vel="0" xml:id="m-1017">
+          <verse n="1" xml:id="m-1026">
+           <syl xml:id="m-1027">
+            wound
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="66" stem.dir="up" tstamp.real="00:01:30.6" vel="0" xml:id="m-1018">
+          <accid accid="s" xml:id="m-1019"/>
+          <verse n="1" xml:id="m-1028">
+           <syl xml:id="m-1029">
+            the
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <pb n="3" xml:id="m-1032"/>
+      <sb xml:id="m-1031"/>
+      <measure n="39" xml:id="m-1030">
+       <staff n="1" xml:id="m-1033">
+        <layer n="1" xml:id="m-1034">
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:31.2" vel="0" xml:id="m-1035">
+          <accid accid.ges="f" xml:id="m-1036"/>
+          <verse n="1" xml:id="m-1039">
+           <syl xml:id="m-1040">
+            wound
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:31.8" vel="0" xml:id="m-1037">
+          <verse n="1" xml:id="m-1041">
+           <syl xml:id="m-1042">
+            the
+           </syl>
+          </verse>
+         </note>
+         <note dur="2" dur.ppq="512" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:32.4" vel="0" xml:id="m-1038">
+          <verse n="1" xml:id="m-1043">
+           <syl xml:id="m-1044">
+            heart,
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-1045">
+        <layer n="1" xml:id="m-1046">
+         <note dur="2" dur.ppq="512" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:31.2" vel="0" xml:id="m-1047">
+          <verse n="1" xml:id="m-1050">
+           <syl xml:id="m-1051">
+            heart,
+           </syl>
+          </verse>
+         </note>
+         <rest dur="4" dur.ppq="256" tstamp.real="00:01:32.4" xml:id="m-1048"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:33" vel="0" xml:id="m-1049">
+          <verse n="1" xml:id="m-1052">
+           <syl xml:id="m-1053">
+            doth
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="40" xml:id="m-1054">
+       <staff n="1" xml:id="m-1055">
+        <layer n="1" xml:id="m-1056">
+         <rest dur="4" dur.ppq="256" tstamp.real="00:01:33.6" xml:id="m-1057"/>
+         <note dur="4" dur.ppq="256" oct="5" pname="g" pnum="79" stem.dir="down" tstamp.real="00:01:34.2" vel="0" xml:id="m-1058">
+          <verse n="1" xml:id="m-1061">
+           <syl xml:id="m-1062">
+            doth
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="f" pnum="77" stem.dir="down" tstamp.real="00:01:34.8" vel="0" xml:id="m-1059">
+          <verse n="1" xml:id="m-1063">
+           <syl xml:id="m-1064">
+            wound
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="e" pnum="76" stem.dir="down" tstamp.real="00:01:35.4" vel="0" xml:id="m-1060">
+          <verse n="1" xml:id="m-1065">
+           <syl xml:id="m-1066">
+            the
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-1067">
+        <layer n="1" xml:id="m-1068">
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:01:33.6" vel="0" xml:id="m-1069">
+          <verse n="1" xml:id="m-1073">
+           <syl xml:id="m-1074">
+            wound
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:01:34.2" vel="0" xml:id="m-1070">
+          <verse n="1" xml:id="m-1075">
+           <syl xml:id="m-1076">
+            the
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:01:34.8" vel="0" xml:id="m-1071">
+          <verse n="1" xml:id="m-1077">
+           <syl xml:id="m-1078">
+            heart
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:35.4" vel="0" xml:id="m-1072">
+          <verse n="1" xml:id="m-1079">
+           <syl xml:id="m-1080">
+            and
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="41" xml:id="m-1081">
+       <staff n="1" xml:id="m-1082">
+        <layer n="1" xml:id="m-1083">
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:36" vel="0" xml:id="m-1084">
+          <verse n="1" xml:id="m-1089">
+           <syl xml:id="m-1090">
+            heart
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:36.6" vel="0" xml:id="m-1085">
+          <verse n="1" xml:id="m-1091">
+           <syl xml:id="m-1092">
+            and
+           </syl>
+          </verse>
+         </note>
+         <note dots="1" dur="4" dur.ppq="384" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:37.2" vel="0" xml:id="m-1086">
+          <accid accid.ges="f" xml:id="m-1087"/>
+          <verse n="1" xml:id="m-1093">
+           <syl xml:id="m-1094">
+            yet
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:38.1" vel="0" xml:id="m-1088">
+          <verse n="1" xml:id="m-1095">
+           <syl xml:id="m-1096">
+            doth
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-1097">
+        <layer n="1" xml:id="m-1098">
+         <note dots="1" dur="4" dur.ppq="384" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:36" vel="0" xml:id="m-1099">
+          <accid accid.ges="f" xml:id="m-1100"/>
+          <verse n="1" xml:id="m-1106">
+           <syl xml:id="m-1107">
+            yet
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:36.9" vel="0" xml:id="m-1101">
+          <verse n="1" xml:id="m-1108">
+           <syl xml:id="m-1109">
+            doth
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:37.2" vel="0" xml:id="m-1102">
+          <verse n="1" xml:id="m-1110">
+           <syl xml:id="m-1111">
+            breed
+           </syl>
+          </verse>
+         </note>
+         <beam xml:id="m-1104">
+          <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:37.8" vel="0" xml:id="m-1103">
+           <verse n="1" xml:id="m-1112">
+            <syl con="u" xml:id="m-1113">
+             n
+            </syl>
+           </verse>
+          </note>
+          <note dur="8" dur.ppq="128" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:01:38.1" vel="0" xml:id="m-1105"/>
+         </beam>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="42" xml:id="m-1114">
+       <staff n="1" xml:id="m-1115">
+        <layer n="1" xml:id="m-1116">
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:38.4" vel="0" xml:id="m-1117">
+          <verse n="1" xml:id="m-1123">
+           <syl xml:id="m-1124">
+            breed
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:39" vel="0" xml:id="m-1118">
+          <accid accid.ges="f" xml:id="m-1119"/>
+          <verse n="1" xml:id="m-1125">
+           <syl xml:id="m-1126">
+            doth
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="e" pnum="75" stem.dir="down" tstamp.real="00:01:39.6" vel="0" xml:id="m-1120">
+          <accid accid="f" xml:id="m-1121"/>
+          <verse n="1" xml:id="m-1127">
+           <syl xml:id="m-1128">
+            breed
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:40.2" vel="0" xml:id="m-1122">
+          <verse n="1" xml:id="m-1129">
+           <syl xml:id="m-1130">
+            no
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-1131">
+        <layer n="1" xml:id="m-1132">
+         <beam xml:id="m-1135">
+          <note dur="8" dur.ppq="128" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:38.4" vel="0" xml:id="m-1133">
+           <accid accid.ges="f" xml:id="m-1134"/>
+          </note>
+          <note dur="8" dur.ppq="128" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:38.7" vel="0" xml:id="m-1136"/>
+         </beam>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:39" vel="0" xml:id="m-1137"/>
+         <note dur="4" dur.ppq="256" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:39.6" vel="0" xml:id="m-1138"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:40.2" vel="0" xml:id="m-1139">
+          <accid accid.ges="f" xml:id="m-1140"/>
+          <verse n="1" xml:id="m-1162">
+           <syl con="d" wordpos="i" xml:id="m-1163">
+            smar
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <tie endid="#m-1157" startid="#m-1139" xml:id="m-1141"/>
+      </measure>
+      <measure n="43" xml:id="m-1142">
+       <staff n="1" xml:id="m-1143">
+        <layer n="1" xml:id="m-1144">
+         <note dur="2" dur.ppq="512" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:40.8" vel="0" xml:id="m-1145">
+          <verse n="1" xml:id="m-1149">
+           <syl con="d" wordpos="i" xml:id="m-1150">
+            smar
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:42" vel="0" xml:id="m-1146">
+          <accid accid.ges="f" xml:id="m-1147"/>
+          <verse n="1" xml:id="m-1151">
+           <syl wordpos="t" xml:id="m-1152">
+            ting,
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:42.6" vel="0" xml:id="m-1148">
+          <verse n="1" xml:id="m-1153">
+           <syl xml:id="m-1154">
+            doth
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-1155">
+        <layer n="1" xml:id="m-1156">
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:40.8" vel="0" xml:id="m-1157">
+          <accid accid.ges="f" xml:id="m-1158"/>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:01:41.4" vel="0" xml:id="m-1159"/>
+         <note dur="2" dur.ppq="512" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:42" vel="0" xml:id="m-1160">
+          <accid accid.ges="f" xml:id="m-1161"/>
+          <verse n="1" xml:id="m-1164">
+           <syl wordpos="t" xml:id="m-1165">
+            ting,
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <sb xml:id="m-1167"/>
+      <measure n="44" xml:id="m-1166">
+       <staff n="1" xml:id="m-1168">
+        <layer n="1" xml:id="m-1169">
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:01:43.2" vel="0" xml:id="m-1170">
+          <verse n="1" xml:id="m-1174">
+           <syl xml:id="m-1175">
+            wound
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:01:43.8" vel="0" xml:id="m-1171">
+          <verse n="1" xml:id="m-1176">
+           <syl xml:id="m-1177">
+            the
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:01:44.4" vel="0" xml:id="m-1172">
+          <verse n="1" xml:id="m-1178">
+           <syl xml:id="m-1179">
+            hart
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:45" vel="0" xml:id="m-1173">
+          <verse n="1" xml:id="m-1180">
+           <syl xml:id="m-1181">
+            and
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-1182">
+        <layer n="1" xml:id="m-1183">
+         <rest dur="4" dur.ppq="256" tstamp.real="00:01:43.2" xml:id="m-1184"/>
+         <note dur="4" dur.ppq="256" oct="5" pname="g" pnum="79" stem.dir="down" tstamp.real="00:01:43.8" vel="0" xml:id="m-1185">
+          <verse n="1" xml:id="m-1188">
+           <syl xml:id="m-1189">
+            doth
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="f" pnum="77" stem.dir="down" tstamp.real="00:01:44.4" vel="0" xml:id="m-1186">
+          <verse n="1" xml:id="m-1190">
+           <syl xml:id="m-1191">
+            wound
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="e" pnum="76" stem.dir="down" tstamp.real="00:01:45" vel="0" xml:id="m-1187">
+          <verse n="1" xml:id="m-1192">
+           <syl xml:id="m-1193">
+            the
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="45" xml:id="m-1194">
+       <staff n="1" xml:id="m-1195">
+        <layer n="1" xml:id="m-1196">
+         <note dots="1" dur="4" dur.ppq="384" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:45.6" vel="0" xml:id="m-1197">
+          <accid accid.ges="f" xml:id="m-1198"/>
+          <verse n="1" xml:id="m-1202">
+           <syl xml:id="m-1203">
+            yet
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:46.5" vel="0" xml:id="m-1199">
+          <verse n="1" xml:id="m-1204">
+           <syl xml:id="m-1205">
+            doth
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:46.8" vel="0" xml:id="m-1200">
+          <verse n="1" xml:id="m-1206">
+           <syl xml:id="m-1207">
+            breed
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:47.4" vel="0" xml:id="m-1201">
+          <verse n="1" xml:id="m-1208">
+           <syl xml:id="m-1209">
+            no
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-1210">
+        <layer n="1" xml:id="m-1211">
+         <note dur="4" dur.ppq="256" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:45.6" vel="0" xml:id="m-1212">
+          <verse n="1" xml:id="m-1217">
+           <syl xml:id="m-1218">
+            hart
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:46.2" vel="0" xml:id="m-1213">
+          <verse n="1" xml:id="m-1219">
+           <syl xml:id="m-1220">
+            and
+           </syl>
+          </verse>
+         </note>
+         <note dots="1" dur="4" dur.ppq="384" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:46.8" vel="0" xml:id="m-1214">
+          <accid accid.ges="f" xml:id="m-1215"/>
+          <verse n="1" xml:id="m-1221">
+           <syl xml:id="m-1222">
+            yet
+           </syl>
+          </verse>
+         </note>
+         <note dur="8" dur.ppq="128" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:47.7" vel="0" xml:id="m-1216">
+          <verse n="1" xml:id="m-1223">
+           <syl xml:id="m-1224">
+            doth
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="46" xml:id="m-1225">
+       <staff n="1" xml:id="m-1226">
+        <layer n="1" xml:id="m-1227">
+         <beam xml:id="m-1229">
+          <note dur="8" dur.ppq="128" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:01:48" vel="0" xml:id="m-1228">
+           <verse n="1" xml:id="m-1264">
+            <syl con="d" wordpos="i" xml:id="m-1265">
+             smar
+            </syl>
+           </verse>
+          </note>
+          <note dur="8" dur.ppq="128" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:01:48.3" vel="0" xml:id="m-1230"/>
+          <note dur="8" dur.ppq="128" oct="4" pname="d" pnum="62" stem.dir="up" tstamp.real="00:01:48.6" vel="0" xml:id="m-1231"/>
+          <note dur="8" dur.ppq="128" oct="4" pname="e" pnum="64" stem.dir="up" tstamp.real="00:01:48.9" vel="0" xml:id="m-1232"/>
+         </beam>
+         <beam xml:id="m-1234">
+          <note dur="8" dur.ppq="128" oct="4" pname="f" pnum="65" stem.dir="up" tstamp.real="00:01:49.2" vel="0" xml:id="m-1233"/>
+          <note dur="8" dur.ppq="128" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:49.5" vel="0" xml:id="m-1235"/>
+         </beam>
+         <note dur="4" dur.ppq="256" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:01:49.8" vel="0" xml:id="m-1236"/>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-1237">
+        <layer n="1" xml:id="m-1238">
+         <note dots="1" dur="2" dur.ppq="768" oct="5" pname="d" pnum="74" stem.dir="down" tstamp.real="00:01:48" vel="0" xml:id="m-1239">
+          <verse n="1" xml:id="m-1242">
+           <syl xml:id="m-1243">
+            breed
+           </syl>
+          </verse>
+         </note>
+         <note dur="4" dur.ppq="256" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:49.8" vel="0" xml:id="m-1240">
+          <verse n="1" xml:id="m-1244">
+           <syl con="u" xml:id="m-1245">
+            no
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <tie endid="#m-1256" startid="#m-1240" xml:id="m-1241"/>
+      </measure>
+      <measure n="47" xml:id="m-1246">
+       <staff n="1" xml:id="m-1247">
+        <layer n="1" xml:id="m-1248">
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="66" stem.dir="up" tstamp.real="00:01:50.4" vel="0" xml:id="m-1249">
+          <accid accid="s" xml:id="m-1250"/>
+         </note>
+         <note dur="2" dur.ppq="512" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:51" vel="0" xml:id="m-1251"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="f" pnum="66" stem.dir="up" tstamp.real="00:01:52.2" vel="0" xml:id="m-1252">
+          <accid accid.ges="s" xml:id="m-1253"/>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-1254">
+        <layer n="1" xml:id="m-1255">
+         <note dur="4" dur.ppq="256" oct="5" pname="c" pnum="72" stem.dir="down" tstamp.real="00:01:50.4" vel="0" xml:id="m-1256"/>
+         <note dur="4" dur.ppq="256" oct="4" pname="b" pnum="70" stem.dir="down" tstamp.real="00:01:51" vel="0" xml:id="m-1257">
+          <accid accid.ges="f" xml:id="m-1258"/>
+         </note>
+         <note dur="2" dur.ppq="512" oct="4" pname="a" pnum="69" stem.dir="up" tstamp.real="00:01:51.6" vel="0" xml:id="m-1259">
+          <verse n="1" xml:id="m-1271">
+           <syl con="d" wordpos="i" xml:id="m-1272">
+            smar
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+      <measure n="48" right="end" xml:id="m-1260">
+       <staff n="1" xml:id="m-1261">
+        <layer n="1" xml:id="m-1262">
+         <note dur="1" dur.ppq="1024" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:52.8" vel="0" xml:id="m-1263">
+          <verse n="1" xml:id="m-1266">
+           <syl wordpos="t" xml:id="m-1267">
+            ting.
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+       <staff n="2" xml:id="m-1268">
+        <layer n="1" xml:id="m-1269">
+         <note dur="1" dur.ppq="1024" oct="4" pname="g" pnum="67" stem.dir="up" tstamp.real="00:01:52.8" vel="0" xml:id="m-1270">
+          <verse n="1" xml:id="m-1273">
+           <syl wordpos="t" xml:id="m-1274">
+            ting.
+           </syl>
+          </verse>
+         </note>
+        </layer>
+       </staff>
+      </measure>
+     </section>
+     <annot type="duration" xml:id="m-26">
+      00:01:55.2
+     </annot>
+    </score>
+   </mdiv>
+  </body>
+ </music>
+</mei>
