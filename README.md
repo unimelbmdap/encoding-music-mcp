@@ -11,6 +11,8 @@ MCP server for analyzing MEI (Music Encoding Initiative) files. Provides tools t
 
 ## Installation
 
+**Prerequisites**: This project requires [uv](https://docs.astral.sh/uv/getting-started/installation/) to be installed.
+
 ### Option 1: Quick Start (using uvx)
 
 No cloning required! Add this to your MCP client configuration:
