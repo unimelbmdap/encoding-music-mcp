@@ -6,13 +6,37 @@ MCP server for analyzing MEI (Music Encoding Initiative) files. Provides tools t
 
 - **46 Built-in MEI Files**: Bach Inventions, Bartók Mikrokosmos, Morley Canzonets - ready to analyze
 - **MEI Metadata Extraction**: Extract title, composer, editors, analysts, publication dates, and copyright information
+- **Key Analysis**: Detect musical keys with confidence scores using music21
 - **Simple & Efficient**: Tools read directly from disk - no token waste
 
 ## Installation
 
-Install using uv:
+### Option 1: Quick Start (using uvx)
+
+No cloning required! Add this to your MCP client configuration:
+
+```json
+{
+  "mcpServers": {
+    "encoding-music-mcp": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/unimelbmdap/encoding-music-mcp.git",
+        "encoding-music-mcp"
+      ]
+    }
+  }
+}
+```
+
+### Option 2: Local Development
+
+Clone the repository and install dependencies:
 
 ```bash
+git clone https://github.com/unimelbmdap/encoding-music-mcp.git
+cd encoding-music-mcp
 uv sync
 ```
 
@@ -24,12 +48,29 @@ uv sync
    - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
    - **Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
 
-2. **Add this configuration:**
+2. **Add configuration (choose one method):**
 
+**Method A: Using uvx (no clone needed)**
 ```json
 {
   "mcpServers": {
-    "encoding-music": {
+    "encoding-music-mcp": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/unimelbmdap/encoding-music-mcp.git",
+        "encoding-music-mcp"
+      ]
+    }
+  }
+}
+```
+
+**Method B: Using local clone**
+```json
+{
+  "mcpServers": {
+    "encoding-music-mcp": {
       "command": "uv",
       "args": [
         "--directory",
@@ -45,8 +86,9 @@ uv sync
 3. **Restart Claude Desktop**
 
 4. **Try it out:**
-   - "What MEI files are available?" → Lists 46 built-in files
-   - "Tell me about Bach_BWV_0772.mei" → Reads resource and extracts metadata
+   - "What MEI files are available?" → Lists all 46 built-in files
+   - "Tell me about Bach_BWV_0772.mei" → Extracts metadata
+   - "What key is Bach_BWV_0772.mei in?" → Analyzes key with confidence score
 
 ### Standalone
 
@@ -63,11 +105,10 @@ uv run encoding-music-mcp
 Discover all built-in MEI files.
 
 **Returns**: Dictionary with:
-- `total_count`: Total number of files
 - `bach_inventions`: List of Bach files
 - `bartok_mikrokosmos`: List of Bartók files
 - `morley_canzonets`: List of Morley files
-- `all_files`: Complete list of filenames
+- `all_files`: Complete list of all filenames
 
 ### `get_mei_metadata`
 
@@ -95,6 +136,25 @@ Extract detailed metadata from a built-in MEI file.
   "xml_editors": ["Schölkopf, Tobias"],
   "analysts": ["Student, This"],
   "publication_date": "2024-11-19"
+}
+```
+
+### `analyze_key`
+
+Analyze the musical key of a piece using music21's key detection algorithm.
+
+**Parameters**:
+- `filename` (string, required): Name of the MEI file (e.g., "Bach_BWV_0772.mei")
+
+**Returns**: Dictionary with:
+- `Key Name`: The detected key (e.g., "C major", "a minor")
+- `Confidence Factor`: Correlation coefficient between 0.0 and 1.0
+
+**Example output**:
+```json
+{
+  "Key Name": "C major",
+  "Confidence Factor": 0.9451
 }
 ```
 
@@ -126,7 +186,7 @@ uv run ruff format .
 
 Additional tools planned:
 - Note counting and frequency analysis
-- Key and time signature detection
+- Time signature detection
 - Pitch histograms
 - Lyrics extraction
 - Full note sequence analysis
