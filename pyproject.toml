@@ -1,0 +1,7 @@
+[project]
+name = "encoding-music-mcp"
+version = "0.1.0"
+description = "Developing MCP tools for analysis of MEI files"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
