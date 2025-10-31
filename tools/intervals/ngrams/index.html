@@ -955,6 +955,90 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#interval-types-kind-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interval Types (kind parameter)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interval Types (kind parameter)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diatonic-kindd-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diatonic (kind='d', default)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chromatic-kindc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chromatic (kind='c')
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-quality-kindq" class="md-nav__link">
+    <span class="md-ellipsis">
+      With Quality (kind='q')
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zero-based-kindz" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zero-based (kind='z')
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thematic-entries-entries-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thematic Entries (entries parameter)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Thematic Entries (entries parameter)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-analysis-all-ngrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      Standard Analysis (all ngrams)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thematic-analysis-entries-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thematic Analysis (entries only)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#use-cases" class="md-nav__link">
     <span class="md-ellipsis">
       Use Cases
@@ -1511,6 +1595,90 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#interval-types-kind-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interval Types (kind parameter)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interval Types (kind parameter)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diatonic-kindd-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diatonic (kind='d', default)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chromatic-kindc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chromatic (kind='c')
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-quality-kindq" class="md-nav__link">
+    <span class="md-ellipsis">
+      With Quality (kind='q')
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zero-based-kindz" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zero-based (kind='z')
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thematic-entries-entries-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thematic Entries (entries parameter)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Thematic Entries (entries parameter)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-analysis-all-ngrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      Standard Analysis (all ngrams)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thematic-analysis-entries-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thematic Analysis (entries only)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#use-cases" class="md-nav__link">
     <span class="md-ellipsis">
       Use Cases
@@ -1685,6 +1853,20 @@
 <td>4</td>
 <td>Length of n-grams to extract</td>
 </tr>
+<tr>
+<td><code>kind</code></td>
+<td><code>str</code></td>
+<td>No</td>
+<td>'d'</td>
+<td>Interval type: 'd' (diatonic), 'c' (chromatic), 'q' (with quality), 'z' (zero-based)</td>
+</tr>
+<tr>
+<td><code>entries</code></td>
+<td><code>bool</code></td>
+<td>No</td>
+<td>False</td>
+<td>Filter to thematic entries only (after rests/breaks)</td>
+</tr>
 </tbody>
 </table>
 <h2 id="returns">Returns</h2>
@@ -1706,6 +1888,16 @@
 <td><code>n</code></td>
 <td><code>int</code></td>
 <td>The n-gram length used</td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td><code>str</code></td>
+<td>The interval type used</td>
+</tr>
+<tr>
+<td><code>entries</code></td>
+<td><code>bool</code></td>
+<td>Whether entry filtering was applied</td>
 </tr>
 <tr>
 <td><code>melodic_ngrams</code></td>
@@ -1750,26 +1942,93 @@
 <p class="admonition-title">Finding the Right N</p>
 <p>Start with n=4. If patterns are too common, increase n. If too few matches, decrease n.</p>
 </div>
+<h2 id="interval-types-kind-parameter">Interval Types (<code>kind</code> parameter)</h2>
+<p>The <code>kind</code> parameter controls how intervals are calculated:</p>
+<h3 id="diatonic-kindd-default">Diatonic (<code>kind='d'</code>, default)</h3>
+<p>Basic scale degrees, no quality information:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Example: 2_-3_2 (up 2nd, down 3rd, up 2nd)</span>
+</span></code></pre></div>
+<h3 id="chromatic-kindc">Chromatic (<code>kind='c'</code>)</h3>
+<p>Semitone distances:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Example: 2_-4_2 (up 2 semitones, down 4 semitones, up 2 semitones)</span>
+</span></code></pre></div>
+<h3 id="with-quality-kindq">With Quality (<code>kind='q'</code>)</h3>
+<p>Includes major/minor/perfect quality - ideal for tonal analysis:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;q&#39;</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Example: M2_-m3_M2 (major 2nd up, minor 3rd down, major 2nd up)</span>
+</span></code></pre></div>
+<h3 id="zero-based-kindz">Zero-based (<code>kind='z'</code>)</h3>
+<p>Zero-indexed diatonic intervals (for computational analysis):</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Example: 1_-2_1 (same as 2_-3_2 but zero-indexed)</span>
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Which Kind to Use?</p>
+<ul>
+<li><strong>'d'</strong> - General pattern recognition</li>
+<li><strong>'c'</strong> - Atonal/twelve-tone analysis</li>
+<li><strong>'q'</strong> - Tonal/harmonic analysis (most detailed)</li>
+<li><strong>'z'</strong> - Computational/statistical analysis</li>
+</ul>
+</div>
+<h2 id="thematic-entries-entries-parameter">Thematic Entries (<code>entries</code> parameter)</h2>
+<p>The <code>entries</code> parameter filters ngrams to show only those occurring after:</p>
+<ul>
+<li>Rests</li>
+<li>Section breaks</li>
+<li>Fermatas</li>
+</ul>
+<p>This is <strong>extremely useful</strong> for identifying thematic material and primary motives.</p>
+<h3 id="standard-analysis-all-ngrams">Standard Analysis (all ngrams)</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span><span class="s2">&quot;Morley_1595_01_Go_ye_my_canzonettes.mei&quot;</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Returns hundreds of ngrams</span>
+</span></code></pre></div>
+<h3 id="thematic-analysis-entries-only">Thematic Analysis (entries only)</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="s2">&quot;Morley_1595_01_Go_ye_my_canzonettes.mei&quot;</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">n</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">entries</span><span class="o">=</span><span class="kc">True</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">)</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Returns only ~13 thematic entries - the main motives!</span>
+</span></code></pre></div>
+<p>Example output with <code>entries=True</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Measure,Beat,Offset,1,2
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>1.0,1.0,0.0,1_1_2_1,
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>2.0,1.0,4.0,,1_1_2_1
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>9.0,1.0,32.0,1_1_2_1,
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>14.0,2.0,53.0,,1_1_4_-3
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>21.0,4.0,83.0,-4_2_2_-3,
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Thematic Analysis Workflow</p>
+<ol>
+<li>Use <code>entries=True</code> to find main motives</li>
+<li>Use <code>entries=False</code> (default) to see all occurrences</li>
+<li>Compare entry patterns across pieces to find thematic relationships</li>
+</ol>
+</div>
 <h2 id="use-cases">Use Cases</h2>
 <h3 id="find-recurring-motifs">Find Recurring Motifs</h3>
 <p>Identify melodic ideas that repeat:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Look for the same pattern appearing multiple times</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Look for the same pattern appearing multiple times</span>
 </span></code></pre></div>
 <h3 id="sequence-detection">Sequence Detection</h3>
 <p>Find sequences (patterns that repeat at different pitch levels):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>2_2_2 appearing multiple times = ascending major scale fragments
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>2_2_2 appearing multiple times = ascending major scale fragments
 </span></code></pre></div>
 <h3 id="motivic-analysis">Motivic Analysis</h3>
 <p>Compare motifs across pieces:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">bach_ngrams</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">)</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">bartok_ngrams</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span><span class="s2">&quot;Bartok_Mikrokosmos_022.mei&quot;</span><span class="p">)</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Compare common patterns</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">bach_ngrams</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">)</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">bartok_ngrams</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span><span class="s2">&quot;Bartok_Mikrokosmos_022.mei&quot;</span><span class="p">)</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Compare common patterns</span>
 </span></code></pre></div>
 <h3 id="imitation-study">Imitation Study</h3>
 <p>Find where voices imitate each other's melodies:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Voice 1: 2_2_2_-3 at measure 1
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Voice 2: 2_2_2_-3 at measure 3 (imitation!)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Voice 1: 2_2_2_-3 at measure 1
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Voice 2: 2_2_2_-3 at measure 3 (imitation!)
 </span></code></pre></div>
 <h2 id="pattern-interpretation">Pattern Interpretation</h2>
 <h3 id="reading-interval-sequences">Reading Interval Sequences</h3>
@@ -1815,11 +2074,11 @@
 <h2 id="adjusting-analysis">Adjusting Analysis</h2>
 <h3 id="for-short-motifs">For Short Motifs</h3>
 <p>Use smaller n:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="for-extended-phrases">For Extended Phrases</h3>
 <p>Use larger n:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="related-tools">Related Tools</h2>
 <ul>

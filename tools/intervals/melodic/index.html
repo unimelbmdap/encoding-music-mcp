@@ -861,6 +861,57 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#interval-types-kind-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interval Types (kind parameter)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interval Types (kind parameter)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diatonic-kindd-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diatonic (kind='d', default)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chromatic-kindc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chromatic (kind='c')
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-quality-kindq" class="md-nav__link">
+    <span class="md-ellipsis">
+      With Quality (kind='q')
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zero-based-kindz" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zero-based (kind='z')
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-melodic-intervals" class="md-nav__link">
     <span class="md-ellipsis">
       Common Melodic Intervals
@@ -1358,6 +1409,57 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#interval-types-kind-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interval Types (kind parameter)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interval Types (kind parameter)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diatonic-kindd-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diatonic (kind='d', default)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chromatic-kindc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chromatic (kind='c')
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-quality-kindq" class="md-nav__link">
+    <span class="md-ellipsis">
+      With Quality (kind='q')
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zero-based-kindz" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zero-based (kind='z')
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-melodic-intervals" class="md-nav__link">
     <span class="md-ellipsis">
       Common Melodic Intervals
@@ -1456,6 +1558,7 @@
 <th>Parameter</th>
 <th>Type</th>
 <th>Required</th>
+<th>Default</th>
 <th>Description</th>
 </tr>
 </thead>
@@ -1464,7 +1567,15 @@
 <td><code>filename</code></td>
 <td><code>str</code></td>
 <td>Yes</td>
+<td>-</td>
 <td>Name of the MEI file (e.g., "Bach_BWV_0772.mei")</td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td><code>str</code></td>
+<td>No</td>
+<td>'d'</td>
+<td>Interval type: 'd' (diatonic), 'c' (chromatic), 'q' (with quality), 'z' (zero-based)</td>
 </tr>
 </tbody>
 </table>
@@ -1482,6 +1593,11 @@
 <td><code>filename</code></td>
 <td><code>str</code></td>
 <td>The input filename</td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td><code>str</code></td>
+<td>The interval type used</td>
 </tr>
 <tr>
 <td><code>melodic_intervals</code></td>
@@ -1509,6 +1625,38 @@
 <li><strong>Rest</strong>: Beginning of melodic line</li>
 <li><strong>NaN</strong>: Voice is silent</li>
 </ul>
+<h2 id="interval-types-kind-parameter">Interval Types (<code>kind</code> parameter)</h2>
+<p>The <code>kind</code> parameter controls how intervals are calculated:</p>
+<h3 id="diatonic-kindd-default">Diatonic (<code>kind='d'</code>, default)</h3>
+<p>Basic scale degrees without quality information:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_melodic_intervals</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Example: 2, -3, 5 (up 2nd, down 3rd, up 5th)</span>
+</span></code></pre></div>
+<h3 id="chromatic-kindc">Chromatic (<code>kind='c'</code>)</h3>
+<p>Semitone distances - useful for atonal/twelve-tone analysis:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_melodic_intervals</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Example: 2, -4, 7 (up 2 semitones, down 4 semitones, up 7 semitones)</span>
+</span></code></pre></div>
+<h3 id="with-quality-kindq">With Quality (<code>kind='q'</code>)</h3>
+<p>Includes major/minor/perfect quality - ideal for detailed tonal analysis:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_melodic_intervals</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;q&#39;</span><span class="p">)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Example: M2, -m3, P5 (major 2nd up, minor 3rd down, perfect 5th up)</span>
+</span></code></pre></div>
+<p>This is the most detailed option and is shown in the example output above.</p>
+<h3 id="zero-based-kindz">Zero-based (<code>kind='z'</code>)</h3>
+<p>Zero-indexed diatonic intervals for computational analysis:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_melodic_intervals</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Example: 1, -2, 4 (same as 2, -3, 5 but zero-indexed)</span>
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Which Kind to Use?</p>
+<ul>
+<li><strong>'d'</strong> - Quick overview of melodic motion</li>
+<li><strong>'c'</strong> - Analyzing chromatic or atonal music</li>
+<li><strong>'q'</strong> - Detailed tonal analysis (most common)</li>
+<li><strong>'z'</strong> - Statistical or computational work</li>
+</ul>
+</div>
 <h2 id="common-melodic-intervals">Common Melodic Intervals</h2>
 <table>
 <thead>
@@ -1565,8 +1713,8 @@
 </ul>
 <h3 id="identify-melodic-patterns">Identify Melodic Patterns</h3>
 <p>Look for recurring interval sequences:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>M2, M2, m2 (ascending major scale fragment)
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>-m3, M2, -m3 (zig-zag pattern)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>M2, M2, m2 (ascending major scale fragment)
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>-m3, M2, -m3 (zig-zag pattern)
 </span></code></pre></div>
 <h3 id="voice-leading-study">Voice Leading Study</h3>
 <p>Analyze how each voice moves independently:</p>
