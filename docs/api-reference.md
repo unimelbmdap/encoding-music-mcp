@@ -13,7 +13,6 @@ Complete reference for all encoding-music-mcp tools.
 | `get_melodic_intervals` | `filename: str` | `dict` with intervals | [Docs](tools/intervals/melodic.md) |
 | `get_harmonic_intervals` | `filename: str` | `dict` with intervals | [Docs](tools/intervals/harmonic.md) |
 | `get_melodic_ngrams` | `filename: str, n: int = 4` | `dict` with n-grams | [Docs](tools/intervals/ngrams.md) |
-| `render_notation` | `filename: str, start_measure: int = 1, end_measure: int = 4, page_width: int = 1200` | `dict` with SVG | [Docs](tools/rendering.md) |
 
 ## Discovery Tools
 
@@ -148,30 +147,6 @@ Find recurring melodic patterns.
 ```
 
 [Full Documentation →](tools/intervals/ngrams.md)
-
-## Rendering Tools
-
-### render_notation(filename, start_measure=1, end_measure=4, page_width=1200)
-
-Render musical excerpts as SVG notation.
-
-**Parameters**:
-- `filename` (str): MEI filename
-- `start_measure` (int, optional): First measure to render (default: 1)
-- `end_measure` (int, optional): Last measure to render (default: 4)
-- `page_width` (int, optional): Width in pixels (default: 1200)
-
-**Returns**:
-```python
-{
-    "filename": str,
-    "measures": str,    # e.g., "1-4"
-    "svg": str,         # SVG markup
-    "format": str       # Always "svg"
-}
-```
-
-[Full Documentation →](tools/rendering.md)
 
 ## Common Patterns
 

@@ -16,7 +16,6 @@ MCP server for analyzing MEI (Music Encoding Initiative) files. Provides tools t
 - **MEI Metadata Extraction**: Extract title, composer, editors, analysts, publication dates, and copyright information
 - **Key Analysis**: Detect musical keys with confidence scores using music21
 - **Interval Analysis**: Extract notes, melodic intervals, harmonic intervals, and melodic n-grams using CRIM Intervals
-- **Notation Rendering**: Render musical excerpts as SVG using verovio - no external dependencies required
 - **Simple & Efficient**: Tools read directly from disk - no token waste
 
 ## Documentation
@@ -113,7 +112,6 @@ uv sync
    - "What key is Bach_BWV_0772.mei in?" → Analyzes key with confidence score
    - "Get the melodic intervals for Bach_BWV_0772.mei" → Extracts melodic intervals
    - "Find melodic 4-grams in Bach_BWV_0772.mei" → Extracts melodic n-grams
-   - "Show me the first 4 measures of Bach_BWV_0772.mei" → Renders notation as SVG
 
 ### Standalone
 
@@ -236,32 +234,6 @@ Extract melodic n-grams from an MEI file using CRIM Intervals.
 - `melodic_ngrams`: String representation of melodic n-grams dataframe
 
 N-grams are tuples of intervals converted to strings with underscore separators (e.g., "2_-2_3_-1").
-
-### `render_notation`
-
-Render musical excerpts as SVG notation for visual display.
-
-**Parameters**:
-- `filename` (string, required): Name of the MEI file (e.g., "Bach_BWV_0772.mei")
-- `start_measure` (integer, optional): First measure to render (default: 1)
-- `end_measure` (integer, optional): Last measure to render (default: 4)
-- `page_width` (integer, optional): Width of rendered page in pixels (default: 1200)
-
-**Returns**: Dictionary with:
-- `filename`: The input filename
-- `measures`: Measure range rendered (e.g., "1-4")
-- `svg`: SVG markup as a string
-- `format`: Always "svg"
-
-**Example output**:
-```json
-{
-  "filename": "Bach_BWV_0772.mei",
-  "measures": "1-4",
-  "svg": "<svg>...</svg>",
-  "format": "svg"
-}
-```
 
 ## Built-in Files
 

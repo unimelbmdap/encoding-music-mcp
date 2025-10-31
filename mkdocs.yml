@@ -58,7 +58,6 @@ nav:
       - Discovery: tools/discovery.md
       - Metadata: tools/metadata.md
       - Key Analysis: tools/key-analysis.md
-      - Rendering: tools/rendering.md
       - Intervals:
           - Overview: tools/intervals/index.md
           - Notes: tools/intervals/notes.md
