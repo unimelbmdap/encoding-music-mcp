@@ -13,10 +13,10 @@
       
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../key-analysis/">
       
       
-        <link rel="next" href="../metadata/">
+        <link rel="next" href="../intervals/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>Discovery - encoding-music-mcp</title>
+        <title>Rendering - encoding-music-mcp</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#list_available_mei_files" class="md-skip">
+        <a href="#render_notation" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Discovery
+              Rendering
             
           </span>
         </div>
@@ -600,6 +600,75 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Discovery
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Metadata
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../key-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Key Analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -617,7 +686,7 @@
   
   
   <span class="md-ellipsis">
-    Discovery
+    Rendering
     
   </span>
   
@@ -630,7 +699,7 @@
   
   
   <span class="md-ellipsis">
-    Discovery
+    Rendering
     
   </span>
   
@@ -690,18 +759,27 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#with-claude-desktop" class="md-nav__link">
+  <a href="#basic-example" class="md-nav__link">
     <span class="md-ellipsis">
-      With Claude Desktop
+      Basic Example
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#example-output" class="md-nav__link">
+  <a href="#custom-range" class="md-nav__link">
     <span class="md-ellipsis">
-      Example Output
+      Custom Range
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wider-display" class="md-nav__link">
+    <span class="md-ellipsis">
+      Wider Display
     </span>
   </a>
   
@@ -723,27 +801,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#browsing-by-composer" class="md-nav__link">
+  <a href="#illustrate-analysis" class="md-nav__link">
     <span class="md-ellipsis">
-      Browsing by Composer
+      Illustrate Analysis
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#batch-analysis" class="md-nav__link">
+  <a href="#compare-sections" class="md-nav__link">
     <span class="md-ellipsis">
-      Batch Analysis
+      Compare Sections
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#collection-statistics" class="md-nav__link">
+  <a href="#focus-on-specific-passages" class="md-nav__link">
     <span class="md-ellipsis">
-      Collection Statistics
+      Focus on Specific Passages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate-thumbnails" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate Thumbnails
     </span>
   </a>
   
@@ -755,37 +842,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#file-naming-conventions" class="md-nav__link">
+  <a href="#technical-details" class="md-nav__link">
     <span class="md-ellipsis">
-      File Naming Conventions
+      Technical Details
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="File Naming Conventions">
+    <nav class="md-nav" aria-label="Technical Details">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#bach-inventions" class="md-nav__link">
+  <a href="#rendering-process" class="md-nav__link">
     <span class="md-ellipsis">
-      Bach Inventions
+      Rendering Process
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#bartok-mikrokosmos" class="md-nav__link">
+  <a href="#svg-output" class="md-nav__link">
     <span class="md-ellipsis">
-      Bartók Mikrokosmos
+      SVG Output
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#morley-canzonets" class="md-nav__link">
+  <a href="#page-width" class="md-nav__link">
     <span class="md-ellipsis">
-      Morley Canzonets
+      Page Width
     </span>
   </a>
   
@@ -793,6 +880,90 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Handling
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#invalid-measure-numbers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Invalid Measure Numbers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-measures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Missing Measures
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#keep-excerpts-small" class="md-nav__link">
+    <span class="md-ellipsis">
+      Keep Excerpts Small
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#match-width-to-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      Match Width to Content
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coordinate-with-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Coordinate with Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations
+    </span>
+  </a>
   
 </li>
       
@@ -805,88 +976,10 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#implementation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Implementation
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../metadata/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Metadata
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../key-analysis/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Key Analysis
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../rendering/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Rendering
-    
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -1421,18 +1514,27 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#with-claude-desktop" class="md-nav__link">
+  <a href="#basic-example" class="md-nav__link">
     <span class="md-ellipsis">
-      With Claude Desktop
+      Basic Example
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#example-output" class="md-nav__link">
+  <a href="#custom-range" class="md-nav__link">
     <span class="md-ellipsis">
-      Example Output
+      Custom Range
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wider-display" class="md-nav__link">
+    <span class="md-ellipsis">
+      Wider Display
     </span>
   </a>
   
@@ -1454,27 +1556,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#browsing-by-composer" class="md-nav__link">
+  <a href="#illustrate-analysis" class="md-nav__link">
     <span class="md-ellipsis">
-      Browsing by Composer
+      Illustrate Analysis
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#batch-analysis" class="md-nav__link">
+  <a href="#compare-sections" class="md-nav__link">
     <span class="md-ellipsis">
-      Batch Analysis
+      Compare Sections
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#collection-statistics" class="md-nav__link">
+  <a href="#focus-on-specific-passages" class="md-nav__link">
     <span class="md-ellipsis">
-      Collection Statistics
+      Focus on Specific Passages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate-thumbnails" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate Thumbnails
     </span>
   </a>
   
@@ -1486,37 +1597,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#file-naming-conventions" class="md-nav__link">
+  <a href="#technical-details" class="md-nav__link">
     <span class="md-ellipsis">
-      File Naming Conventions
+      Technical Details
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="File Naming Conventions">
+    <nav class="md-nav" aria-label="Technical Details">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#bach-inventions" class="md-nav__link">
+  <a href="#rendering-process" class="md-nav__link">
     <span class="md-ellipsis">
-      Bach Inventions
+      Rendering Process
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#bartok-mikrokosmos" class="md-nav__link">
+  <a href="#svg-output" class="md-nav__link">
     <span class="md-ellipsis">
-      Bartók Mikrokosmos
+      SVG Output
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#morley-canzonets" class="md-nav__link">
+  <a href="#page-width" class="md-nav__link">
     <span class="md-ellipsis">
-      Morley Canzonets
+      Page Width
     </span>
   </a>
   
@@ -1524,6 +1635,90 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Handling
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#invalid-measure-numbers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Invalid Measure Numbers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-measures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Missing Measures
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#keep-excerpts-small" class="md-nav__link">
+    <span class="md-ellipsis">
+      Keep Excerpts Small
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#match-width-to-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      Match Width to Content
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coordinate-with-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Coordinate with Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations
+    </span>
+  </a>
   
 </li>
       
@@ -1531,15 +1726,6 @@
   <a href="#related-tools" class="md-nav__link">
     <span class="md-ellipsis">
       Related Tools
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#implementation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Implementation
     </span>
   </a>
   
@@ -1564,14 +1750,53 @@
   
 
 
-<h1 id="list_available_mei_files">list_available_mei_files</h1>
-<p>Discover all built-in MEI files organized by composer.</p>
+<h1 id="render_notation">render_notation</h1>
+<p>Render musical excerpts as SVG notation for visual display.</p>
 <h2 id="overview">Overview</h2>
-<p>The <code>list_available_mei_files</code> tool provides a complete inventory of the 46 MEI files included with encoding-music-mcp. Files are organized into three collections by composer.</p>
+<p>The <code>render_notation</code> tool combines music21's measure selection with verovio's rendering capabilities to create small, focused musical examples. This allows you to display notation directly without requiring external dependencies like LilyPond or MuseScore.</p>
 <h2 id="parameters">Parameters</h2>
-<p>This tool takes no parameters.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filename</code></td>
+<td><code>str</code></td>
+<td>Yes</td>
+<td>-</td>
+<td>Name of the MEI file</td>
+</tr>
+<tr>
+<td><code>start_measure</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>1</td>
+<td>First measure to render</td>
+</tr>
+<tr>
+<td><code>end_measure</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>4</td>
+<td>Last measure to render</td>
+</tr>
+<tr>
+<td><code>page_width</code></td>
+<td><code>int</code></td>
+<td>No</td>
+<td>1200</td>
+<td>Width of rendered page in pixels</td>
+</tr>
+</tbody>
+</table>
 <h2 id="returns">Returns</h2>
-<p>Returns a dictionary with four keys:</p>
 <table>
 <thead>
 <tr>
@@ -1582,107 +1807,141 @@
 </thead>
 <tbody>
 <tr>
-<td><code>bach_inventions</code></td>
-<td><code>List[str]</code></td>
-<td>List of Bach Two-Part Invention filenames (15 files)</td>
+<td><code>filename</code></td>
+<td><code>str</code></td>
+<td>The input filename</td>
 </tr>
 <tr>
-<td><code>bartok_mikrokosmos</code></td>
-<td><code>List[str]</code></td>
-<td>List of Bartók Mikrokosmos filenames (19 files)</td>
+<td><code>measures</code></td>
+<td><code>str</code></td>
+<td>Measure range rendered (e.g., "1-4")</td>
 </tr>
 <tr>
-<td><code>morley_canzonets</code></td>
-<td><code>List[str]</code></td>
-<td>List of Morley Canzonet filenames (12 files)</td>
+<td><code>svg</code></td>
+<td><code>str</code></td>
+<td>SVG markup as a string</td>
 </tr>
 <tr>
-<td><code>all_files</code></td>
-<td><code>List[str]</code></td>
-<td>Complete list of all 46 filenames</td>
+<td><code>format</code></td>
+<td><code>str</code></td>
+<td>Always "svg"</td>
 </tr>
 </tbody>
 </table>
 <h2 id="example-usage">Example Usage</h2>
-<h3 id="with-claude-desktop">With Claude Desktop</h3>
-<div class="admonition example">
-<p class="admonition-title">Natural language query</p>
-<p>"What MEI files are available?"</p>
-</div>
-<h3 id="example-output">Example Output</h3>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;bach_inventions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="s2">&quot;Bach_BWV_0773.mei&quot;</span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="s2">&quot;Bach_BWV_0774.mei&quot;</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="err">...</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="p">],</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="nt">&quot;bartok_mikrokosmos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="s2">&quot;Bartok_Mikrokosmos_022.mei&quot;</span><span class="p">,</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="s2">&quot;Bartok_Mikrokosmos_023.mei&quot;</span><span class="p">,</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="err">...</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="p">],</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="nt">&quot;morley_canzonets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="s2">&quot;Morley_1595_01_Go_ye_my_canzonettes.mei&quot;</span><span class="p">,</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="s2">&quot;Morley_1595_02_When_lo_by_break.mei&quot;</span><span class="p">,</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">    </span><span class="err">...</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span><span class="p">],</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span><span class="nt">&quot;all_files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">    </span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span><span class="s2">&quot;Bach_BWV_0773.mei&quot;</span><span class="p">,</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">    </span><span class="err">...</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span><span class="p">]</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="p">}</span>
+<h3 id="basic-example">Basic Example</h3>
+<p>Render the first 4 measures:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">render_notation</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Returns SVG of measures 1-4</span>
+</span></code></pre></div>
+<h3 id="custom-range">Custom Range</h3>
+<p>Render a specific section:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">render_notation</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">start_measure</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">end_measure</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Returns SVG of measures 5-8</span>
+</span></code></pre></div>
+<h3 id="wider-display">Wider Display</h3>
+<p>Render with more horizontal space:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">render_notation</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">page_width</span><span class="o">=</span><span class="mi">1600</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Returns wider SVG rendering</span>
 </span></code></pre></div>
 <h2 id="use-cases">Use Cases</h2>
-<h3 id="browsing-by-composer">Browsing by Composer</h3>
-<p>Use the composer-specific lists to focus on particular repertoire:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get only Bach inventions</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">bach_files</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;bach_inventions&quot;</span><span class="p">]</span>
+<h3 id="illustrate-analysis">Illustrate Analysis</h3>
+<p>Show the actual notation when discussing musical features:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Analyze intervals</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">intervals</span> <span class="o">=</span> <span class="n">get_melodic_intervals</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">)</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Show the notation being analyzed</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">notation</span> <span class="o">=</span> <span class="n">render_notation</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">start_measure</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">end_measure</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </span></code></pre></div>
-<h3 id="batch-analysis">Batch Analysis</h3>
-<p>Use <code>all_files</code> to process the entire collection:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Analyze keys of all pieces</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;all_files&quot;</span><span class="p">]:</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">key_info</span> <span class="o">=</span> <span class="n">analyze_key</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">key_info</span><span class="p">[</span><span class="s1">&#39;Key Name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<h3 id="compare-sections">Compare Sections</h3>
+<p>Render different sections for comparison:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">opening</span> <span class="o">=</span> <span class="n">render_notation</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">start_measure</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">end_measure</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">closing</span> <span class="o">=</span> <span class="n">render_notation</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">start_measure</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">end_measure</span><span class="o">=</span><span class="mi">23</span><span class="p">)</span>
 </span></code></pre></div>
-<h3 id="collection-statistics">Collection Statistics</h3>
-<p>Use the lists to gather collection information:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">total_files</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;all_files&quot;</span><span class="p">])</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">bach_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;bach_inventions&quot;</span><span class="p">])</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">bartok_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;bartok_mikrokosmos&quot;</span><span class="p">])</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">morley_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;morley_canzonets&quot;</span><span class="p">])</span>
+<h3 id="focus-on-specific-passages">Focus on Specific Passages</h3>
+<p>Extract just the measures you need:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Show only the measures with a specific motif</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">motif</span> <span class="o">=</span> <span class="n">render_notation</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">start_measure</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">end_measure</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
 </span></code></pre></div>
-<h2 id="file-naming-conventions">File Naming Conventions</h2>
-<h3 id="bach-inventions">Bach Inventions</h3>
-<p>Format: <code>Bach_BWV_XXXX.mei</code></p>
+<h3 id="generate-thumbnails">Generate Thumbnails</h3>
+<p>Create small previews with limited measures:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">preview</span> <span class="o">=</span> <span class="n">render_notation</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">start_measure</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">end_measure</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="technical-details">Technical Details</h2>
+<h3 id="rendering-process">Rendering Process</h3>
+<ol>
+<li><strong>Load</strong>: music21 parses the MEI file</li>
+<li><strong>Select</strong>: Specific measures are extracted</li>
+<li><strong>Export</strong>: Excerpt is converted to MusicXML</li>
+<li><strong>Render</strong>: verovio converts MusicXML to SVG</li>
+</ol>
+<h3 id="svg-output">SVG Output</h3>
+<p>The SVG returned is:
+- <strong>Scalable</strong>: Can be displayed at any size
+- <strong>Text-based</strong>: No binary dependencies needed
+- <strong>Inline</strong>: Can be embedded directly in responses
+- <strong>Self-contained</strong>: Includes all necessary notation elements</p>
+<h3 id="page-width">Page Width</h3>
+<p>The <code>page_width</code> parameter affects:
+- Horizontal spacing of notes
+- System breaks
+- Overall layout</p>
+<p>Typical values:
+- <code>1000-1200</code>: Standard display
+- <code>1400-1600</code>: Wider, more spacious
+- <code>800-1000</code>: Compact display</p>
+<h2 id="error-handling">Error Handling</h2>
+<h3 id="invalid-measure-numbers">Invalid Measure Numbers</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># start_measure must be &gt;= 1</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">render_notation</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">start_measure</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># ValueError</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># end_measure must be &gt;= start_measure</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">render_notation</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">start_measure</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">end_measure</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># ValueError</span>
+</span></code></pre></div>
+<h3 id="missing-measures">Missing Measures</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Requesting measures beyond the piece length</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">render_notation</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">start_measure</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">end_measure</span><span class="o">=</span><span class="mi">105</span><span class="p">)</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># ValueError: No music found in measures 100-105</span>
+</span></code></pre></div>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="keep-excerpts-small">Keep Excerpts Small</h3>
+<p>For performance and clarity, limit rendered measures:</p>
 <ul>
-<li><code>BWV</code>: Bach-Werke-Verzeichnis (Bach Works Catalog)</li>
-<li>Ranges from BWV 772 to BWV 786 (15 inventions)</li>
+<li><strong>1-4 measures</strong>: Ideal for motifs</li>
+<li><strong>5-8 measures</strong>: Good for phrases</li>
+<li><strong>8+ measures</strong>: Use sparingly</li>
 </ul>
-<h3 id="bartok-mikrokosmos">Bartók Mikrokosmos</h3>
-<p>Format: <code>Bartok_Mikrokosmos_XXX.mei</code></p>
+<h3 id="match-width-to-content">Match Width to Content</h3>
+<p>Adjust page width based on excerpt length:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Short excerpt - narrower is fine</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">render_notation</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">start_measure</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">end_measure</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">page_width</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Longer excerpt - wider is better</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">render_notation</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">start_measure</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">end_measure</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">page_width</span><span class="o">=</span><span class="mi">1600</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="coordinate-with-analysis">Coordinate with Analysis</h3>
+<p>Show notation alongside analysis results:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Get the data</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">ngrams</span> <span class="o">=</span> <span class="n">get_melodic_ngrams</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Show the notation</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">notation</span> <span class="o">=</span> <span class="n">render_notation</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="n">start_measure</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">end_measure</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Now both data and visual representation are available</span>
+</span></code></pre></div>
+<h2 id="limitations">Limitations</h2>
 <ul>
-<li>Numbers correspond to Mikrokosmos volume and piece numbers</li>
-</ul>
-<h3 id="morley-canzonets">Morley Canzonets</h3>
-<p>Format: <code>Morley_1595_XX_Title.mei</code></p>
-<ul>
-<li><code>1595</code>: Publication year</li>
-<li>Includes descriptive titles</li>
+<li><strong>No audio</strong>: This tool only creates visual notation</li>
+<li><strong>Static output</strong>: SVG is not interactive</li>
+<li><strong>Layout control</strong>: Limited control over detailed layout decisions</li>
+<li><strong>File size</strong>: Very long excerpts create large SVG files</li>
 </ul>
 <h2 id="related-tools">Related Tools</h2>
 <ul>
-<li><a href="../metadata/">get_mei_metadata</a> - Get detailed information about specific files</li>
-<li><a href="../../resources/mei-files/">Resources: MEI Files</a> - Learn more about the collection</li>
-</ul>
-<h2 id="implementation">Implementation</h2>
-<p>The tool scans the <code>resources</code> directory and categorizes files based on filename prefixes:</p>
-<ul>
-<li>Files starting with <code>Bach_BWV_</code> → Bach inventions</li>
-<li>Files starting with <code>Bartok_Mikrokosmos_</code> → Bartók pieces</li>
-<li>Files starting with <code>Morley_</code> → Morley canzonets</li>
+<li><a href="../metadata/">get_mei_metadata</a> - Get piece information before rendering</li>
+<li><a href="../intervals/notes/">get_notes</a> - See the notes in data form</li>
+<li><a href="../intervals/melodic/">get_melodic_intervals</a> - Analyze what's shown in the notation</li>
+<li><a href="../discovery/">list_available_mei_files</a> - Find files to render</li>
 </ul>
 
 
