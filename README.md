@@ -1,5 +1,13 @@
 # encoding-music-mcp
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Documentation](https://img.shields.io/badge/docs-mkdocs-blue)](https://unimelbmdap.github.io/encoding-music-mcp/)
+[![MCP](https://img.shields.io/badge/MCP-Server-green)](https://modelcontextprotocol.io)
+[![MEI](https://img.shields.io/badge/MEI-Music%20Encoding%20Initiative-purple)](https://music-encoding.org/)
+
 MCP server for analyzing MEI (Music Encoding Initiative) files. Provides tools to extract metadata, analyze musical structure, and understand encoded scores.
 
 ## Features
