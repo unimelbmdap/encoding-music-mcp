@@ -8,15 +8,17 @@ The `get_melodic_intervals` tool analyzes the melodic motion within each voice, 
 
 ## Parameters
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `filename` | `str` | Yes | Name of the MEI file (e.g., "Bach_BWV_0772.mei") |
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `filename` | `str` | Yes | - | Name of the MEI file (e.g., "Bach_BWV_0772.mei") |
+| `kind` | `str` | No | 'd' | Interval type: 'd' (diatonic), 'c' (chromatic), 'q' (with quality), 'z' (zero-based) |
 
 ## Returns
 
 | Key | Type | Description |
 |-----|------|-------------|
 | `filename` | `str` | The input filename |
+| `kind` | `str` | The interval type used |
 | `melodic_intervals` | `str` | CSV representation of intervals dataframe |
 
 ## Example Output
@@ -40,6 +42,54 @@ Measure,Beat,1,2
 - **Negative intervals**: Descending motion (e.g., `-M3` = down a major third)
 - **Rest**: Beginning of melodic line
 - **NaN**: Voice is silent
+
+## Interval Types (`kind` parameter)
+
+The `kind` parameter controls how intervals are calculated:
+
+### Diatonic (`kind='d'`, default)
+
+Basic scale degrees without quality information:
+
+```python
+result = get_melodic_intervals("Bach_BWV_0772.mei", kind='d')
+# Example: 2, -3, 5 (up 2nd, down 3rd, up 5th)
+```
+
+### Chromatic (`kind='c'`)
+
+Semitone distances - useful for atonal/twelve-tone analysis:
+
+```python
+result = get_melodic_intervals("Bach_BWV_0772.mei", kind='c')
+# Example: 2, -4, 7 (up 2 semitones, down 4 semitones, up 7 semitones)
+```
+
+### With Quality (`kind='q'`)
+
+Includes major/minor/perfect quality - ideal for detailed tonal analysis:
+
+```python
+result = get_melodic_intervals("Bach_BWV_0772.mei", kind='q')
+# Example: M2, -m3, P5 (major 2nd up, minor 3rd down, perfect 5th up)
+```
+
+This is the most detailed option and is shown in the example output above.
+
+### Zero-based (`kind='z'`)
+
+Zero-indexed diatonic intervals for computational analysis:
+
+```python
+result = get_melodic_intervals("Bach_BWV_0772.mei", kind='z')
+# Example: 1, -2, 4 (same as 2, -3, 5 but zero-indexed)
+```
+
+!!! tip "Which Kind to Use?"
+    - **'d'** - Quick overview of melodic motion
+    - **'c'** - Analyzing chromatic or atonal music
+    - **'q'** - Detailed tonal analysis (most common)
+    - **'z'** - Statistical or computational work
 
 ## Common Melodic Intervals
 

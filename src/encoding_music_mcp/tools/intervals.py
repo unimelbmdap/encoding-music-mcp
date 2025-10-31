@@ -59,7 +59,7 @@ def get_notes(filename: str) -> dict[str, Any]:
     }
 
 
-def get_melodic_intervals(filename: str) -> dict[str, Any]:
+def get_melodic_intervals(filename: str, kind: str = "d") -> dict[str, Any]:
     """Extract melodic intervals from an MEI file using CRIM Intervals.
 
     Returns a dataframe of melodic intervals for the given piece.
@@ -68,18 +68,25 @@ def get_melodic_intervals(filename: str) -> dict[str, Any]:
 
     Args:
         filename: Name of the MEI file (e.g., "Bach_BWV_0772.mei")
+        kind: Type of interval to calculate:
+            - 'd' (default): diatonic intervals (e.g., 2, -3, 5)
+            - 'c': chromatic intervals (e.g., 0, 2, -4)
+            - 'q': diatonic with quality (e.g., 'M2', 'm3', 'P5')
+            - 'z': zero-based diatonic intervals
 
     Returns:
         Dictionary containing:
         - melodic_intervals: CSV representation of the melodic intervals dataframe
+        - kind: The interval type used
         - filename: The input filename
     """
     filepath = get_mei_filepath(filename)
     piece, nr = _load_piece_with_details(filepath)
-    mel = piece.melodic(df=nr)
+    mel = piece.melodic(df=nr, kind=kind)
 
     return {
         "filename": filename,
+        "kind": kind,
         "melodic_intervals": mel.to_csv(index=True)
         if not mel.empty
         else "No melodic intervals found",
@@ -113,7 +120,9 @@ def get_harmonic_intervals(filename: str) -> dict[str, Any]:
     }
 
 
-def get_melodic_ngrams(filename: str, n: int = 4) -> dict[str, Any]:
+def get_melodic_ngrams(
+    filename: str, n: int = 4, kind: str = "d", entries: bool = False
+) -> dict[str, Any]:
     """Extract melodic n-grams from an MEI file using CRIM Intervals.
 
     Returns a dataframe of melodic n-grams for the given piece.
@@ -124,26 +133,54 @@ def get_melodic_ngrams(filename: str, n: int = 4) -> dict[str, Any]:
     Args:
         filename: Name of the MEI file (e.g., "Bach_BWV_0772.mei")
         n: Length of the n-grams (default: 4)
+        kind: Type of interval to calculate:
+            - 'd' (default): diatonic intervals (e.g., 2, -3, 5)
+            - 'c': chromatic intervals (e.g., 0, 2, -4)
+            - 'q': diatonic with quality (e.g., 'M2', 'm3', 'P5')
+            - 'z': zero-based diatonic intervals
+        entries: If True, filter to only show n-grams occurring after rests,
+            section breaks, or fermatas. This is useful for identifying thematic
+            material and motives. (default: False)
 
     Returns:
         Dictionary containing:
         - melodic_ngrams: CSV representation of the melodic n-grams dataframe
         - n: The n-gram length used
+        - kind: The interval type used
+        - entries: Whether entry filtering was applied
         - filename: The input filename
     """
     filepath = get_mei_filepath(filename)
-    piece, nr = _load_piece_with_details(filepath)
-    mel = piece.melodic(df=nr, kind="d")
-    ng = piece.ngrams(df=mel, n=n)
+    piece = importScore(str(filepath))
+    if piece is None:
+        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+
+    if entries:
+        # When filtering to entries, use end=False and offsets='first'
+        mel = piece.melodic(kind=kind, end=False)
+        mel_ngrams = piece.ngrams(df=mel, n=n, offsets="first")
+        mel_ngrams = piece.entries(
+            df=mel_ngrams, thematic=False, anywhere=False, fermatas=True, exclude=[]
+        ).fillna("")
+        mel_ngrams = piece.numberParts(mel_ngrams)
+        mel_ngrams = piece.detailIndex(mel_ngrams, offset=True)
+    else:
+        # Standard n-gram extraction
+        mel = piece.melodic(kind=kind, end=False)
+        mel_ngrams = piece.ngrams(df=mel, n=n, offsets="first").fillna("")
+        mel_ngrams = piece.numberParts(mel_ngrams)
+        mel_ngrams = piece.detailIndex(mel_ngrams, offset=True)
 
     # Convert tuples to strings with underscore separators
     tuple_to_string = lambda x: "_".join(map(str, x)) if isinstance(x, tuple) else x
-    ng = ng.map(tuple_to_string)
+    mel_ngrams = mel_ngrams.map(tuple_to_string)
 
     return {
         "filename": filename,
         "n": n,
-        "melodic_ngrams": ng.to_csv(index=True)
-        if not ng.empty
+        "kind": kind,
+        "entries": entries,
+        "melodic_ngrams": mel_ngrams.to_csv(index=True)
+        if not mel_ngrams.empty
         else "No melodic n-grams found",
     }
