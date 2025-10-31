@@ -7,6 +7,7 @@ MCP server for analyzing MEI (Music Encoding Initiative) files. Provides tools t
 - **46 Built-in MEI Files**: Bach Inventions, Bartók Mikrokosmos, Morley Canzonets - ready to analyze
 - **MEI Metadata Extraction**: Extract title, composer, editors, analysts, publication dates, and copyright information
 - **Key Analysis**: Detect musical keys with confidence scores using music21
+- **Interval Analysis**: Extract notes, melodic intervals, harmonic intervals, and melodic n-grams using CRIM Intervals
 - **Simple & Efficient**: Tools read directly from disk - no token waste
 
 ## Installation
@@ -91,6 +92,8 @@ uv sync
    - "What MEI files are available?" → Lists all 46 built-in files
    - "Tell me about Bach_BWV_0772.mei" → Extracts metadata
    - "What key is Bach_BWV_0772.mei in?" → Analyzes key with confidence score
+   - "Get the melodic intervals for Bach_BWV_0772.mei" → Extracts melodic intervals
+   - "Find melodic 4-grams in Bach_BWV_0772.mei" → Extracts melodic n-grams
 
 ### Standalone
 
@@ -160,6 +163,60 @@ Analyze the musical key of a piece using music21's key detection algorithm.
 }
 ```
 
+### `get_notes`
+
+Extract all notes from an MEI file using CRIM Intervals.
+
+**Parameters**:
+- `filename` (string, required): Name of the MEI file (e.g., "Bach_BWV_0772.mei")
+
+**Returns**: Dictionary with:
+- `filename`: The input filename
+- `notes`: String representation of the notes dataframe with pitch and octave information
+
+Columns represent individual staves or voice parts. Rows represent measure and beat information as floats.
+
+### `get_melodic_intervals`
+
+Extract melodic intervals from an MEI file using CRIM Intervals.
+
+**Parameters**:
+- `filename` (string, required): Name of the MEI file (e.g., "Bach_BWV_0772.mei")
+
+**Returns**: Dictionary with:
+- `filename`: The input filename
+- `melodic_intervals`: String representation of the melodic intervals dataframe
+
+Columns represent individual staves or voice parts. Rows represent measure and beat information as floats.
+
+### `get_harmonic_intervals`
+
+Extract harmonic intervals from an MEI file using CRIM Intervals.
+
+**Parameters**:
+- `filename` (string, required): Name of the MEI file (e.g., "Bach_BWV_0772.mei")
+
+**Returns**: Dictionary with:
+- `filename`: The input filename
+- `harmonic_intervals`: String representation of the harmonic intervals dataframe
+
+Columns represent pairs of voice parts. Rows represent measure and beat information as floats.
+
+### `get_melodic_ngrams`
+
+Extract melodic n-grams from an MEI file using CRIM Intervals.
+
+**Parameters**:
+- `filename` (string, required): Name of the MEI file (e.g., "Bach_BWV_0772.mei")
+- `n` (integer, optional): Length of the n-grams (default: 4)
+
+**Returns**: Dictionary with:
+- `filename`: The input filename
+- `n`: The n-gram length used
+- `melodic_ngrams`: String representation of melodic n-grams dataframe
+
+N-grams are tuples of intervals converted to strings with underscore separators (e.g., "2_-2_3_-1").
+
 ## Built-in Files
 
 The server includes 46 MEI files:
@@ -187,11 +244,10 @@ uv run ruff format .
 ## Coming Soon
 
 Additional tools planned:
-- Note counting and frequency analysis
 - Time signature detection
-- Pitch histograms
+- Pitch histograms and frequency analysis
 - Lyrics extraction
-- Full note sequence analysis
+- Pattern matching and similarity detection
 
 ## License
 
