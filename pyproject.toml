@@ -15,6 +15,7 @@ encoding-music-mcp = "encoding_music_mcp.server:main"
 [dependency-groups]
 dev = [
     "ruff>=0.8.0",
+    "pytest>=8.0.0",
 ]
 
 [build-system]

@@ -239,7 +239,17 @@ uv run encoding-music-mcp
 
 # Format code
 uv run ruff format .
+
+# Run tests
+uv run pytest
+
+# Run tests with verbose output
+uv run pytest -v
 ```
+
+### Testing
+
+The project includes comprehensive tests for all tools. See [tests/README.md](tests/README.md) for detailed testing documentation.
 
 ## Coming Soon
 

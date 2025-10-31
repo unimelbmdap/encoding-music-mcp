@@ -22,8 +22,13 @@ def _load_piece_with_details(filepath) -> tuple[Any, Any]:
 
     Returns:
         Tuple of (piece, detailed_notes_dataframe)
+
+    Raises:
+        FileNotFoundError: If the file cannot be loaded
     """
     piece = importScore(str(filepath))
+    if piece is None:
+        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
     nr = piece.notes()
     nr = piece.numberParts(nr)
     nr = piece.detailIndex(nr)
