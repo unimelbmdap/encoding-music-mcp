@@ -1,5 +1,6 @@
 """MEI rendering tools using verovio."""
 
+import base64
 from pathlib import Path
 from typing import Any
 
@@ -33,8 +34,8 @@ def render_notation(
         Dictionary containing:
         - filename: The input filename
         - measures: String describing the measure range (e.g., "1-4")
-        - svg: SVG markup as a string
-        - format: Always "svg"
+        - image: Base64-encoded data URI of the SVG
+        - format: Always "svg+base64"
 
     Raises:
         FileNotFoundError: If the MEI file cannot be found
@@ -77,9 +78,13 @@ def render_notation(
     )
     svg = tk.renderToSVG()
 
+    # Encode SVG as base64 data URI
+    svg_base64 = base64.b64encode(svg.encode("utf-8")).decode("utf-8")
+    data_uri = f"data:image/svg+xml;base64,{svg_base64}"
+
     return {
         "filename": filename,
         "measures": f"{start_measure}-{end_measure}",
-        "svg": svg,
-        "format": "svg",
+        "image": data_uri,
+        "format": "svg+base64",
     }
