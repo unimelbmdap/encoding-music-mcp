@@ -10,6 +10,7 @@ from .intervals import (
     get_harmonic_intervals,
     get_melodic_ngrams,
 )
+from .rendering import render_notation
 
 # Register all tools here
 # To add a new tool: import it, then add mcp.tool()(your_tool) below
@@ -20,3 +21,4 @@ mcp.tool()(get_notes)
 mcp.tool()(get_melodic_intervals)
 mcp.tool()(get_harmonic_intervals)
 mcp.tool()(get_melodic_ngrams)
+mcp.tool()(render_notation)

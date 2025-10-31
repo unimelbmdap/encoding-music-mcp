@@ -26,6 +26,12 @@ encoding-music-mcp provides a suite of tools for analyzing MEI files. All tools 
 | [`get_harmonic_intervals`](intervals/harmonic.md) | Analyze harmonic intervals between voices | [Documentation](intervals/harmonic.md) |
 | [`get_melodic_ngrams`](intervals/ngrams.md) | Find recurring melodic patterns | [Documentation](intervals/ngrams.md) |
 
+### Rendering Tools
+
+| Tool | Purpose | Learn More |
+|------|---------|------------|
+| [`render_notation`](rendering.md) | Render musical excerpts as SVG notation | [Documentation](rendering.md) |
+
 ## Tool Categories
 
 ### 🔍 Discovery
@@ -50,6 +56,12 @@ Tools for analyzing musical content:
     - Melodic intervals
     - Harmonic intervals
     - N-gram pattern matching
+
+### 🎨 Rendering
+
+Tools for visualizing music notation:
+
+- **[render_notation](rendering.md)**: Create SVG notation excerpts using verovio
 
 ## Tool Design Philosophy
 
