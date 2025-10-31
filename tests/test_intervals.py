@@ -287,3 +287,30 @@ def test_get_cadences_multiple_pieces():
     # Filenames should match
     assert result1["filename"] == "Morley_1595_01_Go_ye_my_canzonettes.mei"
     assert result2["filename"] == "Morley_1595_07_Leave_now_mine_eyes.mei"
+
+
+def test_get_cadences_non_renaissance_music():
+    """Test that cadence detection handles non-Renaissance music gracefully."""
+    # Bach is Baroque, not Renaissance - cadence detection may not work
+    result = get_cadences("Bach_BWV_0772.mei")
+
+    # Should return valid dictionary
+    assert isinstance(result, dict), "Result should be a dictionary"
+
+    # Should have expected keys
+    assert "filename" in result, "Result should contain 'filename'"
+    assert "cadences" in result, "Result should contain 'cadences'"
+
+    # Filename should match
+    assert result["filename"] == "Bach_BWV_0772.mei"
+
+    # Should contain an error message or "No cadences found"
+    cadences_str = result["cadences"]
+    assert isinstance(cadences_str, str), "Cadences should be a string"
+    # Should indicate the tool is optimised for Renaissance music or no cadences found
+    is_valid_response = (
+        "not supported" in cadences_str.lower()
+        or "no cadences" in cadences_str.lower()
+        or "renaissance" in cadences_str.lower()
+    )
+    assert is_valid_response, "Should indicate limitation or no cadences for non-Renaissance music"

@@ -207,7 +207,24 @@ def get_cadences(filename: str) -> dict[str, Any]:
     if piece is None:
         raise FileNotFoundError(f"Could not load MEI file: {filepath}")
 
-    cads = piece.cadences()
+    try:
+        cads = piece.cadences()
+    except (ValueError, KeyError) as e:
+        # Cadence detection may fail for non-Renaissance music or unusual textures
+        return {
+            "filename": filename,
+            "cadences": f"Cadence detection not supported for this piece. "
+            f"This tool is optimised for Renaissance counterpoint (15th-17th century vocal polyphony). "
+            f"Error: {str(e)}",
+        }
+
+    # Check if any cadences were found before adding metadata columns
+    if cads.empty:
+        return {
+            "filename": filename,
+            "cadences": "No cadences found",
+        }
+
     cads["Composer"] = piece.metadata["composer"]
     cads["Title"] = piece.metadata["title"]
     cads = cads[
@@ -216,5 +233,5 @@ def get_cadences(filename: str) -> dict[str, Any]:
 
     return {
         "filename": filename,
-        "cadences": cads.to_csv(index=False) if not cads.empty else "No cadences found",
+        "cadences": cads.to_csv(index=False),
     }
