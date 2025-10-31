@@ -1,5 +1,6 @@
 """MEI rendering tools using verovio."""
 
+from pathlib import Path
 from typing import Any
 
 import verovio
@@ -59,11 +60,13 @@ def render_notation(
         )
 
     # Export to MusicXML (music21's most reliable format for verovio)
-    musicxml_data = excerpt.write("musicxml")
+    # write() returns a file path, so we need to read the file
+    musicxml_path = excerpt.write("musicxml")
+    musicxml_string = Path(musicxml_path).read_text(encoding="utf-8")
 
     # Render with verovio
     tk = verovio.toolkit()
-    tk.loadData(musicxml_data)
+    tk.loadData(musicxml_string)
     tk.setOptions(
         {
             "pageWidth": page_width,
