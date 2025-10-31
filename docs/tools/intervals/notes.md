@@ -17,24 +17,23 @@ The `get_notes` tool extracts every note from an MEI file, displaying pitch name
 | Key | Type | Description |
 |-----|------|-------------|
 | `filename` | `str` | The input filename |
-| `notes` | `str` | Formatted dataframe of notes |
+| `notes` | `str` | CSV representation of notes dataframe |
 
 ## Example Output
 
-```
-                  1     2
-Measure Beat
-1.0     1.000  Rest  Rest
-        1.250    C4   NaN
-        1.500    D4   NaN
-        1.750    E4   NaN
-        2.000    F4   NaN
-        2.250    D4   NaN
-        2.500    E4   NaN
-        2.750    C4   NaN
-        3.000    G4   NaN
-        3.250   NaN    C3
-        3.500    C5    D3
+```csv
+Measure,Beat,1,2
+1.0,1.0,Rest,Rest
+1.0,1.25,C4,
+1.0,1.5,D4,
+1.0,1.75,E4,
+1.0,2.0,F4,
+1.0,2.25,D4,
+1.0,2.5,E4,
+1.0,2.75,C4,
+1.0,3.0,G4,
+1.0,3.25,,C3
+1.0,3.5,C5,D3
 ```
 
 ## Note Representation

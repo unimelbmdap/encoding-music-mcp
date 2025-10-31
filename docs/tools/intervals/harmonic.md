@@ -17,23 +17,22 @@ The `get_harmonic_intervals` tool analyzes the vertical (harmonic) relationships
 | Key | Type | Description |
 |-----|------|-------------|
 | `filename` | `str` | The input filename |
-| `harmonic_intervals` | `str` | Formatted dataframe of intervals |
+| `harmonic_intervals` | `str` | CSV representation of intervals dataframe |
 
 ## Example Output
 
-```
-                2_1
-Measure Beat
-1.0     1.000  Rest
-        1.250  Rest
-        3.250   P12
-        3.500   m14
-        3.750   m13
-        4.000   A11
-        4.250   M13
-        4.500   m13
-        4.750   P15
-2.0     1.000   P12
+```csv
+Measure,Beat,2_1
+1.0,1.0,Rest
+1.0,1.25,Rest
+1.0,3.25,P12
+1.0,3.5,m14
+1.0,3.75,m13
+1.0,4.0,A11
+1.0,4.25,M13
+1.0,4.5,m13
+1.0,4.75,P15
+2.0,1.0,P12
 ```
 
 ## Understanding the Output

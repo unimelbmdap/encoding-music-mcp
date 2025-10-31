@@ -89,7 +89,7 @@ Extract all notes with pitch and octave.
 ```python
 {
     "filename": str,
-    "notes": str    # Formatted dataframe
+    "notes": str    # CSV representation
 }
 ```
 
@@ -106,7 +106,7 @@ Calculate melodic intervals within voices.
 ```python
 {
     "filename": str,
-    "melodic_intervals": str    # Formatted dataframe
+    "melodic_intervals": str    # CSV representation
 }
 ```
 
@@ -123,7 +123,7 @@ Calculate harmonic intervals between voices.
 ```python
 {
     "filename": str,
-    "harmonic_intervals": str    # Formatted dataframe
+    "harmonic_intervals": str    # CSV representation
 }
 ```
 
@@ -142,7 +142,7 @@ Find recurring melodic patterns.
 {
     "filename": str,
     "n": int,
-    "melodic_ngrams": str    # Formatted dataframe
+    "melodic_ngrams": str    # CSV representation
 }
 ```
 
@@ -192,21 +192,21 @@ patterns = get_melodic_ngrams("Bach_BWV_0772.mei", n=4)
 
 ## Data Formats
 
-### Dataframe Format
+### CSV Format
 
-Interval tools return formatted strings representing dataframes:
+Interval tools return data in CSV format for efficient token usage:
 
+```csv
+Measure,Beat,1,2
+1.0,1.0,Rest,Rest
+1.0,1.25,C4,
+1.0,1.5,D4,
 ```
-                  1     2
-Measure Beat
-1.0     1.000  Rest  Rest
-        1.250    C4   NaN
-        1.500    D4   NaN
-```
 
-- **Rows**: Measure.Beat positions
+- **Rows**: Measure and beat positions (indexed)
 - **Columns**: Voice part numbers
 - **Values**: Notes, intervals, or patterns
+- **Empty cells**: Represented as blank (no NaN in CSV)
 
 ### Interval Notation
 

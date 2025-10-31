@@ -17,22 +17,21 @@ The `get_melodic_intervals` tool analyzes the melodic motion within each voice, 
 | Key | Type | Description |
 |-----|------|-------------|
 | `filename` | `str` | The input filename |
-| `melodic_intervals` | `str` | Formatted dataframe of intervals |
+| `melodic_intervals` | `str` | CSV representation of intervals dataframe |
 
 ## Example Output
 
-```
-                  1     2
-Measure Beat
-1.0     1.000  Rest  Rest
-        1.500    M2   NaN
-        1.750    M2   NaN
-        2.000    m2   NaN
-        2.250   -m3   NaN
-        2.500    M2   NaN
-        2.750   -M3   NaN
-        3.000    P5   NaN
-        3.500    P4    M2
+```csv
+Measure,Beat,1,2
+1.0,1.0,Rest,Rest
+1.0,1.5,M2,
+1.0,1.75,M2,
+1.0,2.0,m2,
+1.0,2.25,-m3,
+1.0,2.5,M2,
+1.0,2.75,-M3,
+1.0,3.0,P5,
+1.0,3.5,P4,M2
 ```
 
 ## Understanding the Output

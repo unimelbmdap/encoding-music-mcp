@@ -19,32 +19,30 @@ The `get_melodic_ngrams` tool identifies sequences of melodic intervals (n-grams
 |-----|------|-------------|
 | `filename` | `str` | The input filename |
 | `n` | `int` | The n-gram length used |
-| `melodic_ngrams` | `str` | Formatted dataframe of n-grams |
+| `melodic_ngrams` | `str` | CSV representation of n-grams dataframe |
 
 ## Example Output
 
 ### With n=4 (default)
 
-```
-                         1            2
-Measure Beat
-1.0     1.500     2_2_2_-3          NaN
-        1.750     2_2_-3_2          NaN
-        2.000    2_-3_2_-3          NaN
-        2.250    -3_2_-3_5          NaN
-        2.500     2_-3_5_4          NaN
-        3.500     4_-2_2_2     2_2_2_-3
+```csv
+Measure,Beat,1,2
+1.0,1.5,2_2_2_-3,
+1.0,1.75,2_2_-3_2,
+1.0,2.0,2_-3_2_-3,
+1.0,2.25,-3_2_-3_5,
+1.0,2.5,2_-3_5_4,
+1.0,3.5,4_-2_2_2,2_2_2_-3
 ```
 
 ### With n=3
 
-```
-                      1         2
-Measure Beat
-1.0     1.500     2_2_2       NaN
-        1.750    2_2_-3       NaN
-        2.000    2_-3_2       NaN
-        2.250   -3_2_-3       NaN
+```csv
+Measure,Beat,1,2
+1.0,1.5,2_2_2,
+1.0,1.75,2_2_-3,
+1.0,2.0,2_-3_2,
+1.0,2.25,-3_2_-3,
 ```
 
 ## Understanding N-grams

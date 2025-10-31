@@ -47,7 +47,7 @@ def get_notes(filename: str) -> dict[str, Any]:
 
     Returns:
         Dictionary containing:
-        - notes: String representation of the notes dataframe
+        - notes: CSV representation of the notes dataframe
         - filename: The input filename
     """
     filepath = get_mei_filepath(filename)
@@ -55,7 +55,7 @@ def get_notes(filename: str) -> dict[str, Any]:
 
     return {
         "filename": filename,
-        "notes": nr.to_string(index=True) if not nr.empty else "No notes found",
+        "notes": nr.to_csv(index=True) if not nr.empty else "No notes found",
     }
 
 
@@ -71,7 +71,7 @@ def get_melodic_intervals(filename: str) -> dict[str, Any]:
 
     Returns:
         Dictionary containing:
-        - melodic_intervals: String representation of the melodic intervals dataframe
+        - melodic_intervals: CSV representation of the melodic intervals dataframe
         - filename: The input filename
     """
     filepath = get_mei_filepath(filename)
@@ -80,7 +80,7 @@ def get_melodic_intervals(filename: str) -> dict[str, Any]:
 
     return {
         "filename": filename,
-        "melodic_intervals": mel.to_string(index=True)
+        "melodic_intervals": mel.to_csv(index=True)
         if not mel.empty
         else "No melodic intervals found",
     }
@@ -98,7 +98,7 @@ def get_harmonic_intervals(filename: str) -> dict[str, Any]:
 
     Returns:
         Dictionary containing:
-        - harmonic_intervals: String representation of the harmonic intervals dataframe
+        - harmonic_intervals: CSV representation of the harmonic intervals dataframe
         - filename: The input filename
     """
     filepath = get_mei_filepath(filename)
@@ -107,7 +107,7 @@ def get_harmonic_intervals(filename: str) -> dict[str, Any]:
 
     return {
         "filename": filename,
-        "harmonic_intervals": har.to_string(index=True)
+        "harmonic_intervals": har.to_csv(index=True)
         if not har.empty
         else "No harmonic intervals found",
     }
@@ -127,7 +127,7 @@ def get_melodic_ngrams(filename: str, n: int = 4) -> dict[str, Any]:
 
     Returns:
         Dictionary containing:
-        - melodic_ngrams: String representation of the melodic n-grams dataframe
+        - melodic_ngrams: CSV representation of the melodic n-grams dataframe
         - n: The n-gram length used
         - filename: The input filename
     """
@@ -143,7 +143,7 @@ def get_melodic_ngrams(filename: str, n: int = 4) -> dict[str, Any]:
     return {
         "filename": filename,
         "n": n,
-        "melodic_ngrams": ng.to_string(index=True)
+        "melodic_ngrams": ng.to_csv(index=True)
         if not ng.empty
         else "No melodic n-grams found",
     }
