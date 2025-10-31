@@ -7,6 +7,7 @@ from src.encoding_music_mcp.tools.intervals import (
     get_melodic_intervals,
     get_harmonic_intervals,
     get_melodic_ngrams,
+    get_cadences,
 )
 
 
@@ -64,7 +65,7 @@ def test_get_melodic_intervals_bach():
 
 def test_get_melodic_intervals_contains_intervals():
     """Test that melodic intervals contain expected interval notation."""
-    result = get_melodic_intervals("Bach_BWV_0772.mei")
+    result = get_melodic_intervals("Bach_BWV_0772.mei", kind="q")
 
     intervals_str = result["melodic_intervals"]
 
@@ -174,6 +175,9 @@ def test_intervals_invalid_file():
     with pytest.raises(FileNotFoundError):
         get_melodic_ngrams("nonexistent_file.mei")
 
+    with pytest.raises(FileNotFoundError):
+        get_cadences("nonexistent_file.mei")
+
 
 def test_intervals_bartok():
     """Test that interval tools work with Bartók pieces."""
@@ -213,3 +217,73 @@ def test_intervals_morley():
     assert len(result_melodic["melodic_intervals"]) > 0, "Melodic intervals should not be empty"
     assert len(result_harmonic["harmonic_intervals"]) > 0, "Harmonic intervals should not be empty"
     assert len(result_ngrams["melodic_ngrams"]) > 0, "N-grams should not be empty"
+
+
+def test_get_cadences_morley():
+    """Test cadence extraction for Morley Go ye my canzonettes."""
+    result = get_cadences("Morley_1595_01_Go_ye_my_canzonettes.mei")
+
+    # Check return type
+    assert isinstance(result, dict), "Result should be a dictionary"
+
+    # Check expected keys
+    assert "filename" in result, "Result should contain 'filename'"
+    assert "cadences" in result, "Result should contain 'cadences'"
+
+    # Check filename matches
+    assert result["filename"] == "Morley_1595_01_Go_ye_my_canzonettes.mei", "Filename should match input"
+
+    # Check cadences content
+    assert isinstance(result["cadences"], str), "Cadences should be a string"
+    assert len(result["cadences"]) > 0, "Cadences should not be empty"
+
+
+def test_get_cadences_contains_expected_columns():
+    """Test that cadences contain expected column names."""
+    result = get_cadences("Morley_1595_01_Go_ye_my_canzonettes.mei")
+
+    cadences_str = result["cadences"]
+
+    # Should contain expected column names
+    assert "Composer" in cadences_str, "Should contain Composer column"
+    assert "Title" in cadences_str, "Should contain Title column"
+    assert "Measure" in cadences_str, "Should contain Measure column"
+    assert "Beat" in cadences_str, "Should contain Beat column"
+    assert "Progress" in cadences_str, "Should contain Progress column"
+    assert "CadType" in cadences_str, "Should contain CadType column"
+    assert "Tone" in cadences_str, "Should contain Tone column"
+    assert "CVFs" in cadences_str, "Should contain CVFs column"
+
+
+def test_get_cadences_contains_metadata():
+    """Test that cadences contain composer and title metadata."""
+    result = get_cadences("Morley_1595_01_Go_ye_my_canzonettes.mei")
+
+    cadences_str = result["cadences"]
+
+    # Should contain composer and title information
+    assert "Morley" in cadences_str or "Thomas" in cadences_str, "Should contain composer name"
+
+
+def test_get_cadences_invalid_file():
+    """Test that get_cadences handles invalid filenames appropriately."""
+    with pytest.raises(FileNotFoundError):
+        get_cadences("nonexistent_file.mei")
+
+
+def test_get_cadences_multiple_pieces():
+    """Test that cadence extraction works with multiple Renaissance pieces."""
+    result1 = get_cadences("Morley_1595_01_Go_ye_my_canzonettes.mei")
+    result2 = get_cadences("Morley_1595_07_Leave_now_mine_eyes.mei")
+
+    # Both should return valid dictionaries
+    assert isinstance(result1, dict), "First result should be a dictionary"
+    assert isinstance(result2, dict), "Second result should be a dictionary"
+
+    # Both should have content
+    assert len(result1["cadences"]) > 0, "First piece should have cadences"
+    assert len(result2["cadences"]) > 0, "Second piece should have cadences"
+
+    # Filenames should match
+    assert result1["filename"] == "Morley_1595_01_Go_ye_my_canzonettes.mei"
+    assert result2["filename"] == "Morley_1595_07_Leave_now_mine_eyes.mei"

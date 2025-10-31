@@ -11,6 +11,7 @@ __all__ = [
     "get_melodic_intervals",
     "get_harmonic_intervals",
     "get_melodic_ngrams",
+    "get_cadences",
 ]
 
 
@@ -183,4 +184,37 @@ def get_melodic_ngrams(
         "melodic_ngrams": mel_ngrams.to_csv(index=True)
         if not mel_ngrams.empty
         else "No melodic n-grams found",
+    }
+
+
+def get_cadences(filename: str) -> dict[str, Any]:
+    """Extract predicted cadences from an MEI file using CRIM Intervals.
+
+    Returns a dataframe of cadences predicted for Renaissance counterpoint.
+    Columns include Composer, Title, Measure, Beat, Progress, CadType (cadence type),
+    Tone, and CVFs (Cadential Voice Functions).
+
+    Args:
+        filename: Name of the MEI file (e.g., "Morley_1595_01_Go_ye_my_canzonettes.mei")
+
+    Returns:
+        Dictionary containing:
+        - cadences: CSV representation of the cadences dataframe
+        - filename: The input filename
+    """
+    filepath = get_mei_filepath(filename)
+    piece = importScore(str(filepath))
+    if piece is None:
+        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+
+    cads = piece.cadences()
+    cads["Composer"] = piece.metadata["composer"]
+    cads["Title"] = piece.metadata["title"]
+    cads = cads[
+        ["Composer", "Title", "Measure", "Beat", "Progress", "CadType", "Tone", "CVFs"]
+    ]
+
+    return {
+        "filename": filename,
+        "cadences": cads.to_csv(index=False) if not cads.empty else "No cadences found",
     }

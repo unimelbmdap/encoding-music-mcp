@@ -9,6 +9,7 @@ from .intervals import (
     get_melodic_intervals,
     get_harmonic_intervals,
     get_melodic_ngrams,
+    get_cadences,
 )
 
 # Register all tools here
@@ -20,3 +21,4 @@ mcp.tool()(get_notes)
 mcp.tool()(get_melodic_intervals)
 mcp.tool()(get_harmonic_intervals)
 mcp.tool()(get_melodic_ngrams)
+mcp.tool()(get_cadences)
