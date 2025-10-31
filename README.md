@@ -10,6 +10,16 @@ MCP server for analyzing MEI (Music Encoding Initiative) files. Provides tools t
 - **Interval Analysis**: Extract notes, melodic intervals, harmonic intervals, and melodic n-grams using CRIM Intervals
 - **Simple & Efficient**: Tools read directly from disk - no token waste
 
+## Documentation
+
+📚 **[Read the full documentation](https://unimelbmdap.github.io/encoding-music-mcp/)** for:
+
+- Detailed tool reference
+- Quick start guides
+- MEI file collection details
+- Development guides
+- API reference
+
 ## Installation
 
 **Prerequisites**: This project requires [uv](https://docs.astral.sh/uv/getting-started/installation/) to be installed.
@@ -245,11 +255,29 @@ uv run pytest
 
 # Run tests with verbose output
 uv run pytest -v
+
+# Serve documentation locally
+uv run mkdocs serve
+
+# Build documentation
+uv run mkdocs build
 ```
 
 ### Testing
 
 The project includes comprehensive tests for all tools. See [tests/README.md](tests/README.md) for detailed testing documentation.
+
+### Documentation
+
+Documentation is built with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/):
+
+```bash
+# Serve locally at http://localhost:8000
+uv run mkdocs serve
+
+# Build static site
+uv run mkdocs build
+```
 
 ## Coming Soon
 

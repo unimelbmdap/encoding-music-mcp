@@ -9,6 +9,14 @@ wheels/
 # Virtual environments
 .venv
 
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Documentation
+site/
+
 notebooks
 
 .DS_Store

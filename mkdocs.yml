@@ -1,0 +1,84 @@
+site_name: encoding-music-mcp
+site_description: MCP server for analyzing MEI (Music Encoding Initiative) files
+site_author: MDAP
+repo_url: https://github.com/unimelbmdap/encoding-music-mcp
+repo_name: unimelbmdap/encoding-music-mcp
+
+theme:
+  name: material
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - admonition
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quick-start.md
+      - Configuration: getting-started/configuration.md
+  - Tools:
+      - Overview: tools/index.md
+      - Discovery: tools/discovery.md
+      - Metadata: tools/metadata.md
+      - Key Analysis: tools/key-analysis.md
+      - Intervals:
+          - Overview: tools/intervals/index.md
+          - Notes: tools/intervals/notes.md
+          - Melodic Intervals: tools/intervals/melodic.md
+          - Harmonic Intervals: tools/intervals/harmonic.md
+          - N-grams: tools/intervals/ngrams.md
+  - Resources:
+      - MEI Files: resources/mei-files.md
+      - Bach Inventions: resources/bach.md
+      - Bartók Mikrokosmos: resources/bartok.md
+      - Morley Canzonets: resources/morley.md
+  - Development:
+      - Contributing: development/contributing.md
+      - Testing: development/testing.md
+      - Project Structure: development/structure.md
+  - API Reference: api-reference.md
+
+plugins:
+  - search
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/unimelbmdap/encoding-music-mcp
