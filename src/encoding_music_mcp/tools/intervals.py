@@ -173,7 +173,9 @@ def get_melodic_ngrams(
         mel_ngrams = piece.detailIndex(mel_ngrams, offset=True)
 
     # Convert tuples to strings with underscore separators
-    tuple_to_string = lambda x: "_".join(map(str, x)) if isinstance(x, tuple) else x
+    def tuple_to_string(x):
+        return "_".join(map(str, x)) if isinstance(x, tuple) else x
+
     mel_ngrams = mel_ngrams.map(tuple_to_string)
 
     return {
