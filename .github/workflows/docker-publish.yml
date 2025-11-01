@@ -23,9 +23,25 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/encoding-music-mcp:latest
-
-    - name: Push to Docker Hub
+    - name: Build and push Docker image
       if: github.event_name == 'push'
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/encoding-music-mcp:latest
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        file: ./Dockerfile
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/encoding-music-mcp:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Build Docker image (PR only)
+      if: github.event_name == 'pull_request'
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        file: ./Dockerfile
+        platforms: linux/amd64,linux/arm64
+        push: false
+        tags: ${{ secrets.DOCKER_USERNAME }}/encoding-music-mcp:latest
+        cache-from: type=gha
