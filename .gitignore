@@ -20,3 +20,5 @@ site/
 notebooks
 
 .DS_Store
+
+.env
