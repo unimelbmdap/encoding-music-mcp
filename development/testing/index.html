@@ -1298,6 +1298,30 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#interactive-testing-with-mcp-inspector" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactive Testing with MCP Inspector
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactive Testing with MCP Inspector">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-the-mcp-inspector" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is the MCP Inspector?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#related-documentation" class="md-nav__link">
     <span class="md-ellipsis">
       Related Documentation
@@ -1583,6 +1607,30 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#interactive-testing-with-mcp-inspector" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactive Testing with MCP Inspector
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactive Testing with MCP Inspector">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-the-mcp-inspector" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is the MCP Inspector?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#related-documentation" class="md-nav__link">
     <span class="md-ellipsis">
       Related Documentation
@@ -1739,6 +1787,33 @@
 </span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">):</span>
 </span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>        <span class="n">your_tool</span><span class="p">(</span><span class="s2">&quot;nonexistent.mei&quot;</span><span class="p">)</span>
 </span></code></pre></div>
+<h2 id="interactive-testing-with-mcp-inspector">Interactive Testing with MCP Inspector</h2>
+<p>For interactive testing and debugging of the MCP server, use the MCP Inspector:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>uv<span class="w"> </span>run<span class="w"> </span>mcp<span class="w"> </span>dev<span class="w"> </span>dev_server.py:mcp
+</span></code></pre></div>
+<p>This will start the MCP Inspector at <code>http://localhost:6274</code> where you can:</p>
+<ul>
+<li>Browse all available tools, resources, and prompts</li>
+<li>Test tools interactively with different parameters</li>
+<li>View real-time responses and outputs</li>
+<li>Debug server behaviour and responses</li>
+</ul>
+<p><strong>Note:</strong> Requires the package to be installed. Run <code>uv sync</code> first if needed.</p>
+<h3 id="what-is-the-mcp-inspector">What is the MCP Inspector?</h3>
+<p>The MCP Inspector is a web-based development tool that provides:</p>
+<ul>
+<li><strong>Tool Testing</strong>: Call any tool with custom parameters and see results immediately</li>
+<li><strong>Resource Browser</strong>: View all available resources and their contents</li>
+<li><strong>Prompt Testing</strong>: Try prompt templates with different arguments</li>
+<li><strong>Debug View</strong>: Inspect request/response JSON for debugging</li>
+</ul>
+<p>This is especially useful for:</p>
+<ul>
+<li>Testing new tools before writing unit tests</li>
+<li>Debugging issues with tool parameters or responses</li>
+<li>Exploring the server's capabilities interactively</li>
+<li>Demonstrating functionality to others</li>
+</ul>
 <h2 id="related-documentation">Related Documentation</h2>
 <ul>
 <li><a href="../contributing/">Contributing Guide</a></li>
