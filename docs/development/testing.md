@@ -162,6 +162,39 @@ def test_your_tool_invalid():
         your_tool("nonexistent.mei")
 ```
 
+## Interactive Testing with MCP Inspector
+
+For interactive testing and debugging of the MCP server, use the MCP Inspector:
+
+```bash
+uv run mcp dev dev_server.py:mcp
+```
+
+This will start the MCP Inspector at `http://localhost:6274` where you can:
+
+- Browse all available tools, resources, and prompts
+- Test tools interactively with different parameters
+- View real-time responses and outputs
+- Debug server behaviour and responses
+
+**Note:** Requires the package to be installed. Run `uv sync` first if needed.
+
+### What is the MCP Inspector?
+
+The MCP Inspector is a web-based development tool that provides:
+
+- **Tool Testing**: Call any tool with custom parameters and see results immediately
+- **Resource Browser**: View all available resources and their contents
+- **Prompt Testing**: Try prompt templates with different arguments
+- **Debug View**: Inspect request/response JSON for debugging
+
+This is especially useful for:
+
+- Testing new tools before writing unit tests
+- Debugging issues with tool parameters or responses
+- Exploring the server's capabilities interactively
+- Demonstrating functionality to others
+
 ## Related Documentation
 
 - [Contributing Guide](contributing.md)
