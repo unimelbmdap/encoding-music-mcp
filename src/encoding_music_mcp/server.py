@@ -5,8 +5,9 @@ from mcp.server.fastmcp import FastMCP
 # Create MCP server
 mcp = FastMCP("encoding-music-mcp")
 
-# Import tools to trigger registration
-from .tools import registry  # noqa: E402, F401
+# Import tools and resources to trigger registration
+from .tools import registry as _tools_registry  # noqa: E402, F401
+from .resources import registry as _resources_registry  # noqa: E402, F401
 
 
 def main():
