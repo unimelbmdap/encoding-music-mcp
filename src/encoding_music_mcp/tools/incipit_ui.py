@@ -29,18 +29,18 @@ def render_musical_incipit_ui(
         filename: Name of the MEI file (e.g., "Bach_BWV_0772.mei")
         start_measure: First measure to render (default: 1)
         end_measure: Last measure to render (default: same as start_measure)
-        output_dir: Directory to save HTML (default: ~/Desktop)
+        output_dir: Directory to save HTML (default: ~/Downloads)
 
     Returns:
-        Success message with file path to open in browser
+        File path in tilde notation (e.g., "~/Downloads/filename.html")
 
     Examples:
-        # Render first 4 measures - saves to Desktop
+        # Render first 4 measures - saves to Downloads
         render_musical_incipit_ui("Bach_BWV_0772.mei", start_measure=1, end_measure=4)
 
-        # Save to Downloads folder
+        # Save to Desktop folder
         render_musical_incipit_ui("Bach_BWV_0772.mei", start_measure=1, end_measure=8,
-                                  output_dir="~/Downloads")
+                                  output_dir="~/Desktop")
     """
     mei_filepath = get_mei_filepath(filename)
 
@@ -90,7 +90,7 @@ def render_musical_incipit_ui(
 
     # Determine output directory
     if output_dir is None:
-        output_path = Path.home() / "Desktop"
+        output_path = Path.home() / "Downloads"
     else:
         output_path = Path(output_dir).expanduser()
 
@@ -104,5 +104,11 @@ def render_musical_incipit_ui(
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(html_output)
 
-    # Return file path - Claude will format it nicely
-    return str(output_file)
+    # Return simplified path with tilde notation
+    try:
+        # Try to make it relative to home directory
+        relative_to_home = output_file.relative_to(Path.home())
+        return f"~/{relative_to_home}"
+    except ValueError:
+        # If not in home directory, return full path
+        return str(output_file)
