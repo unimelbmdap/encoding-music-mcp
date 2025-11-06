@@ -17,9 +17,15 @@ def test_list_available_mei_files():
     assert "all_files" in result, "Should include all_files"
 
     # Check that each category is a list
-    assert isinstance(result["bach_inventions"], list), "bach_inventions should be a list"
-    assert isinstance(result["bartok_mikrokosmos"], list), "bartok_mikrokosmos should be a list"
-    assert isinstance(result["morley_canzonets"], list), "morley_canzonets should be a list"
+    assert isinstance(result["bach_inventions"], list), (
+        "bach_inventions should be a list"
+    )
+    assert isinstance(result["bartok_mikrokosmos"], list), (
+        "bartok_mikrokosmos should be a list"
+    )
+    assert isinstance(result["morley_canzonets"], list), (
+        "morley_canzonets should be a list"
+    )
     assert isinstance(result["all_files"], list), "all_files should be a list"
 
     # Check expected counts
@@ -34,7 +40,9 @@ def test_list_available_mei_files():
         + result["bartok_mikrokosmos"]
         + result["morley_canzonets"]
     )
-    assert set(all_combined) == set(result["all_files"]), "all_files should match combined list"
+    assert set(all_combined) == set(result["all_files"]), (
+        "all_files should match combined list"
+    )
 
 
 def test_bach_inventions_naming():
@@ -42,7 +50,9 @@ def test_bach_inventions_naming():
     result = list_available_mei_files()
 
     for filename in result["bach_inventions"]:
-        assert filename.startswith("Bach_BWV_"), f"{filename} should start with 'Bach_BWV_'"
+        assert filename.startswith("Bach_BWV_"), (
+            f"{filename} should start with 'Bach_BWV_'"
+        )
         assert filename.endswith(".mei"), f"{filename} should end with '.mei'"
 
 
@@ -51,7 +61,9 @@ def test_bartok_naming():
     result = list_available_mei_files()
 
     for filename in result["bartok_mikrokosmos"]:
-        assert filename.startswith("Bartok_Mikrokosmos_"), f"{filename} should start with 'Bartok_Mikrokosmos_'"
+        assert filename.startswith("Bartok_Mikrokosmos_"), (
+            f"{filename} should start with 'Bartok_Mikrokosmos_'"
+        )
         assert filename.endswith(".mei"), f"{filename} should end with '.mei'"
 
 

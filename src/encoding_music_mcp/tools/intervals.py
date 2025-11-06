@@ -93,6 +93,7 @@ def get_melodic_intervals(filename: str, kind: str = "d") -> dict[str, Any]:
         else "No melodic intervals found",
     }
 
+
 def get_harmonic_intervals(filename: str) -> dict[str, Any]:
     """Extract harmonic intervals from an MEI file using CRIM Intervals.
 

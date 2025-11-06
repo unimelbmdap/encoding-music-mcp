@@ -57,24 +57,30 @@ def render_musical_incipit_ui(
     # Export to MusicXML string (in memory)
     exporter = musicxml.m21ToXml.GeneralObjectExporter(excerpt)
     musicxml_bytes = exporter.parse()
-    musicxml_string = musicxml_bytes.decode('utf-8')
+    musicxml_string = musicxml_bytes.decode("utf-8")
 
     # Create measure range text
-    measure_text = f"measure {start_measure}" if start_measure == end_measure else f"measures {start_measure}-{end_measure}"
+    measure_text = (
+        f"measure {start_measure}"
+        if start_measure == end_measure
+        else f"measures {start_measure}-{end_measure}"
+    )
 
     # Replace music21's default title with our filename and measure range
     title_replacement = f"{filename} - {measure_text}"
     musicxml_string = musicxml_string.replace(
-        '<movement-title>Music21 Fragment</movement-title>',
-        f'<movement-title>{html.escape(title_replacement)}</movement-title>'
+        "<movement-title>Music21 Fragment</movement-title>",
+        f"<movement-title>{html.escape(title_replacement)}</movement-title>",
     )
 
     # Escape backticks in MusicXML for safe embedding in JavaScript template literal
-    musicxml_escaped = musicxml_string.replace('`', '\\`').replace('${', '\\${')
+    musicxml_escaped = musicxml_string.replace("`", "\\`").replace("${", "\\${")
 
     # Load HTML template (using Verovio app)
-    template_path = Path(__file__).parent.parent / "templates" / "incipit_verovio_app.html"
-    with open(template_path, 'r', encoding='utf-8') as f:
+    template_path = (
+        Path(__file__).parent.parent / "templates" / "incipit_verovio_app.html"
+    )
+    with open(template_path, "r", encoding="utf-8") as f:
         template_content = f.read()
 
     # Use Template for safe substitution
@@ -85,7 +91,7 @@ def render_musical_incipit_ui(
         title=html.escape(f"{filename} : {measure_text}"),
         filename=html.escape(filename),
         measure_text=html.escape(measure_text.capitalize()),
-        musicxml_data=musicxml_escaped  # Escaped for JavaScript template literal
+        musicxml_data=musicxml_escaped,  # Escaped for JavaScript template literal
     )
 
     # Determine output directory
@@ -95,13 +101,15 @@ def render_musical_incipit_ui(
         output_path = Path(output_dir).expanduser()
 
     # Create output filename with timestamp to avoid collisions
-    safe_filename = filename.replace('.mei', '').replace(' ', '_')
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    output_filename = f"{safe_filename}_m{start_measure}-{end_measure}_{timestamp}_incipit.html"
+    safe_filename = filename.replace(".mei", "").replace(" ", "_")
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    output_filename = (
+        f"{safe_filename}_m{start_measure}-{end_measure}_{timestamp}_incipit.html"
+    )
     output_file = output_path / output_filename
 
     # Save HTML file
-    with open(output_file, 'w', encoding='utf-8') as f:
+    with open(output_file, "w", encoding="utf-8") as f:
         f.write(html_output)
 
     # Return simplified path with tilde notation

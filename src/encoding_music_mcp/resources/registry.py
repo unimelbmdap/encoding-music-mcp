@@ -12,5 +12,5 @@ mcp.resource(
     "ui://incipit/{filename}/{start_measure}/{end_measure}",
     name="Musical Incipit Viewer",
     description="Interactive HTML viewer with SVG notation and MIDI playback",
-    mime_type="text/html"
+    mime_type="text/html",
 )(musical_incipit_viewer)

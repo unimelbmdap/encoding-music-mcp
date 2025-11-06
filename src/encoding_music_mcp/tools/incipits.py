@@ -61,7 +61,7 @@ def render_musical_incipit(
     # Export to MusicXML string (in memory)
     exporter = musicxml.m21ToXml.GeneralObjectExporter(excerpt)
     musicxml_bytes = exporter.parse()
-    musicxml_string = musicxml_bytes.decode('utf-8')
+    musicxml_string = musicxml_bytes.decode("utf-8")
 
     # Calculate number of measures for intelligent layout
     num_measures = end_measure - start_measure + 1
@@ -101,15 +101,10 @@ def render_musical_incipit(
     svg_output = tk.renderToSVG(1)  # Page number as positional argument
 
     # Add label with filename and measure range
-    svg_with_label = _add_label_to_svg(
-        svg_output,
-        filename,
-        start_measure,
-        end_measure
-    )
+    svg_with_label = _add_label_to_svg(svg_output, filename, start_measure, end_measure)
 
     # Convert SVG to PNG
-    png_bytes = cairosvg.svg2png(bytestring=svg_with_label.encode('utf-8'))
+    png_bytes = cairosvg.svg2png(bytestring=svg_with_label.encode("utf-8"))
 
     return Image(data=png_bytes, format="png")
 
@@ -119,7 +114,7 @@ def _add_label_to_svg(
     filename: str,
     start_measure: int,
     end_measure: int,
-    label_height: int = 60
+    label_height: int = 60,
 ) -> str:
     """Add a label to the top of an SVG with filename and measure range.
 
@@ -135,39 +130,43 @@ def _add_label_to_svg(
     """
     # Parse SVG
     # Register namespace to avoid ns0 prefix
-    ET.register_namespace('', 'http://www.w3.org/2000/svg')
+    ET.register_namespace("", "http://www.w3.org/2000/svg")
     root = ET.fromstring(svg_string)
 
     # Get current height and increase it (strip 'px' if present)
-    height_str = root.get('height', '1000')
-    current_height = int(height_str.replace('px', ''))
+    height_str = root.get("height", "1000")
+    current_height = int(height_str.replace("px", ""))
     new_height = current_height + label_height
-    root.set('height', f'{new_height}px')
+    root.set("height", f"{new_height}px")
 
     # Adjust viewBox to match
-    viewbox = root.get('viewBox')
+    viewbox = root.get("viewBox")
     if viewbox:
         parts = viewbox.split()
         parts[3] = str(int(float(parts[3])) + label_height)
-        root.set('viewBox', ' '.join(parts))
+        root.set("viewBox", " ".join(parts))
 
     # Create label text
-    measure_text = f"measure {start_measure}" if start_measure == end_measure else f"measures {start_measure}-{end_measure}"
+    measure_text = (
+        f"measure {start_measure}"
+        if start_measure == end_measure
+        else f"measures {start_measure}-{end_measure}"
+    )
     label_text = f"{filename}, {measure_text}"
 
     # Create text element
-    text = ET.Element('{http://www.w3.org/2000/svg}text')
-    text.set('x', '20')
-    text.set('y', '35')
-    text.set('font-family', 'Arial, sans-serif')
-    text.set('font-size', '20')
-    text.set('font-weight', 'bold')
-    text.set('fill', '#333333')
+    text = ET.Element("{http://www.w3.org/2000/svg}text")
+    text.set("x", "20")
+    text.set("y", "35")
+    text.set("font-family", "Arial, sans-serif")
+    text.set("font-size", "20")
+    text.set("font-weight", "bold")
+    text.set("fill", "#333333")
     text.text = label_text
 
     # Create a group for the original music notation, shifted down
-    group = ET.Element('{http://www.w3.org/2000/svg}g')
-    group.set('transform', f'translate(0, {label_height})')
+    group = ET.Element("{http://www.w3.org/2000/svg}g")
+    group.set("transform", f"translate(0, {label_height})")
 
     # Move all existing children to the group
     for child in list(root):
@@ -178,4 +177,4 @@ def _add_label_to_svg(
     root.append(text)
     root.append(group)
 
-    return ET.tostring(root, encoding='unicode')
+    return ET.tostring(root, encoding="unicode")

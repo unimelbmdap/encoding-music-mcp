@@ -11,7 +11,7 @@ def test_render_single_measure():
     assert img._mime_type == "image/png"
     assert len(img.data) > 0
     # Verify PNG signature
-    assert img.data[:8] == b'\x89PNG\r\n\x1a\n'
+    assert img.data[:8] == b"\x89PNG\r\n\x1a\n"
 
 
 def test_render_measure_range():
@@ -36,10 +36,14 @@ def test_render_with_custom_scale():
 def test_render_long_excerpt():
     """Test that longer excerpts wrap across multiple lines."""
     # 16 measures should produce a multi-line rendering
-    img_long = render_musical_incipit("Bach_BWV_0772.mei", start_measure=1, end_measure=16)
+    img_long = render_musical_incipit(
+        "Bach_BWV_0772.mei", start_measure=1, end_measure=16
+    )
 
     # Should be substantially larger than a short excerpt
-    img_short = render_musical_incipit("Bach_BWV_0772.mei", start_measure=1, end_measure=2)
+    img_short = render_musical_incipit(
+        "Bach_BWV_0772.mei", start_measure=1, end_measure=2
+    )
 
     assert img_long is not None
     assert len(img_long.data) > len(img_short.data) * 2
@@ -74,9 +78,7 @@ def test_multipart_rendering():
     """Test that multi-part scores (like Morley canzonets) render all measures."""
     # Morley files have 2 soprano parts
     img = render_musical_incipit(
-        "Morley_1595_01_Go_ye_my_canzonettes.mei",
-        start_measure=1,
-        end_measure=8
+        "Morley_1595_01_Go_ye_my_canzonettes.mei", start_measure=1, end_measure=8
     )
 
     assert img is not None

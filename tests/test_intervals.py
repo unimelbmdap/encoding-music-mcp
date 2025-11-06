@@ -58,9 +58,13 @@ def test_get_melodic_intervals_bach():
     assert result["filename"] == "Bach_BWV_0772.mei", "Filename should match input"
 
     # Check intervals content
-    assert isinstance(result["melodic_intervals"], str), "Melodic intervals should be a string"
+    assert isinstance(result["melodic_intervals"], str), (
+        "Melodic intervals should be a string"
+    )
     assert len(result["melodic_intervals"]) > 0, "Melodic intervals should not be empty"
-    assert "Measure" in result["melodic_intervals"], "Should contain measure information"
+    assert "Measure" in result["melodic_intervals"], (
+        "Should contain measure information"
+    )
 
 
 def test_get_melodic_intervals_contains_intervals():
@@ -70,7 +74,9 @@ def test_get_melodic_intervals_contains_intervals():
     intervals_str = result["melodic_intervals"]
 
     # Should contain standard interval notation (P = Perfect, M = Major, m = minor)
-    has_intervals = any(x in intervals_str for x in ["M2", "m2", "P4", "P5", "M3", "m3"])
+    has_intervals = any(
+        x in intervals_str for x in ["M2", "m2", "P4", "P5", "M3", "m3"]
+    )
     assert has_intervals, "Should contain standard interval notation"
 
 
@@ -89,8 +95,12 @@ def test_get_harmonic_intervals_bach():
     assert result["filename"] == "Bach_BWV_0772.mei", "Filename should match input"
 
     # Check intervals content
-    assert isinstance(result["harmonic_intervals"], str), "Harmonic intervals should be a string"
-    assert len(result["harmonic_intervals"]) > 0, "Harmonic intervals should not be empty"
+    assert isinstance(result["harmonic_intervals"], str), (
+        "Harmonic intervals should be a string"
+    )
+    assert len(result["harmonic_intervals"]) > 0, (
+        "Harmonic intervals should not be empty"
+    )
 
 
 def test_get_harmonic_intervals_contains_intervals():
@@ -121,7 +131,9 @@ def test_get_melodic_ngrams_default():
     assert result["n"] == 4, "Default n should be 4"
 
     # Check n-grams content
-    assert isinstance(result["melodic_ngrams"], str), "Melodic n-grams should be a string"
+    assert isinstance(result["melodic_ngrams"], str), (
+        "Melodic n-grams should be a string"
+    )
     assert len(result["melodic_ngrams"]) > 0, "Melodic n-grams should not be empty"
 
 
@@ -133,7 +145,9 @@ def test_get_melodic_ngrams_custom_n():
     assert result["n"] == 3, "n should match input parameter"
 
     # Check n-grams content
-    assert isinstance(result["melodic_ngrams"], str), "Melodic n-grams should be a string"
+    assert isinstance(result["melodic_ngrams"], str), (
+        "Melodic n-grams should be a string"
+    )
     assert len(result["melodic_ngrams"]) > 0, "Melodic n-grams should not be empty"
 
 
@@ -157,8 +171,9 @@ def test_get_melodic_ngrams_different_n_values():
     assert result_n5["n"] == 5, "n=5 should be recorded"
 
     # Results should be different (different n values produce different patterns)
-    assert result_n3["melodic_ngrams"] != result_n5["melodic_ngrams"], \
+    assert result_n3["melodic_ngrams"] != result_n5["melodic_ngrams"], (
         "Different n values should produce different results"
+    )
 
 
 def test_intervals_invalid_file():
@@ -194,8 +209,12 @@ def test_intervals_bartok():
 
     # All should have content
     assert len(result_notes["notes"]) > 0, "Notes should not be empty"
-    assert len(result_melodic["melodic_intervals"]) > 0, "Melodic intervals should not be empty"
-    assert len(result_harmonic["harmonic_intervals"]) > 0, "Harmonic intervals should not be empty"
+    assert len(result_melodic["melodic_intervals"]) > 0, (
+        "Melodic intervals should not be empty"
+    )
+    assert len(result_harmonic["harmonic_intervals"]) > 0, (
+        "Harmonic intervals should not be empty"
+    )
     assert len(result_ngrams["melodic_ngrams"]) > 0, "N-grams should not be empty"
 
 
@@ -214,8 +233,12 @@ def test_intervals_morley():
 
     # All should have content
     assert len(result_notes["notes"]) > 0, "Notes should not be empty"
-    assert len(result_melodic["melodic_intervals"]) > 0, "Melodic intervals should not be empty"
-    assert len(result_harmonic["harmonic_intervals"]) > 0, "Harmonic intervals should not be empty"
+    assert len(result_melodic["melodic_intervals"]) > 0, (
+        "Melodic intervals should not be empty"
+    )
+    assert len(result_harmonic["harmonic_intervals"]) > 0, (
+        "Harmonic intervals should not be empty"
+    )
     assert len(result_ngrams["melodic_ngrams"]) > 0, "N-grams should not be empty"
 
 
@@ -231,7 +254,9 @@ def test_get_cadences_morley():
     assert "cadences" in result, "Result should contain 'cadences'"
 
     # Check filename matches
-    assert result["filename"] == "Morley_1595_01_Go_ye_my_canzonettes.mei", "Filename should match input"
+    assert result["filename"] == "Morley_1595_01_Go_ye_my_canzonettes.mei", (
+        "Filename should match input"
+    )
 
     # Check cadences content
     assert isinstance(result["cadences"], str), "Cadences should be a string"
@@ -262,7 +287,9 @@ def test_get_cadences_contains_metadata():
     cadences_str = result["cadences"]
 
     # Should contain composer and title information
-    assert "Morley" in cadences_str or "Thomas" in cadences_str, "Should contain composer name"
+    assert "Morley" in cadences_str or "Thomas" in cadences_str, (
+        "Should contain composer name"
+    )
 
 
 def test_get_cadences_invalid_file():
@@ -313,4 +340,6 @@ def test_get_cadences_non_renaissance_music():
         or "no cadences" in cadences_str.lower()
         or "renaissance" in cadences_str.lower()
     )
-    assert is_valid_response, "Should indicate limitation or no cadences for non-Renaissance music"
+    assert is_valid_response, (
+        "Should indicate limitation or no cadences for non-Renaissance music"
+    )

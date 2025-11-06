@@ -38,7 +38,7 @@ def musical_incipit_viewer(
     # Export to MusicXML string (in memory)
     exporter = musicxml.m21ToXml.GeneralObjectExporter(excerpt)
     musicxml_bytes = exporter.parse()
-    musicxml_string = musicxml_bytes.decode('utf-8')
+    musicxml_string = musicxml_bytes.decode("utf-8")
 
     # Initialize Verovio toolkit
     tk = verovio.toolkit()

@@ -42,7 +42,9 @@ def test_get_mei_metadata_bartok():
     assert isinstance(result, dict), "Result should be a dictionary"
 
     # Check composer
-    assert "Bartók" in result["composer"] or "Bartok" in result["composer"], "Composer should be Bartók"
+    assert "Bartók" in result["composer"] or "Bartok" in result["composer"], (
+        "Composer should be Bartók"
+    )
 
     # Check title exists and is not empty
     assert result["title"], "Title should not be empty"
@@ -84,4 +86,6 @@ def test_get_mei_metadata_return_structure():
     assert isinstance(result["analysts"], list), "analysts should be a list"
 
     # Publication date should be string or None
-    assert isinstance(result["publication_date"], (str, type(None))), "publication_date should be string or None"
+    assert isinstance(result["publication_date"], (str, type(None))), (
+        "publication_date should be string or None"
+    )

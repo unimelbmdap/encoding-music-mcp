@@ -25,11 +25,11 @@ def analyze_key(filename: str) -> dict[str, Any]:
     """
     filepath = get_mei_filepath(filename)
     score = converter.parse(str(filepath))
-    key_analysis = score.analyze('key')
+    key_analysis = score.analyze("key")
 
     analysis_dict = {
-        'Key Name': str(key_analysis),
-        'Confidence Factor': key_analysis.correlationCoefficient
+        "Key Name": str(key_analysis),
+        "Confidence Factor": key_analysis.correlationCoefficient,
     }
 
     return analysis_dict

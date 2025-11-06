@@ -11,7 +11,6 @@ from .intervals import (
     get_melodic_ngrams,
     get_cadences,
 )
-from .incipits import render_musical_incipit
 from .incipit_ui import render_musical_incipit_ui
 
 # Register all tools here
