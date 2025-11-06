@@ -68,3 +68,18 @@ def test_label_added():
     result_single = _add_label_to_svg(test_svg, "test.mei", 5, 5)
     assert "measure 5" in result_single
     assert "measures" not in result_single  # Should be singular
+
+
+def test_multipart_rendering():
+    """Test that multi-part scores (like Morley canzonets) render all measures."""
+    # Morley files have 2 soprano parts
+    img = render_musical_incipit(
+        "Morley_1595_01_Go_ye_my_canzonettes.mei",
+        start_measure=1,
+        end_measure=8
+    )
+
+    assert img is not None
+    assert img._mime_type == "image/png"
+    # Multi-part with 8 measures should be substantial
+    assert len(img.data) > 20000

@@ -15,7 +15,7 @@ def render_musical_incipit(
     filename: str,
     start_measure: int = 1,
     end_measure: int | None = None,
-    page_width: int = 2100,
+    page_width: int = 4200,
     page_height: int = 800,
     scale: int = 40,
 ) -> Image:
@@ -29,7 +29,7 @@ def render_musical_incipit(
         filename: Name of the MEI file (e.g., "Bach_BWV_0772.mei")
         start_measure: First measure to render (default: 1)
         end_measure: Last measure to render (default: same as start_measure for single measure)
-        page_width: SVG page width in pixels (default: 2100)
+        page_width: SVG page width in pixels (default: 4200)
         page_height: SVG page height in pixels (default: 800)
         scale: Rendering scale factor (default: 40, higher = larger notation)
 
@@ -66,10 +66,17 @@ def render_musical_incipit(
     # Calculate number of measures for intelligent layout
     num_measures = end_measure - start_measure + 1
 
-    # Adjust page height dynamically based on number of measures
-    # Rough estimate: ~400px per system (line) of music, ~4 measures per system
-    systems_needed = max(1, (num_measures + 3) // 4)  # Round up
-    adjusted_height = max(page_height, systems_needed * 500)
+    # Adjust page height dynamically based on number of measures and parts
+    # Use a generous height and let adjustPageHeight shrink it to actual content
+    # Each part needs vertical space, and measures wrap across systems
+    num_parts = len(excerpt.parts)
+
+    # Rough estimate: ~4 measures per system, ~300px per part per system
+    systems_needed = max(1, (num_measures + 3) // 4)
+    estimated_height = systems_needed * num_parts * 300 + 200  # +200 for margins
+
+    # Use generous height (max 60000) and let adjustPageHeight optimize
+    adjusted_height = min(60000, max(page_height, estimated_height))
 
     # Initialize Verovio toolkit
     tk = verovio.toolkit()
@@ -83,6 +90,7 @@ def render_musical_incipit(
         "breaks": "auto",  # Let verovio automatically break lines
         "footer": "none",
         "header": "none",
+        "pageMarginBottom": 150,  # Extra space at bottom for lyrics
     }
     tk.setOptions(options)
 
