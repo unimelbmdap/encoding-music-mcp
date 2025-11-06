@@ -1,10 +1,9 @@
-"""Musical incipit UI viewer - generates interactive HTML file."""
+"""Musical incipit UI viewer - generates interactive HTML file with Verovio app."""
 
 import html
 from pathlib import Path
 from string import Template
 from music21 import converter, musicxml
-import verovio
 
 from .helpers import get_mei_filepath
 
@@ -17,10 +16,13 @@ def render_musical_incipit_ui(
     end_measure: int | None = None,
     output_dir: str | None = None,
 ) -> str:
-    """Generate interactive HTML file with SVG notation and MIDI playback, saved to disk.
+    """Generate interactive HTML file with Verovio app (notation + MIDI playback), saved to disk.
 
-    Creates an HTML viewer with vector graphics notation and audio playback,
-    saves it to a file, and returns the path for opening in a browser.
+    Creates an HTML viewer with the full Verovio interactive app featuring:
+    - Vector graphics notation rendering
+    - MIDI playback with synchronized note highlighting
+    - Interactive controls (play/pause, zoom, navigation)
+    - Click-to-play functionality
 
     Args:
         filename: Name of the MEI file (e.g., "Bach_BWV_0772.mei")
@@ -56,34 +58,21 @@ def render_musical_incipit_ui(
     musicxml_bytes = exporter.parse()
     musicxml_string = musicxml_bytes.decode('utf-8')
 
-    # Initialize Verovio toolkit
-    tk = verovio.toolkit()
-
-    # Configure rendering options for web display
-    options = {
-        "pageWidth": 2100,
-        "pageHeight": 60000,
-        "scale": 50,
-        "adjustPageHeight": True,
-        "breaks": "auto",
-        "footer": "none",
-        "header": "none",
-        "pageMarginBottom": 150,
-    }
-    tk.setOptions(options)
-
-    # Load and render to SVG
-    tk.loadData(musicxml_string)
-    svg_output = tk.renderToSVG(1)
-
-    # Render to MIDI (returns base64 encoded string)
-    midi_base64 = tk.renderToMIDI()
-
     # Create measure range text
     measure_text = f"measure {start_measure}" if start_measure == end_measure else f"measures {start_measure}-{end_measure}"
 
-    # Load HTML template
-    template_path = Path(__file__).parent.parent / "templates" / "incipit_viewer.html"
+    # Replace music21's default title with our filename and measure range
+    title_replacement = f"{filename} - {measure_text}"
+    musicxml_string = musicxml_string.replace(
+        '<movement-title>Music21 Fragment</movement-title>',
+        f'<movement-title>{html.escape(title_replacement)}</movement-title>'
+    )
+
+    # Escape backticks in MusicXML for safe embedding in JavaScript template literal
+    musicxml_escaped = musicxml_string.replace('`', '\\`').replace('${', '\\${')
+
+    # Load HTML template (using Verovio app)
+    template_path = Path(__file__).parent.parent / "templates" / "incipit_verovio_app.html"
     with open(template_path, 'r', encoding='utf-8') as f:
         template_content = f.read()
 
@@ -92,11 +81,10 @@ def render_musical_incipit_ui(
 
     # Safely inject content
     html_output = template.substitute(
-        title=html.escape(f"{filename} - {measure_text}"),
+        title=html.escape(f"{filename} : {measure_text}"),
         filename=html.escape(filename),
         measure_text=html.escape(measure_text.capitalize()),
-        midi_base64=midi_base64,  # Already base64, safe
-        svg_content=svg_output  # SVG from verovio, trusted
+        musicxml_data=musicxml_escaped  # Escaped for JavaScript template literal
     )
 
     # Determine output directory

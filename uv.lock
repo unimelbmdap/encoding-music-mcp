@@ -435,7 +435,6 @@ dependencies = [
     { name = "cairosvg" },
     { name = "crim-intervals" },
     { name = "mcp", extra = ["cli"] },
-    { name = "mcp-ui" },
 ]
 
 [package.dev-dependencies]
@@ -450,7 +449,6 @@ requires-dist = [
     { name = "cairosvg", specifier = ">=2.8.2" },
     { name = "crim-intervals", specifier = ">=2.0.61" },
     { name = "mcp", extras = ["cli"], specifier = ">=1.0.0" },
-    { name = "mcp-ui", specifier = ">=0.1.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -936,15 +934,6 @@ wheels = [
 cli = [
     { name = "python-dotenv" },
     { name = "typer" },
-]
-
-[[package]]
-name = "mcp-ui"
-version = "0.1.2"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/c8/88/ea9e85c462a6742e5dada407efe1905744a39cc11cd9038ed25101a002c7/mcp_ui-0.1.2.tar.gz", hash = "sha256:dbef7b69aa10118806ae6daa6e8aacacaa1729e6a0b2abcaf1efedcc4aa0a00a", size = 5832, upload-time = "2025-09-11T20:04:44.606Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/ec/fa/c3b9c761a61f45df63490695e1a3ad17a4219c0be0552d4cc1756385eddf/mcp_ui-0.1.2-py3-none-any.whl", hash = "sha256:1eabbf9898cd19edbfa416b6437e61f68116d20963c8f64136cbb0223214ae48", size = 5956, upload-time = "2025-09-11T20:04:43.346Z" },
 ]
 
 [[package]]
