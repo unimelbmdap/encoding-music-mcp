@@ -1,6 +1,6 @@
-# encoding-music-mcp
+# Encoding Music MCP
 
-Welcome to the documentation for **encoding-music-mcp**, a Model Context Protocol (MCP) server for analyzing MEI (Music Encoding Initiative) files.
+Welcome to the documentation for **Encoding Music MCP**, a Model Context Protocol (MCP) server for analyzing MEI (Music Encoding Initiative) files.
 
 ## Overview
 
@@ -50,7 +50,7 @@ The [Music Encoding Initiative (MEI)](https://music-encoding.org/) is a communit
 
 ## Getting Started
 
-Ready to begin? Head over to the [Installation Guide](getting-started/installation.md) to set up encoding-music-mcp.
+Ready to begin? Head over to the [Installation Guide](getting-started/installation.md) to set up Encoding Music MCP.
 
 ## Support
 
