@@ -1,6 +1,7 @@
 """Musical incipit UI viewer - generates interactive HTML file with Verovio app."""
 
 import html
+from datetime import datetime
 from pathlib import Path
 from string import Template
 from music21 import converter, musicxml
@@ -93,15 +94,15 @@ def render_musical_incipit_ui(
     else:
         output_path = Path(output_dir).expanduser()
 
-    # Create output filename
+    # Create output filename with timestamp to avoid collisions
     safe_filename = filename.replace('.mei', '').replace(' ', '_')
-    output_filename = f"{safe_filename}_m{start_measure}-{end_measure}_incipit.html"
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    output_filename = f"{safe_filename}_m{start_measure}-{end_measure}_{timestamp}_incipit.html"
     output_file = output_path / output_filename
 
     # Save HTML file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(html_output)
 
-    # Return clickable file URL
-    file_url = output_file.as_uri()
-    return f"✓ Interactive incipit saved!\n\nClick to open: {file_url}\n\nOr find it at: {output_file}"
+    # Return file path - Claude will format it nicely
+    return str(output_file)
