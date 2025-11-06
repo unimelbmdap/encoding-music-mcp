@@ -54,8 +54,11 @@
     <script type="module">
         import 'https://editor.verovio.org/javascript/app/verovio-app.js';
 
-        // Create the Verovio app with default options
-        const app = new Verovio.App(document.getElementById("app"), {});
+        // Create the Verovio app with responsive view to show all content
+        const app = new Verovio.App(document.getElementById("app"), {
+            defaultView: 'responsive',  // Use responsive view to show all measures
+            enableDocument: false       // Disable document (paginated) view
+        });
 
         // MusicXML data embedded from Python
         const musicxmlData = `$musicxml_data`;
