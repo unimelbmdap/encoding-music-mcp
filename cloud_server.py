@@ -7,4 +7,5 @@ manages the asyncio event loop. For local development, use dev_server.py instead
 from encoding_music_mcp.server import mcp
 
 # FastMCP cloud handles running the server in its own event loop
-# Just expose the mcp instance without calling .run()
+# Expose the mcp instance at module level (required by fastmcp cloud)
+__all__ = ["mcp"]
