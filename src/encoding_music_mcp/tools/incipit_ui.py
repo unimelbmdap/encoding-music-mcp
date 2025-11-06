@@ -114,4 +114,6 @@ def render_musical_incipit_ui(
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(html_output)
 
-    return f"✓ Interactive incipit saved to: {output_file}\n\nOpen this file in your browser to view the notation and play audio."
+    # Return clickable file URL
+    file_url = output_file.as_uri()
+    return f"✓ Interactive incipit saved!\n\nClick to open: {file_url}\n\nOr find it at: {output_file}"
