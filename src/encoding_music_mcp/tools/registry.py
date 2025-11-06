@@ -11,7 +11,6 @@ from .intervals import (
     get_melodic_ngrams,
     get_cadences,
 )
-from .incipit_ui import render_musical_incipit_ui
 
 # Register all tools here
 # To add a new tool: import it, then add mcp.tool()(your_tool) below
@@ -23,5 +22,3 @@ mcp.tool()(get_melodic_intervals)
 mcp.tool()(get_harmonic_intervals)
 mcp.tool()(get_melodic_ngrams)
 mcp.tool()(get_cadences)
-# mcp.tool()(render_musical_incipit)
-mcp.tool()(render_musical_incipit_ui)
