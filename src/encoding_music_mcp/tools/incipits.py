@@ -17,7 +17,7 @@ def render_musical_incipit(
     end_measure: int | None = None,
     page_width: int = 4200,
     page_height: int = 800,
-    scale: int = 40,
+    scale: int = 60,
 ) -> Image:
     """Render a musical incipit (excerpt) from an MEI file as a PNG image.
 
@@ -31,7 +31,7 @@ def render_musical_incipit(
         end_measure: Last measure to render (default: same as start_measure for single measure)
         page_width: SVG page width in pixels (default: 4200)
         page_height: SVG page height in pixels (default: 800)
-        scale: Rendering scale factor (default: 40, higher = larger notation)
+        scale: Rendering scale factor (default: 60, higher = larger notation)
 
     Returns:
         Image object containing the rendered PNG
@@ -43,8 +43,8 @@ def render_musical_incipit(
         # Render measures 1-4 (opening incipit)
         render_musical_incipit("Bach_BWV_0772.mei", start_measure=1, end_measure=4)
 
-        # Render measure 10 with larger scale for detail
-        render_musical_incipit("Bach_BWV_0772.mei", start_measure=10, scale=60)
+        # Render measure 10 with even larger scale for detail
+        render_musical_incipit("Bach_BWV_0772.mei", start_measure=10, scale=80)
     """
     filepath = get_mei_filepath(filename)
 
@@ -66,14 +66,16 @@ def render_musical_incipit(
     # Calculate number of measures for intelligent layout
     num_measures = end_measure - start_measure + 1
 
-    # Adjust page height dynamically based on number of measures and parts
+    # Adjust page height dynamically based on number of measures, parts, and scale
     # Use a generous height and let adjustPageHeight shrink it to actual content
     # Each part needs vertical space, and measures wrap across systems
     num_parts = len(excerpt.parts)
 
-    # Rough estimate: ~4 measures per system, ~300px per part per system
-    systems_needed = max(1, (num_measures + 3) // 4)
-    estimated_height = systems_needed * num_parts * 300 + 200  # +200 for margins
+    # Rough estimate: ~2 measures per system (with current page width)
+    # Scale affects vertical space needed: larger scale = more height
+    systems_needed = max(1, (num_measures + 1) // 2)
+    height_per_part_per_system = int(300 * (scale / 40))  # Scale relative to base of 40
+    estimated_height = systems_needed * num_parts * height_per_part_per_system + 200
 
     # Use generous height (max 60000) and let adjustPageHeight optimize
     adjusted_height = min(60000, max(page_height, estimated_height))

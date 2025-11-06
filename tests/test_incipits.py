@@ -26,8 +26,8 @@ def test_render_measure_range():
 
 def test_render_with_custom_scale():
     """Test rendering with custom scale parameter."""
-    img_small = render_musical_incipit("Bach_BWV_0772.mei", start_measure=1, scale=30)
-    img_large = render_musical_incipit("Bach_BWV_0772.mei", start_measure=1, scale=60)
+    img_small = render_musical_incipit("Bach_BWV_0772.mei", start_measure=1, scale=40)
+    img_large = render_musical_incipit("Bach_BWV_0772.mei", start_measure=1, scale=80)
 
     # Larger scale should produce larger image
     assert len(img_large.data) > len(img_small.data)
