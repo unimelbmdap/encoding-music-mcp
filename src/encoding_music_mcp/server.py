@@ -1,6 +1,6 @@
 """MCP server for MEI file analysis."""
 
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 
 # Create MCP server
 mcp = FastMCP("encoding-music-mcp")
