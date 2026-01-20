@@ -22,3 +22,7 @@ notebooks
 .DS_Store
 
 .env
+
+.vscode
+
+planning/
