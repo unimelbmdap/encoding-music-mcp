@@ -9,9 +9,5 @@
     "type": "uv",
     "python": ">=3.12",
     "project": "."
-  },
-  "deployment": {
-    "transport": "http",
-    "log_level": "INFO"
   }
 }
