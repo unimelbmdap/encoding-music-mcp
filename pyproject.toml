@@ -5,8 +5,8 @@ description = "MCP server for analysis of MEI (Music Encoding Initiative) files"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "fastmcp==2.1.2",
-    "crim-intervals>=2.0.62",
+    "fastmcp==2.14.3",
+    "crim-intervals @ git+https://github.com/HCDigitalScholarship/intervals.git@rich_dev_24_dev",
 ]
 
 [project.scripts]
