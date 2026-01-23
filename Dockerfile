@@ -4,10 +4,12 @@
 FROM ghcr.io/astral-sh/uv:0.5.11-python3.12-bookworm-slim AS builder
 
 # Install build dependencies for compiling Python packages (verovio needs swig + C++)
+# git is needed for uv to install packages from GitHub repositories
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         build-essential \
         swig \
+        git \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
