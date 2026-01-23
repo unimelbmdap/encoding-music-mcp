@@ -1,0 +1,3 @@
+encoding-music.drdanielrb.com {
+    reverse_proxy mcp:8000
+}
