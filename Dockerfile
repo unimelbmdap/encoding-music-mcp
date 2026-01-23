@@ -60,9 +60,9 @@ RUN mkdir -p /data && chown mcp:mcp /data
 # Switch to non-root user
 USER mcp
 
-# Health check (MCP servers use stdio, so this checks if the binary exists)
+# Health check - verify HTTP server is responding
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD ["/app/.venv/bin/encoding-music-mcp", "--help"]
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/mcp')"
 
 # Run the MCP server
 ENTRYPOINT ["/app/.venv/bin/encoding-music-mcp"]
