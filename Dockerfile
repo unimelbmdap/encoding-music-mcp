@@ -62,7 +62,7 @@ USER mcp
 
 # Health check - verify HTTP server is responding
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/mcp')"
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
 
 # Run the MCP server
 ENTRYPOINT ["/app/.venv/bin/encoding-music-mcp"]

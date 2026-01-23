@@ -3,9 +3,16 @@
 import os
 
 from fastmcp import FastMCP
+from starlette.responses import JSONResponse
 
 # Create MCP server
 mcp = FastMCP("encoding-music-mcp")
+
+
+@mcp.custom_route("/health", methods=["GET"])
+async def health_check(request):
+    """Health check endpoint for container orchestration."""
+    return JSONResponse({"status": "healthy"})
 
 # Import tools, resources, and prompts to trigger registration
 from .tools import registry as _tools_registry  # noqa: E402, F401

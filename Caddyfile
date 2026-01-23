@@ -1,3 +1,7 @@
 encoding-music.drdanielrb.com {
+    log {
+        output stdout
+        format json
+    }
     reverse_proxy mcp:8000
 }
