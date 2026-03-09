@@ -1,5 +1,7 @@
 """Tool registry - all tools are registered here."""
 
+from fastmcp.server.apps import AppConfig
+
 from ..server import mcp
 from .metadata import get_mei_metadata
 from .discovery import list_available_mei_files
@@ -11,6 +13,7 @@ from .intervals import (
     get_melodic_ngrams,
     get_cadences,
 )
+from .notation import show_notation
 
 # Register all tools here
 # To add a new tool: import it, then add mcp.tool()(your_tool) below
@@ -22,3 +25,6 @@ mcp.tool()(get_melodic_intervals)
 mcp.tool()(get_harmonic_intervals)
 mcp.tool()(get_melodic_ngrams)
 mcp.tool()(get_cadences)
+mcp.tool(
+    app=AppConfig(resource_uri="ui://notation/view.html"),
+)(show_notation)
