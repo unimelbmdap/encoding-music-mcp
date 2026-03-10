@@ -17,11 +17,12 @@ encoding-music-mcp/
 │       │   ├── discovery.py    # File discovery
 │       │   ├── metadata.py     # Metadata extraction
 │       │   ├── key_analysis.py # Key detection
-│       │   └── intervals.py    # Interval analysis
-│       └── resources/          # MEI files (46 files)
-│           ├── Bach_BWV_*.mei
-│           ├── Bartok_Mikrokosmos_*.mei
-│           └── Morley_*.mei
+│       │   ├── intervals.py    # Interval analysis
+│       │   └── notation.py     # Notation display (Verovio)
+│       └── resources/
+│           ├── mei_files/      # MEI files (46 files)
+│           ├── registry.py     # Resource registration
+│           └── notation_app.html # Notation viewer UI
 ├── tests/
 │   ├── __init__.py
 │   ├── test_discovery.py
@@ -124,6 +125,7 @@ mcp.tool()(your_tool)
 - **metadata.py**: MEI header parsing
 - **key_analysis.py**: Music21-based key detection
 - **intervals.py**: CRIM Intervals analysis
+- **notation.py**: Verovio-based notation rendering
 
 ### Tests Module (`tests/`)
 
@@ -159,8 +161,10 @@ Documentation site configuration using Material theme.
 ## Dependencies
 
 ### Runtime
-- **mcp**: Model Context Protocol implementation
+- **fastmcp**: FastMCP v3 framework for MCP server and Apps support
 - **crim-intervals**: Interval analysis (includes music21)
+- **verovio**: Music notation engraving (MEI to SVG)
+- **mcp[cli]**: MCP protocol implementation
 
 ### Development
 - **pytest**: Testing framework

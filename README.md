@@ -16,6 +16,7 @@ MCP server for analyzing MEI (Music Encoding Initiative) files. Provides tools t
 - **MEI Metadata Extraction**: Extract title, composer, editors, analysts, publication dates, and copyright information
 - **Key Analysis**: Detect musical keys with confidence scores using music21
 - **Interval Analysis**: Extract notes, melodic intervals, harmonic intervals, and melodic n-grams using CRIM Intervals
+- **Notation Display**: Render sheet music as SVG with interactive pagination using Verovio (requires [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps))
 - **Simple & Efficient**: Tools read directly from disk - no token waste
 
 ## Documentation
@@ -112,6 +113,7 @@ uv sync
    - "What key is Bach_BWV_0772.mei in?" → Analyzes key with confidence score
    - "Get the melodic intervals for Bach_BWV_0772.mei" → Extracts melodic intervals
    - "Find melodic 4-grams in Bach_BWV_0772.mei" → Extracts melodic n-grams
+   - "Show me the notation for Bach_BWV_0772.mei" → Displays rendered sheet music
 
 ### Standalone
 
@@ -234,6 +236,18 @@ Extract melodic n-grams from an MEI file using CRIM Intervals.
 - `melodic_ngrams`: String representation of melodic n-grams dataframe
 
 N-grams are tuples of intervals converted to strings with underscore separators (e.g., "2_-2_3_-1").
+
+### `show_notation`
+
+Display musical notation for an MEI file as rendered SVG. Requires the [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps) for inline display.
+
+**Parameters**:
+- `filename` (string, required): Name of the MEI file (e.g., "Bach_BWV_0772.mei")
+- `start_measure` (integer, optional): First measure to display (defaults to full piece)
+- `end_measure` (integer, optional): Last measure to display (defaults to start_measure if only start given)
+- `page` (integer, optional): Page number to display (default: 1)
+
+**Returns**: SVG notation rendered by Verovio, displayed in an interactive viewer with pagination controls.
 
 ## Built-in Files
 

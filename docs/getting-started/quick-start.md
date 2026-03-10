@@ -121,6 +121,19 @@ Key analysis returns a confidence factor between 0.0 and 1.0:
 - **0.5 - 0.8**: Moderate confidence
 - **< 0.5**: Low confidence (possibly modal or atonal)
 
+### Viewing Notation
+
+!!! example "Try asking:"
+    "Show me the notation for Bach_BWV_0772.mei"
+
+This uses the [`show_notation`](../tools/notation.md) tool to render the score as sheet music. The notation is displayed inline with interactive prev/next pagination. You can also request specific measures:
+
+!!! example "Try asking:"
+    "Show me measures 19 to 22 of Bach_BWV_0772.mei"
+
+!!! note
+    Notation display requires the [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps) to be enabled in your MCP client.
+
 ## More Complex Queries
 
 Try combining tools or asking analytical questions:

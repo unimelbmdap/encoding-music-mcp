@@ -20,6 +20,12 @@ This MCP server provides a comprehensive suite of tools for analyzing encoded mu
 - **Interval Analysis**: Extract notes, melodic intervals, harmonic intervals, and melodic n-grams using CRIM Intervals
 - **File Discovery**: Browse and explore the built-in MEI collection
 
+### 🎵 Notation Display
+- **Sheet Music Rendering**: Display MEI files as beautifully engraved notation using Verovio
+- **Interactive Pagination**: Navigate multi-page scores with prev/next controls
+- **Measure Selection**: View specific measure ranges
+- Requires the [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps)
+
 ### ⚡ Efficient Design
 - Direct disk access - no token waste
 - Fast dataframe-based interval analysis
@@ -45,6 +51,7 @@ The [Music Encoding Initiative (MEI)](https://music-encoding.org/) is a communit
 - **Music Analysis**: Analyze harmonic progressions, melodic patterns, and key relationships
 - **Comparative Studies**: Compare compositions across different composers and periods
 - **Pattern Discovery**: Find recurring melodic or harmonic patterns using n-gram analysis
+- **Notation Display**: View rendered sheet music inline during analysis conversations
 - **Educational Tools**: Explore musical structure and theory with AI assistance
 - **Research Workflows**: Integrate music analysis into computational musicology research
 

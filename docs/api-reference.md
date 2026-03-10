@@ -13,6 +13,7 @@ Complete reference for all encoding-music-mcp tools.
 | `get_melodic_intervals` | `filename: str` | `dict` with intervals | [Docs](tools/intervals/melodic.md) |
 | `get_harmonic_intervals` | `filename: str` | `dict` with intervals | [Docs](tools/intervals/harmonic.md) |
 | `get_melodic_ngrams` | `filename: str, n: int = 4` | `dict` with n-grams | [Docs](tools/intervals/ngrams.md) |
+| `show_notation` | `filename: str, start_measure: int = None, end_measure: int = None, page: int = 1` | SVG notation | [Docs](tools/notation.md) |
 
 ## Discovery Tools
 
@@ -147,6 +148,35 @@ Find recurring melodic patterns.
 ```
 
 [Full Documentation →](tools/intervals/ngrams.md)
+
+## Notation Tools
+
+### show_notation(filename, start_measure=None, end_measure=None, page=1)
+
+Render MEI file as sheet music notation using Verovio.
+
+**Parameters**:
+- `filename` (str): MEI filename
+- `start_measure` (int, optional): First measure to display
+- `end_measure` (int, optional): Last measure to display
+- `page` (int, optional): Page number (default: 1)
+
+**Returns**:
+```python
+{
+    "filename": str,
+    "svg": str,          # SVG markup
+    "page": int,
+    "total_pages": int,
+    "start_measure": int | None,
+    "end_measure": int | None
+}
+```
+
+!!! note
+    Requires the [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps) for inline display.
+
+[Full Documentation →](tools/notation.md)
 
 ## Common Patterns
 
