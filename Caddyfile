@@ -3,5 +3,11 @@ encoding-music.drdanielrb.com {
         output stdout
         format json
     }
-    reverse_proxy mcp:8000
+    encode gzip
+    reverse_proxy mcp:8000 {
+        transport http {
+            keepalive 30s
+            keepalive_idle_conns 10
+        }
+    }
 }
