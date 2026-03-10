@@ -1,68 +1,134 @@
-"""Notation display tool using MCP Apps extension."""
+"""Notation display tool using MCP Apps extension with Verovio."""
 
-from music21 import converter, musicxml
+import copy
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
+import verovio
+from mcp.types import TextContent
 
 from fastmcp.tools.tool import ToolResult
 
 from .helpers import get_mei_filepath
 
+# Resolve the Verovio resource path from the installed package.
+# The verovio __init__.py sets this via importlib.resources, but that can
+# fail in some process contexts (e.g. MCP server launched by Claude Desktop).
+_VEROVIO_RESOURCE_PATH = str(Path(verovio.__file__).parent / "data")
+
 __all__ = ["show_notation"]
+
+_MEI_NS = "http://www.music-encoding.org/ns/mei"
+_MEI_TAG = "{" + _MEI_NS + "}"
+
+# Register namespaces so ET.tostring preserves them.
+ET.register_namespace("", _MEI_NS)
+ET.register_namespace("xml", "http://www.w3.org/XML/1998/namespace")
+
+# Verovio options for web-friendly SVG output.
+# Scale and page height are tuned so each page SVG stays under ~80KB
+# to avoid MCP structured content transport limits.
+_VEROVIO_OPTIONS = {
+    "scale": 40,
+    "pageWidth": 2000,
+    "pageHeight": 800,
+    "adjustPageHeight": True,
+    "systemMaxPerPage": 1,
+    "breaks": "auto",
+    "footer": "none",
+    "pageMarginLeft": 20,
+    "pageMarginRight": 20,
+    "pageMarginTop": 20,
+    "pageMarginBottom": 20,
+}
+
+
+def _filter_measures(mei_data: str, start: int, end: int) -> str:
+    """Return MEI XML containing only measures in [start, end]."""
+    root = ET.fromstring(mei_data)
+    for section in root.findall(f".//{_MEI_TAG}section"):
+        for measure in section.findall(f"{_MEI_TAG}measure"):
+            n = int(measure.get("n", 0))
+            if n < start or n > end:
+                section.remove(measure)
+    return '<?xml version="1.0" encoding="UTF-8"?>\n' + ET.tostring(
+        root, encoding="unicode"
+    )
+
+
+def _create_toolkit(mei_data: str) -> verovio.toolkit:
+    """Create a Verovio toolkit loaded with MEI data."""
+    tk = verovio.toolkit()
+    tk.setResourcePath(_VEROVIO_RESOURCE_PATH)
+    tk.setOptions(_VEROVIO_OPTIONS)
+    if not tk.loadData(mei_data):
+        raise ValueError(
+            f"Verovio failed to load MEI data "
+            f"(data length={len(mei_data)}, "
+            f"resource_path={tk.getResourcePath()})"
+        )
+    return tk
 
 
 def show_notation(
     filename: str,
     start_measure: int | None = None,
     end_measure: int | None = None,
+    page: int = 1,
 ) -> ToolResult:
-    """Display musical notation for an MEI file, optionally showing a specific measure range.
+    """Display musical notation for an MEI file.
+
+    Renders one page of notation at a time. Use the page parameter to
+    navigate through longer pieces.
 
     Args:
         filename: Name of the MEI file (e.g., "Bach_BWV_0772.mei")
         start_measure: First measure to display (optional, defaults to showing full piece)
         end_measure: Last measure to display (optional, defaults to start_measure if only start given)
+        page: Page number to display (default 1). Use total_pages from the result to navigate.
 
     Returns:
-        ToolResult with notation XML data for the MCP App viewer
+        ToolResult with SVG notation for the MCP App viewer
     """
     filepath = get_mei_filepath(filename)
 
     if not filepath.exists():
         raise FileNotFoundError(f"MEI file not found: {filename}")
 
-    if start_measure is None:
-        # No measure range - return raw MEI
-        xml = filepath.read_text(encoding="utf-8")
-        description = f"Showing full score: {filename}"
-        structured = {
-            "filename": filename,
-            "xml": xml,
-        }
-    else:
-        # Extract measure range with music21
+    mei_data = filepath.read_text(encoding="utf-8")
+
+    if start_measure is not None:
         if end_measure is None:
             end_measure = start_measure
+        mei_data = _filter_measures(mei_data, start_measure, end_measure)
 
-        score = converter.parse(str(filepath))
-        excerpt = score.measures(start_measure, end_measure)
+    tk = _create_toolkit(mei_data)
+    total_pages = tk.getPageCount()
 
-        exporter = musicxml.m21ToXml.GeneralObjectExporter(excerpt)
-        musicxml_bytes = exporter.parse()
-        xml = musicxml_bytes.decode("utf-8")
+    page = max(1, min(page, total_pages))
+    svg = tk.renderToSVG(page)
 
+    if start_measure is not None:
         measure_text = (
             f"measure {start_measure}"
             if start_measure == end_measure
             else f"measures {start_measure}-{end_measure}"
         )
-        description = f"Showing {filename}, {measure_text}"
-        structured = {
-            "filename": filename,
-            "start_measure": start_measure,
-            "end_measure": end_measure,
-            "xml": xml,
-        }
+        description = f"Showing {filename}, {measure_text}, page {page} of {total_pages}"
+    else:
+        description = f"Showing {filename}, page {page} of {total_pages}"
+
+    structured = {
+        "filename": filename,
+        "svg": svg,
+        "page": page,
+        "total_pages": total_pages,
+    }
+    if start_measure is not None:
+        structured["start_measure"] = start_measure
+        structured["end_measure"] = end_measure
 
     return ToolResult(
-        content=description,
+        content=[TextContent(type="text", text=description)],
         structured_content=structured,
     )

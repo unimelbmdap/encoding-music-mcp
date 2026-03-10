@@ -22,7 +22,6 @@ _notation_html_path = Path(__file__).parent / "notation_app.html"
     app=AppConfig(
         csp=ResourceCSP(
             resource_domains=[
-                "https://editor.verovio.org",
                 "https://unpkg.com",
             ],
         ),

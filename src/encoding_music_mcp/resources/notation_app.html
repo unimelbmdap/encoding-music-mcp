@@ -6,73 +6,208 @@
     <meta name="color-scheme" content="light dark">
     <title>Notation Viewer</title>
     <style>
-        body {
+        * { box-sizing: border-box; }
+        html, body {
             margin: 0;
             padding: 0;
-            background: transparent;
+            font-family: system-ui, -apple-system, sans-serif;
+            font-size: 1rem;
+            background: #fff;
+            color: #333;
         }
-        #app {
-            min-height: 400px;
-            border: 1px solid lightgray;
+        @media (prefers-color-scheme: dark) {
+            html, body { background: #111827; color: #f9fafb; }
         }
-        #loading {
+        .main {
+            width: 100%;
+            padding: 8px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+        }
+        #status {
+            font-size: 0.875rem;
+            color: #6b7280;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+        }
+        #status.error { color: #ef4444; }
+        #status.hidden { display: none; }
+        .sheet-section {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid #e5e7eb;
+        }
+        @media (prefers-color-scheme: dark) {
+            .sheet-section {
+                background: #1f2937;
+                border-color: #374151;
+            }
+        }
+        .notation-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+        .notation-container svg {
+            width: 100%;
+            height: auto;
+        }
+        .pagination {
+            display: none;
             align-items: center;
-            height: 200px;
-            font-family: system-ui, sans-serif;
-            color: #666;
+            justify-content: center;
+            gap: 12px;
+            padding: 4px 0;
+        }
+        .pagination.visible { display: flex; }
+        .pagination button {
+            padding: 4px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: #fff;
+            color: #333;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        .pagination button:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+        .pagination button:not(:disabled):hover {
+            background: #f3f4f6;
+        }
+        @media (prefers-color-scheme: dark) {
+            .pagination button {
+                background: #374151;
+                border-color: #4b5563;
+                color: #f9fafb;
+            }
+            .pagination button:not(:disabled):hover {
+                background: #4b5563;
+            }
+        }
+        .page-info {
+            font-size: 0.8rem;
+            color: #6b7280;
+            min-width: 80px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div id="loading">Loading notation viewer...</div>
-    <div id="app" style="display: none;"></div>
+    <main class="main">
+        <span id="status">Waiting for notation...</span>
+        <section class="sheet-section">
+            <div id="notation" class="notation-container"></div>
+        </section>
+        <nav id="pagination" class="pagination">
+            <button id="prev-btn">&larr; Prev</button>
+            <span id="page-info" class="page-info"></span>
+            <button id="next-btn">Next &rarr;</button>
+        </nav>
+    </main>
 
     <script type="module">
         import { App } from "https://unpkg.com/@modelcontextprotocol/ext-apps@0.4.0/app-with-deps";
-        import "https://editor.verovio.org/javascript/app/verovio-app.js";
 
-        const loadingEl = document.getElementById("loading");
-        const appEl = document.getElementById("app");
+        const statusEl = document.getElementById("status");
+        const notationEl = document.getElementById("notation");
+        const paginationEl = document.getElementById("pagination");
+        const pageInfoEl = document.getElementById("page-info");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
 
-        let verovioApp = null;
+        let currentState = null;
 
-        function initVerovio() {
-            if (verovioApp) return;
-            loadingEl.style.display = "none";
-            appEl.style.display = "block";
-            verovioApp = new Verovio.App(appEl, {
-                defaultView: "responsive",
-            });
+        function setStatus(text, isError = false) {
+            statusEl.textContent = text;
+            statusEl.classList.toggle("error", isError);
+            statusEl.classList.remove("hidden");
         }
+
+        function render(structured) {
+            currentState = structured;
+            notationEl.innerHTML = structured.svg;
+            statusEl.classList.add("hidden");
+
+            const { page, total_pages } = structured;
+            if (total_pages > 1) {
+                paginationEl.classList.add("visible");
+                pageInfoEl.textContent = `Page ${page} of ${total_pages}`;
+                prevBtn.disabled = page <= 1;
+                nextBtn.disabled = page >= total_pages;
+            } else {
+                paginationEl.classList.remove("visible");
+            }
+        }
+
+        async function goToPage(newPage) {
+            if (!currentState) return;
+            setStatus("Loading page...");
+            const args = { filename: currentState.filename, page: newPage };
+            if (currentState.start_measure != null) {
+                args.start_measure = currentState.start_measure;
+                args.end_measure = currentState.end_measure;
+            }
+            try {
+                const result = await app.callServerTool({ name: "show_notation", arguments: args });
+                if (result && result.structuredContent && result.structuredContent.svg) {
+                    render(result.structuredContent);
+                } else if (result && result.content) {
+                    // Try parsing structured content from text content
+                    const text = result.content.find(c => c.type === "text");
+                    if (text) {
+                        try {
+                            const parsed = JSON.parse(text.text);
+                            if (parsed.svg) { render(parsed); return; }
+                        } catch {}
+                    }
+                    setStatus("Unexpected result format", true);
+                } else {
+                    setStatus("No data returned", true);
+                }
+            } catch (err) {
+                setStatus("Error loading page: " + (err.message || err), true);
+            }
+        }
+
+        prevBtn.addEventListener("click", () => {
+            if (currentState && currentState.page > 1) {
+                goToPage(currentState.page - 1);
+            }
+        });
+
+        nextBtn.addEventListener("click", () => {
+            if (currentState && currentState.page < currentState.total_pages) {
+                goToPage(currentState.page + 1);
+            }
+        });
 
         const app = new App({ name: "Notation Viewer", version: "1.0.0" });
 
-        app.ontoolresult = ({ content }) => {
-            const textItem = content?.find(c => c.type === "text");
-            if (!textItem) return;
-
-            try {
-                const data = JSON.parse(textItem.text);
-                const xml = data.xml;
-                if (xml) {
-                    initVerovio();
-                    verovioApp.loadData(xml);
-                }
-            } catch {
-                // If content isn't JSON, try loading it as raw XML
-                initVerovio();
-                verovioApp.loadData(textItem.text);
+        app.ontoolresult = (result) => {
+            const structured = result.structuredContent;
+            if (structured && structured.svg) {
+                render(structured);
+                return;
             }
+            setStatus("No notation data in result", true);
+        };
+
+        app.ontoolinput = (params) => {
+            setStatus("Rendering notation...");
         };
 
         app.onerror = (err) => {
-            console.error("MCP App error:", err);
-            loadingEl.textContent = "Error loading notation";
+            console.error("App error:", err);
+            setStatus("Error: " + (err.message || err), true);
         };
 
         await app.connect();
+        setStatus("Connected, waiting for notation...");
     </script>
 </body>
 </html>
