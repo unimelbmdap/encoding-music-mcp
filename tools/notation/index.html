@@ -13,10 +13,10 @@
       
       
       
-        <link rel="prev" href="../metadata/">
+        <link rel="prev" href="../key-analysis/">
       
       
-        <link rel="next" href="../notation/">
+        <link rel="next" href="../intervals/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>Key Analysis - encoding-music-mcp</title>
+        <title>Notation - encoding-music-mcp</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#analyze_key" class="md-skip">
+        <a href="#notation-display" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Key Analysis
+              Notation
             
           </span>
         </div>
@@ -646,6 +646,29 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../key-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Key Analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -663,7 +686,7 @@
   
   
   <span class="md-ellipsis">
-    Key Analysis
+    Notation
     
   </span>
   
@@ -676,7 +699,7 @@
   
   
   <span class="md-ellipsis">
-    Key Analysis
+    Notation
     
   </span>
   
@@ -699,11 +722,53 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
-      Overview
+      Prerequisites
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#full-piece" class="md-nav__link">
+    <span class="md-ellipsis">
+      Full piece
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#specific-measures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Specific measures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#page-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Page navigation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -717,162 +782,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#returns" class="md-nav__link">
+  <a href="#return-value" class="md-nav__link">
     <span class="md-ellipsis">
-      Returns
+      Return Value
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#example-usage" class="md-nav__link">
+  <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
-      Example Usage
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Example Usage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#with-claude-desktop" class="md-nav__link">
-    <span class="md-ellipsis">
-      With Claude Desktop
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example-output" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example Output
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#understanding-confidence-factors" class="md-nav__link">
-    <span class="md-ellipsis">
-      Understanding Confidence Factors
+      How It Works
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#use-cases" class="md-nav__link">
+  <a href="#technical-details" class="md-nav__link">
     <span class="md-ellipsis">
-      Use Cases
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Use Cases">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#single-piece-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      Single Piece Analysis
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#batch-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      Batch Analysis
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#key-distribution-study" class="md-nav__link">
-    <span class="md-ellipsis">
-      Key Distribution Study
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#algorithm" class="md-nav__link">
-    <span class="md-ellipsis">
-      Algorithm
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-name-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      Key Name Format
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#limitations" class="md-nav__link">
-    <span class="md-ellipsis">
-      Limitations
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Limitations">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#what-this-tool-cant-do" class="md-nav__link">
-    <span class="md-ellipsis">
-      What This Tool Can't Do
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      Related Tools
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      Error Handling
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#implementation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Implementation
+      Technical Details
     </span>
   </a>
   
@@ -882,29 +812,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../notation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Notation
-    
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -1402,11 +1309,53 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
-      Overview
+      Prerequisites
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#full-piece" class="md-nav__link">
+    <span class="md-ellipsis">
+      Full piece
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#specific-measures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Specific measures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#page-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Page navigation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1420,162 +1369,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#returns" class="md-nav__link">
+  <a href="#return-value" class="md-nav__link">
     <span class="md-ellipsis">
-      Returns
+      Return Value
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#example-usage" class="md-nav__link">
+  <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
-      Example Usage
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Example Usage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#with-claude-desktop" class="md-nav__link">
-    <span class="md-ellipsis">
-      With Claude Desktop
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example-output" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example Output
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#understanding-confidence-factors" class="md-nav__link">
-    <span class="md-ellipsis">
-      Understanding Confidence Factors
+      How It Works
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#use-cases" class="md-nav__link">
+  <a href="#technical-details" class="md-nav__link">
     <span class="md-ellipsis">
-      Use Cases
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Use Cases">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#single-piece-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      Single Piece Analysis
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#batch-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      Batch Analysis
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#key-distribution-study" class="md-nav__link">
-    <span class="md-ellipsis">
-      Key Distribution Study
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#algorithm" class="md-nav__link">
-    <span class="md-ellipsis">
-      Algorithm
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-name-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      Key Name Format
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#limitations" class="md-nav__link">
-    <span class="md-ellipsis">
-      Limitations
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Limitations">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#what-this-tool-cant-do" class="md-nav__link">
-    <span class="md-ellipsis">
-      What This Tool Can't Do
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      Related Tools
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      Error Handling
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#implementation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Implementation
+      Technical Details
     </span>
   </a>
   
@@ -1600,10 +1414,29 @@
   
 
 
-<h1 id="analyze_key">analyze_key</h1>
-<p>Detect the musical key of a piece using music21's key detection algorithm.</p>
-<h2 id="overview">Overview</h2>
-<p>The <code>analyze_key</code> tool analyzes the pitch content of an MEI file to determine its musical key. It returns both the key name and a confidence factor indicating how certain the analysis is.</p>
+<h1 id="notation-display">Notation Display</h1>
+<p>The <code>show_notation</code> tool renders MEI files as sheet music using <a href="https://www.verovio.org/">Verovio</a>, a lightweight music notation engraving library. The rendered notation is displayed inline via the <a href="https://modelcontextprotocol.io/docs/extensions/apps">MCP Apps extension</a>.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>This tool requires an MCP client that supports the MCP Apps extension (e.g., Claude Desktop with the extension enabled). Without the extension, the tool still returns a text description of the page being shown.</p>
+<h2 id="usage">Usage</h2>
+<h3 id="full-piece">Full piece</h3>
+<div class="admonition example">
+<p class="admonition-title">Try asking:</p>
+<p>"Show me the notation for Bach_BWV_0772.mei"</p>
+</div>
+<p>Displays the first page of the piece with prev/next pagination controls.</p>
+<h3 id="specific-measures">Specific measures</h3>
+<div class="admonition example">
+<p class="admonition-title">Try asking:</p>
+<p>"Show me measures 19 to 22 of Bach_BWV_0772.mei"</p>
+</div>
+<p>Filters the MEI to only include the requested measures before rendering.</p>
+<h3 id="page-navigation">Page navigation</h3>
+<p>The notation viewer displays one system per page. For multi-page pieces, use the interactive prev/next buttons in the viewer, or request a specific page:</p>
+<div class="admonition example">
+<p class="admonition-title">Try asking:</p>
+<p>"Show page 3 of Bach_BWV_0772.mei"</p>
+</div>
 <h2 id="parameters">Parameters</h2>
 <table>
 <thead>
@@ -1611,164 +1444,72 @@
 <th>Parameter</th>
 <th>Type</th>
 <th>Required</th>
+<th>Default</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>filename</code></td>
-<td><code>str</code></td>
+<td>string</td>
 <td>Yes</td>
+<td>-</td>
 <td>Name of the MEI file (e.g., "Bach_BWV_0772.mei")</td>
 </tr>
-</tbody>
-</table>
-<h2 id="returns">Returns</h2>
-<p>Returns a dictionary with two keys:</p>
-<table>
-<thead>
 <tr>
-<th>Key</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Key Name</code></td>
-<td><code>str</code></td>
-<td>Detected key (e.g., "C major", "a minor")</td>
+<td><code>start_measure</code></td>
+<td>integer</td>
+<td>No</td>
+<td>None</td>
+<td>First measure to display</td>
 </tr>
 <tr>
-<td><code>Confidence Factor</code></td>
-<td><code>float</code></td>
-<td>Correlation coefficient between 0.0 and 1.0</td>
+<td><code>end_measure</code></td>
+<td>integer</td>
+<td>No</td>
+<td>start_measure</td>
+<td>Last measure to display</td>
+</tr>
+<tr>
+<td><code>page</code></td>
+<td>integer</td>
+<td>No</td>
+<td>1</td>
+<td>Page number to display</td>
 </tr>
 </tbody>
 </table>
-<h2 id="example-usage">Example Usage</h2>
-<h3 id="with-claude-desktop">With Claude Desktop</h3>
-<div class="admonition example">
-<p class="admonition-title">Natural language queries</p>
+<h2 id="return-value">Return Value</h2>
+<p>The tool returns a <code>ToolResult</code> with:</p>
 <ul>
-<li>"What key is Bach_BWV_0772.mei in?"</li>
-<li>"Analyze the key of Morley_1595_01_Go_ye_my_canzonettes.mei"</li>
-<li>"Compare the keys of all Bach inventions"</li>
+<li><strong>Text content</strong>: A description of what is being shown (e.g., "Showing Bach_BWV_0772.mei, page 1 of 7")</li>
+<li><strong>Structured content</strong>: SVG data and pagination metadata for the viewer app</li>
 </ul>
-</div>
-<h3 id="example-output">Example Output</h3>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;Key Name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;C major&quot;</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&quot;Confidence Factor&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9451</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">}</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="s2">&quot;svg&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;svg ...&gt;...&lt;/svg&gt;&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="s2">&quot;page&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="s2">&quot;total_pages&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="c1"># If measure range was requested:</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="s2">&quot;start_measure&quot;</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="s2">&quot;end_measure&quot;</span><span class="p">:</span> <span class="mi">22</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">}</span>
 </span></code></pre></div>
-<h2 id="understanding-confidence-factors">Understanding Confidence Factors</h2>
-<p>The confidence factor indicates how strongly the pitch content matches the detected key:</p>
-<table>
-<thead>
-<tr>
-<th>Range</th>
-<th>Interpretation</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>0.8 - 1.0</strong></td>
-<td>Very confident - clear tonal center</td>
-<td>Bach inventions, typical Classical/Romantic works</td>
-</tr>
-<tr>
-<td><strong>0.5 - 0.8</strong></td>
-<td>Moderate confidence - some ambiguity</td>
-<td>Modal pieces, early music, chromatic passages</td>
-</tr>
-<tr>
-<td><strong>0.0 - 0.5</strong></td>
-<td>Low confidence - weak or ambiguous tonality</td>
-<td>Atonal music, highly chromatic music</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition tip">
-<p class="admonition-title">Interpreting Results</p>
-<p>High confidence doesn't always mean the analysis is "correct" - it means the pitch content strongly correlates with a particular key profile. Some pieces may be:</p>
-<ul>
-<li><strong>Modal</strong>: May report as major/minor with lower confidence</li>
-<li><strong>Modulating</strong>: Reports the overall or most prominent key</li>
-<li><strong>Chromatic</strong>: May have lower confidence even if clearly tonal</li>
-</ul>
-</div>
-<h2 id="use-cases">Use Cases</h2>
-<h3 id="single-piece-analysis">Single Piece Analysis</h3>
-<p>Determine the key of a specific piece:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">analyze_key</span><span class="p">(</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">)</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Key: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;Key Name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Confidence: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;Confidence Factor&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span></code></pre></div>
-<h3 id="batch-analysis">Batch Analysis</h3>
-<p>Compare keys across a collection:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">files</span> <span class="o">=</span> <span class="n">list_available_mei_files</span><span class="p">()</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">files</span><span class="p">[</span><span class="s2">&quot;bach_inventions&quot;</span><span class="p">]:</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">key_info</span> <span class="o">=</span> <span class="n">analyze_key</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">key_info</span><span class="p">[</span><span class="s1">&#39;Key Name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>          <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">key_info</span><span class="p">[</span><span class="s1">&#39;Confidence Factor&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-</span></code></pre></div>
-<h3 id="key-distribution-study">Key Distribution Study</h3>
-<p>Analyze key usage in a corpus:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">keys</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">all_files</span><span class="p">:</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">analyze_key</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;Key Name&#39;</span><span class="p">])</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">key_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Most common keys: </span><span class="si">{</span><span class="n">key_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span></code></pre></div>
-<h2 id="algorithm">Algorithm</h2>
-<p>The tool uses music21's Krumhansl-Schmuckler key-finding algorithm, which:</p>
+<h2 id="how-it-works">How It Works</h2>
 <ol>
-<li>Extracts all pitches from the score</li>
-<li>Calculates a pitch-class distribution</li>
-<li>Correlates with major and minor key profiles</li>
-<li>Returns the key with the highest correlation</li>
+<li>The MEI file is read from the built-in collection</li>
+<li>If <code>start_measure</code>/<code>end_measure</code> are specified, the MEI XML is filtered to include only those measures</li>
+<li>Verovio renders the MEI to SVG server-side (one system per page, ~50-60KB per page)</li>
+<li>The SVG is sent to the notation viewer app, which displays it in a sandboxed iframe</li>
+<li>Pagination buttons in the viewer call <code>show_notation</code> again with a different <code>page</code> parameter</li>
 </ol>
-<h2 id="key-name-format">Key Name Format</h2>
-<p>Keys are formatted as:</p>
+<h2 id="technical-details">Technical Details</h2>
 <ul>
-<li><strong>Major keys</strong>: Capital letter + "major" (e.g., "C major", "F major")</li>
-<li><strong>Minor keys</strong>: Lowercase letter + "minor" (e.g., "a minor", "d minor")</li>
-<li><strong>Accidentals</strong>: Sharps (#) or flats (b) as needed (e.g., "F# major", "B♭ major")</li>
+<li><strong>Rendering engine</strong>: Verovio 5.5+ (Python bindings, server-side)</li>
+<li><strong>Output format</strong>: SVG, one system per page</li>
+<li><strong>Page size</strong>: Each SVG page is approximately 50-60KB to stay within MCP transport limits</li>
+<li><strong>Viewer</strong>: Custom HTML app using the <code>@modelcontextprotocol/ext-apps</code> SDK</li>
 </ul>
-<h2 id="limitations">Limitations</h2>
-<h3 id="what-this-tool-cant-do">What This Tool Can't Do</h3>
-<ul>
-<li><strong>Detect modulations</strong>: Reports overall key, not key changes</li>
-<li><strong>Handle polytonality</strong>: Reports single dominant key</li>
-<li><strong>Distinguish modes</strong>: Reports as major or minor</li>
-<li><strong>Detect ambiguous cases</strong>: Will still return highest correlation</li>
-</ul>
-<div class="admonition warning">
-<p class="admonition-title">Non-tonal Music</p>
-<p>For atonal, serial, or highly experimental music, the confidence factor will be low and the reported key may not be meaningful.</p>
-</div>
-<h2 id="related-tools">Related Tools</h2>
-<ul>
-<li><a href="../intervals/melodic/">get_melodic_intervals</a> - Analyze melodic content</li>
-<li><a href="../intervals/harmonic/">get_harmonic_intervals</a> - Analyze harmonic content</li>
-<li><a href="../discovery/">list_available_mei_files</a> - Find files to analyze</li>
-</ul>
-<h2 id="error-handling">Error Handling</h2>
-<p>If a file doesn't exist:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="ne">FileNotFoundError</span><span class="p">:</span> <span class="p">[</span><span class="n">Errno</span> <span class="mi">2</span><span class="p">]</span> <span class="n">No</span> <span class="n">such</span> <span class="n">file</span> <span class="ow">or</span> <span class="n">directory</span><span class="p">:</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  <span class="s1">&#39;src/encoding_music_mcp/resources/nonexistent.mei&#39;</span>
-</span></code></pre></div>
-<h2 id="implementation">Implementation</h2>
-<p>Uses the music21 library:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">score</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">key_analysis</span> <span class="o">=</span> <span class="n">score</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">)</span>
-</span></code></pre></div>
 
 
 
