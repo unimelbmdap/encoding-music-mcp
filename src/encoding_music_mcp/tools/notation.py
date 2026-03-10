@@ -1,6 +1,5 @@
 """Notation display tool using MCP Apps extension with Verovio."""
 
-import copy
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
