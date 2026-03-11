@@ -18,11 +18,14 @@ WORKDIR /app
 # Copy dependency files first for better layer caching
 COPY pyproject.toml uv.lock ./
 
-# Copy source code (needed for package build)
+# Install dependencies only (cached unless pyproject.toml/uv.lock change)
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev --no-install-project
+
+# Copy source and install project
 COPY src/ src/
 COPY README.md ./
 
-# Install production dependencies and package
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev
 
