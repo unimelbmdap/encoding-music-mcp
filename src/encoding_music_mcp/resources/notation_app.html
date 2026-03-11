@@ -43,7 +43,9 @@
         }
         @media (prefers-color-scheme: dark) {
             .sheet-section {
-                background: #1f2937;
+                /* Keep notation on a light "paper" background so black SVG
+                   elements remain legible in dark mode. */
+                background: #f9fafb;
                 border-color: #374151;
             }
         }
