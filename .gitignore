@@ -19,6 +19,8 @@ site/
 
 notebooks
 
+output/
+
 .DS_Store
 
 .env
