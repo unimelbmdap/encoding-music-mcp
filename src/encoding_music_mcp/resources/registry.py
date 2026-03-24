@@ -13,6 +13,7 @@ mcp.resource("mei://collections/list")(mei_collections_list)
 mcp.resource("mei://files/{filename}")(mei_file_content)
 
 _notation_html_path = Path(__file__).parent / "notation_app.html"
+_play_excerpt_html_path = Path(__file__).parent / "play_excerpt_app.html"
 
 
 @mcp.resource(
@@ -29,3 +30,18 @@ _notation_html_path = Path(__file__).parent / "notation_app.html"
 )
 def notation_viewer() -> str:
     return _notation_html_path.read_text(encoding="utf-8")
+
+@mcp.resource(
+    "ui://play_excerpt/v2.html",
+    name="Excerpt Player",
+    description="Interactive audio excerpt player",
+    app=AppConfig(
+        csp=ResourceCSP(
+            resource_domains=[
+                "https://unpkg.com",
+            ],
+        ),
+    ),
+)
+def play_excerpt_viewer() -> str:
+    return _play_excerpt_html_path.read_text(encoding="utf-8")
