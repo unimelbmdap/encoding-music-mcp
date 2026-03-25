@@ -1,6 +1,4 @@
 from typing import Any
-
-import pandas as pd
 from crim_intervals import importScore
 
 from .helpers import get_mei_filepath
