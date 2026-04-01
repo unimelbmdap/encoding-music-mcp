@@ -7,6 +7,7 @@ from src.encoding_music_mcp.tools.intervals import (
     get_melodic_intervals,
     get_harmonic_intervals,
     get_melodic_ngrams,
+    get_first_occur_melodic_ngrams,
     get_cadences,
 )
 
@@ -176,6 +177,58 @@ def test_get_melodic_ngrams_different_n_values():
     )
 
 
+def test_get_first_occur_melodic_ngrams_bach():
+    """Test first-occurrence melodic n-gram extraction for Bach BWV 0772."""
+    result = get_first_occur_melodic_ngrams("Bach_BWV_0772.mei")
+
+    assert isinstance(result, dict), "Result should be a dictionary"
+    assert result["filename"] == "Bach_BWV_0772.mei"
+    assert result["n"] == 4
+    assert result["kind"] == "d"
+    assert result["combine_unisons"] is True
+    assert result["compound"] is False
+    assert "patterns" in result, "Result should contain 'patterns'"
+    assert isinstance(result["patterns"], list), "Patterns should be a list"
+    assert len(result["patterns"]) > 0, "Patterns should not be empty"
+
+
+def test_get_first_occur_melodic_ngrams_pattern_record_shape():
+    """Test that pattern records contain the expected fields and value types."""
+    result = get_first_occur_melodic_ngrams("Bach_BWV_0772.mei")
+    pattern = result["patterns"][0]
+
+    assert "pattern" in pattern
+    assert "start_q" in pattern
+    assert "duration" in pattern
+    assert "end_q" in pattern
+    assert "column" in pattern
+
+    assert isinstance(pattern["pattern"], list), "Pattern should be a list"
+    assert len(pattern["pattern"]) == result["n"], "Pattern length should match n"
+    assert isinstance(pattern["start_q"], float), "start_q should be a float"
+    assert isinstance(pattern["duration"], float), "duration should be a float"
+    assert isinstance(pattern["end_q"], float), "end_q should be a float"
+    assert isinstance(pattern["column"], str), "column should be a string"
+    assert pattern["end_q"] > pattern["start_q"], "end_q should be greater than start_q"
+
+
+def test_get_first_occur_melodic_ngrams_custom_options():
+    """Test that custom parameters are recorded in the result."""
+    result = get_first_occur_melodic_ngrams(
+        "Bach_BWV_0772.mei",
+        n=3,
+        kind="q",
+        combine_unisons=False,
+        compound=True,
+    )
+
+    assert result["n"] == 3
+    assert result["kind"] == "q"
+    assert result["combine_unisons"] is False
+    assert result["compound"] is True
+    assert len(result["patterns"]) > 0, "Custom configuration should still return patterns"
+
+
 def test_intervals_invalid_file():
     """Test that all interval tools handle invalid filenames appropriately."""
     with pytest.raises(FileNotFoundError):
@@ -189,6 +242,9 @@ def test_intervals_invalid_file():
 
     with pytest.raises(FileNotFoundError):
         get_melodic_ngrams("nonexistent_file.mei")
+
+    with pytest.raises(FileNotFoundError):
+        get_first_occur_melodic_ngrams("nonexistent_file.mei")
 
     with pytest.raises(FileNotFoundError):
         get_cadences("nonexistent_file.mei")
