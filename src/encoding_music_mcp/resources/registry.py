@@ -15,6 +15,7 @@ mcp.resource("mei://collections/list")(mei_collections_list)
 mcp.resource("mei://files/{filename}")(mei_file_content)
 
 _notation_html_path = Path(__file__).parent / "notation_app.html"
+_voice_ranges_html_path = Path(__file__).parent / "voice_ranges_app.html"
 _play_excerpt_html_path = Path(__file__).parent / "play_excerpt_app.html"
 
 
@@ -32,6 +33,22 @@ _play_excerpt_html_path = Path(__file__).parent / "play_excerpt_app.html"
 )
 def notation_viewer() -> str:
     return _notation_html_path.read_text(encoding="utf-8")
+
+
+@mcp.resource(
+    "ui://voice-ranges/view.html",
+    name="Voice Range Viewer",
+    description="Interactive chart for staff pitch ranges within one score",
+    app=AppConfig(
+        csp=ResourceCSP(
+            resource_domains=[
+                "https://unpkg.com",
+            ],
+        ),
+    ),
+)
+def voice_ranges_viewer() -> str:
+    return _voice_ranges_html_path.read_text(encoding="utf-8")
 
 @mcp.resource(
     "ui://play_excerpt/v2.html",
