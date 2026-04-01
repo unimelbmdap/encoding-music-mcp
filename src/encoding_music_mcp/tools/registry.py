@@ -11,10 +11,10 @@ from .intervals import (
     get_melodic_intervals,
     get_harmonic_intervals,
     get_melodic_ngrams,
+    get_first_occur_melodic_ngrams,
     get_cadences,
 )
 from .notation import show_notation
-from .melodic_patterns import get_first_occurrence_melodic_ngrams
 from .play_excerpt import load_audio_resource, play_excerpt
 from .visualisation.voice_ranges import plot_voice_ranges
 
@@ -34,7 +34,7 @@ mcp.tool(
 mcp.tool(
     app=AppConfig(resource_uri="ui://voice-ranges/view.html"),
 )(plot_voice_ranges)
-mcp.tool()(get_first_occurrence_melodic_ngrams)
+mcp.tool()(get_first_occur_melodic_ngrams)
 mcp.tool()(load_audio_resource)
 mcp.tool(
     app=AppConfig(resource_uri="ui://play_excerpt/v2.html"),

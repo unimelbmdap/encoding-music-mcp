@@ -11,6 +11,7 @@ __all__ = [
     "get_melodic_intervals",
     "get_harmonic_intervals",
     "get_melodic_ngrams",
+    "get_first_occur_melodic_ngrams",
     "get_cadences",
 ]
 
@@ -186,6 +187,97 @@ def get_melodic_ngrams(
         "melodic_ngrams": mel_ngrams.to_csv(index=True)
         if not mel_ngrams.empty
         else "No melodic n-grams found",
+    }
+
+
+def _pattern_to_list(pattern: Any) -> list[Any] | Any:
+    """Convert a tuple-based n-gram pattern to a JSON-friendly list."""
+    return list(pattern) if isinstance(pattern, tuple) else pattern
+
+
+def get_first_occur_melodic_ngrams(
+    filename: str,
+    n: int = 4,
+    kind: str = "d",
+    combine_unisons: bool = True,
+    compound: bool = False,
+) -> dict[str, Any]:
+    """Extract first-occurrence melodic n-gram patterns from an MEI file.
+
+    This computes melodic n-grams using CRIM Intervals, identifies the first
+    occurrence of each unique pattern across all parts, and returns quarter-note
+    playback boundaries for each pattern.
+
+    Args:
+        filename: Name of the MEI file (e.g., "Bach_BWV_0772.mei").
+        n: Length of the melodic n-grams.
+        kind: Type of interval to calculate:
+            - 'd' (default): diatonic intervals (e.g., 2, -3, 5)
+            - 'c': chromatic intervals (e.g., 0, 2, -4)
+            - 'q': diatonic with quality (e.g., 'M2', 'm3', 'P5')
+            - 'z': zero-based diatonic intervals
+        combine_unisons: Whether to combine unisons when extracting notes.
+        compound: Whether to use compound intervals.
+
+    Returns:
+        Dictionary containing:
+        - filename: The input filename
+        - n: The n-gram length used
+        - kind: The interval type used
+        - combine_unisons: Whether unisons were combined
+        - compound: Whether compound intervals were used
+        - patterns: A list of first-occurrence pattern records, each containing:
+            - pattern: The melodic n-gram as a list
+            - start_q: Start position in quarter-note units
+            - duration: Pattern duration in quarter-note units
+            - end_q: End position in quarter-note units
+            - column: Staff or part label
+
+    Raises:
+        FileNotFoundError: If the MEI file cannot be loaded.
+    """
+    filepath = get_mei_filepath(filename)
+    piece = importScore(str(filepath))
+    if piece is None:
+        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+
+    nr = piece.notes(combineUnisons=combine_unisons)
+    mel = piece.melodic(df=nr, kind=kind, compound=compound, unit=0, end=False)
+
+    entry_ngrams = piece.entries(df=mel, n=n, thematic=True, anywhere=True)
+    ngram_durations = piece.durations(df=mel, n=n, mask_df=entry_ngrams)
+
+    first_occurrence: dict[tuple, dict[str, Any]] = {}
+
+    for row in entry_ngrams.index:
+        for col in entry_ngrams.columns:
+            pattern = entry_ngrams.loc[row, col]
+
+            if isinstance(pattern, tuple) and pattern not in first_occurrence:
+                first_occurrence[pattern] = {
+                    "start_q": float(row),
+                    "column": col,
+                    "duration": float(ngram_durations.loc[row, col]),
+                }
+
+    pattern_records = [
+        {
+            "pattern": _pattern_to_list(pattern),
+            "start_q": info["start_q"],
+            "duration": info["duration"],
+            "end_q": info["start_q"] + info["duration"],
+            "column": info["column"],
+        }
+        for pattern, info in first_occurrence.items()
+    ]
+
+    return {
+        "filename": filename,
+        "n": n,
+        "kind": kind,
+        "combine_unisons": combine_unisons,
+        "compound": compound,
+        "patterns": pattern_records,
     }
 
 

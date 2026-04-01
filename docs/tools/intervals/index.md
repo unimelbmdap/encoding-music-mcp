@@ -14,6 +14,7 @@ The interval analysis tools provide detailed melodic and harmonic analysis of ME
 | [`get_melodic_intervals`](melodic.md) | Calculate melodic intervals within each voice | [Documentation](melodic.md) |
 | [`get_harmonic_intervals`](harmonic.md) | Calculate harmonic intervals between voices | [Documentation](harmonic.md) |
 | [`get_melodic_ngrams`](ngrams.md) | Find recurring melodic patterns (n-grams) | [Documentation](ngrams.md) |
+| [`get_first_occur_melodic_ngrams`](first-occur.md) | Find the first occurrence of each unique melodic n-gram | [Documentation](first-occur.md) |
 | [`get_cadences`](cadences.md) | Detect and classify cadences in Renaissance counterpoint | [Documentation](cadences.md) |
 
 ## Common Features
@@ -95,7 +96,8 @@ A typical analysis workflow might be:
 2. **Analyze Melody** with [`get_melodic_intervals`](melodic.md)
 3. **Analyze Harmony** with [`get_harmonic_intervals`](harmonic.md)
 4. **Find Patterns** with [`get_melodic_ngrams`](ngrams.md)
-5. **Detect Cadences** with [`get_cadences`](cadences.md) (for Renaissance music)
+5. **Find First Occurrences** with [`get_first_occur_melodic_ngrams`](first-occur.md)
+6. **Detect Cadences** with [`get_cadences`](cadences.md) (for Renaissance music)
 
 ## Use Cases
 
@@ -136,4 +138,5 @@ Explore the individual tool documentation:
 - [Melodic Intervals](melodic.md)
 - [Harmonic Intervals](harmonic.md)
 - [Melodic N-grams](ngrams.md)
+- [First-Occurrence N-grams](first-occur.md)
 - [Cadence Detection](cadences.md)

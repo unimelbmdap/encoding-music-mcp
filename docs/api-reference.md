@@ -13,6 +13,7 @@ Complete reference for all encoding-music-mcp tools.
 | `get_melodic_intervals` | `filename: str` | `dict` with intervals | [Docs](tools/intervals/melodic.md) |
 | `get_harmonic_intervals` | `filename: str` | `dict` with intervals | [Docs](tools/intervals/harmonic.md) |
 | `get_melodic_ngrams` | `filename: str, n: int = 4` | `dict` with n-grams | [Docs](tools/intervals/ngrams.md) |
+| `get_first_occur_melodic_ngrams` | `filename: str, n: int = 4, kind: str = "d", combine_unisons: bool = True, compound: bool = False` | `dict` with first-occurrence patterns | [Docs](tools/intervals/first-occur.md) |
 | `show_notation` | `filename: str, start_measure: int = None, end_measure: int = None, page: int = 1` | SVG notation | [Docs](tools/notation.md) |
 | `play_excerpt` | `filename: str, start_q: float = 0.0, end_q: float = None, bpm: int = 60` | Audio player payload | [Docs](tools/play-excerpt.md) |
 
@@ -149,6 +150,31 @@ Find recurring melodic patterns.
 ```
 
 [Full Documentation →](tools/intervals/ngrams.md)
+
+### get_first_occur_melodic_ngrams(filename, n=4, kind="d", combine_unisons=True, compound=False)
+
+Find the first occurrence of each unique melodic n-gram in a score.
+
+**Parameters**:
+- `filename` (str): MEI filename
+- `n` (int, optional): N-gram length (default: 4)
+- `kind` (str, optional): Interval type
+- `combine_unisons` (bool, optional): Whether to combine unisons when extracting notes
+- `compound` (bool, optional): Whether to use compound intervals
+
+**Returns**:
+```python
+{
+    "filename": str,
+    "n": int,
+    "kind": str,
+    "combine_unisons": bool,
+    "compound": bool,
+    "patterns": list[dict[str, Any]]
+}
+```
+
+[Full Documentation â†’](tools/intervals/first-occur.md)
 
 ## Notation Tools
 
