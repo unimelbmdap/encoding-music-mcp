@@ -21,6 +21,7 @@ _VEROVIO_RESOURCE_PATH = str(Path(verovio.__file__).parent / "data")
 # A SoundFont is needed by FluidSynth to turn MIDI into actual audio.
 _SOUNDFONT_PATH = Path(__file__).resolve().parent.parent / "resources" / "GeneralUser-GS.sf2"
 _AUDIO_CACHE_DIR = Path(tempfile.gettempdir()) / "encoding_music_mcp_audio"
+_AUDIO_CACHE_VERSION = "v2"
 
 # Defines a fallback location for the FluidSynth executable on Windows. (e.g. use `where.exe fluidsynth`)
 _FALLBACK_FLUIDSYNTH_EXE = Path(r"C:\ProgramData\chocolatey\bin\fluidsynth.exe")
@@ -30,6 +31,7 @@ _AUDIO_REGISTRY: dict[str, dict[str, Any]] = {}
 _AUDIO_REGISTRY_LOCK = Lock()
 
 __all__ = ["play_excerpt", "load_audio_resource", "get_registered_audio"]
+_DEFAULT_PLAYBACK_VELOCITY = 64
 
 
 def _inject_or_replace_tempo(mei_text: str, bpm: int) -> str:
@@ -62,6 +64,21 @@ def _inject_or_replace_tempo(mei_text: str, bpm: int) -> str:
         rf'\1\n  <tempo midi.bpm="{bpm}">♩ = {bpm}</tempo>',
         mei_text,
         count=1,
+    )
+
+
+def _normalize_zero_velocities(mei_text: str, default_velocity: int = _DEFAULT_PLAYBACK_VELOCITY) -> str:
+    """Replace silent note/chord velocities with a practical playback default.
+
+    Some source MEI files encode notes with ``vel="0"``. That value is fine as
+    source data, but once converted to MIDI it effectively produces silent note
+    events. To make playback audible, these zero-velocity note and chord events
+    are rewritten to a moderate default velocity before rendering to MIDI.
+    """
+    return re.sub(
+        r'(<(?:note|chord)\b[^>]*\bvel=")0(")',
+        rf"\g<1>{default_velocity}\2",
+        mei_text,
     )
 
 
@@ -298,7 +315,10 @@ def _build_audio_cache_key(filename: str, start_q: float, end_q: float | None, b
     file paths. That means repeated requests for the same file, tempo, and
     quarter-note range can reuse the same MP3 instead of re-rendering it.
     """
-    payload = f"{filename}|{start_q:.6f}|{end_q if end_q is None else f'{end_q:.6f}'}|{bpm}"
+    payload = (
+        f"{_AUDIO_CACHE_VERSION}|{filename}|{start_q:.6f}|"
+        f"{end_q if end_q is None else f'{end_q:.6f}'}|{bpm}"
+    )
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
@@ -382,6 +402,7 @@ def play_excerpt(
 
     mei_text = filepath.read_text(encoding="utf-8")
     mei_text = _inject_or_replace_tempo(mei_text, bpm)
+    mei_text = _normalize_zero_velocities(mei_text)
 
     tk = _create_toolkit(mei_text)
     midi_b64 = tk.renderToMIDI()

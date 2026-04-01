@@ -128,3 +128,14 @@ def test_load_audio_resource_returns_base64(monkeypatch: pytest.MonkeyPatch, tmp
     assert payload["resource_uri"] == "audio://files/token123"
     assert payload["mime_type"] == "audio/mpeg"
     assert payload["audio_base64"] == "ZmFrZS1tcDMtYnl0ZXM="
+
+
+def test_normalize_zero_velocities_rewrites_silent_notes():
+    """Zero-velocity note and chord events should be made audible for playback."""
+    mei = '<note vel="0"/><chord dur="4" vel="0"/><note vel="42"/>'
+
+    normalized = play_excerpt_module._normalize_zero_velocities(mei, default_velocity=64)
+
+    assert '<note vel="64"/>' in normalized
+    assert '<chord dur="4" vel="64"/>' in normalized
+    assert 'vel="42"' in normalized
