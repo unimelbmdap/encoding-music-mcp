@@ -205,7 +205,7 @@
                 }));
                 chartEl.appendChild(rect(barX, laneY, barWidth, barHeight, {
                     rx: "8",
-                    fill: staff.color,
+                    fill: staff.colour,
                     opacity: "0.72"
                 }));
                 chartEl.appendChild(text(leftMargin - 12, rowY + 31, staff.label, {
@@ -225,7 +225,7 @@
             staff_ranges.forEach((staff) => {
                 const item = document.createElement("div");
                 item.className = "legend-item";
-                item.innerHTML = `<span class="swatch" style="background:${staff.color}"></span><span>${staff.label}: ${staff.lowest_note} to ${staff.highest_note}</span>`;
+                item.innerHTML = `<span class="swatch" style="background:${staff.colour}"></span><span>${staff.label}: ${staff.lowest_note} to ${staff.highest_note}</span>`;
                 legendEl.appendChild(item);
             });
 

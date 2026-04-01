@@ -32,6 +32,12 @@ encoding-music-mcp provides a suite of tools for analyzing MEI files. All tools 
 |------|---------|------------|
 | [`show_notation`](notation.md) | Display rendered sheet music with interactive pagination | [Documentation](notation.md) |
 
+### Visualisation Tools
+
+| Tool | Purpose | Learn More |
+|------|---------|------------|
+| [`plot_voice_ranges`](voice-ranges.md) | Display compact per-staff pitch ranges for a single score | [Documentation](voice-ranges.md) |
+
 ## Tool Categories
 
 ### 🔍 Discovery
@@ -62,6 +68,12 @@ Tools for analyzing musical content:
 Tools for viewing rendered sheet music:
 
 - **[show_notation](notation.md)**: Render MEI files as SVG notation with interactive pagination (requires [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps))
+
+### Visualisation
+
+Tools for viewing derived visual summaries:
+
+- **[plot_voice_ranges](voice-ranges.md)**: Plot the lowest and highest pitch reached by each staff in one score
 
 ## Tool Design Philosophy
 

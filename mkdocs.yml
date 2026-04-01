@@ -59,6 +59,7 @@ nav:
       - Metadata: tools/metadata.md
       - Key Analysis: tools/key-analysis.md
       - Notation: tools/notation.md
+      - Voice Ranges: tools/voice-ranges.md
       - Intervals:
           - Overview: tools/intervals/index.md
           - Notes: tools/intervals/notes.md

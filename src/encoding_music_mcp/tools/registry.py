@@ -14,9 +14,9 @@ from .intervals import (
     get_cadences,
 )
 from .notation import show_notation
-from .voice_ranges import plot_voice_ranges
 from .melodic_patterns import get_first_occurrence_melodic_ngrams
 from .play_excerpt import load_audio_resource, play_excerpt
+from .visualisation.voice_ranges import plot_voice_ranges
 
 # Register all tools here
 # To add a new tool: import it, then add mcp.tool()(your_tool) below

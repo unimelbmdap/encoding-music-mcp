@@ -311,9 +311,9 @@ def _convert_wav_to_mp3(input_wav: Path, output_mp3: Path) -> None:
 def _build_audio_cache_key(filename: str, start_q: float, end_q: float | None, bpm: int) -> str:
     """Create a stable cache key for a rendered audio request.
 
-    The cache key is derived from the musical request, not from any temporary
-    file paths. That means repeated requests for the same file, tempo, and
-    quarter-note range can reuse the same MP3 instead of re-rendering it.
+    The cache key is derived from the musical request. That means repeated requests 
+    for the same file, tempo, and quarter-note range can reuse the same MP3 instead 
+    of re-rendering it.
     """
     payload = (
         f"{_AUDIO_CACHE_VERSION}|{filename}|{start_q:.6f}|"
@@ -323,12 +323,7 @@ def _build_audio_cache_key(filename: str, start_q: float, end_q: float | None, b
 
 
 def _register_audio_file(audio_path: Path, mime_type: str, duration_sec: float) -> str:
-    """Register a prepared audio file and return a lookup token.
-
-    The token is an opaque identifier that the app can safely pass around
-    without exposing local filesystem paths. The in-memory registry maps that
-    token back to the prepared MP3 file and its metadata for later retrieval.
-    """
+    """Register a prepared audio file and return a lookup token."""
     token = secrets.token_urlsafe(16)
     with _AUDIO_REGISTRY_LOCK:
         _AUDIO_REGISTRY[token] = {

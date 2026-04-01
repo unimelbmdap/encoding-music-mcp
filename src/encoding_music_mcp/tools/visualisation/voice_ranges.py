@@ -10,15 +10,15 @@ from typing import Any
 from fastmcp.tools.tool import ToolResult
 from mcp.types import TextContent
 
-from .intervals import get_notes
-from .metadata import get_mei_metadata
+from ..intervals import get_notes
+from ..metadata import get_mei_metadata
 
 __all__ = ["plot_voice_ranges"]
 
 _NOTE_RE = re.compile(r"^([A-G])([#-]*)(\d+)$")
 _PITCH_CLASS = {"C": 0, "D": 2, "E": 4, "F": 5, "G": 7, "A": 9, "B": 11}
 _NOTE_NAMES = ["C", "C#", "D", "E-", "E", "F", "F#", "G", "A-", "A", "B-", "B"]
-_STAFF_COLORS = [
+_STAFF_COLOURS = [
     "#ff6b6b",
     "#4dabf7",
     "#845ef7",
@@ -86,7 +86,7 @@ def _extract_staff_ranges(filename: str) -> tuple[dict[str, Any], list[dict[str,
             {
                 "staff": str(column),
                 "label": f"Staff {column}",
-                "color": _STAFF_COLORS[index % len(_STAFF_COLORS)],
+                "colour": _STAFF_COLOURS[index % len(_STAFF_COLOURS)],
                 "lowest_midi": lowest_midi,
                 "highest_midi": highest_midi,
                 "lowest_note": _midi_to_note_name(lowest_midi),
@@ -107,7 +107,18 @@ def _extract_staff_ranges(filename: str) -> tuple[dict[str, Any], list[dict[str,
 
 
 def plot_voice_ranges(filename: str) -> ToolResult:
-    """Plot note ranges for the staves in a single MEI score."""
+    """Plot note ranges for the staves in a single MEI score.
+
+    Derives the lowest and highest sounding pitch in each staff, then packages
+    those ranges for the voice-range viewer app.
+
+    Args:
+        filename: Name of the MEI file (e.g., ``"Bach_BWV_0772.mei"``).
+
+    Returns:
+        ToolResult with text fallback plus structured content containing score
+        metadata, axis labels, and per-staff range summaries.
+    """
     metadata, staff_ranges = _extract_staff_ranges(filename)
     x_min = min(staff["lowest_midi"] for staff in staff_ranges)
     x_max = max(staff["highest_midi"] for staff in staff_ranges)
@@ -129,3 +140,4 @@ def plot_voice_ranges(filename: str) -> ToolResult:
         content=[TextContent(type="text", text=description)],
         structured_content=structured,
     )
+
