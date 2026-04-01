@@ -2,10 +2,12 @@
 
 from pathlib import Path
 
+from fastmcp.resources import ResourceContent, ResourceResult
 from fastmcp.server.apps import AppConfig, ResourceCSP
 
 from ..server import mcp
 from .mei import mei_collections_list, mei_file_content
+from ..tools.play_excerpt import get_registered_audio
 
 # Register all resources here
 # To add a new resource: import it, then add mcp.resource(uri)(your_resource) below
@@ -45,3 +47,24 @@ def notation_viewer() -> str:
 )
 def play_excerpt_viewer() -> str:
     return _play_excerpt_html_path.read_text(encoding="utf-8")
+
+
+@mcp.resource("audio://files/{token}")
+def audio_file_resource(token: str) -> ResourceResult:
+    """Expose prepared audio files as MCP resources for stdio-compatible apps."""
+    audio_entry = get_registered_audio(token)
+    if not audio_entry:
+        raise FileNotFoundError(f"Audio resource not found for token: {token}")
+
+    audio_path = audio_entry["path"]
+    if not audio_path.exists():
+        raise FileNotFoundError(f"Audio file no longer exists for token: {token}")
+
+    return ResourceResult(
+        contents=[
+            ResourceContent(
+                content=audio_path.read_bytes(),
+                mime_type=audio_entry["mime_type"],
+            )
+        ]
+    )

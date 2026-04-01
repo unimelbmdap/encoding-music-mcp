@@ -15,7 +15,7 @@ from .intervals import (
 )
 from .notation import show_notation
 from .melodic_patterns import get_first_occurrence_melodic_ngrams
-from .play_excerpt import play_excerpt
+from .play_excerpt import load_audio_resource, play_excerpt
 
 # Register all tools here
 # To add a new tool: import it, then add mcp.tool()(your_tool) below
@@ -31,6 +31,7 @@ mcp.tool(
     app=AppConfig(resource_uri="ui://notation/view.html"),
 )(show_notation)
 mcp.tool()(get_first_occurrence_melodic_ngrams)
+mcp.tool()(load_audio_resource)
 mcp.tool(
     app=AppConfig(resource_uri="ui://play_excerpt/v2.html"),
 )(play_excerpt)

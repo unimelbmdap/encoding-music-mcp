@@ -1,10 +1,14 @@
 import base64
+import hashlib
 import re
+import secrets
 import shutil
 import subprocess
 import tempfile
 import wave
 from pathlib import Path
+from threading import Lock
+from typing import Any
 
 import verovio
 from fastmcp.tools.tool import ToolResult
@@ -16,11 +20,16 @@ _VEROVIO_RESOURCE_PATH = str(Path(verovio.__file__).parent / "data")
 
 # A SoundFont is needed by FluidSynth to turn MIDI into actual audio.
 _SOUNDFONT_PATH = Path(__file__).resolve().parent.parent / "resources" / "GeneralUser-GS.sf2"
+_AUDIO_CACHE_DIR = Path(tempfile.gettempdir()) / "encoding_music_mcp_audio"
 
-# Defines a fallback location for the FluidSynth executable on Windows. (use `where.exe fluidsynth`)
+# Defines a fallback location for the FluidSynth executable on Windows. (e.g. use `where.exe fluidsynth`)
 _FALLBACK_FLUIDSYNTH_EXE = Path(r"C:\ProgramData\chocolatey\bin\fluidsynth.exe")
+_FALLBACK_FFMPEG_EXE = Path(r"C:\ProgramData\chocolatey\bin\ffmpeg.exe")
 
-__all__ = ["play_excerpt"]
+_AUDIO_REGISTRY: dict[str, dict[str, Any]] = {}
+_AUDIO_REGISTRY_LOCK = Lock()
+
+__all__ = ["play_excerpt", "load_audio_resource", "get_registered_audio"]
 
 
 def _inject_or_replace_tempo(mei_text: str, bpm: int) -> str:
@@ -103,6 +112,22 @@ def _find_fluidsynth_executable() -> Path:
         "FluidSynth executable not found. "
         "Install it on Windows and make sure it is on PATH, "
         f"or place it at {_FALLBACK_FLUIDSYNTH_EXE}."
+    )
+
+
+def _find_ffmpeg_executable() -> Path:
+    """Locate the FFmpeg executable used for MP3 conversion."""
+    exe = shutil.which("ffmpeg")
+    if exe:
+        return Path(exe)
+
+    if _FALLBACK_FFMPEG_EXE.exists():
+        return _FALLBACK_FFMPEG_EXE
+
+    raise FileNotFoundError(
+        "FFmpeg executable not found. "
+        "Install it on Windows and make sure it is on PATH, "
+        f"or place it at {_FALLBACK_FFMPEG_EXE}."
     )
 
 
@@ -223,29 +248,100 @@ def _trim_wav_file(input_wav: Path, output_wav: Path, start_sec: float, end_sec:
         dst.writeframes(audio_frames)
 
 
-def _wav_file_to_b64(wav_path: Path) -> str:
-    """Encode a WAV file as a base64 ASCII string.
+def _get_wav_duration_sec(wav_path: Path) -> float:
+    """Return the duration of a WAV file in seconds."""
+    with wave.open(str(wav_path), "rb") as src:
+        return src.getnframes() / src.getframerate()
 
-    Parameters:
-        wav_path : Path
-            Path to the WAV file.
 
-    Returns:
-        str
-            Base64-encoded WAV data.
+def _convert_wav_to_mp3(input_wav: Path, output_mp3: Path) -> None:
+    """Convert WAV audio to MP3 using FFmpeg."""
+    ffmpeg_exe = _find_ffmpeg_executable()
+
+    cmd = [
+        str(ffmpeg_exe),
+        "-y",
+        "-i",
+        str(input_wav),
+        "-codec:a",
+        "libmp3lame",
+        "-q:a",
+        "4",
+        str(output_mp3),
+    ]
+
+    result = subprocess.run(
+        cmd,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+        text=True,
+        check=False,
+        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+    )
+
+    if result.returncode != 0:
+        stderr = (result.stderr or "").strip()
+        raise RuntimeError(
+            f"FFmpeg failed with exit code {result.returncode}"
+            + (f". stderr: {stderr}" if stderr else "")
+        )
+
+    if not output_mp3.exists():
+        raise RuntimeError("FFmpeg did not produce an MP3 file.")
+
+
+def _build_audio_cache_key(filename: str, start_q: float, end_q: float | None, bpm: int) -> str:
+    """Create a stable cache key for a rendered audio request.
+
+    The cache key is derived from the musical request, not from any temporary
+    file paths. That means repeated requests for the same file, tempo, and
+    quarter-note range can reuse the same MP3 instead of re-rendering it.
     """
-    return base64.b64encode(wav_path.read_bytes()).decode("ascii")
+    payload = f"{filename}|{start_q:.6f}|{end_q if end_q is None else f'{end_q:.6f}'}|{bpm}"
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _register_audio_file(audio_path: Path, mime_type: str, duration_sec: float) -> str:
+    """Register a prepared audio file and return a lookup token.
+
+    The token is an opaque identifier that the app can safely pass around
+    without exposing local filesystem paths. The in-memory registry maps that
+    token back to the prepared MP3 file and its metadata for later retrieval.
+    """
+    token = secrets.token_urlsafe(16)
+    with _AUDIO_REGISTRY_LOCK:
+        _AUDIO_REGISTRY[token] = {
+            "path": audio_path,
+            "mime_type": mime_type,
+            "duration_sec": duration_sec,
+        }
+    return token
+
+
+def get_registered_audio(token: str) -> dict[str, Any] | None:
+    """Look up a registered prepared audio file by token."""
+    with _AUDIO_REGISTRY_LOCK:
+        return _AUDIO_REGISTRY.get(token)
+
+
+def _parse_audio_resource_uri(resource_uri: str) -> str:
+    """Extract the token from an ``audio://`` resource URI."""
+    prefix = "audio://files/"
+    if not resource_uri.startswith(prefix):
+        raise ValueError(f"Invalid audio resource URI: {resource_uri}")
+    return resource_uri[len(prefix):]
 
 
 def play_excerpt(
-    filename: str, start_q: float, end_q: float, bpm: int = 60,
+    filename: str, start_q: float = 0.0, end_q: float | None = None, bpm: int = 60,
 ) -> ToolResult:
-    """Render an MEI file to audio and return a requested excerpt.
+    """Render an MEI file to MP3 and return an MCP audio resource reference.
 
     The function reads the MEI file, injects or replaces its tempo, renders it
     to MIDI with Verovio, synthesises the MIDI to WAV with FluidSynth, trims
-    the requested time interval, and returns the excerpt as base64-encoded WAV
-    data in the tool result.
+    the requested time interval if provided, converts the audio to MP3, and
+    returns a small tool payload with an ``audio://`` resource URI.
 
     The end time is extended slightly before trimming so that the rendered audio
     does not cut off the final note too early.
@@ -254,25 +350,28 @@ def play_excerpt(
         filename : str
             Name of the MEI file to load.
         start_q : float
-            Start position of the excerpt in quarter-note units.
-        end_q : float
-            End position of the excerpt in quarter-note units.
+            Start position of the excerpt in zero-based quarter-note units.
+            ``0.0`` means the beginning of the piece.
+        end_q : float | None
+            Optional end position of the excerpt in quarter-note units.
         bpm : int, default=60
             Playback tempo in beats per minute.
 
     Returns:
         ToolResult
             A tool result containing a text message and structured payload with the
-            audio excerpt and related metadata.
+            MCP audio resource URI and related metadata.
 
     Raises:
         ValueError
-            If ``end_q`` is not greater than ``start_q`` or if ``bpm`` is not
-            positive.
+            If ``end_q`` is not greater than ``start_q`` when provided, or if
+            ``start_q`` is negative, or if ``bpm`` is not positive.
         FileNotFoundError
             If the MEI file does not exist.
     """
-    if end_q <= start_q:
+    if start_q < 0:
+        raise ValueError("start_q must be greater than or equal to 0")
+    if end_q is not None and end_q <= start_q:
         raise ValueError("end_q must be greater than start_q")
     if bpm <= 0:
         raise ValueError("bpm must be positive")
@@ -287,29 +386,89 @@ def play_excerpt(
     tk = _create_toolkit(mei_text)
     midi_b64 = tk.renderToMIDI()
 
-    start_sec = start_q * 60.0 / bpm
-    # Add a small buffer to avoid cutting off the final note too early
-    end_sec = (end_q + 0.25) * 60.0 / bpm
+    _AUDIO_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    cache_key = _build_audio_cache_key(filename, start_q, end_q, bpm)
+    output_mp3_path = _AUDIO_CACHE_DIR / f"{cache_key}.mp3"
 
     with tempfile.TemporaryDirectory() as tmpdir:
         tmpdir_path = Path(tmpdir)
         full_wav_path = tmpdir_path / "full.wav"
-        excerpt_wav_path = tmpdir_path / "excerpt.wav"
+        working_wav_path = tmpdir_path / "working.wav"
 
         _render_midi_b64_to_wav_file(midi_b64, full_wav_path)
-        _trim_wav_file(full_wav_path, excerpt_wav_path, start_sec, end_sec)
-        audio_b64 = _wav_file_to_b64(excerpt_wav_path)
+
+        if end_q is None:
+            shutil.copyfile(full_wav_path, working_wav_path)
+        else:
+            start_sec = start_q * 60.0 / bpm
+            # Add a small buffer to avoid cutting off the final note too early.
+            end_sec = (end_q + 0.25) * 60.0 / bpm
+            _trim_wav_file(full_wav_path, working_wav_path, start_sec, end_sec)
+
+        if not output_mp3_path.exists():
+            _convert_wav_to_mp3(working_wav_path, output_mp3_path)
+
+        duration_sec = _get_wav_duration_sec(working_wav_path)
+
+    audio_token = _register_audio_file(output_mp3_path, "audio/mpeg", duration_sec)
+    audio_resource_uri = f"audio://files/{audio_token}"
 
     payload = {
         "filename": filename,
-        "audio_base64": audio_b64,
-        "mime_type": "audio/wav",
+        "audio_resource_uri": audio_resource_uri,
+        "mime_type": "audio/mpeg",
         "start_q": start_q,
         "end_q": end_q,
         "bpm": bpm,
+        "duration_sec": duration_sec,
     }
 
     return ToolResult(
-        content=[TextContent(type="text", text="Prepared audio excerpt")],
+        content=[TextContent(type="text", text="Prepared streaming audio")],
+        structured_content=payload,
+    )
+
+
+def load_audio_resource(resource_uri: str) -> ToolResult:
+    """Load a prepared audio MCP resource for use inside the playback widget.
+
+    This helper acts as a bridge between the app and the server-side audio 
+    registry. It accepts an ``audio://files/{token}`` resource URI, resolves 
+    the token to a previously prepared MP3 file, reads the file bytes, and 
+    returns them as base64 along with MIME metadata.
+
+    Parameters:
+        resource_uri : str
+            MCP audio resource URI produced earlier by ``play_excerpt``.
+
+    Returns:
+        ToolResult
+            A tool result whose structured payload contains the original
+            resource URI, MIME type, duration, and base64-encoded audio bytes.
+
+    Raises:
+        ValueError
+            If the resource URI does not match the expected ``audio://`` format.
+        FileNotFoundError
+            If the token is unknown or the prepared audio file has been removed.
+    """
+    token = _parse_audio_resource_uri(resource_uri)
+    audio_entry = get_registered_audio(token)
+    if not audio_entry:
+        raise FileNotFoundError(f"Audio resource not found: {resource_uri}")
+
+    audio_path = audio_entry["path"]
+    if not audio_path.exists():
+        raise FileNotFoundError(f"Audio file no longer exists for resource: {resource_uri}")
+
+    payload = {
+        "resource_uri": resource_uri,
+        "mime_type": audio_entry["mime_type"],
+        "audio_base64": base64.b64encode(audio_path.read_bytes()).decode("ascii"),
+        "duration_sec": audio_entry["duration_sec"],
+    }
+
+    return ToolResult(
+        content=[TextContent(type="text", text="Loaded audio resource")],
         structured_content=payload,
     )
