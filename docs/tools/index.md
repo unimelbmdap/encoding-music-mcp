@@ -38,6 +38,12 @@ encoding-music-mcp provides a suite of tools for analyzing MEI files. All tools 
 |------|---------|------------|
 | [`plot_voice_ranges`](voice-ranges.md) | Display compact per-staff pitch ranges for a single score | [Documentation](voice-ranges.md) |
 
+### Playback Tools
+
+| Tool | Purpose | Learn More |
+|------|---------|------------|
+| [`play_excerpt`](play-excerpt.md) | Render a score or excerpt to streamed audio playback | [Documentation](play-excerpt.md) |
+
 ## Tool Categories
 
 ### 🔍 Discovery
@@ -74,6 +80,12 @@ Tools for viewing rendered sheet music:
 Tools for viewing derived visual summaries:
 
 - **[plot_voice_ranges](voice-ranges.md)**: Plot the lowest and highest pitch reached by each staff in one score
+
+### Playback
+
+Tools for listening to rendered score audio:
+
+- **[play_excerpt](play-excerpt.md)**: Render an MEI score or excerpt as audio in an inline player
 
 ## Tool Design Philosophy
 

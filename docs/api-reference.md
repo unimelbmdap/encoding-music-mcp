@@ -14,6 +14,7 @@ Complete reference for all encoding-music-mcp tools.
 | `get_harmonic_intervals` | `filename: str` | `dict` with intervals | [Docs](tools/intervals/harmonic.md) |
 | `get_melodic_ngrams` | `filename: str, n: int = 4` | `dict` with n-grams | [Docs](tools/intervals/ngrams.md) |
 | `show_notation` | `filename: str, start_measure: int = None, end_measure: int = None, page: int = 1` | SVG notation | [Docs](tools/notation.md) |
+| `play_excerpt` | `filename: str, start_q: float = 0.0, end_q: float = None, bpm: int = 60` | Audio player payload | [Docs](tools/play-excerpt.md) |
 
 ## Discovery Tools
 
@@ -177,6 +178,31 @@ Render MEI file as sheet music notation using Verovio.
     Requires the [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps) for inline display.
 
 [Full Documentation →](tools/notation.md)
+
+### play_excerpt(filename, start_q=0.0, end_q=None, bpm=60)
+
+Render an MEI file or excerpt to streamed MP3 audio.
+
+**Parameters**:
+- `filename` (str): MEI filename
+- `start_q` (float, optional): Start offset in quarter-note units
+- `end_q` (float | None, optional): End offset in quarter-note units
+- `bpm` (int, optional): Playback tempo in beats per minute
+
+**Returns**:
+```python
+{
+    "filename": str,
+    "audio_resource_uri": str,
+    "mime_type": "audio/mpeg",
+    "start_q": float,
+    "end_q": float | None,
+    "bpm": int,
+    "duration_sec": float,
+}
+```
+
+[Full Documentation â†’](tools/play-excerpt.md)
 
 ## Common Patterns
 
