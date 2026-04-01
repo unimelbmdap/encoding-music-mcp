@@ -69,6 +69,16 @@ def _create_toolkit(mei_data: str) -> verovio.toolkit:
     return tk
 
 
+def _normalise_svg_text(svg: str) -> str:
+    """Replace fragile Unicode text and preserve SVG text spacing."""
+    normalised = (
+        svg.replace("\u2013", "-")
+        .replace("\u00a0", " ")
+        .replace("\u00e2\u20ac\u201c", "-")
+    )
+    return normalised.replace("<text ", '<text xml:space="preserve" ')
+
+
 def show_notation(
     filename: str,
     start_measure: int | None = None,
@@ -105,7 +115,7 @@ def show_notation(
     total_pages = tk.getPageCount()
 
     page = max(1, min(page, total_pages))
-    svg = tk.renderToSVG(page)
+    svg = _normalise_svg_text(tk.renderToSVG(page))
 
     if start_measure is not None:
         measure_text = (
