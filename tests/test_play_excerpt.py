@@ -1,6 +1,7 @@
 """Tests for MP3 playback preparation tool."""
 
 import wave
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import pytest
@@ -18,11 +19,6 @@ def _write_test_wav(path: Path, duration_sec: float = 1.0, framerate: int = 8000
         wav_file.writeframes(b"\x00\x00" * frame_count)
 
 
-class _DummyToolkit:
-    def renderToMIDI(self) -> str:
-        return "ZHVtbXk="
-
-
 @pytest.fixture
 def fake_mei_file(tmp_path: Path) -> Path:
     mei_path = tmp_path / "sample.mei"
@@ -36,7 +32,11 @@ def test_play_excerpt_full_piece_returns_stream_url(monkeypatch: pytest.MonkeyPa
 
     monkeypatch.setattr(play_excerpt_module, "_AUDIO_CACHE_DIR", output_dir)
     monkeypatch.setattr(play_excerpt_module, "get_mei_filepath", lambda filename: fake_mei_file)
-    monkeypatch.setattr(play_excerpt_module, "_create_toolkit", lambda mei_data: _DummyToolkit())
+    monkeypatch.setattr(
+        play_excerpt_module,
+        "_render_mei_to_midi_b64",
+        lambda filepath, mei_data, bpm: "ZHVtbXk=",
+    )
 
     def fake_render(midi_b64: str, wav_path: Path) -> None:
         _write_test_wav(wav_path, duration_sec=1.25)
@@ -70,7 +70,11 @@ def test_play_excerpt_range_trims_audio(monkeypatch: pytest.MonkeyPatch, tmp_pat
 
     monkeypatch.setattr(play_excerpt_module, "_AUDIO_CACHE_DIR", output_dir)
     monkeypatch.setattr(play_excerpt_module, "get_mei_filepath", lambda filename: fake_mei_file)
-    monkeypatch.setattr(play_excerpt_module, "_create_toolkit", lambda mei_data: _DummyToolkit())
+    monkeypatch.setattr(
+        play_excerpt_module,
+        "_render_mei_to_midi_b64",
+        lambda filepath, mei_data, bpm: "ZHVtbXk=",
+    )
 
     trim_calls: list[tuple[float, float]] = []
 
@@ -139,3 +143,32 @@ def test_normalize_zero_velocities_rewrites_silent_notes():
     assert '<note vel="64"/>' in normalized
     assert '<chord dur="4" vel="64"/>' in normalized
     assert 'vel="42"' in normalized
+
+
+def test_expand_mei_repeats_for_playback_keeps_first_and_second_endings():
+    """Playback expansion should preserve alternate endings across repeat passes."""
+    mei_path = (
+        Path(__file__).resolve().parents[1]
+        / "src"
+        / "encoding_music_mcp"
+        / "resources"
+        / "mei_files"
+        / "Morley_1595_10_O_thou_that_art.mei"
+    )
+
+    expanded = play_excerpt_module._expand_mei_repeats_for_playback(
+        mei_path.read_text(encoding="utf-8")
+    )
+
+    root = ET.fromstring(expanded)
+    measures = root.findall(
+        ".//{http://www.music-encoding.org/ns/mei}section/"
+        "{http://www.music-encoding.org/ns/mei}measure"
+    )
+    measure_numbers = [measure.get("n") for measure in measures]
+
+    assert measure_numbers[30:] == [
+        "31", "32", "33", "34", "35", "36", "37", "38", "39",
+        "40", "41", "42", "43", "44", "45", "46",
+        "31", "32", "33", "34", "35", "36", "37", "38", "39", "47",
+    ]
