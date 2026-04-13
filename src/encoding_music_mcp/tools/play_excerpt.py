@@ -11,11 +11,13 @@ from pathlib import Path
 from threading import Lock
 from typing import Any
 
+from fastmcp import Context
+from fastmcp.server.elicitation import CancelledElicitation, DeclinedElicitation
 from fastmcp.tools.tool import ToolResult
 from music21 import converter, tempo
 from mcp.types import TextContent
 
-from .helpers import get_mei_filepath
+from .helpers import get_mei_collections, get_mei_filepath
 
 # A SoundFont is needed by FluidSynth to turn MIDI into actual audio.
 _SOUNDFONT_PATH = Path(__file__).resolve().parent.parent / "resources" / "GeneralUser-GS.sf2"
@@ -503,8 +505,12 @@ def _parse_audio_resource_uri(resource_uri: str) -> str:
     return resource_uri[len(prefix):]
 
 
-def play_excerpt(
-    filename: str, start_q: float = 0.0, end_q: float | None = None, bpm: int = 60,
+async def play_excerpt(
+    filename: str | None = None,
+    start_q: float = 0.0,
+    end_q: float | None = None,
+    bpm: int = 60,
+    ctx: Context | None = None,
 ) -> ToolResult:
     """Render an MEI file to MP3 and return an MCP audio resource reference.
 
@@ -517,8 +523,9 @@ def play_excerpt(
     does not cut off the final note too early.
 
     Parameters:
-        filename : str
-            Name of the MEI file to load.
+        filename : str | None
+            Name of the MEI file to load. If omitted and the client supports
+            elicitation, the tool asks the user to choose one.
         start_q : float
             Start position of the excerpt in zero-based quarter-note units.
             ``0.0`` means the beginning of the piece.
@@ -545,6 +552,24 @@ def play_excerpt(
         raise ValueError("end_q must be greater than start_q")
     if bpm <= 0:
         raise ValueError("bpm must be positive")
+    if filename is None:
+        if ctx is None:
+            raise ValueError(
+                "filename is required to play an excerpt when no MCP context is available"
+            )
+
+        available_files = get_mei_collections().get("all_files", [])
+        if not available_files:
+            raise FileNotFoundError("No built-in MEI files are available for playback")
+
+        elicitation = await ctx.elicit(
+            "Which music score would you like me to play?",
+            available_files,
+        )
+        if isinstance(elicitation, DeclinedElicitation | CancelledElicitation):
+            raise ValueError("filename is required to play an excerpt")
+
+        filename = elicitation.data
 
     filepath = get_mei_filepath(filename)
     if not filepath.exists():

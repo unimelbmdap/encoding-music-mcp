@@ -21,7 +21,7 @@ Without the Apps extension, the tool still returns a small text response and str
 
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
-| `filename` | `str` | Yes | - | Name of the MEI file (e.g., `"Bach_BWV_0772.mei"`) |
+| `filename` | `str \| None` | No | `None` | Name of the MEI file (e.g., `"Bach_BWV_0772.mei"`). If omitted, the server asks the user which score to play when the client supports elicitation. |
 | `start_q` | `float` | No | `0.0` | Start position in quarter-note units from the beginning of the piece |
 | `end_q` | `float \| None` | No | `None` | Optional end position in quarter-note units; if omitted, playback continues from `start_q` to the end of the piece |
 | `bpm` | `int` | No | `60` | Playback tempo in beats per minute |
@@ -54,6 +54,13 @@ The tool returns a `ToolResult` with:
 
 Renders the whole score and opens it in the audio player.
 
+### Missing filename
+
+!!! example "Try asking:"
+    "Play the music score for me"
+
+If the filename is missing, the server elicits the score name instead of immediately failing.
+
 ### Selected excerpt
 
 !!! example "Try asking:"
@@ -75,6 +82,7 @@ Renders only the requested excerpt and opens it in the audio player.
 ## Notes
 
 - `start_q` is zero-based: `0.0` means the beginning of the piece
+- If `filename` is omitted and the user declines the follow-up elicitation, the tool returns a validation error
 - `end_q` must be greater than `start_q`
 - If `end_q` is not provided, the rendered audio runs from `start_q` through to the end of the piece
 - A small timing buffer is added at the end of excerpts so the final note is less likely to be cut off too early
@@ -83,4 +91,3 @@ Renders only the requested excerpt and opens it in the audio player.
 ## Related Tools
 
 - [show_notation](notation.md) - View the same score as rendered notation
-

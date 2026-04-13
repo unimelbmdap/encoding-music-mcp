@@ -1,10 +1,12 @@
 """Tests for MP3 playback preparation tool."""
 
+import asyncio
 import wave
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import pytest
+from fastmcp.server.elicitation import AcceptedElicitation, DeclinedElicitation
 
 from src.encoding_music_mcp.tools import play_excerpt as play_excerpt_module
 
@@ -47,7 +49,7 @@ def test_play_excerpt_full_piece_returns_stream_url(monkeypatch: pytest.MonkeyPa
     monkeypatch.setattr(play_excerpt_module, "_render_midi_b64_to_wav_file", fake_render)
     monkeypatch.setattr(play_excerpt_module, "_convert_wav_to_mp3", fake_convert)
 
-    result = play_excerpt_module.play_excerpt("sample.mei", bpm=72)
+    result = asyncio.run(play_excerpt_module.play_excerpt("sample.mei", bpm=72))
     payload = result.structured_content
 
     assert payload is not None
@@ -92,7 +94,9 @@ def test_play_excerpt_range_trims_audio(monkeypatch: pytest.MonkeyPatch, tmp_pat
     monkeypatch.setattr(play_excerpt_module, "_trim_wav_file", fake_trim)
     monkeypatch.setattr(play_excerpt_module, "_convert_wav_to_mp3", fake_convert)
 
-    result = play_excerpt_module.play_excerpt("sample.mei", start_q=2.0, end_q=6.0, bpm=120)
+    result = asyncio.run(
+        play_excerpt_module.play_excerpt("sample.mei", start_q=2.0, end_q=6.0, bpm=120)
+    )
     payload = result.structured_content
 
     assert payload is not None
@@ -103,13 +107,70 @@ def test_play_excerpt_range_trims_audio(monkeypatch: pytest.MonkeyPatch, tmp_pat
 def test_play_excerpt_rejects_invalid_range():
     """Invalid ranges should be rejected before any rendering starts."""
     with pytest.raises(ValueError, match="end_q must be greater than start_q"):
-        play_excerpt_module.play_excerpt("anything.mei", start_q=3.0, end_q=3.0)
+        asyncio.run(play_excerpt_module.play_excerpt("anything.mei", start_q=3.0, end_q=3.0))
 
 
 def test_play_excerpt_rejects_negative_start():
     """Negative quarter-note offsets should be rejected."""
     with pytest.raises(ValueError, match="start_q must be greater than or equal to 0"):
-        play_excerpt_module.play_excerpt("anything.mei", start_q=-1.0)
+        asyncio.run(play_excerpt_module.play_excerpt("anything.mei", start_q=-1.0))
+
+
+def test_play_excerpt_elicits_filename_when_missing(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, fake_mei_file: Path,
+):
+    """Missing filenames should be requested from the user before playback proceeds."""
+    output_dir = tmp_path / "audio-cache"
+
+    monkeypatch.setattr(play_excerpt_module, "_AUDIO_CACHE_DIR", output_dir)
+    monkeypatch.setattr(play_excerpt_module, "get_mei_filepath", lambda filename: fake_mei_file)
+    monkeypatch.setattr(
+        play_excerpt_module,
+        "get_mei_collections",
+        lambda: {"all_files": ["sample.mei", "other.mei"]},
+    )
+    monkeypatch.setattr(
+        play_excerpt_module,
+        "_render_mei_to_midi_b64",
+        lambda filepath, mei_data, bpm: "ZHVtbXk=",
+    )
+
+    def fake_render(midi_b64: str, wav_path: Path) -> None:
+        _write_test_wav(wav_path, duration_sec=1.0)
+
+    def fake_convert(input_wav: Path, output_mp3: Path) -> None:
+        output_mp3.write_bytes(b"fake-mp3")
+
+    class FakeContext:
+        async def elicit(self, message: str, response_type: object) -> AcceptedElicitation[str]:
+            assert message == "Which music score would you like me to play?"
+            assert response_type == ["sample.mei", "other.mei"]
+            return AcceptedElicitation(data="sample.mei")
+
+    monkeypatch.setattr(play_excerpt_module, "_render_midi_b64_to_wav_file", fake_render)
+    monkeypatch.setattr(play_excerpt_module, "_convert_wav_to_mp3", fake_convert)
+
+    result = asyncio.run(play_excerpt_module.play_excerpt(ctx=FakeContext()))
+
+    payload = result.structured_content
+    assert payload is not None
+    assert payload["filename"] == "sample.mei"
+
+
+def test_play_excerpt_raises_after_elicitation_decline(monkeypatch: pytest.MonkeyPatch):
+    """Declining filename elicitation should produce a clear validation error."""
+    monkeypatch.setattr(
+        play_excerpt_module,
+        "get_mei_collections",
+        lambda: {"all_files": ["sample.mei"]},
+    )
+
+    class FakeContext:
+        async def elicit(self, message: str, response_type: object) -> DeclinedElicitation:
+            return DeclinedElicitation()
+
+    with pytest.raises(ValueError, match="filename is required to play an excerpt"):
+        asyncio.run(play_excerpt_module.play_excerpt(ctx=FakeContext()))
 
 
 def test_load_audio_resource_returns_base64(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):

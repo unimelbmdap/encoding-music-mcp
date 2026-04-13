@@ -15,7 +15,7 @@ Complete reference for all encoding-music-mcp tools.
 | `get_melodic_ngrams` | `filename: str, n: int = 4` | `dict` with n-grams | [Docs](tools/intervals/ngrams.md) |
 | `get_first_occur_melodic_ngrams` | `filename: str, n: int = 4, kind: str = "d", combine_unisons: bool = True, compound: bool = False` | `dict` with first-occurrence patterns | [Docs](tools/intervals/first-occur.md) |
 | `show_notation` | `filename: str, start_measure: int = None, end_measure: int = None, page: int = 1` | SVG notation | [Docs](tools/notation.md) |
-| `play_excerpt` | `filename: str, start_q: float = 0.0, end_q: float = None, bpm: int = 60` | Audio player payload | [Docs](tools/play-excerpt.md) |
+| `play_excerpt` | `filename: str | None = None, start_q: float = 0.0, end_q: float = None, bpm: int = 60` | Audio player payload | [Docs](tools/play-excerpt.md) |
 
 ## Discovery Tools
 
@@ -205,12 +205,12 @@ Render MEI file as sheet music notation using Verovio.
 
 [Full Documentation →](tools/notation.md)
 
-### play_excerpt(filename, start_q=0.0, end_q=None, bpm=60)
+### play_excerpt(filename=None, start_q=0.0, end_q=None, bpm=60)
 
 Render an MEI file or excerpt to streamed MP3 audio.
 
 **Parameters**:
-- `filename` (str): MEI filename
+- `filename` (str | None): MEI filename. If omitted, the server can elicit it from the user.
 - `start_q` (float, optional): Start offset in quarter-note units
 - `end_q` (float | None, optional): End offset in quarter-note units
 - `bpm` (int, optional): Playback tempo in beats per minute
