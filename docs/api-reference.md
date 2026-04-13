@@ -6,6 +6,8 @@ Complete reference for all encoding-music-mcp tools.
 
 | Tool | Parameters | Returns | Documentation |
 |------|------------|---------|---------------|
+| `run_comprehensive_analysis` | `filename: str` | `str` comprehensive analysis text | N/A |
+| `diagnose_sampling` | None | `dict` sampling diagnostic status | N/A |
 | `list_available_mei_files` | None | `dict` with file lists | [Docs](tools/discovery.md) |
 | `get_mei_metadata` | `filename: str` | `dict` with metadata | [Docs](tools/metadata.md) |
 | `analyze_key` | `filename: str` | `dict` with key info | [Docs](tools/key-analysis.md) |
@@ -63,6 +65,37 @@ Extract metadata from MEI file header.
 [Full Documentation →](tools/metadata.md)
 
 ## Analysis Tools
+
+### run_comprehensive_analysis(filename)
+
+Run the comprehensive analysis workflow and return the final analysis text.
+
+**Parameters**:
+- `filename` (str): MEI filename
+
+**Returns**:
+```python
+"[sampled path]\\n..." | "[legacy fallback]\\n..."
+```
+
+### diagnose_sampling()
+
+Run a tiny sampling diagnostic to determine whether this tool call has
+usable MCP sampling support.
+
+**Parameters**: None
+
+**Returns**:
+```python
+{
+    "status": "no_context" | "sampling_unsupported" | "sampling_ok",
+    "has_context": bool,
+    "supports_sampling_tools": bool,
+    "sampling_attempted": bool,
+    "error": str,          # present when unsupported
+    "sample_text": str,    # present when successful
+}
+```
 
 ### analyze_key(filename)
 
