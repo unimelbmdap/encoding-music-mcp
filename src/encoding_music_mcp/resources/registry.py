@@ -17,6 +17,9 @@ mcp.resource("mei://files/{filename}")(mei_file_content)
 _notation_html_path = Path(__file__).parent / "notation_app.html"
 _notation_highlight_html_path = Path(__file__).parent / "notation_highlight.html"
 _voice_ranges_html_path = Path(__file__).parent / "voice_ranges_app.html"
+_weighted_note_distribution_html_path = (
+    Path(__file__).parent / "weighted_note_distribution_app.html"
+)
 _play_excerpt_html_path = Path(__file__).parent / "play_excerpt_app.html"
 
 
@@ -66,6 +69,23 @@ def notation_highlight_viewer() -> str:
 )
 def voice_ranges_viewer() -> str:
     return _voice_ranges_html_path.read_text(encoding="utf-8")
+
+
+@mcp.resource(
+    "ui://weighted-note-distribution/view.html",
+    name="Weighted Note Distribution Viewer",
+    description="Interactive radar chart for duration-weighted pitch-class distributions",
+    app=AppConfig(
+        csp=ResourceCSP(
+            resource_domains=[
+                "https://unpkg.com",
+            ],
+        ),
+    ),
+)
+def weighted_note_distribution_viewer() -> str:
+    return _weighted_note_distribution_html_path.read_text(encoding="utf-8")
+
 
 @mcp.resource(
     "ui://play_excerpt/v2.html",

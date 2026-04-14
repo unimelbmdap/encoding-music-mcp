@@ -60,6 +60,7 @@ nav:
       - Key Analysis: tools/key-analysis.md
       - Notation: tools/notation.md
       - Voice Ranges: tools/voice-ranges.md
+      - Weighted Note Distribution: tools/weighted-note-distribution.md
       - Play Excerpt: tools/play-excerpt.md
       - Intervals:
           - Overview: tools/intervals/index.md

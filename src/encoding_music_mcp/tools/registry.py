@@ -19,6 +19,7 @@ from .notation import show_notation, show_notation_highlight
 from .play_excerpt import load_audio_resource, play_excerpt
 from .sampling_diagnostics import diagnose_sampling
 from .visualisation.voice_ranges import plot_voice_ranges
+from .visualisation.weighted_note_distribution import plot_weighted_note_distribution
 
 # Register all tools here
 # To add a new tool: import it, then add mcp.tool()(your_tool) below
@@ -41,6 +42,9 @@ mcp.tool(
 mcp.tool(
     app=AppConfig(resource_uri="ui://voice-ranges/view.html"),
 )(plot_voice_ranges)
+mcp.tool(
+    app=AppConfig(resource_uri="ui://weighted-note-distribution/view.html"),
+)(plot_weighted_note_distribution)
 mcp.tool()(get_first_occur_melodic_ngrams)
 mcp.tool()(load_audio_resource)
 mcp.tool(
