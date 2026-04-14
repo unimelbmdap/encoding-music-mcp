@@ -15,7 +15,7 @@ from .helpers import get_mei_filepath
 # fail in some process contexts (e.g. MCP server launched by Claude Desktop).
 _VEROVIO_RESOURCE_PATH = str(Path(verovio.__file__).parent / "data")
 
-__all__ = ["show_notation"]
+__all__ = ["show_notation", "show_notation_highlight"]
 
 _MEI_NS = "http://www.music-encoding.org/ns/mei"
 _MEI_TAG = "{" + _MEI_NS + "}"
@@ -139,5 +139,29 @@ def show_notation(
 
     return ToolResult(
         content=[TextContent(type="text", text=description)],
+        structured_content=structured,
+    )
+
+
+def show_notation_highlight(
+    filename: str,
+    highlight_note_ids: list[str],
+    start_measure: int | None = None,
+    end_measure: int | None = None,
+    page: int = 1,
+) -> ToolResult:
+    """Display notation with a supplied set of highlighted note IDs."""
+    result = show_notation(
+        filename=filename,
+        start_measure=start_measure,
+        end_measure=end_measure,
+        page=page,
+    )
+
+    structured = dict(result.structured_content or {})
+    structured["highlight_note_ids"] = highlight_note_ids
+
+    return ToolResult(
+        content=result.content,
         structured_content=structured,
     )

@@ -15,7 +15,7 @@ from .intervals import (
     get_first_occur_melodic_ngrams,
     get_cadences,
 )
-from .notation import show_notation
+from .notation import show_notation, show_notation_highlight
 from .play_excerpt import load_audio_resource, play_excerpt
 from .sampling_diagnostics import diagnose_sampling
 from .visualisation.voice_ranges import plot_voice_ranges
@@ -35,6 +35,9 @@ mcp.tool()(get_cadences)
 mcp.tool(
     app=AppConfig(resource_uri="ui://notation/view.html"),
 )(show_notation)
+mcp.tool(
+    app=AppConfig(resource_uri="ui://notation/highlight.html"),
+)(show_notation_highlight)
 mcp.tool(
     app=AppConfig(resource_uri="ui://voice-ranges/view.html"),
 )(plot_voice_ranges)

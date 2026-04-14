@@ -1,8 +1,8 @@
-"""Tests for show_notation tool."""
+"""Tests for show_notation tools."""
 
 import pytest
 
-from src.encoding_music_mcp.tools.notation import show_notation
+from src.encoding_music_mcp.tools.notation import show_notation, show_notation_highlight
 
 
 def test_show_notation_full_piece():
@@ -89,3 +89,18 @@ def test_show_notation_page_clamping():
 
     result_low = show_notation("Bach_BWV_0772.mei", page=0)
     assert result_low.structured_content["page"] == 1
+
+
+def test_show_notation_highlight_includes_note_ids():
+    """Test highlight-capable notation payload includes requested note IDs."""
+    result = show_notation_highlight(
+        "Bach_BWV_0772.mei",
+        highlight_note_ids=["nz7y0rb", "n1ecjh8t"],
+    )
+
+    assert result.structured_content is not None
+    assert result.structured_content["highlight_note_ids"] == [
+        "nz7y0rb",
+        "n1ecjh8t",
+    ]
+    assert result.structured_content["svg"].startswith("<svg")

@@ -1,5 +1,7 @@
 """MEI interval analysis tools using CRIM Intervals."""
 
+import xml.etree.ElementTree as ET
+from pathlib import Path
 from typing import Any
 
 from crim_intervals.main_objs import importScore
@@ -14,6 +16,195 @@ __all__ = [
     "get_first_occur_melodic_ngrams",
     "get_cadences",
 ]
+
+_MEI_NS = {"mei": "http://www.music-encoding.org/ns/mei"}
+_XML_ID = "{http://www.w3.org/XML/1998/namespace}id"
+
+
+def _get_staff_ppq(root: ET.Element) -> dict[str, int]:
+    """Return ppq values for each staff number, defaulting to 480."""
+    staff_ppq: dict[str, int] = {}
+    for staff_def in root.findall(".//mei:staffDef", _MEI_NS):
+        staff_n = staff_def.get("n")
+        ppq = staff_def.get("ppq")
+        if staff_n and ppq:
+            staff_ppq[staff_n] = int(ppq)
+    return staff_ppq
+
+
+def _iter_layer_events(
+    element: ET.Element,
+    current_ppq: int,
+) -> list[dict[str, Any]]:
+    """Flatten a layer subtree into timed events in document order."""
+    events: list[dict[str, Any]] = []
+
+    tag = element.tag.rsplit("}", 1)[-1]
+
+    if tag in {"beam", "tuplet", "bTrem", "fTrem"}:
+        for child in list(element):
+            events.extend(_iter_layer_events(child, current_ppq))
+        return events
+
+    if tag == "chord":
+        note_ids = [
+            note.get(_XML_ID)
+            for note in element.findall("mei:note", _MEI_NS)
+            if note.get(_XML_ID)
+        ]
+        dur_ppq = element.get("dur.ppq")
+        if dur_ppq is None:
+            return events
+        events.append(
+            {
+                "kind": "note",
+                "dur_ppq": int(dur_ppq),
+                "note_ids": note_ids,
+            }
+        )
+        return events
+
+    if tag == "note":
+        dur_ppq = element.get("dur.ppq")
+        if dur_ppq is None:
+            return events
+        xml_id = element.get(_XML_ID)
+        events.append(
+            {
+                "kind": "note",
+                "dur_ppq": int(dur_ppq),
+                "note_ids": [xml_id] if xml_id else [],
+            }
+        )
+        return events
+
+    if tag in {"rest", "mRest", "space", "mSpace"}:
+        dur_ppq = element.get("dur.ppq")
+        if dur_ppq is None:
+            if tag in {"mRest", "mSpace"}:
+                dur_ppq = str(current_ppq * 4)
+            else:
+                return events
+        events.append({"kind": "rest", "dur_ppq": int(dur_ppq)})
+        return events
+
+    return events
+
+
+def _build_part_note_events(filepath: Path) -> dict[str, list[dict[str, Any]]]:
+    """Parse MEI and return sounded-note events for each CRIM part number."""
+    root = ET.parse(filepath).getroot()
+    staff_ppq = _get_staff_ppq(root)
+
+    part_key_to_label: dict[tuple[str, str], str] = {}
+    part_events: dict[str, list[dict[str, Any]]] = {}
+    global_offsets_ppq: dict[str, int] = {}
+
+    for measure in root.findall(".//mei:measure", _MEI_NS):
+        measure_n = float(measure.get("n", "0"))
+        measure_offsets_ppq: dict[str, int] = {}
+
+        for staff in measure.findall("mei:staff", _MEI_NS):
+            staff_n = staff.get("n", "")
+            current_ppq = staff_ppq.get(staff_n, 480)
+
+            for layer in staff.findall("mei:layer", _MEI_NS):
+                layer_n = layer.get("n", "1")
+                part_key = (staff_n, layer_n)
+                if part_key not in part_key_to_label:
+                    part_label = str(len(part_key_to_label) + 1)
+                    part_key_to_label[part_key] = part_label
+                    part_events[part_label] = []
+                    global_offsets_ppq[part_label] = 0
+
+                part_label = part_key_to_label[part_key]
+                measure_offset_ppq = measure_offsets_ppq.get(part_label, 0)
+                layer_events: list[dict[str, Any]] = []
+
+                for child in list(layer):
+                    layer_events.extend(_iter_layer_events(child, current_ppq))
+
+                for event in layer_events:
+                    dur_ppq = event["dur_ppq"]
+                    if event["kind"] == "note" and event["note_ids"]:
+                        onset_q = global_offsets_ppq[part_label] / current_ppq
+                        beat = 1 + (measure_offset_ppq / current_ppq)
+                        part_events[part_label].append(
+                            {
+                                "measure": measure_n,
+                                "beat": beat,
+                                "offset": onset_q,
+                                "note_ids": event["note_ids"],
+                            }
+                        )
+
+                    measure_offset_ppq += dur_ppq
+                    global_offsets_ppq[part_label] += dur_ppq
+
+                measure_offsets_ppq[part_label] = measure_offset_ppq
+
+    return part_events
+
+
+def _build_note_id_matches(
+    filepath: Path, mel_ngrams: Any, n: int
+) -> list[dict[str, Any]]:
+    """Build structured note-id spans for each melodic n-gram match."""
+    part_events = _build_part_note_events(filepath)
+
+    note_lookup: dict[str, dict[tuple[float, float, float], int]] = {}
+    for part_label, events in part_events.items():
+        part_lookup: dict[tuple[float, float, float], int] = {}
+        for idx, event in enumerate(events):
+            key = (
+                round(float(event["measure"]), 5),
+                round(float(event["beat"]), 5),
+                round(float(event["offset"]), 5),
+            )
+            part_lookup[key] = idx
+        note_lookup[part_label] = part_lookup
+
+    matches: list[dict[str, Any]] = []
+
+    for row in mel_ngrams.index:
+        measure, beat, offset = (float(row[0]), float(row[1]), float(row[2]))
+        row_key = (round(measure, 5), round(beat, 5), round(offset, 5))
+
+        for column in mel_ngrams.columns:
+            pattern = mel_ngrams.loc[row, column]
+            if isinstance(pattern, tuple):
+                pattern_values = list(pattern)
+                pattern_string = "_".join(map(str, pattern))
+            elif isinstance(pattern, str) and pattern.strip():
+                pattern_values = [value.strip() for value in pattern.split(",")]
+                pattern_string = "_".join(pattern_values)
+            else:
+                continue
+
+            part_label = str(column)
+            part_lookup = note_lookup.get(part_label, {})
+            start_idx = part_lookup.get(row_key)
+            events = part_events.get(part_label, [])
+
+            note_ids: list[str] = []
+            if start_idx is not None:
+                span = events[start_idx : start_idx + n + 1]
+                for event in span:
+                    note_ids.extend(event["note_ids"])
+
+            matches.append(
+                {
+                    "pattern": pattern_values,
+                    "pattern_string": pattern_string,
+                    "column": part_label,
+                    "start_measure": measure,
+                    "start_beat": beat,
+                    "start_offset": offset,
+                    "note_ids": note_ids,
+                }
+            )
+
+    return matches
 
 
 def _load_piece_with_details(filepath) -> tuple[Any, Any]:
@@ -147,6 +338,7 @@ def get_melodic_ngrams(
     Returns:
         Dictionary containing:
         - melodic_ngrams: CSV representation of the melodic n-grams dataframe
+        - melodic_ngram_note_ids: Structured list of n-gram matches with note IDs
         - n: The n-gram length used
         - kind: The interval type used
         - entries: Whether entry filtering was applied
@@ -177,6 +369,7 @@ def get_melodic_ngrams(
     def tuple_to_string(x):
         return "_".join(map(str, x)) if isinstance(x, tuple) else x
 
+    melodic_ngram_note_ids = _build_note_id_matches(filepath, mel_ngrams, n)
     mel_ngrams = mel_ngrams.map(tuple_to_string)
 
     return {
@@ -184,6 +377,7 @@ def get_melodic_ngrams(
         "n": n,
         "kind": kind,
         "entries": entries,
+        "melodic_ngram_note_ids": melodic_ngram_note_ids,
         "melodic_ngrams": mel_ngrams.to_csv(index=True)
         if not mel_ngrams.empty
         else "No melodic n-grams found",

@@ -126,6 +126,9 @@ def test_get_melodic_ngrams_default():
     assert "filename" in result, "Result should contain 'filename'"
     assert "n" in result, "Result should contain 'n'"
     assert "melodic_ngrams" in result, "Result should contain 'melodic_ngrams'"
+    assert "melodic_ngram_note_ids" in result, (
+        "Result should contain 'melodic_ngram_note_ids'"
+    )
 
     # Check values
     assert result["filename"] == "Bach_BWV_0772.mei", "Filename should match input"
@@ -136,6 +139,37 @@ def test_get_melodic_ngrams_default():
         "Melodic n-grams should be a string"
     )
     assert len(result["melodic_ngrams"]) > 0, "Melodic n-grams should not be empty"
+    assert isinstance(result["melodic_ngram_note_ids"], list), (
+        "Melodic n-gram note IDs should be a list"
+    )
+
+
+def test_get_melodic_ngrams_note_id_matches_shape():
+    """Test that melodic n-grams expose structured note-id matches."""
+    result = get_melodic_ngrams("Bach_BWV_0772.mei", n=4)
+
+    matches = result["melodic_ngram_note_ids"]
+    assert len(matches) > 0, "Should include note-id matches"
+
+    match = matches[0]
+    assert "pattern" in match
+    assert "pattern_string" in match
+    assert "column" in match
+    assert "start_measure" in match
+    assert "start_beat" in match
+    assert "start_offset" in match
+    assert "note_ids" in match
+
+    assert isinstance(match["pattern"], list)
+    assert len(match["pattern"]) == 4
+    assert isinstance(match["pattern_string"], str)
+    assert isinstance(match["column"], str)
+    assert isinstance(match["start_measure"], float)
+    assert isinstance(match["start_beat"], float)
+    assert isinstance(match["start_offset"], float)
+    assert isinstance(match["note_ids"], list)
+    assert len(match["note_ids"]) == 5
+    assert all(isinstance(note_id, str) for note_id in match["note_ids"])
 
 
 def test_get_melodic_ngrams_custom_n():

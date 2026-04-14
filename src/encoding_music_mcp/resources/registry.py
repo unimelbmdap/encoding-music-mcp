@@ -15,6 +15,7 @@ mcp.resource("mei://collections/list")(mei_collections_list)
 mcp.resource("mei://files/{filename}")(mei_file_content)
 
 _notation_html_path = Path(__file__).parent / "notation_app.html"
+_notation_highlight_html_path = Path(__file__).parent / "notation_highlight.html"
 _voice_ranges_html_path = Path(__file__).parent / "voice_ranges_app.html"
 _play_excerpt_html_path = Path(__file__).parent / "play_excerpt_app.html"
 
@@ -33,6 +34,22 @@ _play_excerpt_html_path = Path(__file__).parent / "play_excerpt_app.html"
 )
 def notation_viewer() -> str:
     return _notation_html_path.read_text(encoding="utf-8")
+
+
+@mcp.resource(
+    "ui://notation/highlight.html",
+    name="Notation Highlight Viewer",
+    description="Interactive sheet music viewer with note highlighting",
+    app=AppConfig(
+        csp=ResourceCSP(
+            resource_domains=[
+                "https://unpkg.com",
+            ],
+        ),
+    ),
+)
+def notation_highlight_viewer() -> str:
+    return _notation_highlight_html_path.read_text(encoding="utf-8")
 
 
 @mcp.resource(
