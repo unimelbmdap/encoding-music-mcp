@@ -17,7 +17,7 @@ Complete reference for all encoding-music-mcp tools.
 | `get_melodic_ngrams` | `filename: str, n: int = 4` | `dict` with n-grams | [Docs](tools/intervals/ngrams.md) |
 | `get_first_occur_melodic_ngrams` | `filename: str, n: int = 4, kind: str = "d", combine_unisons: bool = True, compound: bool = False` | `dict` with first-occurrence patterns | [Docs](tools/intervals/first-occur.md) |
 | `show_notation` | `filename: str, start_measure: int = None, end_measure: int = None, page: int = 1` | SVG notation | [Docs](tools/notation.md) |
-| `plot_weighted_note_distribution` | `filename: str, pitch_class_order: str = "fifths", group_by_staff: bool = False, limit_to_active: bool = True` | Radar plot payload | [Docs](tools/weighted-note-distribution.md) |
+| `plot_weighted_note_distribution` | `filename: str | None = None, filenames: list[str] | None = None, pitch_class_order: str = "fifths", group_by_staff: bool = False, limit_to_active: bool = True` | Radar plot payload | [Docs](tools/weighted-note-distribution.md) |
 | `play_excerpt` | `filename: str | None = None, start_q: float = 0.0, end_q: float = None, bpm: int = 60` | Audio player payload | [Docs](tools/play-excerpt.md) |
 
 ## Discovery Tools
@@ -239,12 +239,13 @@ Render MEI file as sheet music notation using Verovio.
 
 [Full Documentation →](tools/notation.md)
 
-### plot_weighted_note_distribution(filename, pitch_class_order="fifths", group_by_staff=False, limit_to_active=True)
+### plot_weighted_note_distribution(filename=None, filenames=None, pitch_class_order="fifths", group_by_staff=False, limit_to_active=True)
 
-Plot a duration-weighted pitch-class radar chart for one score.
+Plot a duration-weighted pitch-class radar chart for one or more scores.
 
 **Parameters**:
-- `filename` (str): MEI filename
+- `filename` (str | None): One MEI filename
+- `filenames` (list[str] | None): Multiple MEI filenames to overlay on one figure
 - `pitch_class_order` (str, optional): `"fifths"` or `"chromatic"` (default: `"fifths"`)
 - `group_by_staff` (bool, optional): Plot one polygon per staff (default: `False`)
 - `limit_to_active` (bool, optional): Hide pitch classes with zero weight (default: `True`)
@@ -253,6 +254,9 @@ Plot a duration-weighted pitch-class radar chart for one score.
 ```python
 {
     "filename": str,
+    "filenames": list[str],
+    "score_count": int,
+    "scores": list[dict[str, Any]],
     "title": str,
     "composer": str | None,
     "pitch_class_order": str,

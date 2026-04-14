@@ -1,4 +1,4 @@
-"""Weighted note-distribution radar plot for a single MEI score."""
+"""Weighted note-distribution radar plot for one or more MEI scores."""
 
 from __future__ import annotations
 
@@ -160,27 +160,48 @@ def _order_for_name(pitch_class_order: str) -> list[str]:
     raise ValueError("pitch_class_order must be either 'chromatic' or 'fifths'")
 
 
-def _build_weighted_note_payload(
+def _resolve_filenames(
+    filename: str | None,
+    filenames: list[str] | None,
+) -> list[str]:
+    """Normalise single-file and multi-file inputs."""
+    resolved: list[str] = []
+    if filename:
+        resolved.append(filename)
+    if filenames:
+        resolved.extend(name for name in filenames if name)
+
+    deduped: list[str] = []
+    for name in resolved:
+        if name not in deduped:
+            deduped.append(name)
+
+    if not deduped:
+        raise ValueError("Provide filename or filenames")
+    return deduped
+
+
+def _build_score_groups(
     filename: str,
-    pitch_class_order: str,
     group_by_staff: bool,
-    limit_to_active: bool,
-) -> dict[str, Any]:
-    """Compute score-level or staff-level weighted pitch-class summaries."""
+) -> tuple[dict[str, Any], dict[str, dict[str, float]], dict[str, int]]:
+    """Compute weighted pitch-class totals for one score."""
     filepath = get_mei_filepath(filename)
     if not filepath.exists():
         raise FileNotFoundError(f"MEI file not found: {filename}")
 
     metadata = get_mei_metadata(filename)
     root = ET.parse(filepath).getroot()
-    order = _order_for_name(pitch_class_order)
 
     group_totals: dict[str, dict[str, float]] = {}
     note_counts: dict[str, int] = {}
     for measure in root.findall(".//mei:measure", _MEI_NS):
         for staff in measure.findall("mei:staff", _MEI_NS):
             staff_n = staff.get("n", "?")
-            group_label = f"Staff {staff_n}" if group_by_staff else "Score"
+            if group_by_staff:
+                group_label = f"{metadata.get('title') or filename} - Staff {staff_n}"
+            else:
+                group_label = metadata.get("title") or filename
             totals = group_totals.setdefault(
                 group_label,
                 {pitch_class: 0.0 for pitch_class in _PITCH_CLASS_LABELS.values()},
@@ -197,6 +218,38 @@ def _build_weighted_note_payload(
     if not group_totals or all(sum(values.values()) == 0 for values in group_totals.values()):
         raise ValueError(f"No sounding notes found in MEI file: {filename}")
 
+    metadata_payload = {
+        "filename": filename,
+        "title": metadata.get("title") or filename,
+        "composer": metadata.get("composer"),
+    }
+    return metadata_payload, group_totals, note_counts
+
+
+def _build_weighted_note_payload(
+    filename: str | None,
+    filenames: list[str] | None,
+    pitch_class_order: str,
+    group_by_staff: bool,
+    limit_to_active: bool,
+) -> dict[str, Any]:
+    """Compute score-level or staff-level weighted pitch-class summaries."""
+    resolved_filenames = _resolve_filenames(filename, filenames)
+    order = _order_for_name(pitch_class_order)
+
+    score_metadata: list[dict[str, Any]] = []
+    group_totals: dict[str, dict[str, float]] = {}
+    note_counts: dict[str, int] = {}
+
+    for score_filename in resolved_filenames:
+        metadata_payload, score_groups, score_counts = _build_score_groups(
+            filename=score_filename,
+            group_by_staff=group_by_staff,
+        )
+        score_metadata.append(metadata_payload)
+        group_totals.update(score_groups)
+        note_counts.update(score_counts)
+
     active_pitch_classes = [
         pitch_class
         for pitch_class in order
@@ -206,8 +259,7 @@ def _build_weighted_note_payload(
 
     traces: list[dict[str, Any]] = []
     radial_max = 0.0
-    sort_key = lambda value: (value != "Score", value)
-    for index, label in enumerate(sorted(group_totals.keys(), key=sort_key)):
+    for index, label in enumerate(group_totals.keys()):
         totals = group_totals[label]
         total_weight = sum(totals.values())
         values = [
@@ -227,10 +279,25 @@ def _build_weighted_note_payload(
             }
         )
 
+    if len(score_metadata) == 1:
+        title = score_metadata[0]["title"]
+        composer = score_metadata[0]["composer"]
+    else:
+        title = f"{len(score_metadata)} scores"
+        composers = {
+            metadata["composer"]
+            for metadata in score_metadata
+            if metadata.get("composer")
+        }
+        composer = ", ".join(sorted(composers)) if composers else None
+
     return {
-        "filename": filename,
-        "title": metadata.get("title") or filename,
-        "composer": metadata.get("composer"),
+        "filename": resolved_filenames[0],
+        "filenames": resolved_filenames,
+        "score_count": len(score_metadata),
+        "scores": score_metadata,
+        "title": title,
+        "composer": composer,
         "pitch_class_order": pitch_class_order.lower(),
         "group_by_staff": group_by_staff,
         "limit_to_active": limit_to_active,
@@ -241,29 +308,32 @@ def _build_weighted_note_payload(
 
 
 def plot_weighted_note_distribution(
-    filename: str,
+    filename: str | None = None,
+    filenames: list[str] | None = None,
     pitch_class_order: str = "fifths",
     group_by_staff: bool = False,
     limit_to_active: bool = True,
 ) -> ToolResult:
-    """Plot a duration-weighted pitch-class radar chart for one MEI score.
+    """Plot a duration-weighted pitch-class radar chart for one or more MEI scores.
 
     Each note contributes its duration weight (``dur.ppq``) to its pitch class,
     so sustained tones count more than brief passing notes. By default the tool
-    combines all staves into one score-level polygon and orders pitch classes by
-    the circle of fifths, mirroring the notebook example shared by the user.
+    combines each score into one polygon and orders pitch classes by the circle
+    of fifths, mirroring the notebook example shared by the user.
     """
     structured = _build_weighted_note_payload(
         filename=filename,
+        filenames=filenames,
         pitch_class_order=pitch_class_order,
         group_by_staff=group_by_staff,
         limit_to_active=limit_to_active,
     )
 
     trace_count = len(structured["traces"])
+    score_count = structured["score_count"]
     description = (
-        f"Showing weighted note distribution for {structured['title']} "
-        f"({filename}) with {trace_count} trace"
+        f"Showing weighted note distribution for {score_count} score"
+        f"{'' if score_count == 1 else 's'} with {trace_count} trace"
         f"{'' if trace_count == 1 else 's'} in {structured['pitch_class_order']} order."
     )
 

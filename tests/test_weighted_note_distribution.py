@@ -16,6 +16,8 @@ def test_plot_weighted_note_distribution_bach():
 
     assert structured is not None
     assert structured["filename"] == "Bach_BWV_0772.mei"
+    assert structured["filenames"] == ["Bach_BWV_0772.mei"]
+    assert structured["score_count"] == 1
     assert structured["pitch_class_order"] == "fifths"
     assert structured["group_by_staff"] is False
     assert structured["limit_to_active"] is True
@@ -24,12 +26,36 @@ def test_plot_weighted_note_distribution_bach():
     assert len(structured["traces"]) == 1
 
     trace = structured["traces"][0]
-    assert trace["label"] == "Score"
+    assert trace["label"] == structured["title"]
     assert len(trace["values"]) == len(structured["categories"])
     assert len(trace["raw_weights_ppq"]) == len(structured["categories"])
     assert trace["total_weight_ppq"] > 0
     assert trace["note_count"] > 0
     assert math.isclose(sum(trace["values"]), 1.0, rel_tol=1e-9, abs_tol=1e-9)
+
+
+def test_plot_weighted_note_distribution_multiple_scores_overlay():
+    """Multiple scores should appear as multiple polygons on one figure."""
+    result = plot_weighted_note_distribution(
+        filenames=["Bach_BWV_0772.mei", "Bach_BWV_0773.mei"],
+    )
+    structured = result.structured_content
+
+    assert structured is not None
+    assert structured["filenames"] == ["Bach_BWV_0772.mei", "Bach_BWV_0773.mei"]
+    assert structured["score_count"] == 2
+    assert len(structured["scores"]) == 2
+    assert len(structured["traces"]) == 2
+    assert all(
+        len(trace["values"]) == len(structured["categories"])
+        for trace in structured["traces"]
+    )
+    assert all(trace["label"] != "Score" for trace in structured["traces"])
+    assert structured["traces"][0]["color"] != structured["traces"][1]["color"]
+    assert all(
+        math.isclose(sum(trace["values"]), 1.0, rel_tol=1e-9, abs_tol=1e-9)
+        for trace in structured["traces"]
+    )
 
 
 def test_plot_weighted_note_distribution_group_by_staff():
@@ -43,7 +69,7 @@ def test_plot_weighted_note_distribution_group_by_staff():
     assert structured is not None
     assert structured["group_by_staff"] is True
     assert len(structured["traces"]) >= 2
-    assert all(trace["label"].startswith("Staff ") for trace in structured["traces"])
+    assert all("Staff " in trace["label"] for trace in structured["traces"])
     assert all(
         len(trace["values"]) == len(structured["categories"])
         for trace in structured["traces"]

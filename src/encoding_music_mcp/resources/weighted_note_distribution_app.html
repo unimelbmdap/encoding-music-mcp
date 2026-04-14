@@ -34,6 +34,15 @@
             color: #6a5438;
             font-size: 0.95rem;
         }
+        .meta {
+            margin-top: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .meta-line {
+            line-height: 1.25;
+        }
         .summary { margin-top: 8px; }
         #status {
             color: #8b0000;
@@ -191,6 +200,8 @@
                 title,
                 composer,
                 filename,
+                scores,
+                score_count,
                 pitch_class_order,
                 group_by_staff,
                 categories,
@@ -199,17 +210,29 @@
             } = structured;
 
             titleEl.textContent = title || filename;
-            metaEl.textContent = composer ? `${composer} | ${filename}` : filename;
+            if (score_count > 1 && Array.isArray(scores)) {
+                metaEl.innerHTML = scores.map((score) => {
+                    const line = score.composer
+                        ? `${score.composer} | ${score.title}`
+                        : score.title;
+                    return `<div class="meta-line">${line}</div>`;
+                }).join("");
+            } else {
+                const line = composer ? `${composer} | ${filename}` : filename;
+                metaEl.innerHTML = `<div class="meta-line">${line}</div>`;
+            }
+            const traceSummary = group_by_staff
+                ? "one polygon per staff"
+                : (score_count > 1 ? "one overlaid polygon per score" : "one polygon for the score");
             summaryEl.textContent =
-                `Scaled by note duration, ordered by ${pitch_class_order}, ` +
-                `${group_by_staff ? "one polygon per staff" : "one combined score polygon"}.`;
+                `Scaled by note duration, ordered by ${pitch_class_order}, ${traceSummary}.`;
 
             const width = 680;
             const height = 620;
             const cx = 330;
-            const cy = 300;
+            const cy = 318;
             const outerRadius = 210;
-            const labelRadius = 250;
+            const labelRadius = 224;
             const ringSteps = 4;
             const safeMax = radial_max > 0 ? radial_max : 1;
 
@@ -218,7 +241,7 @@
 
             const titleNode = svgNode("text", {
                 x: cx,
-                y: 40,
+                y: 28,
                 "text-anchor": "middle",
                 "font-size": "18",
                 "font-weight": "700",

@@ -1,6 +1,6 @@
 # Weighted Note Distribution
 
-The `plot_weighted_note_distribution` tool displays a radar chart of pitch-class usage for a single MEI score, weighted by note duration.
+The `plot_weighted_note_distribution` tool displays a radar chart of pitch-class usage for one or more MEI scores, weighted by note duration.
 
 ## Overview
 
@@ -8,7 +8,7 @@ This tool is designed for the kind of "weighted note distribution" view shown in
 
 By default the chart:
 
-- combines the whole score into one trace
+- combines each score into one trace
 - orders pitch classes by the circle of fifths
 - hides pitch classes that never occur
 
@@ -20,10 +20,13 @@ This tool requires an MCP client that supports the MCP Apps extension. Without t
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `filename` | `str` | Yes | Name of the MEI file (for example, `"Bach_BWV_0772.mei"`) |
+| `filename` | `str` | Conditionally | Name of one MEI file |
+| `filenames` | `list[str]` | Conditionally | Two or more MEI files to overlay on one figure |
 | `pitch_class_order` | `str` | No | `"fifths"` (default) or `"chromatic"` |
 | `group_by_staff` | `bool` | No | When `True`, show one polygon per staff instead of one combined score trace |
 | `limit_to_active` | `bool` | No | When `True` (default), omit pitch classes with zero weight |
+
+Provide either `filename`, `filenames`, or both.
 
 ## Return Value
 
@@ -35,6 +38,12 @@ The tool returns a `ToolResult` with:
 ```python
 {
     "filename": "Bach_BWV_0772.mei",
+    "filenames": ["Bach_BWV_0772.mei", "Bach_BWV_0773.mei"],
+    "score_count": 2,
+    "scores": [
+        {"filename": "Bach_BWV_0772.mei", "title": "...", "composer": "..."},
+        {"filename": "Bach_BWV_0773.mei", "title": "...", "composer": "..."},
+    ],
     "title": "Invention No. 1 in C major, BWV 772",
     "composer": "Bach, Johann Sebastian",
     "pitch_class_order": "fifths",
@@ -60,6 +69,9 @@ The tool returns a `ToolResult` with:
 !!! example "Try asking:"
     "Plot the weighted note distribution for Bach_BWV_0772.mei"
 
+!!! example "Overlay multiple scores:"
+    "Plot the weighted note distribution for Bach_BWV_0772.mei and Bach_BWV_0773.mei on one chart"
+
 !!! example "Or per staff:"
     "Plot the weighted note distribution for Bach_BWV_0772.mei by staff"
 
@@ -75,6 +87,7 @@ The tool returns a `ToolResult` with:
 
 - Compare tonal emphasis across staves in a polyphonic score
 - See which pitch classes dominate a single piece
+- Compare two or more pieces as translucent polygons on the same radar chart
 - Mirror the weighted-note radar plot shown in exploratory notebooks
 
 ## Related Tools
