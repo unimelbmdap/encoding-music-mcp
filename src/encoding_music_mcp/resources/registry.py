@@ -14,13 +14,14 @@ from ..tools.play_excerpt import get_registered_audio
 mcp.resource("mei://collections/list")(mei_collections_list)
 mcp.resource("mei://files/{filename}")(mei_file_content)
 
-_notation_html_path = Path(__file__).parent / "notation_app.html"
-_notation_highlight_html_path = Path(__file__).parent / "notation_highlight.html"
-_voice_ranges_html_path = Path(__file__).parent / "voice_ranges_app.html"
+_templates_dir = Path(__file__).parent / "templates"
+_notation_html_path = _templates_dir / "notation_app.html"
+_notation_highlight_html_path = _templates_dir / "notation_highlight.html"
+_voice_ranges_html_path = _templates_dir / "voice_ranges_app.html"
 _weighted_note_distribution_html_path = (
-    Path(__file__).parent / "weighted_note_distribution_app.html"
+    _templates_dir / "weighted_note_distribution_app.html"
 )
-_play_excerpt_html_path = Path(__file__).parent / "play_excerpt_app.html"
+_play_excerpt_html_path = _templates_dir / "play_excerpt_app.html"
 
 
 @mcp.resource(

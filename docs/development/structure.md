@@ -20,9 +20,12 @@ encoding-music-mcp/
 │       │   ├── intervals.py    # Interval analysis
 │       │   └── notation.py     # Notation display (Verovio)
 │       └── resources/
-│           ├── mei_files/      # MEI files (46 files)
+│           ├── __init__.py
+│           ├── mei.py
 │           ├── registry.py     # Resource registration
-│           └── notation_app.html # Notation viewer UI
+│           ├── GeneralUser-GS.sf2
+│           ├── mei_files/      # MEI files (46 files)
+│           └── templates/      # HTML templates for MCP Apps UIs
 ├── tests/
 │   ├── __init__.py
 │   ├── test_discovery.py
