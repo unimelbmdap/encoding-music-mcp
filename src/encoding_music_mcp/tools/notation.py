@@ -150,7 +150,12 @@ def show_notation_highlight(
     end_measure: int | None = None,
     page: int = 1,
 ) -> ToolResult:
-    """Display notation with a supplied set of highlighted note IDs."""
+    """Display notation with a supplied set of highlighted note IDs.
+
+    Call this tool once for the requested excerpt and let the widget handle
+    navigation across all pages. Avoid making one tool call per page unless
+    the user explicitly asks for a specific page number.
+    """
     result = show_notation(
         filename=filename,
         start_measure=start_measure,
