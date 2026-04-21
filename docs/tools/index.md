@@ -25,6 +25,8 @@ encoding-music-mcp provides a suite of tools for analyzing MEI files. All tools 
 | [`get_melodic_intervals`](intervals/melodic.md) | Analyze melodic intervals within voices | [Documentation](intervals/melodic.md) |
 | [`get_harmonic_intervals`](intervals/harmonic.md) | Analyze harmonic intervals between voices | [Documentation](intervals/harmonic.md) |
 | [`get_melodic_ngrams`](intervals/ngrams.md) | Find recurring melodic patterns | [Documentation](intervals/ngrams.md) |
+| [`count_melodic_ngrams`](intervals/ngram-counts.md) | Count and rank melodic n-gram patterns | [Documentation](intervals/ngram-counts.md) |
+| [`get_melodic_ngram_matches`](intervals/ngram-matches.md) | Group note-ID spans by melodic n-gram pattern | [Documentation](intervals/ngram-matches.md) |
 | [`get_first_occur_melodic_ngrams`](intervals/first-occur.md) | Find first-occurrence melodic patterns with playback positions | [Documentation](intervals/first-occur.md) |
 
 ### Notation Tools

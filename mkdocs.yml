@@ -68,6 +68,8 @@ nav:
           - Melodic Intervals: tools/intervals/melodic.md
           - Harmonic Intervals: tools/intervals/harmonic.md
           - N-grams: tools/intervals/ngrams.md
+          - N-gram Counts: tools/intervals/ngram-counts.md
+          - N-gram Matches: tools/intervals/ngram-matches.md
           - First-Occurrence N-grams: tools/intervals/first-occur.md
   - Resources:
       - MEI Files: resources/mei-files.md

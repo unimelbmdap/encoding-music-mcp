@@ -14,6 +14,7 @@ The `get_melodic_ngrams` tool identifies sequences of melodic intervals (n-grams
 | `n` | `int` | No | 4 | Length of n-grams to extract |
 | `kind` | `str` | No | 'd' | Interval type: 'd' (diatonic), 'c' (chromatic), 'q' (with quality), 'z' (zero-based) |
 | `entries` | `bool` | No | False | Filter to thematic entries only (after rests/breaks) |
+| `include_note_ids` | `bool` | No | False | Also include occurrence-level note-ID spans for highlighting |
 
 ## Returns
 
@@ -23,30 +24,32 @@ The `get_melodic_ngrams` tool identifies sequences of melodic intervals (n-grams
 | `n` | `int` | The n-gram length used |
 | `kind` | `str` | The interval type used |
 | `entries` | `bool` | Whether entry filtering was applied |
+| `include_note_ids` | `bool` | Whether note-ID spans were included |
 | `melodic_ngrams` | `str` | CSV representation of n-grams dataframe |
+| `melodic_ngram_note_ids` | `list[dict]` | Optional occurrence records with note IDs |
 
 ## Example Output
 
 ### With n=4 (default)
 
 ```csv
-Measure,Beat,1,2
-1.0,1.5,2_2_2_-3,
-1.0,1.75,2_2_-3_2,
-1.0,2.0,2_-3_2_-3,
-1.0,2.25,-3_2_-3_5,
-1.0,2.5,2_-3_5_4,
-1.0,3.5,4_-2_2_2,2_2_2_-3
+Measure,Beat,Offset,1,2
+1.0,1.25,0.25,2_2_2_-3,
+1.0,1.5,0.5,2_2_-3_2,
+1.0,1.75,0.75,2_-3_2_-3,
+1.0,2.0,1.0,-3_2_-3_5,
+1.0,2.25,1.25,2_-3_5_4,
+1.0,3.5,2.5,4_-2_2_2,2_2_2_-3
 ```
 
 ### With n=3
 
 ```csv
-Measure,Beat,1,2
-1.0,1.5,2_2_2,
-1.0,1.75,2_2_-3,
-1.0,2.0,2_-3_2,
-1.0,2.25,-3_2_-3,
+Measure,Beat,Offset,1,2
+1.0,1.25,0.25,2_2_2,
+1.0,1.5,0.5,2_2_-3,
+1.0,1.75,0.75,2_-3_2,
+1.0,2.0,1.0,-3_2_-3,
 ```
 
 ## Understanding N-grams
@@ -156,8 +159,18 @@ Measure,Beat,Offset,1,2
 
 !!! tip "Thematic Analysis Workflow"
     1. Use `entries=True` to find main motives
-    2. Use `entries=False` (default) to see all occurrences
-    3. Compare entry patterns across pieces to find thematic relationships
+    2. Use `count_melodic_ngrams` to rank them by frequency
+    3. Use `get_melodic_ngram_matches` to fetch only the note IDs you want to highlight
+    4. Compare entry patterns across pieces to find thematic relationships
+
+## Recommended Workflow
+
+For pattern-driven tasks, a lighter staged workflow is usually better than asking for every note ID up front:
+
+1. Call `get_melodic_ngrams` to inspect the full pattern table.
+2. Call `count_melodic_ngrams` to answer questions like "how many times?" or "what are the top 2?".
+3. Call `get_melodic_ngram_matches` with one or more pattern strings such as `["2_2_2_-3"]` when you need note IDs for highlighting.
+4. Set `include_note_ids=True` on `get_melodic_ngrams` only when a single call really does need both the table and the occurrence spans.
 
 ## Use Cases
 
