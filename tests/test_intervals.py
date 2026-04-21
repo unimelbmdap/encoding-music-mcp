@@ -7,6 +7,8 @@ from src.encoding_music_mcp.tools.intervals import (
     get_melodic_intervals,
     get_harmonic_intervals,
     get_melodic_ngrams,
+    count_melodic_ngrams,
+    get_melodic_ngram_matches,
     get_first_occur_melodic_ngrams,
     get_cadences,
 )
@@ -126,27 +128,26 @@ def test_get_melodic_ngrams_default():
     assert "filename" in result, "Result should contain 'filename'"
     assert "n" in result, "Result should contain 'n'"
     assert "melodic_ngrams" in result, "Result should contain 'melodic_ngrams'"
-    assert "melodic_ngram_note_ids" in result, (
-        "Result should contain 'melodic_ngram_note_ids'"
-    )
+    assert "include_note_ids" in result, "Result should record note-id inclusion mode"
 
     # Check values
     assert result["filename"] == "Bach_BWV_0772.mei", "Filename should match input"
     assert result["n"] == 4, "Default n should be 4"
+    assert result["include_note_ids"] is False, "Note IDs should be omitted by default"
 
     # Check n-grams content
     assert isinstance(result["melodic_ngrams"], str), (
         "Melodic n-grams should be a string"
     )
     assert len(result["melodic_ngrams"]) > 0, "Melodic n-grams should not be empty"
-    assert isinstance(result["melodic_ngram_note_ids"], list), (
-        "Melodic n-gram note IDs should be a list"
+    assert "melodic_ngram_note_ids" not in result, (
+        "Default result should not eagerly include note IDs"
     )
 
 
-def test_get_melodic_ngrams_note_id_matches_shape():
-    """Test that melodic n-grams expose structured note-id matches."""
-    result = get_melodic_ngrams("Bach_BWV_0772.mei", n=4)
+def test_get_melodic_ngrams_include_note_ids():
+    """Test that melodic n-grams can optionally expose note-id matches."""
+    result = get_melodic_ngrams("Bach_BWV_0772.mei", n=4, include_note_ids=True)
 
     matches = result["melodic_ngram_note_ids"]
     assert len(matches) > 0, "Should include note-id matches"
@@ -172,6 +173,16 @@ def test_get_melodic_ngrams_note_id_matches_shape():
     assert all(isinstance(note_id, str) for note_id in match["note_ids"])
 
 
+def test_get_melodic_ngrams_format():
+    """Test that n-grams are formatted with underscore separators."""
+    result = get_melodic_ngrams("Bach_BWV_0772.mei", n=4)
+
+    ngrams_str = result["melodic_ngrams"]
+
+    assert "2_2_2_-3" in ngrams_str, "N-grams should use underscore separators"
+    assert "2, 2, 2, -3" not in ngrams_str, "CSV should not keep comma-separated tuples"
+
+
 def test_get_melodic_ngrams_custom_n():
     """Test melodic n-gram extraction with custom n value."""
     result = get_melodic_ngrams("Bach_BWV_0772.mei", n=3)
@@ -184,16 +195,6 @@ def test_get_melodic_ngrams_custom_n():
         "Melodic n-grams should be a string"
     )
     assert len(result["melodic_ngrams"]) > 0, "Melodic n-grams should not be empty"
-
-
-def test_get_melodic_ngrams_format():
-    """Test that n-grams are formatted with underscore separators."""
-    result = get_melodic_ngrams("Bach_BWV_0772.mei", n=4)
-
-    ngrams_str = result["melodic_ngrams"]
-
-    # Should contain underscore-separated patterns
-    assert "_" in ngrams_str, "N-grams should use underscore separators"
 
 
 def test_get_melodic_ngrams_different_n_values():
@@ -209,6 +210,49 @@ def test_get_melodic_ngrams_different_n_values():
     assert result_n3["melodic_ngrams"] != result_n5["melodic_ngrams"], (
         "Different n values should produce different results"
     )
+
+
+def test_count_melodic_ngrams_returns_ranked_counts():
+    """Test that melodic n-gram counts are grouped and ranked by frequency."""
+    result = count_melodic_ngrams("Bach_BWV_0772.mei", n=4)
+
+    assert result["filename"] == "Bach_BWV_0772.mei"
+    assert result["n"] == 4
+    assert "pattern_counts" in result
+    assert isinstance(result["pattern_counts"], list)
+    assert len(result["pattern_counts"]) > 0
+
+    first_pattern = result["pattern_counts"][0]
+    assert "pattern" in first_pattern
+    assert "pattern_string" in first_pattern
+    assert "count" in first_pattern
+    assert isinstance(first_pattern["pattern"], list)
+    assert isinstance(first_pattern["pattern_string"], str)
+    assert isinstance(first_pattern["count"], int)
+    assert first_pattern["count"] >= result["pattern_counts"][-1]["count"]
+
+
+def test_get_melodic_ngram_matches_groups_occurrences_by_pattern():
+    """Test that melodic n-gram matches are keyed by pattern string."""
+    result = get_melodic_ngram_matches("Bach_BWV_0772.mei", n=4, patterns=["2_2_2_-3"])
+
+    assert result["filename"] == "Bach_BWV_0772.mei"
+    assert result["patterns"] == ["2_2_2_-3"]
+    assert "matches_by_pattern" in result
+    assert list(result["matches_by_pattern"].keys()) == ["2_2_2_-3"]
+
+    matches = result["matches_by_pattern"]["2_2_2_-3"]
+    assert len(matches) > 0
+
+    match = matches[0]
+    assert "pattern" in match
+    assert "column" in match
+    assert "start_measure" in match
+    assert "start_beat" in match
+    assert "start_offset" in match
+    assert "note_ids" in match
+    assert match["pattern"] == ["2", "2", "2", "-3"]
+    assert isinstance(match["note_ids"], list)
 
 
 def test_get_first_occur_melodic_ngrams_bach():

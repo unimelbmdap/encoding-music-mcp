@@ -13,6 +13,8 @@ __all__ = [
     "get_melodic_intervals",
     "get_harmonic_intervals",
     "get_melodic_ngrams",
+    "count_melodic_ngrams",
+    "get_melodic_ngram_matches",
     "get_first_occur_melodic_ngrams",
     "get_cadences",
 ]
@@ -207,6 +209,105 @@ def _build_note_id_matches(
     return matches
 
 
+def _normalise_pattern(pattern: Any) -> tuple[list[str], str]:
+    """Convert a CRIM n-gram cell value into list and underscore-string forms."""
+    if isinstance(pattern, tuple):
+        pattern_values = [str(value) for value in pattern]
+    elif isinstance(pattern, str):
+        cleaned = pattern.strip()
+        if not cleaned:
+            return [], ""
+        if "_" in cleaned:
+            pattern_values = [value.strip() for value in cleaned.split("_")]
+        else:
+            pattern_values = [value.strip() for value in cleaned.split(",")]
+    else:
+        return [], ""
+
+    pattern_values = [value for value in pattern_values if value]
+    return pattern_values, "_".join(pattern_values)
+
+
+def _pattern_to_string(pattern: Any) -> str:
+    """Render a pattern cell as a stable underscore-separated string."""
+    _, pattern_string = _normalise_pattern(pattern)
+    return pattern_string
+
+
+def _load_melodic_ngram_dataframe(
+    filepath: Path, n: int, kind: str, entries: bool
+) -> Any:
+    """Load and normalise a melodic n-gram dataframe."""
+    piece = importScore(str(filepath))
+    if piece is None:
+        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+
+    mel = piece.melodic(kind=kind, end=False)
+    mel_ngrams = piece.ngrams(df=mel, n=n, offsets="first")
+
+    if entries:
+        mel_ngrams = piece.entries(
+            df=mel_ngrams, thematic=False, anywhere=False, fermatas=True, exclude=[]
+        )
+
+    mel_ngrams = mel_ngrams.fillna("")
+    mel_ngrams = piece.numberParts(mel_ngrams)
+    mel_ngrams = piece.detailIndex(mel_ngrams, offset=True)
+
+    return mel_ngrams
+
+
+def _group_matches_by_pattern(
+    matches: list[dict[str, Any]], patterns: list[str] | None = None
+) -> dict[str, list[dict[str, Any]]]:
+    """Group note-id matches by underscore-separated pattern string."""
+    pattern_filter = {pattern.strip() for pattern in patterns or [] if pattern.strip()}
+    grouped: dict[str, list[dict[str, Any]]] = {}
+
+    for match in matches:
+        pattern_string = match["pattern_string"]
+        if pattern_filter and pattern_string not in pattern_filter:
+            continue
+
+        grouped.setdefault(pattern_string, []).append(
+            {
+                "pattern": match["pattern"],
+                "column": match["column"],
+                "start_measure": match["start_measure"],
+                "start_beat": match["start_beat"],
+                "start_offset": match["start_offset"],
+                "note_ids": match["note_ids"],
+            }
+        )
+
+    return dict(sorted(grouped.items()))
+
+
+def _count_patterns(mel_ngrams: Any) -> list[dict[str, Any]]:
+    """Count how often each melodic n-gram pattern occurs."""
+    counts: dict[str, int] = {}
+    patterns_by_string: dict[str, list[str]] = {}
+
+    for row in mel_ngrams.index:
+        for column in mel_ngrams.columns:
+            pattern_values, pattern_string = _normalise_pattern(mel_ngrams.loc[row, column])
+            if not pattern_string:
+                continue
+
+            counts[pattern_string] = counts.get(pattern_string, 0) + 1
+            patterns_by_string.setdefault(pattern_string, pattern_values)
+
+    sorted_patterns = sorted(counts.items(), key=lambda item: (-item[1], item[0]))
+    return [
+        {
+            "pattern": patterns_by_string[pattern_string],
+            "pattern_string": pattern_string,
+            "count": count,
+        }
+        for pattern_string, count in sorted_patterns
+    ]
+
+
 def _load_piece_with_details(filepath) -> tuple[Any, Any]:
     """Load a piece and prepare detailed note dataframe.
 
@@ -314,7 +415,11 @@ def get_harmonic_intervals(filename: str) -> dict[str, Any]:
 
 
 def get_melodic_ngrams(
-    filename: str, n: int = 4, kind: str = "d", entries: bool = False
+    filename: str,
+    n: int = 4,
+    kind: str = "d",
+    entries: bool = False,
+    include_note_ids: bool = False,
 ) -> dict[str, Any]:
     """Extract melodic n-grams from an MEI file using CRIM Intervals.
 
@@ -334,53 +439,78 @@ def get_melodic_ngrams(
         entries: If True, filter to only show n-grams occurring after rests,
             section breaks, or fermatas. This is useful for identifying thematic
             material and motives. (default: False)
+        include_note_ids: If True, also include occurrence-level note-ID spans.
+            This is more expensive than returning the pattern table alone and is
+            best reserved for targeted highlighting workflows. (default: False)
 
     Returns:
         Dictionary containing:
         - melodic_ngrams: CSV representation of the melodic n-grams dataframe
-        - melodic_ngram_note_ids: Structured list of n-gram matches with note IDs
         - n: The n-gram length used
         - kind: The interval type used
         - entries: Whether entry filtering was applied
+        - include_note_ids: Whether note-ID matches were included
         - filename: The input filename
     """
     filepath = get_mei_filepath(filename)
-    piece = importScore(str(filepath))
-    if piece is None:
-        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+    mel_ngrams = _load_melodic_ngram_dataframe(filepath, n=n, kind=kind, entries=entries)
+    mel_ngrams_as_strings = mel_ngrams.map(_pattern_to_string)
 
-    if entries:
-        # When filtering to entries, use end=False and offsets='first'
-        mel = piece.melodic(kind=kind, end=False)
-        mel_ngrams = piece.ngrams(df=mel, n=n, offsets="first")
-        mel_ngrams = piece.entries(
-            df=mel_ngrams, thematic=False, anywhere=False, fermatas=True, exclude=[]
-        ).fillna("")
-        mel_ngrams = piece.numberParts(mel_ngrams)
-        mel_ngrams = piece.detailIndex(mel_ngrams, offset=True)
-    else:
-        # Standard n-gram extraction
-        mel = piece.melodic(kind=kind, end=False)
-        mel_ngrams = piece.ngrams(df=mel, n=n, offsets="first").fillna("")
-        mel_ngrams = piece.numberParts(mel_ngrams)
-        mel_ngrams = piece.detailIndex(mel_ngrams, offset=True)
+    result = {
+        "filename": filename,
+        "n": n,
+        "kind": kind,
+        "entries": entries,
+        "include_note_ids": include_note_ids,
+        "melodic_ngrams": mel_ngrams_as_strings.to_csv(index=True)
+        if not mel_ngrams_as_strings.empty
+        else "No melodic n-grams found",
+    }
 
-    # Convert tuples to strings with underscore separators
-    def tuple_to_string(x):
-        return "_".join(map(str, x)) if isinstance(x, tuple) else x
+    if include_note_ids:
+        result["melodic_ngram_note_ids"] = _build_note_id_matches(filepath, mel_ngrams, n)
 
-    melodic_ngram_note_ids = _build_note_id_matches(filepath, mel_ngrams, n)
-    mel_ngrams = mel_ngrams.map(tuple_to_string)
+    return result
+
+
+def count_melodic_ngrams(
+    filename: str, n: int = 4, kind: str = "d", entries: bool = False
+) -> dict[str, Any]:
+    """Count melodic n-gram occurrences and rank patterns by frequency."""
+    filepath = get_mei_filepath(filename)
+    mel_ngrams = _load_melodic_ngram_dataframe(filepath, n=n, kind=kind, entries=entries)
 
     return {
         "filename": filename,
         "n": n,
         "kind": kind,
         "entries": entries,
-        "melodic_ngram_note_ids": melodic_ngram_note_ids,
-        "melodic_ngrams": mel_ngrams.to_csv(index=True)
-        if not mel_ngrams.empty
-        else "No melodic n-grams found",
+        "pattern_counts": _count_patterns(mel_ngrams),
+    }
+
+
+def get_melodic_ngram_matches(
+    filename: str,
+    n: int = 4,
+    kind: str = "d",
+    entries: bool = False,
+    patterns: list[str] | None = None,
+) -> dict[str, Any]:
+    """Return note-id matches grouped by melodic n-gram pattern."""
+    filepath = get_mei_filepath(filename)
+    mel_ngrams = _load_melodic_ngram_dataframe(filepath, n=n, kind=kind, entries=entries)
+    grouped_matches = _group_matches_by_pattern(
+        _build_note_id_matches(filepath, mel_ngrams, n),
+        patterns=patterns,
+    )
+
+    return {
+        "filename": filename,
+        "n": n,
+        "kind": kind,
+        "entries": entries,
+        "patterns": patterns or [],
+        "matches_by_pattern": grouped_matches,
     }
 
 

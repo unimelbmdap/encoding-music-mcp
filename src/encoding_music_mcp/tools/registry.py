@@ -12,6 +12,8 @@ from .intervals import (
     get_melodic_intervals,
     get_harmonic_intervals,
     get_melodic_ngrams,
+    count_melodic_ngrams,
+    get_melodic_ngram_matches,
     get_first_occur_melodic_ngrams,
     get_cadences,
 )
@@ -32,6 +34,8 @@ mcp.tool()(get_notes)
 mcp.tool()(get_melodic_intervals)
 mcp.tool()(get_harmonic_intervals)
 mcp.tool()(get_melodic_ngrams)
+mcp.tool()(count_melodic_ngrams)
+mcp.tool()(get_melodic_ngram_matches)
 mcp.tool()(get_cadences)
 mcp.tool(
     app=AppConfig(resource_uri="ui://notation/view.html"),
