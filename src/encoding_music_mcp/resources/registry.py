@@ -21,6 +21,7 @@ _voice_ranges_html_path = _templates_dir / "voice_ranges_app.html"
 _weighted_note_distribution_html_path = (
     _templates_dir / "weighted_note_distribution_app.html"
 )
+_melodic_ngram_heatmap_html_path = _templates_dir / "melodic_ngram_heatmap_app.html"
 _play_excerpt_html_path = _templates_dir / "play_excerpt_app.html"
 
 
@@ -86,6 +87,22 @@ def voice_ranges_viewer() -> str:
 )
 def weighted_note_distribution_viewer() -> str:
     return _weighted_note_distribution_html_path.read_text(encoding="utf-8")
+
+
+@mcp.resource(
+    "ui://melodic-ngram-heatmap/view.html",
+    name="Melodic N-gram Heatmap",
+    description="Timeline heatmap for top melodic n-gram patterns by score and staff",
+    app=AppConfig(
+        csp=ResourceCSP(
+            resource_domains=[
+                "https://unpkg.com",
+            ],
+        ),
+    ),
+)
+def melodic_ngram_heatmap_viewer() -> str:
+    return _melodic_ngram_heatmap_html_path.read_text(encoding="utf-8")
 
 
 @mcp.resource(

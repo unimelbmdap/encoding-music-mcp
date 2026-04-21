@@ -20,6 +20,7 @@ Complete reference for all encoding-music-mcp tools.
 | `get_first_occur_melodic_ngrams` | `filename: str, n: int = 4, kind: str = "d", combine_unisons: bool = True, compound: bool = False` | `dict` with first-occurrence patterns | [Docs](tools/intervals/first-occur.md) |
 | `show_notation` | `filename: str, start_measure: int = None, end_measure: int = None, page: int = 1` | SVG notation | [Docs](tools/notation.md) |
 | `plot_weighted_note_distribution` | `filename: str | None = None, filenames: list[str] | None = None, pitch_class_order: str = "fifths", group_by_staff: bool = False, limit_to_active: bool = True` | Radar plot payload | [Docs](tools/weighted-note-distribution.md) |
+| `plot_melodic_ngram_heatmap` | `filename: str | None = None, filenames: list[str] | None = None, n: int = 4, kind: str = "d", entries: bool = False, top_n: int = 2, combine_unisons: bool \| None = None, compound: bool = False` | Melodic n-gram heatmap payload | [Docs](tools/melodic-ngram-heatmap.md) |
 | `play_excerpt` | `filename: str | None = None, start_q: float = 0.0, end_q: float = None, bpm: int = 60` | Audio player payload | [Docs](tools/play-excerpt.md) |
 
 ## Discovery Tools
@@ -376,6 +377,41 @@ Plot a duration-weighted pitch-class radar chart for one or more scores.
     Requires the [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps) for inline display.
 
 [Full Documentation →](tools/weighted-note-distribution.md)
+
+### plot_melodic_ngram_heatmap(filename=None, filenames=None, n=4, kind="d", entries=False, top_n=2, combine_unisons=None, compound=False)
+
+Plot top melodic n-gram occurrences as timeline rectangles, separated by score
+and staff. The tool counts patterns across all selected pieces, keeps the
+highest-ranked `top_n` patterns, and draws every matching occurrence from start
+offset to end offset.
+
+**Parameters**:
+- `filename` (str | None): One MEI filename
+- `filenames` (list[str] | None): Multiple MEI filenames
+- `n` (int, optional): N-gram length (default: `4`)
+- `kind` (str, optional): Interval kind (default: `"d"`)
+- `entries` (bool, optional): Restrict to entry-filtered n-grams
+- `top_n` (int, optional): Number of top patterns to plot (default: `2`)
+- `combine_unisons` (bool | None, optional): Whether to combine unisons
+- `compound` (bool, optional): Whether to use compound intervals
+
+**Returns**:
+```python
+{
+    "filenames": list[str],
+    "score_count": int,
+    "patterns": list[dict[str, Any]],
+    "rows": list[dict[str, Any]],
+    "occurrences": list[dict[str, Any]],
+    "x_min": float,
+    "x_max": float,
+}
+```
+
+!!! note
+    Requires the [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps) for inline display.
+
+[Full Documentation →](tools/melodic-ngram-heatmap.md)
 
 ### play_excerpt(filename=None, start_q=0.0, end_q=None, bpm=60)
 
