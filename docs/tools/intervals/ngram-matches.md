@@ -17,6 +17,8 @@ Instead of returning every occurrence as a location-keyed row, it returns a dict
 | `kind` | `str` | No | `'d'` | Interval type: `'d'`, `'c'`, `'q'`, or `'z'` |
 | `entries` | `bool` | No | `False` | Restrict to thematic entries only |
 | `patterns` | `list[str] \| None` | No | `None` | Optional underscore-separated pattern filters |
+| `combine_unisons` | `bool \| None` | No | `None` | Whether to combine unisons when extracting notes |
+| `compound` | `bool` | No | `False` | Whether to use compound intervals |
 
 ## Returns
 
@@ -27,6 +29,8 @@ Instead of returning every occurrence as a location-keyed row, it returns a dict
 | `kind` | `str` | The interval type used |
 | `entries` | `bool` | Whether entry filtering was applied |
 | `patterns` | `list[str]` | The requested filters |
+| `combine_unisons` | `bool \| None` | Whether unison combining was explicitly applied |
+| `compound` | `bool` | Whether compound intervals were used |
 | `matches_by_pattern` | `dict[str, list[dict]]` | Occurrence records grouped by pattern |
 
 ## Example Output
@@ -46,6 +50,8 @@ Instead of returning every occurrence as a location-keyed row, it returns a dict
                 "start_measure": 1.0,
                 "start_beat": 1.25,
                 "start_offset": 0.25,
+                "duration": 1.25,
+                "end_offset": 1.5,
                 "note_ids": ["nz7y0rb", "n1ecjh8t", "na90xbl", "n67c47", "nqqw2wk"],
             }
         ]

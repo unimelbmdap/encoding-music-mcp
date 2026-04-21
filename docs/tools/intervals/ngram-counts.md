@@ -20,6 +20,8 @@ Instead of returning one row per location, it groups occurrences by pattern stri
 | `n` | `int` | No | 4 | Length of n-grams to extract |
 | `kind` | `str` | No | `'d'` | Interval type: `'d'`, `'c'`, `'q'`, or `'z'` |
 | `entries` | `bool` | No | `False` | Restrict to thematic entries only |
+| `combine_unisons` | `bool \| None` | No | `None` | Whether to combine unisons when extracting notes |
+| `compound` | `bool` | No | `False` | Whether to use compound intervals |
 
 ## Returns
 
@@ -29,6 +31,8 @@ Instead of returning one row per location, it groups occurrences by pattern stri
 | `n` | `int` | The n-gram length used |
 | `kind` | `str` | The interval type used |
 | `entries` | `bool` | Whether entry filtering was applied |
+| `combine_unisons` | `bool \| None` | Whether unison combining was explicitly applied |
+| `compound` | `bool` | Whether compound intervals were used |
 | `pattern_counts` | `list[dict]` | Ranked pattern counts |
 
 ## Example Output

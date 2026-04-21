@@ -136,6 +136,7 @@ def _build_part_note_events(filepath: Path) -> dict[str, list[dict[str, Any]]]:
                                 "measure": measure_n,
                                 "beat": beat,
                                 "offset": onset_q,
+                                "duration": dur_ppq / current_ppq,
                                 "note_ids": event["note_ids"],
                             }
                         )
@@ -189,10 +190,19 @@ def _build_note_id_matches(
             events = part_events.get(part_label, [])
 
             note_ids: list[str] = []
+            duration = 0.0
             if start_idx is not None:
                 span = events[start_idx : start_idx + n + 1]
                 for event in span:
                     note_ids.extend(event["note_ids"])
+                if span:
+                    first_event = span[0]
+                    last_event = span[-1]
+                    duration = (
+                        float(last_event["offset"])
+                        + float(last_event["duration"])
+                        - float(first_event["offset"])
+                    )
 
             matches.append(
                 {
@@ -202,6 +212,8 @@ def _build_note_id_matches(
                     "start_measure": measure,
                     "start_beat": beat,
                     "start_offset": offset,
+                    "duration": duration,
+                    "end_offset": offset + duration,
                     "note_ids": note_ids,
                 }
             )
@@ -235,14 +247,30 @@ def _pattern_to_string(pattern: Any) -> str:
 
 
 def _load_melodic_ngram_dataframe(
-    filepath: Path, n: int, kind: str, entries: bool
+    filepath: Path,
+    n: int,
+    kind: str,
+    entries: bool,
+    combine_unisons: bool | None = None,
+    compound: bool = False,
 ) -> Any:
     """Load and normalise a melodic n-gram dataframe."""
     piece = importScore(str(filepath))
     if piece is None:
         raise FileNotFoundError(f"Could not load MEI file: {filepath}")
 
-    mel = piece.melodic(kind=kind, end=False)
+    if combine_unisons is None:
+        mel = piece.melodic(kind=kind, end=False)
+    else:
+        nr = piece.notes(combineUnisons=combine_unisons)
+        mel = piece.melodic(
+            df=nr,
+            kind=kind,
+            compound=compound,
+            unit=0,
+            end=False,
+        )
+
     mel_ngrams = piece.ngrams(df=mel, n=n, offsets="first")
 
     if entries:
@@ -276,6 +304,8 @@ def _group_matches_by_pattern(
                 "start_measure": match["start_measure"],
                 "start_beat": match["start_beat"],
                 "start_offset": match["start_offset"],
+                "duration": match["duration"],
+                "end_offset": match["end_offset"],
                 "note_ids": match["note_ids"],
             }
         )
@@ -474,17 +504,31 @@ def get_melodic_ngrams(
 
 
 def count_melodic_ngrams(
-    filename: str, n: int = 4, kind: str = "d", entries: bool = False
+    filename: str,
+    n: int = 4,
+    kind: str = "d",
+    entries: bool = False,
+    combine_unisons: bool | None = None,
+    compound: bool = False,
 ) -> dict[str, Any]:
     """Count melodic n-gram occurrences and rank patterns by frequency."""
     filepath = get_mei_filepath(filename)
-    mel_ngrams = _load_melodic_ngram_dataframe(filepath, n=n, kind=kind, entries=entries)
+    mel_ngrams = _load_melodic_ngram_dataframe(
+        filepath,
+        n=n,
+        kind=kind,
+        entries=entries,
+        combine_unisons=combine_unisons,
+        compound=compound,
+    )
 
     return {
         "filename": filename,
         "n": n,
         "kind": kind,
         "entries": entries,
+        "combine_unisons": combine_unisons,
+        "compound": compound,
         "pattern_counts": _count_patterns(mel_ngrams),
     }
 
@@ -495,10 +539,19 @@ def get_melodic_ngram_matches(
     kind: str = "d",
     entries: bool = False,
     patterns: list[str] | None = None,
+    combine_unisons: bool | None = None,
+    compound: bool = False,
 ) -> dict[str, Any]:
     """Return note-id matches grouped by melodic n-gram pattern."""
     filepath = get_mei_filepath(filename)
-    mel_ngrams = _load_melodic_ngram_dataframe(filepath, n=n, kind=kind, entries=entries)
+    mel_ngrams = _load_melodic_ngram_dataframe(
+        filepath,
+        n=n,
+        kind=kind,
+        entries=entries,
+        combine_unisons=combine_unisons,
+        compound=compound,
+    )
     grouped_matches = _group_matches_by_pattern(
         _build_note_id_matches(filepath, mel_ngrams, n),
         patterns=patterns,
@@ -510,13 +563,10 @@ def get_melodic_ngram_matches(
         "kind": kind,
         "entries": entries,
         "patterns": patterns or [],
+        "combine_unisons": combine_unisons,
+        "compound": compound,
         "matches_by_pattern": grouped_matches,
     }
-
-
-def _pattern_to_list(pattern: Any) -> list[Any] | Any:
-    """Convert a tuple-based n-gram pattern to a JSON-friendly list."""
-    return list(pattern) if isinstance(pattern, tuple) else pattern
 
 
 def get_first_occur_melodic_ngrams(
@@ -528,9 +578,8 @@ def get_first_occur_melodic_ngrams(
 ) -> dict[str, Any]:
     """Extract first-occurrence melodic n-gram patterns from an MEI file.
 
-    This computes melodic n-grams using CRIM Intervals, identifies the first
-    occurrence of each unique pattern across all parts, and returns quarter-note
-    playback boundaries for each pattern.
+    This computes melodic n-gram counts, groups note-id matches by pattern,
+    then keeps the first occurrence of each unique pattern across all parts.
 
     Args:
         filename: Name of the MEI file (e.g., "Bach_BWV_0772.mei").
@@ -552,48 +601,62 @@ def get_first_occur_melodic_ngrams(
         - compound: Whether compound intervals were used
         - patterns: A list of first-occurrence pattern records, each containing:
             - pattern: The melodic n-gram as a list
+            - pattern_string: The underscore-separated pattern key
+            - count: Total number of occurrences
             - start_q: Start position in quarter-note units
             - duration: Pattern duration in quarter-note units
             - end_q: End position in quarter-note units
             - column: Staff or part label
+            - note_ids: MEI note IDs for the matched n-gram span
 
     Raises:
         FileNotFoundError: If the MEI file cannot be loaded.
     """
-    filepath = get_mei_filepath(filename)
-    piece = importScore(str(filepath))
-    if piece is None:
-        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+    counts_result = count_melodic_ngrams(
+        filename=filename,
+        n=n,
+        kind=kind,
+        combine_unisons=combine_unisons,
+        compound=compound,
+    )
+    pattern_counts = counts_result["pattern_counts"]
+    count_by_pattern = {
+        record["pattern_string"]: record["count"] for record in pattern_counts
+    }
 
-    nr = piece.notes(combineUnisons=combine_unisons)
-    mel = piece.melodic(df=nr, kind=kind, compound=compound, unit=0, end=False)
+    matches_result = get_melodic_ngram_matches(
+        filename=filename,
+        n=n,
+        kind=kind,
+        patterns=[record["pattern_string"] for record in pattern_counts],
+        combine_unisons=combine_unisons,
+        compound=compound,
+    )
 
-    entry_ngrams = piece.entries(df=mel, n=n, thematic=True, anywhere=True)
-    ngram_durations = piece.durations(df=mel, n=n, mask_df=entry_ngrams)
+    pattern_records: list[dict[str, Any]] = []
+    for pattern_string, matches in matches_result["matches_by_pattern"].items():
+        if not matches:
+            continue
 
-    first_occurrence: dict[tuple, dict[str, Any]] = {}
+        first_match = matches[0]
+        start_q = float(first_match["start_offset"])
+        duration = float(first_match["duration"])
+        pattern_records.append(
+            {
+                "pattern": first_match["pattern"],
+                "pattern_string": pattern_string,
+                "count": count_by_pattern.get(pattern_string, len(matches)),
+                "start_q": start_q,
+                "duration": duration,
+                "end_q": start_q + duration,
+                "column": first_match["column"],
+                "note_ids": first_match["note_ids"],
+            }
+        )
 
-    for row in entry_ngrams.index:
-        for col in entry_ngrams.columns:
-            pattern = entry_ngrams.loc[row, col]
-
-            if isinstance(pattern, tuple) and pattern not in first_occurrence:
-                first_occurrence[pattern] = {
-                    "start_q": float(row),
-                    "column": col,
-                    "duration": float(ngram_durations.loc[row, col]),
-                }
-
-    pattern_records = [
-        {
-            "pattern": _pattern_to_list(pattern),
-            "start_q": info["start_q"],
-            "duration": info["duration"],
-            "end_q": info["start_q"] + info["duration"],
-            "column": info["column"],
-        }
-        for pattern, info in first_occurrence.items()
-    ]
+    pattern_records.sort(
+        key=lambda record: (record["start_q"], str(record["column"]), record["pattern_string"])
+    )
 
     return {
         "filename": filename,

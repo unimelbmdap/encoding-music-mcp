@@ -15,8 +15,8 @@ Complete reference for all encoding-music-mcp tools.
 | `get_melodic_intervals` | `filename: str` | `dict` with intervals | [Docs](tools/intervals/melodic.md) |
 | `get_harmonic_intervals` | `filename: str` | `dict` with intervals | [Docs](tools/intervals/harmonic.md) |
 | `get_melodic_ngrams` | `filename: str, n: int = 4, kind: str = "d", entries: bool = False, include_note_ids: bool = False` | `dict` with n-grams | [Docs](tools/intervals/ngrams.md) |
-| `count_melodic_ngrams` | `filename: str, n: int = 4, kind: str = "d", entries: bool = False` | `dict` with ranked n-gram counts | [Docs](tools/intervals/ngram-counts.md) |
-| `get_melodic_ngram_matches` | `filename: str, n: int = 4, kind: str = "d", entries: bool = False, patterns: list[str] \| None = None` | `dict` with pattern-keyed note-id matches | [Docs](tools/intervals/ngram-matches.md) |
+| `count_melodic_ngrams` | `filename: str, n: int = 4, kind: str = "d", entries: bool = False, combine_unisons: bool \| None = None, compound: bool = False` | `dict` with ranked n-gram counts | [Docs](tools/intervals/ngram-counts.md) |
+| `get_melodic_ngram_matches` | `filename: str, n: int = 4, kind: str = "d", entries: bool = False, patterns: list[str] \| None = None, combine_unisons: bool \| None = None, compound: bool = False` | `dict` with pattern-keyed note-id matches | [Docs](tools/intervals/ngram-matches.md) |
 | `get_first_occur_melodic_ngrams` | `filename: str, n: int = 4, kind: str = "d", combine_unisons: bool = True, compound: bool = False` | `dict` with first-occurrence patterns | [Docs](tools/intervals/first-occur.md) |
 | `show_notation` | `filename: str, start_measure: int = None, end_measure: int = None, page: int = 1` | SVG notation | [Docs](tools/notation.md) |
 | `plot_weighted_note_distribution` | `filename: str | None = None, filenames: list[str] | None = None, pitch_class_order: str = "fifths", group_by_staff: bool = False, limit_to_active: bool = True` | Radar plot payload | [Docs](tools/weighted-note-distribution.md) |
@@ -194,7 +194,7 @@ Find recurring melodic patterns.
 
 [Full Documentation →](tools/intervals/ngrams.md)
 
-### count_melodic_ngrams(filename, n=4, kind="d", entries=False)
+### count_melodic_ngrams(filename, n=4, kind="d", entries=False, combine_unisons=None, compound=False)
 
 Count how many times each melodic n-gram occurs.
 
@@ -203,6 +203,8 @@ Count how many times each melodic n-gram occurs.
 - `n` (int, optional): N-gram length (default: 4)
 - `kind` (str, optional): Interval type
 - `entries` (bool, optional): Restrict to entry-filtered n-grams
+- `combine_unisons` (bool | None, optional): Whether to combine unisons when extracting notes
+- `compound` (bool, optional): Whether to use compound intervals
 
 **Returns**:
 ```python
@@ -211,6 +213,8 @@ Count how many times each melodic n-gram occurs.
     "n": int,
     "kind": str,
     "entries": bool,
+    "combine_unisons": bool | None,
+    "compound": bool,
     "pattern_counts": [
         {
             "pattern": list[str],
@@ -223,7 +227,7 @@ Count how many times each melodic n-gram occurs.
 
 [Full Documentation →](tools/intervals/ngram-counts.md)
 
-### get_melodic_ngram_matches(filename, n=4, kind="d", entries=False, patterns=None)
+### get_melodic_ngram_matches(filename, n=4, kind="d", entries=False, patterns=None, combine_unisons=None, compound=False)
 
 Group note-id spans by melodic n-gram pattern.
 
@@ -233,6 +237,8 @@ Group note-id spans by melodic n-gram pattern.
 - `kind` (str, optional): Interval type
 - `entries` (bool, optional): Restrict to entry-filtered n-grams
 - `patterns` (list[str] | None, optional): Underscore-separated pattern filters
+- `combine_unisons` (bool | None, optional): Whether to combine unisons when extracting notes
+- `compound` (bool, optional): Whether to use compound intervals
 
 **Returns**:
 ```python
@@ -242,6 +248,8 @@ Group note-id spans by melodic n-gram pattern.
     "kind": str,
     "entries": bool,
     "patterns": list[str],
+    "combine_unisons": bool | None,
+    "compound": bool,
     "matches_by_pattern": {
         "2_2_2_-3": [
             {
@@ -250,6 +258,8 @@ Group note-id spans by melodic n-gram pattern.
                 "start_measure": float,
                 "start_beat": float,
                 "start_offset": float,
+                "duration": float,
+                "end_offset": float,
                 "note_ids": list[str],
             }
         ]
@@ -278,7 +288,18 @@ Find the first occurrence of each unique melodic n-gram in a score.
     "kind": str,
     "combine_unisons": bool,
     "compound": bool,
-    "patterns": list[dict[str, Any]]
+    "patterns": [
+        {
+            "pattern": list[str],
+            "pattern_string": str,
+            "count": int,
+            "start_q": float,
+            "duration": float,
+            "end_q": float,
+            "column": str,
+            "note_ids": list[str],
+        }
+    ]
 }
 ```
 
@@ -465,7 +486,12 @@ def get_melodic_ngrams(
     include_note_ids: bool = False,
 ) -> dict[str, Any]: ...
 def count_melodic_ngrams(
-    filename: str, n: int = 4, kind: str = "d", entries: bool = False
+    filename: str,
+    n: int = 4,
+    kind: str = "d",
+    entries: bool = False,
+    combine_unisons: bool | None = None,
+    compound: bool = False,
 ) -> dict[str, Any]: ...
 def get_melodic_ngram_matches(
     filename: str,
@@ -473,6 +499,8 @@ def get_melodic_ngram_matches(
     kind: str = "d",
     entries: bool = False,
     patterns: list[str] | None = None,
+    combine_unisons: bool | None = None,
+    compound: bool = False,
 ) -> dict[str, Any]: ...
 ```
 

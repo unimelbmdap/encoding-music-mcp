@@ -276,18 +276,59 @@ def test_get_first_occur_melodic_ngrams_pattern_record_shape():
     pattern = result["patterns"][0]
 
     assert "pattern" in pattern
+    assert "pattern_string" in pattern
+    assert "count" in pattern
     assert "start_q" in pattern
     assert "duration" in pattern
     assert "end_q" in pattern
     assert "column" in pattern
+    assert "note_ids" in pattern
 
     assert isinstance(pattern["pattern"], list), "Pattern should be a list"
     assert len(pattern["pattern"]) == result["n"], "Pattern length should match n"
+    assert isinstance(pattern["pattern_string"], str), "Pattern key should be a string"
+    assert isinstance(pattern["count"], int), "Count should be an integer"
+    assert pattern["count"] > 0, "Count should be positive"
     assert isinstance(pattern["start_q"], float), "start_q should be a float"
     assert isinstance(pattern["duration"], float), "duration should be a float"
     assert isinstance(pattern["end_q"], float), "end_q should be a float"
     assert isinstance(pattern["column"], str), "column should be a string"
+    assert isinstance(pattern["note_ids"], list), "Note IDs should be a list"
+    assert len(pattern["note_ids"]) == result["n"] + 1
     assert pattern["end_q"] > pattern["start_q"], "end_q should be greater than start_q"
+
+
+def test_get_first_occur_melodic_ngrams_matches_grouped_helper():
+    """Test that first occurrences align with the grouped match helper."""
+    result = get_first_occur_melodic_ngrams("Bach_BWV_0772.mei", n=4)
+    first_pattern = result["patterns"][0]
+
+    matches_result = get_melodic_ngram_matches(
+        "Bach_BWV_0772.mei",
+        n=4,
+        patterns=[first_pattern["pattern_string"]],
+        combine_unisons=True,
+        compound=False,
+    )
+    first_match = matches_result["matches_by_pattern"][first_pattern["pattern_string"]][
+        0
+    ]
+
+    assert first_pattern["start_q"] == first_match["start_offset"]
+    assert first_pattern["column"] == first_match["column"]
+    assert first_pattern["note_ids"] == first_match["note_ids"]
+
+    counts_result = count_melodic_ngrams(
+        "Bach_BWV_0772.mei",
+        n=4,
+        combine_unisons=True,
+        compound=False,
+    )
+    count_by_pattern = {
+        record["pattern_string"]: record["count"]
+        for record in counts_result["pattern_counts"]
+    }
+    assert first_pattern["count"] == count_by_pattern[first_pattern["pattern_string"]]
 
 
 def test_get_first_occur_melodic_ngrams_custom_options():
