@@ -59,9 +59,10 @@ nav:
       - Metadata: tools/metadata.md
       - Key Analysis: tools/key-analysis.md
       - Notation: tools/notation.md
-      - Voice Ranges: tools/voice-ranges.md
-      - Weighted Note Distribution: tools/weighted-note-distribution.md
-      - Melodic N-gram Heatmap: tools/melodic-ngram-heatmap.md
+      - Visualisation:
+          - Voice Ranges: tools/visualisation/voice-ranges.md
+          - Weighted Note Distribution: tools/visualisation/weighted-note-distribution.md
+          - Melodic N-gram Heatmap: tools/visualisation/melodic-ngram-heatmap.md
       - Play Excerpt: tools/play-excerpt.md
       - Intervals:
           - Overview: tools/intervals/index.md

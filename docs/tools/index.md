@@ -39,9 +39,9 @@ encoding-music-mcp provides a suite of tools for analyzing MEI files. All tools 
 
 | Tool | Purpose | Learn More |
 |------|---------|------------|
-| [`plot_voice_ranges`](voice-ranges.md) | Display compact per-staff pitch ranges for a single score | [Documentation](voice-ranges.md) |
-| [`plot_weighted_note_distribution`](weighted-note-distribution.md) | Display a duration-weighted pitch-class radar chart for a single score | [Documentation](weighted-note-distribution.md) |
-| [`plot_melodic_ngram_heatmap`](melodic-ngram-heatmap.md) | Display top melodic n-gram spans across scores and staves | [Documentation](melodic-ngram-heatmap.md) |
+| [`plot_voice_ranges`](visualisation/voice-ranges.md) | Display compact per-staff pitch ranges for a single score | [Documentation](visualisation/voice-ranges.md) |
+| [`plot_weighted_note_distribution`](visualisation/weighted-note-distribution.md) | Display a duration-weighted pitch-class radar chart for a single score | [Documentation](visualisation/weighted-note-distribution.md) |
+| [`plot_melodic_ngram_heatmap`](visualisation/melodic-ngram-heatmap.md) | Display top melodic n-gram spans across scores and staves | [Documentation](visualisation/melodic-ngram-heatmap.md) |
 
 ### Playback Tools
 
@@ -84,9 +84,9 @@ Tools for viewing rendered sheet music:
 
 Tools for viewing derived visual summaries:
 
-- **[plot_voice_ranges](voice-ranges.md)**: Plot the lowest and highest pitch reached by each staff in one score
-- **[plot_weighted_note_distribution](weighted-note-distribution.md)**: Plot duration-weighted pitch classes as a radar chart
-- **[plot_melodic_ngram_heatmap](melodic-ngram-heatmap.md)**: Plot top melodic n-gram spans as coloured rectangles across scores and staves
+- **[plot_voice_ranges](visualisation/voice-ranges.md)**: Plot the lowest and highest pitch reached by each staff in one score
+- **[plot_weighted_note_distribution](visualisation/weighted-note-distribution.md)**: Plot duration-weighted pitch classes as a radar chart
+- **[plot_melodic_ngram_heatmap](visualisation/melodic-ngram-heatmap.md)**: Plot top melodic n-gram spans as coloured rectangles across scores and staves
 
 ### Playback
 

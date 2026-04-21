@@ -19,8 +19,8 @@ Complete reference for all encoding-music-mcp tools.
 | `get_melodic_ngram_matches` | `filename: str, n: int = 4, kind: str = "d", entries: bool = False, patterns: list[str] \| None = None, combine_unisons: bool \| None = None, compound: bool = False` | `dict` with pattern-keyed note-id matches | [Docs](tools/intervals/ngram-matches.md) |
 | `get_first_occur_melodic_ngrams` | `filename: str, n: int = 4, kind: str = "d", combine_unisons: bool = True, compound: bool = False` | `dict` with first-occurrence patterns | [Docs](tools/intervals/first-occur.md) |
 | `show_notation` | `filename: str, start_measure: int = None, end_measure: int = None, page: int = 1` | SVG notation | [Docs](tools/notation.md) |
-| `plot_weighted_note_distribution` | `filename: str | None = None, filenames: list[str] | None = None, pitch_class_order: str = "fifths", group_by_staff: bool = False, limit_to_active: bool = True` | Radar plot payload | [Docs](tools/weighted-note-distribution.md) |
-| `plot_melodic_ngram_heatmap` | `filename: str | None = None, filenames: list[str] | None = None, n: int = 4, kind: str = "d", entries: bool = False, top_n: int = 2, combine_unisons: bool \| None = None, compound: bool = False` | Melodic n-gram heatmap payload | [Docs](tools/melodic-ngram-heatmap.md) |
+| `plot_weighted_note_distribution` | `filename: str | None = None, filenames: list[str] | None = None, pitch_class_order: str = "fifths", group_by_staff: bool = False, limit_to_active: bool = True` | Radar plot payload | [Docs](tools/visualisation/weighted-note-distribution.md) |
+| `plot_melodic_ngram_heatmap` | `filename: str | None = None, filenames: list[str] | None = None, n: int = 4, kind: str = "d", entries: bool = False, top_n: int = 2, combine_unisons: bool \| None = None, compound: bool = False` | Melodic n-gram heatmap payload | [Docs](tools/visualisation/melodic-ngram-heatmap.md) |
 | `play_excerpt` | `filename: str | None = None, start_q: float = 0.0, end_q: float = None, bpm: int = 60` | Audio player payload | [Docs](tools/play-excerpt.md) |
 
 ## Discovery Tools
@@ -376,7 +376,7 @@ Plot a duration-weighted pitch-class radar chart for one or more scores.
 !!! note
     Requires the [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps) for inline display.
 
-[Full Documentation →](tools/weighted-note-distribution.md)
+[Full Documentation →](tools/visualisation/weighted-note-distribution.md)
 
 ### plot_melodic_ngram_heatmap(filename=None, filenames=None, n=4, kind="d", entries=False, top_n=2, combine_unisons=None, compound=False)
 
@@ -411,7 +411,7 @@ offset to end offset.
 !!! note
     Requires the [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps) for inline display.
 
-[Full Documentation →](tools/melodic-ngram-heatmap.md)
+[Full Documentation →](tools/visualisation/melodic-ngram-heatmap.md)
 
 ### play_excerpt(filename=None, start_q=0.0, end_q=None, bpm=60)
 

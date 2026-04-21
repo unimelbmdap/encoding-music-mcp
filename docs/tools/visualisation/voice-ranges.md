@@ -69,6 +69,5 @@ The viewer shows one horizontal bar per staff. Each bar begins at the staff's lo
 
 ## Related Tools
 
-- [get_notes](intervals/notes.md) - Source note data reused by this tool
-- [show_notation](notation.md) - View the score as engraved notation
-
+- [get_notes](../intervals/notes.md) - Source note data reused by this tool
+- [show_notation](../notation.md) - View the score as engraved notation

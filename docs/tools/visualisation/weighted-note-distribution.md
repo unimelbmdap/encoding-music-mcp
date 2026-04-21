@@ -92,5 +92,5 @@ The tool returns a `ToolResult` with:
 
 ## Related Tools
 
-- [get_notes](intervals/notes.md) - Extract unweighted note-event tables
+- [get_notes](../intervals/notes.md) - Extract unweighted note-event tables
 - [plot_voice_ranges](voice-ranges.md) - Compare staff pitch spans instead of pitch-class emphasis
