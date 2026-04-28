@@ -9,6 +9,7 @@ Complete reference for all encoding-music-mcp tools.
 | `run_comprehensive_analysis` | `filename: str` | `str` comprehensive analysis text | N/A |
 | `diagnose_sampling` | None | `dict` sampling diagnostic status | N/A |
 | `list_available_mei_files` | None | `dict` with file lists | [Docs](tools/discovery.md) |
+| `register_mei_file_from_path` | `file_path: str | None = None, filename: str | None = None` | `dict` registration status | [Docs](tools/uploads.md) |
 | `get_mei_metadata` | `filename: str` | `dict` with metadata | [Docs](tools/metadata.md) |
 | `analyze_key` | `filename: str` | `dict` with key info | [Docs](tools/key-analysis.md) |
 | `get_notes` | `filename: str` | `dict` with notes | [Docs](tools/intervals/notes.md) |
@@ -18,7 +19,7 @@ Complete reference for all encoding-music-mcp tools.
 | `count_melodic_ngrams` | `filename: str, n: int = 4, kind: str = "d", entries: bool = False, combine_unisons: bool \| None = None, compound: bool = False` | `dict` with ranked n-gram counts | [Docs](tools/intervals/ngram-counts.md) |
 | `get_melodic_ngram_matches` | `filename: str, n: int = 4, kind: str = "d", entries: bool = False, patterns: list[str] \| None = None, combine_unisons: bool \| None = None, compound: bool = False` | `dict` with pattern-keyed note-id matches | [Docs](tools/intervals/ngram-matches.md) |
 | `get_first_occur_melodic_ngrams` | `filename: str, n: int = 4, kind: str = "d", combine_unisons: bool = True, compound: bool = False` | `dict` with first-occurrence patterns | [Docs](tools/intervals/first-occur.md) |
-| `show_notation` | `filename: str, start_measure: int = None, end_measure: int = None, page: int = 1` | SVG notation | [Docs](tools/notation.md) |
+| `show_notation` | `filename: str \| None = None, start_measure: int = None, end_measure: int = None, page: int = 1` | SVG notation | [Docs](tools/notation.md) |
 | `plot_weighted_note_distribution` | `filename: str | None = None, filenames: list[str] | None = None, pitch_class_order: str = "fifths", group_by_staff: bool = False, limit_to_active: bool = True` | Radar plot payload | [Docs](tools/visualisation/weighted-note-distribution.md) |
 | `plot_melodic_ngram_heatmap` | `filename: str | None = None, filenames: list[str] | None = None, n: int = 4, kind: str = "d", entries: bool = False, top_n: int = 2, combine_unisons: bool \| None = None, compound: bool = False` | Melodic n-gram heatmap payload | [Docs](tools/visualisation/melodic-ngram-heatmap.md) |
 | `play_excerpt` | `filename: str | None = None, start_q: float = 0.0, end_q: float = None, bpm: int = 60` | Audio player payload | [Docs](tools/play-excerpt.md) |
@@ -27,7 +28,7 @@ Complete reference for all encoding-music-mcp tools.
 
 ### list_available_mei_files()
 
-Discover all built-in MEI files.
+Discover all built-in MEI files and user-registered MEI files.
 
 **Parameters**: None
 
@@ -37,11 +38,37 @@ Discover all built-in MEI files.
     "bach_inventions": List[str],      # 15 files
     "bartok_mikrokosmos": List[str],   # 19 files
     "morley_canzonets": List[str],     # 12 files
-    "all_files": List[str]             # 46 files
+    "uploaded_mei_files": List[str],   # files registered during this session
+    "all_files": List[str]             # built-in plus uploaded filenames
 }
 ```
 
 [Full Documentation →](tools/discovery.md)
+
+## Uploaded MEI Tools
+
+### register_mei_file_from_path(file_path=None, filename=None)
+
+Register a local MEI file path exposed by the user. If `file_path` is omitted
+and the client supports elicitation, the server asks the user to provide a local
+path visible to the MCP server process.
+
+**Parameters**:
+- `file_path` (str | None): Local path to the MEI file
+- `filename` (str | None): Optional session filename. Defaults to the path basename.
+
+**Returns**:
+```python
+{
+    "filename": str,
+    "registered": True,
+    "source_path": str,
+    "message": str
+}
+```
+
+After registration, use `filename` with tools such as `show_notation`,
+`get_notes`, `get_melodic_ngrams`, `analyze_key`, and visualisation tools.
 
 ## Metadata Tools
 

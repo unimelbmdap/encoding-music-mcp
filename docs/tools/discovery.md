@@ -1,10 +1,14 @@
 # list_available_mei_files
 
-Discover all built-in MEI files organized by composer.
+Discover built-in MEI files organized by composer, plus MEI files registered
+during the current server session.
 
 ## Overview
 
-The `list_available_mei_files` tool provides a complete inventory of the 46 MEI files included with encoding-music-mcp. Files are organized into three collections by composer.
+The `list_available_mei_files` tool provides a complete inventory of the 46 MEI
+files included with encoding-music-mcp and any user-supplied MEI file paths
+registered with `register_mei_file_from_path`. Built-in files are organized into
+three collections by composer.
 
 ## Parameters
 
@@ -12,14 +16,15 @@ This tool takes no parameters.
 
 ## Returns
 
-Returns a dictionary with four keys:
+Returns a dictionary with five keys:
 
 | Key | Type | Description |
 |-----|------|-------------|
 | `bach_inventions` | `List[str]` | List of Bach Two-Part Invention filenames (15 files) |
 | `bartok_mikrokosmos` | `List[str]` | List of Bartók Mikrokosmos filenames (19 files) |
 | `morley_canzonets` | `List[str]` | List of Morley Canzonet filenames (12 files) |
-| `all_files` | `List[str]` | Complete list of all 46 filenames |
+| `uploaded_mei_files` | `List[str]` | User-supplied MEI filenames registered during this session |
+| `all_files` | `List[str]` | Complete list of built-in and registered filenames |
 
 ## Example Usage
 
@@ -48,9 +53,13 @@ Returns a dictionary with four keys:
     "Morley_1595_02_When_lo_by_break.mei",
     ...
   ],
+  "uploaded_mei_files": [
+    "CRIM_Model_0002.mei"
+  ],
   "all_files": [
     "Bach_BWV_0772.mei",
     "Bach_BWV_0773.mei",
+    "CRIM_Model_0002.mei",
     ...
   ]
 }

@@ -17,9 +17,15 @@ from .intervals import (
     get_first_occur_melodic_ngrams,
     get_cadences,
 )
-from .notation import show_notation, show_notation_highlight
+from .notation import (
+    SHOW_NOTATION_HIGHLIGHT_OUTPUT_SCHEMA,
+    SHOW_NOTATION_OUTPUT_SCHEMA,
+    show_notation,
+    show_notation_highlight,
+)
 from .play_excerpt import load_audio_resource, play_excerpt
 from .sampling_diagnostics import diagnose_sampling
+from .uploads import register_mei_file_from_path
 from .visualisation.voice_ranges import plot_voice_ranges
 from .visualisation.weighted_note_distribution import plot_weighted_note_distribution
 from .visualisation.melodic_ngram_heatmap import plot_melodic_ngram_heatmap
@@ -29,6 +35,7 @@ from .visualisation.melodic_ngram_heatmap import plot_melodic_ngram_heatmap
 mcp.tool()(run_comprehensive_analysis)
 mcp.tool()(diagnose_sampling)
 mcp.tool()(list_available_mei_files)
+mcp.tool()(register_mei_file_from_path)
 mcp.tool()(get_mei_metadata)
 mcp.tool()(analyze_key)
 mcp.tool()(get_notes)
@@ -40,9 +47,11 @@ mcp.tool()(get_melodic_ngram_matches)
 mcp.tool()(get_cadences)
 mcp.tool(
     app=AppConfig(resource_uri="ui://notation/view.html"),
+    output_schema=SHOW_NOTATION_OUTPUT_SCHEMA,
 )(show_notation)
 mcp.tool(
     app=AppConfig(resource_uri="ui://notation/highlight.html"),
+    output_schema=SHOW_NOTATION_HIGHLIGHT_OUTPUT_SCHEMA,
 )(show_notation_highlight)
 mcp.tool(
     app=AppConfig(resource_uri="ui://voice-ranges/view.html"),

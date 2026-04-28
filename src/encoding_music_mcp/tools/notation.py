@@ -6,16 +6,53 @@ from pathlib import Path
 import verovio
 from mcp.types import TextContent
 
+from fastmcp import Context
+from fastmcp.server.elicitation import CancelledElicitation, DeclinedElicitation
 from fastmcp.tools.tool import ToolResult
 
-from .helpers import get_mei_filepath
+from .helpers import get_mei_collections, get_mei_filepath, register_uploaded_mei_from_path
 
 # Resolve the Verovio resource path from the installed package.
 # The verovio __init__.py sets this via importlib.resources, but that can
 # fail in some process contexts (e.g. MCP server launched by Claude Desktop).
 _VEROVIO_RESOURCE_PATH = str(Path(verovio.__file__).parent / "data")
 
-__all__ = ["show_notation", "show_notation_highlight"]
+SHOW_NOTATION_OUTPUT_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "filename": {"type": "string"},
+        "svg": {"type": "string"},
+        "page": {"type": "integer"},
+        "total_pages": {"type": "integer"},
+        "start_measure": {"type": "integer"},
+        "end_measure": {"type": "integer"},
+    },
+    "required": ["filename", "svg", "page", "total_pages"],
+}
+
+SHOW_NOTATION_HIGHLIGHT_OUTPUT_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        **SHOW_NOTATION_OUTPUT_SCHEMA["properties"],
+        "highlight_note_ids": {
+            "type": "array",
+            "items": {"type": "string"},
+        },
+    },
+    "required": [
+        *SHOW_NOTATION_OUTPUT_SCHEMA["required"],
+        "highlight_note_ids",
+    ],
+}
+
+__all__ = [
+    "SHOW_NOTATION_OUTPUT_SCHEMA",
+    "SHOW_NOTATION_HIGHLIGHT_OUTPUT_SCHEMA",
+    "show_notation",
+    "show_notation_highlight",
+]
 
 _MEI_NS = "http://www.music-encoding.org/ns/mei"
 _MEI_TAG = "{" + _MEI_NS + "}"
@@ -79,11 +116,71 @@ def _normalise_svg_text(svg: str) -> str:
     return normalised.replace("<text ", '<text xml:space="preserve" ')
 
 
-def show_notation(
-    filename: str,
+async def _resolve_notation_filename(
+    filename: str | None,
+    ctx: Context | None,
+    should_elicit: bool,
+) -> str:
+    """Choose or register the score to render."""
+    if not should_elicit:
+        if filename is None:
+            raise ValueError("filename is required to show notation")
+        return filename
+
+    if ctx is None:
+        if filename is None:
+            raise ValueError(
+                "filename is required to show notation when no MCP context is available"
+            )
+        return filename
+
+    available_files = get_mei_collections().get("all_files", [])
+    options = available_files
+    if filename and filename not in options:
+        options = [filename, *options]
+
+    prompt = (
+        "Which MEI file would you like to show? "
+        "Choose one of the available files, type another registered filename, "
+        "or type a local path to a .mei file on this computer."
+    )
+    elicitation = await ctx.elicit(prompt, options or str)
+    if isinstance(elicitation, DeclinedElicitation | CancelledElicitation):
+        raise ValueError("filename or local MEI path is required to show notation")
+
+    selected = str(elicitation.data).strip()
+    if not selected:
+        raise ValueError("filename or local MEI path is required to show notation")
+
+    is_path_like = "/" in selected or "\\" in selected or Path(selected).is_absolute()
+    path = Path(selected).expanduser()
+    if is_path_like and path.exists():
+        registered_filename = (
+            filename if filename and not get_mei_filepath(filename).exists() else None
+        )
+        return register_uploaded_mei_from_path(selected, registered_filename)["filename"]
+
+    selected_filepath = get_mei_filepath(selected)
+    if selected_filepath.exists():
+        return selected
+
+    if path.exists():
+        registered_filename = (
+            filename if filename and not get_mei_filepath(filename).exists() else None
+        )
+        return register_uploaded_mei_from_path(selected, registered_filename)["filename"]
+
+    raise FileNotFoundError(
+        f"MEI file not found as a registered filename or local path: {selected}"
+    )
+
+
+async def show_notation(
+    filename: str | None = None,
     start_measure: int | None = None,
     end_measure: int | None = None,
     page: int = 1,
+    ctx: Context | None = None,
 ) -> ToolResult:
     """Display musical notation for an MEI file.
 
@@ -99,6 +196,12 @@ def show_notation(
     Returns:
         ToolResult with SVG notation for the MCP App viewer
     """
+    should_elicit = (
+        page == 1
+        and ctx is not None
+        and (filename is None or not get_mei_filepath(filename).exists())
+    )
+    filename = await _resolve_notation_filename(filename, ctx, should_elicit)
     filepath = get_mei_filepath(filename)
 
     if not filepath.exists():
@@ -143,12 +246,13 @@ def show_notation(
     )
 
 
-def show_notation_highlight(
+async def show_notation_highlight(
     filename: str,
     highlight_note_ids: list[str],
     start_measure: int | None = None,
     end_measure: int | None = None,
     page: int = 1,
+    ctx: Context | None = None,
 ) -> ToolResult:
     """Display notation with a supplied set of highlighted note IDs.
 
@@ -156,11 +260,12 @@ def show_notation_highlight(
     navigation across all pages. Avoid making one tool call per page unless
     the user explicitly asks for a specific page number.
     """
-    result = show_notation(
+    result = await show_notation(
         filename=filename,
         start_measure=start_measure,
         end_measure=end_measure,
         page=page,
+        ctx=ctx,
     )
 
     structured = dict(result.structured_content or {})

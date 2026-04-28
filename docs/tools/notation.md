@@ -15,6 +15,11 @@ This tool requires an MCP client that supports the MCP Apps extension (e.g., Cla
 
 Displays the first page of the piece with prev/next pagination controls.
 
+When `filename` is omitted, or when the requested filename is not available and
+the MCP client supports elicitation, the tool asks which MEI file to show. You
+can select a built-in or registered filename, type another registered filename,
+or type a local path to a `.mei` file on the machine running the MCP server.
+
 ### Specific measures
 
 !!! example "Try asking:"
@@ -33,7 +38,7 @@ The notation viewer displays one system per page. For multi-page pieces, use the
 
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
-| `filename` | string | Yes | - | Name of the MEI file (e.g., "Bach_BWV_0772.mei") |
+| `filename` | string | No | None | MEI filename to render. If omitted or unavailable, the tool elicits a file when supported. |
 | `start_measure` | integer | No | None | First measure to display |
 | `end_measure` | integer | No | start_measure | Last measure to display |
 | `page` | integer | No | 1 | Page number to display |
@@ -59,11 +64,13 @@ The tool returns a `ToolResult` with:
 
 ## How It Works
 
-1. The MEI file is read from the built-in collection
-2. If `start_measure`/`end_measure` are specified, the MEI XML is filtered to include only those measures
-3. Verovio renders the MEI to SVG server-side (one system per page, ~50-60KB per page)
-4. The SVG is sent to the notation viewer app, which displays it in a sandboxed iframe
-5. Pagination buttons in the viewer call `show_notation` again with a different `page` parameter
+1. If `filename` is omitted or unavailable, the tool elicits the exact MEI file when supported
+2. Local paths entered through elicitation are registered for the current server session
+3. The MEI file is read from the registered uploads or built-in collection
+4. If `start_measure`/`end_measure` are specified, the MEI XML is filtered to include only those measures
+5. Verovio renders the MEI to SVG server-side (one system per page, ~50-60KB per page)
+6. The SVG is sent to the notation viewer app, which displays it in a sandboxed iframe
+7. Pagination buttons in the viewer call `show_notation` again with a different `page` parameter
 
 ## Technical Details
 

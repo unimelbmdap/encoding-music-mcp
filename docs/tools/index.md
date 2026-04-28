@@ -1,6 +1,6 @@
 # Tools Overview
 
-encoding-music-mcp provides a suite of tools for analyzing MEI files. All tools work with the [built-in MEI collection](../resources/mei-files.md).
+encoding-music-mcp provides a suite of tools for analyzing MEI files. Tools work with the [built-in MEI collection](../resources/mei-files.md) and MEI files registered during the current server session.
 
 ## Available Tools
 
@@ -9,6 +9,12 @@ encoding-music-mcp provides a suite of tools for analyzing MEI files. All tools 
 | Tool | Purpose | Learn More |
 |------|---------|------------|
 | [`list_available_mei_files`](discovery.md) | Browse and discover the 46 built-in MEI files | [Documentation](discovery.md) |
+
+### Upload Tools
+
+| Tool | Purpose | Learn More |
+|------|---------|------------|
+| [`register_mei_file_from_path`](uploads.md) | Register a user-exposed local MEI path, with optional elicitation | [Documentation](uploads.md) |
 
 ### Metadata Tools
 
@@ -56,6 +62,7 @@ encoding-music-mcp provides a suite of tools for analyzing MEI files. All tools 
 Tools for exploring the MEI collection:
 
 - **[list_available_mei_files](discovery.md)**: Browse files by composer
+- **[register_mei_file_from_path](uploads.md)**: Make a user-supplied MEI path available to analysis tools
 
 ### 📋 Metadata
 
@@ -137,6 +144,11 @@ Most tools accept a `filename` parameter:
 ```python
 filename: str  # Name of the MEI file (e.g., "Bach_BWV_0772.mei")
 ```
+
+For user-supplied files, call `register_mei_file_from_path(file_path, filename)`
+first, then pass the registered `filename` to analysis, notation, visualisation,
+or playback tools. Omit `file_path` to ask the user for it via elicitation when
+supported.
 
 Analysis tools may accept additional parameters:
 
