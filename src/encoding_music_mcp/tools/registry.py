@@ -18,8 +18,6 @@ from .intervals import (
     get_cadences,
 )
 from .notation import (
-    SHOW_NOTATION_HIGHLIGHT_OUTPUT_SCHEMA,
-    SHOW_NOTATION_OUTPUT_SCHEMA,
     show_notation,
     show_notation_highlight,
 )
@@ -47,11 +45,9 @@ mcp.tool()(get_melodic_ngram_matches)
 mcp.tool()(get_cadences)
 mcp.tool(
     app=AppConfig(resource_uri="ui://notation/view.html"),
-    output_schema=SHOW_NOTATION_OUTPUT_SCHEMA,
 )(show_notation)
 mcp.tool(
     app=AppConfig(resource_uri="ui://notation/highlight.html"),
-    output_schema=SHOW_NOTATION_HIGHLIGHT_OUTPUT_SCHEMA,
 )(show_notation_highlight)
 mcp.tool(
     app=AppConfig(resource_uri="ui://voice-ranges/view.html"),

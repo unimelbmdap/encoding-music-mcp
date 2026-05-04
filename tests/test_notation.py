@@ -108,6 +108,20 @@ def test_show_notation_elicits_when_supplied_filename_is_unavailable():
     assert result.structured_content["svg"].startswith("<svg")
 
 
+def test_show_notation_elicits_when_supplied_path_folder_is_unavailable(tmp_path):
+    """Nonexistent path-like inputs should ask for a replacement score."""
+    filename = tmp_path / "missing-folder" / "missing-score.mei"
+    ctx = _FakeContext(str(_sample_mei_path()))
+
+    result = asyncio.run(show_notation(str(filename), page=2, ctx=ctx))
+
+    assert ctx.messages
+    assert "could not find" in ctx.messages[0][0]
+    assert str(filename) in ctx.messages[0][0]
+    assert result.structured_content["filename"] == "Bach_BWV_0772.mei"
+    assert result.structured_content["svg"].startswith("<svg")
+
+
 def test_show_notation_measure_range():
     """Test showing specific measure range."""
     result = asyncio.run(
@@ -200,17 +214,9 @@ def test_show_notation_highlight_includes_note_ids():
     assert result.structured_content["svg"].startswith("<svg")
 
 
-def test_notation_tools_advertise_output_schemas():
-    """App-backed notation tools should still be discoverable as JSON tools."""
+def test_notation_tools_do_not_require_custom_output_schemas():
+    """App-backed notation tools should register without handwritten schemas."""
     tools = {tool.name: tool for tool in asyncio.run(mcp.list_tools())}
 
-    notation_schema = tools["show_notation"].output_schema
-    highlight_schema = tools["show_notation_highlight"].output_schema
-
-    assert notation_schema is not None
-    assert notation_schema["required"] == ["filename", "svg", "page", "total_pages"]
-    assert "svg" in notation_schema["properties"]
-
-    assert highlight_schema is not None
-    assert "highlight_note_ids" in highlight_schema["required"]
-    assert highlight_schema["properties"]["highlight_note_ids"]["type"] == "array"
+    assert tools["show_notation"].output_schema is None
+    assert tools["show_notation_highlight"].output_schema is None

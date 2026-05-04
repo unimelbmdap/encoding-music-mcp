@@ -17,39 +17,7 @@ from .helpers import get_mei_collections, get_mei_filepath, register_uploaded_me
 # fail in some process contexts (e.g. MCP server launched by Claude Desktop).
 _VEROVIO_RESOURCE_PATH = str(Path(verovio.__file__).parent / "data")
 
-SHOW_NOTATION_OUTPUT_SCHEMA = {
-    "type": "object",
-    "additionalProperties": False,
-    "properties": {
-        "filename": {"type": "string"},
-        "svg": {"type": "string"},
-        "page": {"type": "integer"},
-        "total_pages": {"type": "integer"},
-        "start_measure": {"type": "integer"},
-        "end_measure": {"type": "integer"},
-    },
-    "required": ["filename", "svg", "page", "total_pages"],
-}
-
-SHOW_NOTATION_HIGHLIGHT_OUTPUT_SCHEMA = {
-    "type": "object",
-    "additionalProperties": False,
-    "properties": {
-        **SHOW_NOTATION_OUTPUT_SCHEMA["properties"],
-        "highlight_note_ids": {
-            "type": "array",
-            "items": {"type": "string"},
-        },
-    },
-    "required": [
-        *SHOW_NOTATION_OUTPUT_SCHEMA["required"],
-        "highlight_note_ids",
-    ],
-}
-
 __all__ = [
-    "SHOW_NOTATION_OUTPUT_SCHEMA",
-    "SHOW_NOTATION_HIGHLIGHT_OUTPUT_SCHEMA",
     "show_notation",
     "show_notation_highlight",
 ]
@@ -116,6 +84,15 @@ def _normalise_svg_text(svg: str) -> str:
     return normalised.replace("<text ", '<text xml:space="preserve" ')
 
 
+def _missing_registration_filename(filename: str | None) -> str | None:
+    """Reuse a missing requested basename when registering an elicited local path."""
+    if filename is None or "/" in filename or "\\" in filename:
+        return None
+    if Path(filename).name != filename or get_mei_filepath(filename).exists():
+        return None
+    return filename
+
+
 async def _resolve_notation_filename(
     filename: str | None,
     ctx: Context | None,
@@ -139,10 +116,16 @@ async def _resolve_notation_filename(
     if filename and filename not in options:
         options = [filename, *options]
 
+    missing_hint = ""
+    if filename:
+        missing_hint = (
+            f" I could not find a registered MEI file, local file, or folder for "
+            f"'{filename}'."
+        )
     prompt = (
-        "Which MEI file would you like to show? "
-        "Choose one of the available files, type another registered filename, "
-        "or type a local path to a .mei file on this computer."
+        "Which MEI file would you like to show?"
+        f"{missing_hint} Choose one of the available files, type another registered "
+        "filename, or type a local path to a .mei file on this computer."
     )
     elicitation = await ctx.elicit(prompt, options or str)
     if isinstance(elicitation, DeclinedElicitation | CancelledElicitation):
@@ -155,9 +138,7 @@ async def _resolve_notation_filename(
     is_path_like = "/" in selected or "\\" in selected or Path(selected).is_absolute()
     path = Path(selected).expanduser()
     if is_path_like and path.exists():
-        registered_filename = (
-            filename if filename and not get_mei_filepath(filename).exists() else None
-        )
+        registered_filename = _missing_registration_filename(filename)
         return register_uploaded_mei_from_path(selected, registered_filename)["filename"]
 
     selected_filepath = get_mei_filepath(selected)
@@ -165,9 +146,7 @@ async def _resolve_notation_filename(
         return selected
 
     if path.exists():
-        registered_filename = (
-            filename if filename and not get_mei_filepath(filename).exists() else None
-        )
+        registered_filename = _missing_registration_filename(filename)
         return register_uploaded_mei_from_path(selected, registered_filename)["filename"]
 
     raise FileNotFoundError(
@@ -196,10 +175,8 @@ async def show_notation(
     Returns:
         ToolResult with SVG notation for the MCP App viewer
     """
-    should_elicit = (
-        page == 1
-        and ctx is not None
-        and (filename is None or not get_mei_filepath(filename).exists())
+    should_elicit = ctx is not None and (
+        filename is None or not get_mei_filepath(filename).exists()
     )
     filename = await _resolve_notation_filename(filename, ctx, should_elicit)
     filepath = get_mei_filepath(filename)
