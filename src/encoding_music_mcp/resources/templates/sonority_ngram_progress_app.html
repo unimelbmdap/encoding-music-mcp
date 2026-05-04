@@ -176,8 +176,13 @@
             return 0.1;
         }
 
-        function yRowStrideForZoom() {
-            return Math.max(1, Math.ceil(5 / zoomScale));
+        function yRowHeightForZoom() {
+            return clamp(4 * zoomScale, 1, 20);
+        }
+
+        function yLabelStrideForZoom(rowCount) {
+            const targetLabelCount = Math.max(1, Math.round(10 * zoomScale));
+            return Math.max(1, Math.ceil(rowCount / targetLabelCount));
         }
 
         function setZoom(nextZoom, anchorProgress = null) {
@@ -187,7 +192,7 @@
             const previousScrollRatio = previousScrollWidth > 0
                 ? chartShellEl.scrollLeft / previousScrollWidth
                 : 0;
-            zoomScale = clamp(nextZoom, 0.65, 10);
+            zoomScale = clamp(nextZoom, 0.2, 10);
             render(currentStructured);
             const nextScrollWidth = Math.max(1, chartShellEl.scrollWidth - chartShellEl.clientWidth);
             if (anchorProgress === null || previousZoom === zoomScale) {
@@ -222,22 +227,22 @@
         function render(structured) {
             currentStructured = structured;
             const { scores, rows, occurrences, n, kind, directed, compound, sort } = structured;
-            const rowHeight = 20;
-            const groupGap = 20;
+            const rowHeight = yRowHeightForZoom();
+            const groupGap = clamp(4 * zoomScale, 4, 20);
             const top = 66;
             const bottom = 58;
             const plotWidth = Math.ceil(720 * zoomScale);
-            const yRowStride = yRowStrideForZoom();
+            const yLabelStride = yLabelStrideForZoom(rows.length);
             const renderRows = [...rows].reverse();
-            const visibleRows = renderRows.filter((_, index) => index % yRowStride === 0);
-            const longestLabel = visibleRows.reduce((max, row) => Math.max(max, row.label.length), 10);
+            const visibleLabelRows = renderRows.filter((_, index) => index % yLabelStride === 0);
+            const longestLabel = visibleLabelRows.reduce((max, row) => Math.max(max, row.label.length), 10);
             const left = 64;
             const labelWidth = Math.min(520, Math.max(130, longestLabel * 6.4 + 12));
             const rightWithLabels = labelWidth + 20;
             const groupStarts = new Map();
             let yCursor = top;
             let previousScore = null;
-            visibleRows.forEach((row) => {
+            renderRows.forEach((row) => {
                 if (previousScore !== null && previousScore !== row.score_index) {
                     yCursor += groupGap;
                 }
@@ -264,7 +269,7 @@
                 `;
             }).join("");
             summaryEl.textContent =
-                `n=${n} | motion kind=${kind} | directed=${directed} | compound=${compound} | sonority sorted=${sort} | ${visibleRows.length} of ${rows.length} displayed pattern${rows.length === 1 ? "" : "s"}.`;
+                `n=${n} | motion kind=${kind} | directed=${directed} | compound=${compound} | sonority sorted=${sort} | ${rows.length} plotted pattern${rows.length === 1 ? "" : "s"} | ${visibleLabelRows.length} labelled.`;
             zoomReadoutEl.textContent = `${Math.round(zoomScale * 100)}%`;
 
             chartEl.setAttribute("viewBox", `0 0 ${width} ${height}`);
@@ -308,29 +313,34 @@
             }
 
             const rowY = new Map();
-            visibleRows.forEach((row, index) => {
+            renderRows.forEach((row, index) => {
+                const showLabel = index % yLabelStride === 0;
                 rowY.set(row.id, row._y);
-                chartEl.appendChild(svgNode("line", {
-                    x1: left,
-                    y1: row._y,
-                    x2: left + plotWidth,
-                    y2: row._y,
-                    stroke: "currentColor",
-                    "stroke-opacity": "0.17",
-                    "stroke-width": "1",
-                }));
-                const label = svgNode("text", {
-                    x: left + plotWidth + 12,
-                    y: row._y + 4,
-                    "text-anchor": "start",
-                    "font-size": "12",
-                    fill: "currentColor",
-                    "fill-opacity": "0.9",
-                });
-                label.textContent = row.label;
-                chartEl.appendChild(label);
+                if (showLabel) {
+                    chartEl.appendChild(svgNode("line", {
+                        x1: left,
+                        y1: row._y,
+                        x2: left + plotWidth,
+                        y2: row._y,
+                        stroke: "currentColor",
+                        "stroke-opacity": "0.17",
+                        "stroke-width": "1",
+                    }));
+                }
+                if (showLabel) {
+                    const label = svgNode("text", {
+                        x: left + plotWidth + 12,
+                        y: row._y + 4,
+                        "text-anchor": "start",
+                        "font-size": "12",
+                        fill: "currentColor",
+                        "fill-opacity": "0.9",
+                    });
+                    label.textContent = row.label;
+                    chartEl.appendChild(label);
+                }
 
-                const next = visibleRows[index + 1];
+                const next = renderRows[index + 1];
                 if (!next || next.score_index !== row.score_index) {
                     chartEl.appendChild(svgNode("line", {
                         x1: left,
@@ -344,7 +354,8 @@
                 }
             });
 
-            const jitterStep = 3.2;
+            const jitterStep = Math.min(2.2, rowHeight * 0.18);
+            const pointRadius = clamp(rowHeight * 0.35, 1.2, 3.2);
             occurrences.forEach((occurrence, index) => {
                 const y = rowY.get(occurrence.row_id);
                 if (y === undefined) return;
@@ -352,7 +363,7 @@
                 const point = svgNode("circle", {
                     cx: x,
                     cy: y + ((index % 3) - 1) * jitterStep,
-                    r: "3.6",
+                    r: pointRadius,
                     fill: occurrence.color,
                     "fill-opacity": "0.9",
                 });

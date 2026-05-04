@@ -13,6 +13,13 @@ For dense scores, the viewer samples y-axis rows at lower zoom levels and adds
 more rows back as the user zooms in. This keeps the plot readable while still
 allowing close inspection of the full pattern set.
 
+The default CRIM corpus helper filters sonorities by beat strength. Some MEI
+files import with valid sonorities but no beat-strength values. In that case,
+when `minimum_beat_strength` is `0.0`, the tool recomputes sonority n-grams
+without beat-strength filtering and returns a warning in the text and structured
+payload. If `minimum_beat_strength` is greater than `0.0`, the tool raises a
+clear error instead of pretending the filter was applied.
+
 In multi-score mode, each score introduces only sonority n-gram patterns that
 have not already appeared in earlier selected scores. This avoids duplicating
 the same y-axis row across later score groups.
@@ -66,6 +73,9 @@ The tool returns a `ToolResult` with:
     "compound": True,
     "sort": False,
     "minimum_beat_strength": 0.0,
+    "beat_strength_filter_applied": True,
+    "beat_strength_fallback_filenames": [],
+    "warnings": [],
     "rows": [
         {
             "id": "Bartok_Mikrokosmos_022.mei::M10_P5_M3_P4",
@@ -119,9 +129,11 @@ The tool returns a `ToolResult` with:
 1. The tool resolves one or more MEI filenames
 2. CRIM Intervals computes corpus-level sonority n-grams with offsets and
    normalized progress values
-3. Each score contributes y-axis rows for newly introduced patterns
-4. Occurrences are linked to those rows and plotted by normalized progress
-5. The viewer samples dense y-axis rows at low zoom and reveals more rows as the
+3. If CRIM returns no beat-strength values for a score, the tool can recompute
+   sonority n-grams without the beat-strength filter and records that fallback
+4. Each score contributes y-axis rows for newly introduced patterns
+5. Occurrences are linked to those rows and plotted by normalized progress
+6. The viewer samples dense y-axis rows at low zoom and reveals more rows as the
    user zooms in
 
 ## Use Cases

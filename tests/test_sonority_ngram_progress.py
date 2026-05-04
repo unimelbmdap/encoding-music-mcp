@@ -80,6 +80,31 @@ def test_plot_sonority_ngram_progress_text_summary():
     assert "Most recurring displayed patterns:" in text
 
 
+def test_plot_sonority_ngram_progress_skips_missing_beat_strength_filter():
+    """Scores with sonorities but no beat strengths should fall back explicitly."""
+    result = plot_sonority_ngram_progress("Bach_BWV_0772.mei", n=4)
+    structured = result.structured_content
+    text = result.content[0].text
+
+    assert len(structured["rows"]) > 0
+    assert len(structured["occurrences"]) > 0
+    assert structured["beat_strength_filter_applied"] is False
+    assert structured["beat_strength_fallback_filenames"] == ["Bach_BWV_0772.mei"]
+    assert "Beat-strength filtering was skipped" in structured["warnings"][0]
+    assert "Warnings:" in text
+    assert "Beat-strength filtering was skipped" in text
+
+
+def test_plot_sonority_ngram_progress_rejects_unavailable_beat_strength_filter():
+    """Explicit beat-strength filtering should fail when CRIM has no values."""
+    with pytest.raises(ValueError, match="Cannot apply minimum_beat_strength"):
+        plot_sonority_ngram_progress(
+            "Bach_BWV_0772.mei",
+            n=4,
+            minimum_beat_strength=0.25,
+        )
+
+
 def test_plot_sonority_ngram_progress_invalid_n():
     """Invalid n-gram lengths should be rejected before analysis."""
     with pytest.raises(ValueError, match="n must be at least 1"):

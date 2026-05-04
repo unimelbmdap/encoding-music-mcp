@@ -463,6 +463,9 @@ user zooms in.
     "scores": list[dict[str, Any]],
     "rows": list[dict[str, Any]],
     "occurrences": list[dict[str, Any]],
+    "beat_strength_filter_applied": bool,
+    "beat_strength_fallback_filenames": list[str],
+    "warnings": list[str],
     "x_min": 0.0,
     "x_max": 1.0,
 }

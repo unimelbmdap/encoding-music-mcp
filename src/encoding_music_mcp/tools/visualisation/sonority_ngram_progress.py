@@ -5,6 +5,7 @@ from __future__ import annotations
 import warnings
 from typing import Any
 
+import pandas as pd
 from crim_intervals.corpus_tools import corpus_sonority_ngrams
 from crim_intervals.main_objs import CorpusBase
 from fastmcp.tools.tool import ToolResult
@@ -43,7 +44,7 @@ def _load_corpus_sonority_ngrams(
     compound: bool,
     sort: bool,
     minimum_beat_strength: float,
-) -> Any:
+) -> dict[str, Any]:
     """Load CRIM's corpus-level sonority n-gram dataframe."""
     filepaths = [get_mei_filepath(filename) for filename in filenames]
     for filename, path in zip(filenames, filepaths, strict=True):
@@ -57,7 +58,7 @@ def _load_corpus_sonority_ngrams(
             message=".*A value is trying to be set on a copy.*",
             category=FutureWarning,
         )
-        return corpus_sonority_ngrams(
+        corpus_ngrams = corpus_sonority_ngrams(
             corpus,
             ngram_length=n,
             metadata_choice=True,
@@ -67,6 +68,113 @@ def _load_corpus_sonority_ngrams(
             sort=sort,
             minimum_beat_strength=minimum_beat_strength,
         )
+    fallback_filenames: list[str] = []
+    warning_messages: list[str] = []
+    fallback_frames: list[Any] = []
+
+    for filename, path in zip(filenames, filepaths, strict=True):
+        metadata = get_mei_metadata(filename)
+        title = metadata.get("title") or filename
+        score_rows = _filter_rows_for_title(corpus_ngrams, title)
+        if not score_rows.empty:
+            continue
+
+        fallback_state = _beat_strength_fallback_state(str(path), compound, sort)
+        if fallback_state != "available":
+            continue
+        if minimum_beat_strength > 0:
+            raise ValueError(
+                "Cannot apply minimum_beat_strength because CRIM returned no "
+                f"beat-strength values for {filename}."
+            )
+
+        fallback_frame = _load_unfiltered_sonority_ngrams_for_score(
+            filename=filename,
+            path=str(path),
+            n=n,
+            compound=compound,
+            sort=sort,
+        )
+        if fallback_frame.empty:
+            continue
+
+        fallback_filenames.append(filename)
+        fallback_frames.append(fallback_frame)
+        warning_messages.append(
+            "Beat-strength filtering was skipped because CRIM returned no "
+            f"beat-strength values for {filename}."
+        )
+
+    if fallback_frames:
+        corpus_ngrams = pd.concat([corpus_ngrams, *fallback_frames], ignore_index=True)
+
+    return {
+        "dataframe": corpus_ngrams,
+        "beat_strength_filter_applied": not fallback_filenames,
+        "beat_strength_fallback_filenames": fallback_filenames,
+        "warnings": warning_messages,
+    }
+
+
+def _filter_rows_for_title(rows: Any, title: str) -> Any:
+    """Return rows matching a score title using exact then contains matching."""
+    if rows.empty or "Title" not in rows:
+        return rows.iloc[0:0]
+    score_rows = rows[rows["Title"].fillna("").astype(str).eq(str(title))]
+    if score_rows.empty:
+        score_rows = rows[
+            rows["Title"].fillna("").astype(str).str.contains(str(title), regex=False)
+        ]
+    return score_rows
+
+
+def _beat_strength_fallback_state(path: str, compound: bool, sort: bool) -> str:
+    """Report whether unfiltered sonority fallback is appropriate for a score."""
+    piece = CorpusBase([path]).scores[0]
+    sonorities = piece.sonorities(compound=compound, sort=sort)
+    sonorities = sonorities[sonorities["Sonority"] != ""]
+    if sonorities.empty:
+        return "no_sonorities"
+
+    beat_strengths = piece.beatStrengths()
+    if beat_strengths.notna().any().any():
+        return "has_beat_strengths"
+    return "available"
+
+
+def _load_unfiltered_sonority_ngrams_for_score(
+    filename: str,
+    path: str,
+    n: int,
+    compound: bool,
+    sort: bool,
+) -> Any:
+    """Recompute sonority n-grams without CRIM's beat-strength filter."""
+    metadata = get_mei_metadata(filename)
+    piece = CorpusBase([path]).scores[0]
+    sonorities = piece.sonorities(compound=compound, sort=sort)
+    sonorities = sonorities[sonorities["Sonority"] != ""]
+    low_line = pd.DataFrame(piece.lowLine())
+    low_melodic = piece.melodic(end=False, df=low_line)
+    combined = pd.merge(sonorities, low_melodic, left_index=True, right_index=True, how="left")
+    combined["Low Line"] = combined["Low Line"].fillna("Held")
+    combined["Low_Sonority"] = combined["Low Line"] + "_" + combined["Sonority"]
+
+    ngrams = piece.ngrams(n=n, df=combined)
+    if ngrams.empty:
+        return pd.DataFrame()
+
+    detailed = piece.detailIndex(ngrams, offset=True, progress=True)
+    detailed = piece.numberParts(detailed)
+    if not detailed.empty:
+        detailed["Low_Sonority"] = detailed["Low_Sonority"].apply(
+            lambda value: "_".join(value) if isinstance(value, tuple) else value
+        )
+    detailed = detailed.reset_index()
+    detailed.insert(0, "Date", metadata.get("date"))
+    detailed.insert(0, "Title", metadata.get("title") or filename)
+    detailed.insert(0, "Composer", metadata.get("composer"))
+    return detailed
 
 
 def _build_score_payload(
@@ -163,13 +271,14 @@ def _build_progress_payload(
         raise ValueError("n must be at least 1")
 
     resolved_filenames = _resolve_filenames(filename, filenames)
-    corpus_ngrams = _load_corpus_sonority_ngrams(
+    sonority_result = _load_corpus_sonority_ngrams(
         filenames=resolved_filenames,
         n=n,
         compound=compound,
         sort=sort,
         minimum_beat_strength=minimum_beat_strength,
     )
+    corpus_ngrams = sonority_result["dataframe"]
     score_payloads = [
         _build_score_payload(
             filename=score_filename,
@@ -248,6 +357,13 @@ def _build_progress_payload(
         "compound": compound,
         "sort": sort,
         "minimum_beat_strength": minimum_beat_strength,
+        "beat_strength_filter_applied": sonority_result[
+            "beat_strength_filter_applied"
+        ],
+        "beat_strength_fallback_filenames": sonority_result[
+            "beat_strength_fallback_filenames"
+        ],
+        "warnings": sonority_result["warnings"],
         "rows": rows,
         "occurrences": occurrences,
         "x_min": 0.0,
@@ -286,6 +402,9 @@ def _build_text_summary(structured: dict[str, Any]) -> str:
         "low-line sonority n-gram begins, measured as progress from the start "
         "to the end of the score."
     )
+    warnings_text = structured.get("warnings") or []
+    if warnings_text:
+        description = "\n".join([description, "Warnings:", *warnings_text])
 
     if not rows or not occurrences:
         return description
