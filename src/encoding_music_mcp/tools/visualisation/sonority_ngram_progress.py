@@ -251,6 +251,75 @@ def _build_progress_payload(
     }
 
 
+def _format_score_name(score: dict[str, Any]) -> str:
+    composer = score.get("composer")
+    title = score.get("title") or score.get("filename")
+    return f"{composer} | {title}" if composer else str(title)
+
+
+def _progress_percent(value: float) -> str:
+    return f"{round(value * 100)}%"
+
+
+def _build_text_summary(structured: dict[str, Any]) -> str:
+    """Build a compact natural-language summary for chat clients."""
+    rows = structured["rows"]
+    occurrences = structured["occurrences"]
+    score_lines = [
+        (
+            f"- {_format_score_name(score)}: {score['pattern_count']} distinct "
+            f"sonority n-gram pattern{'' if score['pattern_count'] == 1 else 's'}"
+        )
+        for score in structured["scores"]
+    ]
+
+    description = (
+        f"Sonority n-gram progress scatter for {structured['score_count']} "
+        f"score{'' if structured['score_count'] == 1 else 's'}.\n"
+        f"The plot contains {len(rows)} displayed pattern"
+        f"{'' if len(rows) == 1 else 's'} and {len(occurrences)} occurrence"
+        f"{'' if len(occurrences) == 1 else 's'}. Each point marks where a "
+        "low-line sonority n-gram begins, measured as progress from the start "
+        "to the end of the score."
+    )
+
+    if not rows or not occurrences:
+        return description
+
+    progress_values = [float(occurrence["progress"]) for occurrence in occurrences]
+    first_progress = min(progress_values)
+    last_progress = max(progress_values)
+
+    pattern_counts = sorted(
+        (
+            (row["count"], row["pattern_string"], float(row["first_progress"]))
+            for row in rows
+        ),
+        key=lambda item: (-item[0], item[2], item[1]),
+    )
+    top_patterns = [
+        (
+            f"- {pattern}: {count} occurrence{'' if count == 1 else 's'}, "
+            f"first appearing around {_progress_percent(first)}"
+        )
+        for count, pattern, first in pattern_counts[:5]
+    ]
+
+    return "\n".join(
+        [
+            description,
+            (
+                f"Occurrences span roughly {_progress_percent(first_progress)} to "
+                f"{_progress_percent(last_progress)} of the score timeline."
+            ),
+            "Scores:",
+            *score_lines,
+            "Most recurring displayed patterns:",
+            *top_patterns,
+        ]
+    )
+
+
 def plot_sonority_ngram_progress(
     filename: str | None = None,
     filenames: list[str] | None = None,
@@ -276,13 +345,7 @@ def plot_sonority_ngram_progress(
         minimum_beat_strength=minimum_beat_strength,
     )
 
-    description = (
-        f"Showing sonority n-gram progress scatter for {structured['score_count']} "
-        f"score{'' if structured['score_count'] == 1 else 's'} with "
-        f"{len(structured['rows'])} displayed pattern"
-        f"{'' if len(structured['rows']) == 1 else 's'}."
-    )
     return ToolResult(
-        content=[TextContent(type="text", text=description)],
+        content=[TextContent(type="text", text=_build_text_summary(structured))],
         structured_content=structured,
     )

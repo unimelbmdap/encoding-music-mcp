@@ -10,25 +10,29 @@
         html, body {
             margin: 0;
             padding: 0;
-            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: #0f1319;
-            color: #f4f7fb;
+            font-family: Georgia, "Times New Roman", serif;
+            background:
+                radial-gradient(circle at top, rgba(227, 196, 125, 0.35), transparent 36%),
+                linear-gradient(180deg, #f6f0e3 0%, #ebe2cd 100%);
+            color: #241d14;
         }
         body { padding: 12px; }
         .panel {
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 8px;
-            background: #121821;
-            padding: 16px;
+            border: 1px solid rgba(103, 78, 45, 0.2);
+            border-radius: 22px;
+            background: rgba(255, 251, 244, 0.88);
+            box-shadow: 0 16px 40px rgba(81, 55, 22, 0.12);
+            padding: 18px;
+            backdrop-filter: blur(6px);
         }
         h1 {
             margin: 0;
-            font-size: 1.2rem;
-            line-height: 1.25;
+            font-size: 1.55rem;
+            line-height: 1.15;
         }
         .meta, .summary, .scores {
-            color: #aeb8c6;
-            font-size: 0.9rem;
+            color: #6a5438;
+            font-size: 0.95rem;
             margin-top: 6px;
         }
         .scores {
@@ -50,7 +54,7 @@
             margin-top: 5px;
         }
         #status {
-            color: #ffb4a8;
+            color: #8b0000;
             font-size: 0.95rem;
         }
         #status.hidden { display: none; }
@@ -63,9 +67,9 @@
         }
         .tool-button {
             appearance: none;
-            border: 1px solid rgba(255, 255, 255, 0.16);
+            border: 1px solid rgba(103, 78, 45, 0.2);
             border-radius: 6px;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.55);
             color: inherit;
             min-width: 34px;
             height: 32px;
@@ -75,18 +79,18 @@
             cursor: pointer;
         }
         .tool-button:hover {
-            background: rgba(255, 255, 255, 0.11);
+            background: rgba(255, 255, 255, 0.8);
         }
         .zoom-readout {
-            color: #aeb8c6;
+            color: #6a5438;
             font-size: 0.86rem;
             min-width: 54px;
         }
         .chart-shell {
             overflow: auto;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            background: #0d1218;
+            border: 1px solid rgba(103, 78, 45, 0.14);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.52);
             margin-top: 14px;
         }
         svg {
@@ -98,26 +102,28 @@
         @media (max-width: 760px) {
             .panel { padding: 12px; }
         }
-        @media (prefers-color-scheme: light) {
+        @media (prefers-color-scheme: dark) {
             html, body {
-                background: #f4f6f8;
-                color: #17202b;
+                background:
+                    radial-gradient(circle at top, rgba(206, 149, 55, 0.22), transparent 34%),
+                    linear-gradient(180deg, #1b1612 0%, #120f0c 100%);
+                color: #f3eadc;
             }
             .panel {
-                background: #ffffff;
-                border-color: rgba(26, 36, 49, 0.12);
+                background: rgba(36, 28, 21, 0.82);
+                border-color: rgba(255, 255, 255, 0.1);
+                box-shadow: none;
             }
             .chart-shell {
-                background: #f9fbfd;
-                border-color: rgba(26, 36, 49, 0.12);
+                background: rgba(255, 255, 255, 0.04);
+                border-color: rgba(255, 255, 255, 0.12);
             }
-            .meta, .summary, .scores { color: #546173; }
+            .meta, .summary, .scores, .zoom-readout { color: #d0bea3; }
             .tool-button {
-                background: #ffffff;
-                border-color: rgba(26, 36, 49, 0.16);
+                background: rgba(255, 255, 255, 0.04);
+                border-color: rgba(255, 255, 255, 0.12);
             }
-            .tool-button:hover { background: #eef3f7; }
-            .zoom-readout { color: #546173; }
+            .tool-button:hover { background: rgba(255, 255, 255, 0.09); }
         }
     </style>
 </head>
@@ -170,6 +176,10 @@
             return 0.1;
         }
 
+        function yRowStrideForZoom() {
+            return Math.max(1, Math.ceil(5 / zoomScale));
+        }
+
         function setZoom(nextZoom, anchorProgress = null) {
             if (!currentStructured) return;
             const previousZoom = zoomScale;
@@ -215,16 +225,19 @@
             const rowHeight = 20;
             const groupGap = 20;
             const top = 66;
-            const right = 92;
             const bottom = 58;
             const plotWidth = Math.ceil(720 * zoomScale);
-            const longestLabel = rows.reduce((max, row) => Math.max(max, row.label.length), 10);
-            const left = Math.min(520, Math.max(130, longestLabel * 6.4 + 12));
+            const yRowStride = yRowStrideForZoom();
             const renderRows = [...rows].reverse();
+            const visibleRows = renderRows.filter((_, index) => index % yRowStride === 0);
+            const longestLabel = visibleRows.reduce((max, row) => Math.max(max, row.label.length), 10);
+            const left = 64;
+            const labelWidth = Math.min(520, Math.max(130, longestLabel * 6.4 + 12));
+            const rightWithLabels = labelWidth + 20;
             const groupStarts = new Map();
             let yCursor = top;
             let previousScore = null;
-            renderRows.forEach((row) => {
+            visibleRows.forEach((row) => {
                 if (previousScore !== null && previousScore !== row.score_index) {
                     yCursor += groupGap;
                 }
@@ -235,7 +248,7 @@
                 yCursor += rowHeight;
                 previousScore = row.score_index;
             });
-            const width = left + plotWidth + right;
+            const width = left + plotWidth + rightWithLabels;
             const height = Math.max(190, yCursor + bottom);
 
             titleEl.textContent = "Scatter Plot of Sonority vs Progress";
@@ -251,7 +264,7 @@
                 `;
             }).join("");
             summaryEl.textContent =
-                `n=${n} | motion kind=${kind} | directed=${directed} | compound=${compound} | sonority sorted=${sort} | ${rows.length} displayed pattern${rows.length === 1 ? "" : "s"}.`;
+                `n=${n} | motion kind=${kind} | directed=${directed} | compound=${compound} | sonority sorted=${sort} | ${visibleRows.length} of ${rows.length} displayed pattern${rows.length === 1 ? "" : "s"}.`;
             zoomReadoutEl.textContent = `${Math.round(zoomScale * 100)}%`;
 
             chartEl.setAttribute("viewBox", `0 0 ${width} ${height}`);
@@ -269,7 +282,7 @@
                     x2: x,
                     y2: height - bottom + 6,
                     stroke: "currentColor",
-                    "stroke-opacity": tick === 0 || tick === 10 ? "0.28" : "0.12",
+                    "stroke-opacity": tick === 0 || tick === tickCount ? "0.28" : "0.12",
                     "stroke-width": "1",
                 }));
                 const label = svgNode("text", {
@@ -295,7 +308,7 @@
             }
 
             const rowY = new Map();
-            renderRows.forEach((row, index) => {
+            visibleRows.forEach((row, index) => {
                 rowY.set(row.id, row._y);
                 chartEl.appendChild(svgNode("line", {
                     x1: left,
@@ -307,9 +320,9 @@
                     "stroke-width": "1",
                 }));
                 const label = svgNode("text", {
-                    x: left - 12,
+                    x: left + plotWidth + 12,
                     y: row._y + 4,
-                    "text-anchor": "end",
+                    "text-anchor": "start",
                     "font-size": "12",
                     fill: "currentColor",
                     "fill-opacity": "0.9",
@@ -317,7 +330,7 @@
                 label.textContent = row.label;
                 chartEl.appendChild(label);
 
-                const next = renderRows[index + 1];
+                const next = visibleRows[index + 1];
                 if (!next || next.score_index !== row.score_index) {
                     chartEl.appendChild(svgNode("line", {
                         x1: left,
@@ -372,10 +385,11 @@
             topAxisTitle.textContent = "Progress through score";
             chartEl.appendChild(topAxisTitle);
 
+            const yTitleX = left - 24;
             const yTitle = svgNode("text", {
-                x: left + plotWidth + 48,
+                x: yTitleX,
                 y: top + Math.max(60, (height - top - bottom) / 2),
-                transform: `rotate(-90 ${left + plotWidth + 48} ${top + Math.max(60, (height - top - bottom) / 2)})`,
+                transform: `rotate(-90 ${yTitleX} ${top + Math.max(60, (height - top - bottom) / 2)})`,
                 "text-anchor": "middle",
                 "font-size": "13",
                 fill: "currentColor",
@@ -434,9 +448,7 @@
             const rect = chartEl.getBoundingClientRect();
             const structured = currentStructured;
             if (!structured) return;
-            const rows = structured.rows || [];
-            const longestLabel = rows.reduce((max, row) => Math.max(max, row.label.length), 10);
-            const left = Math.min(520, Math.max(130, longestLabel * 6.4 + 12));
+            const left = 64;
             const localX = event.clientX - rect.left;
             const anchorProgress = clamp((localX - left) / (720 * zoomScale), 0, 1);
             setZoom(event.deltaY < 0 ? zoomScale * 1.18 : zoomScale / 1.18, anchorProgress);
