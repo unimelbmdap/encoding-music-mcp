@@ -27,6 +27,7 @@ from .uploads import register_mei_file_from_path
 from .visualisation.voice_ranges import plot_voice_ranges
 from .visualisation.weighted_note_distribution import plot_weighted_note_distribution
 from .visualisation.melodic_ngram_heatmap import plot_melodic_ngram_heatmap
+from .visualisation.sonority_ngram_progress import plot_sonority_ngram_progress
 
 # Register all tools here
 # To add a new tool: import it, then add mcp.tool()(your_tool) below
@@ -58,6 +59,9 @@ mcp.tool(
 mcp.tool(
     app=AppConfig(resource_uri="ui://melodic-ngram-heatmap/view.html"),
 )(plot_melodic_ngram_heatmap)
+mcp.tool(
+    app=AppConfig(resource_uri="ui://sonority-ngram-progress/view.html"),
+)(plot_sonority_ngram_progress)
 mcp.tool()(get_first_occur_melodic_ngrams)
 mcp.tool()(load_audio_resource)
 mcp.tool(

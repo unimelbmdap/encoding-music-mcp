@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>Sonority N-gram Progress</title>
+    <style>
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #0f1319;
+            color: #f4f7fb;
+        }
+        body { padding: 12px; }
+        .panel {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            background: #121821;
+            padding: 16px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            line-height: 1.25;
+        }
+        .meta, .summary, .scores {
+            color: #aeb8c6;
+            font-size: 0.9rem;
+            margin-top: 6px;
+        }
+        .scores {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            line-height: 1.35;
+        }
+        .score-line {
+            display: grid;
+            grid-template-columns: 12px minmax(0, 1fr);
+            gap: 7px;
+            align-items: start;
+        }
+        .score-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 999px;
+            margin-top: 5px;
+        }
+        #status {
+            color: #ffb4a8;
+            font-size: 0.95rem;
+        }
+        #status.hidden { display: none; }
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .tool-button {
+            appearance: none;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            color: inherit;
+            min-width: 34px;
+            height: 32px;
+            padding: 0 10px;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .tool-button:hover {
+            background: rgba(255, 255, 255, 0.11);
+        }
+        .zoom-readout {
+            color: #aeb8c6;
+            font-size: 0.86rem;
+            min-width: 54px;
+        }
+        .chart-shell {
+            overflow: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: #0d1218;
+            margin-top: 14px;
+        }
+        svg {
+            display: block;
+            min-width: 820px;
+            width: 100%;
+            height: auto;
+        }
+        @media (max-width: 760px) {
+            .panel { padding: 12px; }
+        }
+        @media (prefers-color-scheme: light) {
+            html, body {
+                background: #f4f6f8;
+                color: #17202b;
+            }
+            .panel {
+                background: #ffffff;
+                border-color: rgba(26, 36, 49, 0.12);
+            }
+            .chart-shell {
+                background: #f9fbfd;
+                border-color: rgba(26, 36, 49, 0.12);
+            }
+            .meta, .summary, .scores { color: #546173; }
+            .tool-button {
+                background: #ffffff;
+                border-color: rgba(26, 36, 49, 0.16);
+            }
+            .tool-button:hover { background: #eef3f7; }
+            .zoom-readout { color: #546173; }
+        }
+    </style>
+</head>
+<body>
+    <main class="panel">
+        <div id="status">Waiting for sonority n-gram progress data...</div>
+        <div id="content" hidden>
+            <h1 id="title"></h1>
+            <div id="meta" class="meta"></div>
+            <div id="scores" class="scores"></div>
+            <div id="summary" class="summary"></div>
+            <div class="toolbar" aria-label="Chart zoom controls">
+                <button id="zoomOut" class="tool-button" type="button" title="Zoom out">-</button>
+                <button id="zoomIn" class="tool-button" type="button" title="Zoom in">+</button>
+                <button id="zoomReset" class="tool-button" type="button" title="Reset zoom">Reset</button>
+                <span id="zoomReadout" class="zoom-readout">100%</span>
+            </div>
+            <section id="chartShell" class="chart-shell">
+                <svg id="chart" role="img" aria-label="Sonority n-gram progress scatter"></svg>
+            </section>
+        </div>
+    </main>
+
+    <script type="module">
+        import { App } from "https://unpkg.com/@modelcontextprotocol/ext-apps@0.4.0/app-with-deps";
+
+        const statusEl = document.getElementById("status");
+        const contentEl = document.getElementById("content");
+        const titleEl = document.getElementById("title");
+        const metaEl = document.getElementById("meta");
+        const scoresEl = document.getElementById("scores");
+        const summaryEl = document.getElementById("summary");
+        const chartEl = document.getElementById("chart");
+        const chartShellEl = document.getElementById("chartShell");
+        const zoomOutEl = document.getElementById("zoomOut");
+        const zoomInEl = document.getElementById("zoomIn");
+        const zoomResetEl = document.getElementById("zoomReset");
+        const zoomReadoutEl = document.getElementById("zoomReadout");
+        let currentStructured = null;
+        let zoomScale = 1;
+
+        function clamp(value, min, max) {
+            return Math.max(min, Math.min(max, value));
+        }
+
+        function tickStepForZoom() {
+            if (zoomScale >= 8) return 0.01;
+            if (zoomScale >= 4) return 0.02;
+            if (zoomScale >= 2) return 0.05;
+            return 0.1;
+        }
+
+        function setZoom(nextZoom, anchorProgress = null) {
+            if (!currentStructured) return;
+            const previousZoom = zoomScale;
+            const previousScrollWidth = Math.max(1, chartShellEl.scrollWidth - chartShellEl.clientWidth);
+            const previousScrollRatio = previousScrollWidth > 0
+                ? chartShellEl.scrollLeft / previousScrollWidth
+                : 0;
+            zoomScale = clamp(nextZoom, 0.65, 10);
+            render(currentStructured);
+            const nextScrollWidth = Math.max(1, chartShellEl.scrollWidth - chartShellEl.clientWidth);
+            if (anchorProgress === null || previousZoom === zoomScale) {
+                chartShellEl.scrollLeft = previousScrollRatio * nextScrollWidth;
+                return;
+            }
+            const targetX = anchorProgress * (720 * zoomScale);
+            chartShellEl.scrollLeft = clamp(
+                targetX - chartShellEl.clientWidth / 2,
+                0,
+                nextScrollWidth,
+            );
+        }
+
+        function setStatus(text, isError = false) {
+            statusEl.textContent = text;
+            statusEl.style.color = isError ? "#ff8a7a" : "";
+            statusEl.classList.remove("hidden");
+            contentEl.hidden = true;
+        }
+
+        function svgNode(tag, attrs = {}) {
+            const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
+            Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+            return node;
+        }
+
+        function pct(value) {
+            return `${Math.round(Number(value) * 100)}%`;
+        }
+
+        function render(structured) {
+            currentStructured = structured;
+            const { scores, rows, occurrences, n, kind, directed, compound, sort } = structured;
+            const rowHeight = 20;
+            const groupGap = 20;
+            const top = 66;
+            const right = 92;
+            const bottom = 58;
+            const plotWidth = Math.ceil(720 * zoomScale);
+            const longestLabel = rows.reduce((max, row) => Math.max(max, row.label.length), 10);
+            const left = Math.min(520, Math.max(130, longestLabel * 6.4 + 12));
+            const renderRows = [...rows].reverse();
+            const groupStarts = new Map();
+            let yCursor = top;
+            let previousScore = null;
+            renderRows.forEach((row) => {
+                if (previousScore !== null && previousScore !== row.score_index) {
+                    yCursor += groupGap;
+                }
+                if (!groupStarts.has(row.score_index)) {
+                    groupStarts.set(row.score_index, yCursor);
+                }
+                row._y = yCursor;
+                yCursor += rowHeight;
+                previousScore = row.score_index;
+            });
+            const width = left + plotWidth + right;
+            const height = Math.max(190, yCursor + bottom);
+
+            titleEl.textContent = "Scatter Plot of Sonority vs Progress";
+            metaEl.textContent = `${scores.length} score${scores.length === 1 ? "" : "s"}`;
+            scoresEl.innerHTML = scores.map((score) => {
+                const title = score.title || score.filename;
+                const composer = score.composer ? `${score.composer} | ` : "";
+                return `
+                    <div class="score-line">
+                        <span class="score-dot" style="background:${score.color}"></span>
+                        <span>${composer}${title}</span>
+                    </div>
+                `;
+            }).join("");
+            summaryEl.textContent =
+                `n=${n} | motion kind=${kind} | directed=${directed} | compound=${compound} | sonority sorted=${sort} | ${rows.length} displayed pattern${rows.length === 1 ? "" : "s"}.`;
+            zoomReadoutEl.textContent = `${Math.round(zoomScale * 100)}%`;
+
+            chartEl.setAttribute("viewBox", `0 0 ${width} ${height}`);
+            chartEl.style.minWidth = `${width}px`;
+            chartEl.innerHTML = "";
+
+            const tickStep = tickStepForZoom();
+            const tickCount = Math.round(1 / tickStep);
+            for (let tick = 0; tick <= tickCount; tick += 1) {
+                const progress = Math.min(1, tick * tickStep);
+                const x = left + progress * plotWidth;
+                chartEl.appendChild(svgNode("line", {
+                    x1: x,
+                    y1: top - 10,
+                    x2: x,
+                    y2: height - bottom + 6,
+                    stroke: "currentColor",
+                    "stroke-opacity": tick === 0 || tick === 10 ? "0.28" : "0.12",
+                    "stroke-width": "1",
+                }));
+                const label = svgNode("text", {
+                    x,
+                    y: height - 10,
+                    "text-anchor": "middle",
+                    "font-size": "12",
+                    fill: "currentColor",
+                    "fill-opacity": "0.78",
+                });
+                label.textContent = pct(progress);
+                chartEl.appendChild(label);
+                const topLabel = svgNode("text", {
+                    x,
+                    y: 24,
+                    "text-anchor": "middle",
+                    "font-size": "12",
+                    fill: "currentColor",
+                    "fill-opacity": "0.78",
+                });
+                topLabel.textContent = pct(progress);
+                chartEl.appendChild(topLabel);
+            }
+
+            const rowY = new Map();
+            renderRows.forEach((row, index) => {
+                rowY.set(row.id, row._y);
+                chartEl.appendChild(svgNode("line", {
+                    x1: left,
+                    y1: row._y,
+                    x2: left + plotWidth,
+                    y2: row._y,
+                    stroke: "currentColor",
+                    "stroke-opacity": "0.17",
+                    "stroke-width": "1",
+                }));
+                const label = svgNode("text", {
+                    x: left - 12,
+                    y: row._y + 4,
+                    "text-anchor": "end",
+                    "font-size": "12",
+                    fill: "currentColor",
+                    "fill-opacity": "0.9",
+                });
+                label.textContent = row.label;
+                chartEl.appendChild(label);
+
+                const next = renderRows[index + 1];
+                if (!next || next.score_index !== row.score_index) {
+                    chartEl.appendChild(svgNode("line", {
+                        x1: left,
+                        y1: row._y + rowHeight / 2,
+                        x2: left + plotWidth,
+                        y2: row._y + rowHeight / 2,
+                        stroke: "currentColor",
+                        "stroke-opacity": "0.34",
+                        "stroke-width": "1",
+                    }));
+                }
+            });
+
+            const jitterStep = 3.2;
+            occurrences.forEach((occurrence, index) => {
+                const y = rowY.get(occurrence.row_id);
+                if (y === undefined) return;
+                const x = left + Number(occurrence.progress) * plotWidth;
+                const point = svgNode("circle", {
+                    cx: x,
+                    cy: y + ((index % 3) - 1) * jitterStep,
+                    r: "3.6",
+                    fill: occurrence.color,
+                    "fill-opacity": "0.9",
+                });
+                const title = svgNode("title");
+                title.textContent =
+                    `${occurrence.pattern_string} | ${pct(occurrence.progress)} | offset ${Number(occurrence.start_q).toFixed(2)}`;
+                point.appendChild(title);
+                chartEl.appendChild(point);
+            });
+
+            const axisTitle = svgNode("text", {
+                x: left + plotWidth / 2,
+                y: height - 28,
+                "text-anchor": "middle",
+                "font-size": "13",
+                fill: "currentColor",
+                "fill-opacity": "0.82",
+            });
+            axisTitle.textContent = "Progress through score";
+            chartEl.appendChild(axisTitle);
+
+            const topAxisTitle = svgNode("text", {
+                x: left + plotWidth / 2,
+                y: 44,
+                "text-anchor": "middle",
+                "font-size": "13",
+                fill: "currentColor",
+                "fill-opacity": "0.82",
+            });
+            topAxisTitle.textContent = "Progress through score";
+            chartEl.appendChild(topAxisTitle);
+
+            const yTitle = svgNode("text", {
+                x: left + plotWidth + 48,
+                y: top + Math.max(60, (height - top - bottom) / 2),
+                transform: `rotate(-90 ${left + plotWidth + 48} ${top + Math.max(60, (height - top - bottom) / 2)})`,
+                "text-anchor": "middle",
+                "font-size": "13",
+                fill: "currentColor",
+                "fill-opacity": "0.82",
+            });
+            yTitle.textContent = "Sonority n-gram";
+            chartEl.appendChild(yTitle);
+
+            if (rows.length === 0) {
+                const empty = svgNode("text", {
+                    x: width / 2,
+                    y: 96,
+                    "text-anchor": "middle",
+                    "font-size": "14",
+                    fill: "currentColor",
+                    "fill-opacity": "0.8",
+                });
+                empty.textContent = "No sonority n-grams found for the selected score set.";
+                chartEl.appendChild(empty);
+            }
+
+            statusEl.classList.add("hidden");
+            contentEl.hidden = false;
+        }
+
+        const app = new App({ name: "Sonority N-gram Progress", version: "1.0.0" });
+
+        app.ontoolinput = () => {
+            setStatus("Rendering sonority n-gram progress...");
+        };
+
+        app.ontoolresult = (result) => {
+            const structured = result.structuredContent;
+            if (structured && structured.rows && structured.occurrences && structured.scores) {
+                zoomScale = 1;
+                render(structured);
+                return;
+            }
+            setStatus("No sonority n-gram progress data in result.", true);
+        };
+
+        app.onerror = (err) => {
+            console.error("App error:", err);
+            setStatus("Error: " + (err.message || err), true);
+        };
+
+        await app.connect();
+        setStatus("Connected, waiting for sonority n-gram progress data...");
+
+        zoomOutEl.addEventListener("click", () => setZoom(zoomScale / 1.35));
+        zoomInEl.addEventListener("click", () => setZoom(zoomScale * 1.35));
+        zoomResetEl.addEventListener("click", () => setZoom(1));
+        chartShellEl.addEventListener("wheel", (event) => {
+            if (!event.ctrlKey && !event.metaKey) return;
+            event.preventDefault();
+            const rect = chartEl.getBoundingClientRect();
+            const structured = currentStructured;
+            if (!structured) return;
+            const rows = structured.rows || [];
+            const longestLabel = rows.reduce((max, row) => Math.max(max, row.label.length), 10);
+            const left = Math.min(520, Math.max(130, longestLabel * 6.4 + 12));
+            const localX = event.clientX - rect.left;
+            const anchorProgress = clamp((localX - left) / (720 * zoomScale), 0, 1);
+            setZoom(event.deltaY < 0 ? zoomScale * 1.18 : zoomScale / 1.18, anchorProgress);
+        }, { passive: false });
+    </script>
+</body>
+</html>

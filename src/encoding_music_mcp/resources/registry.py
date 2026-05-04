@@ -22,6 +22,9 @@ _weighted_note_distribution_html_path = (
     _templates_dir / "weighted_note_distribution_app.html"
 )
 _melodic_ngram_heatmap_html_path = _templates_dir / "melodic_ngram_heatmap_app.html"
+_sonority_ngram_progress_html_path = (
+    _templates_dir / "sonority_ngram_progress_app.html"
+)
 _play_excerpt_html_path = _templates_dir / "play_excerpt_app.html"
 
 
@@ -103,6 +106,22 @@ def weighted_note_distribution_viewer() -> str:
 )
 def melodic_ngram_heatmap_viewer() -> str:
     return _melodic_ngram_heatmap_html_path.read_text(encoding="utf-8")
+
+
+@mcp.resource(
+    "ui://sonority-ngram-progress/view.html",
+    name="Sonority N-gram Progress",
+    description="Scatter plot of sonority n-grams by normalized score progress",
+    app=AppConfig(
+        csp=ResourceCSP(
+            resource_domains=[
+                "https://unpkg.com",
+            ],
+        ),
+    ),
+)
+def sonority_ngram_progress_viewer() -> str:
+    return _sonority_ngram_progress_html_path.read_text(encoding="utf-8")
 
 
 @mcp.resource(
