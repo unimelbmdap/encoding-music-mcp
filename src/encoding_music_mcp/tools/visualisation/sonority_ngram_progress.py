@@ -45,7 +45,11 @@ def _load_corpus_sonority_ngrams(
     minimum_beat_strength: float,
 ) -> Any:
     """Load CRIM's corpus-level sonority n-gram dataframe."""
-    paths = [str(get_mei_filepath(filename)) for filename in filenames]
+    filepaths = [get_mei_filepath(filename) for filename in filenames]
+    for filename, path in zip(filenames, filepaths, strict=True):
+        if not path.exists():
+            raise FileNotFoundError(f"MEI file not found: {filename}")
+    paths = [str(path) for path in filepaths]
     corpus = CorpusBase(paths)
     with warnings.catch_warnings():
         warnings.filterwarnings(

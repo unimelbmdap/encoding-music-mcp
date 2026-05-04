@@ -63,6 +63,7 @@ nav:
           - Voice Ranges: tools/visualisation/voice-ranges.md
           - Weighted Note Distribution: tools/visualisation/weighted-note-distribution.md
           - Melodic N-gram Heatmap: tools/visualisation/melodic-ngram-heatmap.md
+          - Sonority N-gram Progress: tools/visualisation/sonority-ngram-progress.md
       - Play Excerpt: tools/play-excerpt.md
       - Intervals:
           - Overview: tools/intervals/index.md

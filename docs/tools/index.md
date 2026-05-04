@@ -48,6 +48,7 @@ encoding-music-mcp provides a suite of tools for analyzing MEI files. Tools work
 | [`plot_voice_ranges`](visualisation/voice-ranges.md) | Display compact per-staff pitch ranges for a single score | [Documentation](visualisation/voice-ranges.md) |
 | [`plot_weighted_note_distribution`](visualisation/weighted-note-distribution.md) | Display a duration-weighted pitch-class radar chart for a single score | [Documentation](visualisation/weighted-note-distribution.md) |
 | [`plot_melodic_ngram_heatmap`](visualisation/melodic-ngram-heatmap.md) | Display top melodic n-gram spans across scores and staves | [Documentation](visualisation/melodic-ngram-heatmap.md) |
+| [`plot_sonority_ngram_progress`](visualisation/sonority-ngram-progress.md) | Display low-line sonority n-grams by normalized score progress | [Documentation](visualisation/sonority-ngram-progress.md) |
 
 ### Playback Tools
 
@@ -94,6 +95,7 @@ Tools for viewing derived visual summaries:
 - **[plot_voice_ranges](visualisation/voice-ranges.md)**: Plot the lowest and highest pitch reached by each staff in one score
 - **[plot_weighted_note_distribution](visualisation/weighted-note-distribution.md)**: Plot duration-weighted pitch classes as a radar chart
 - **[plot_melodic_ngram_heatmap](visualisation/melodic-ngram-heatmap.md)**: Plot top melodic n-gram spans as coloured rectangles across scores and staves
+- **[plot_sonority_ngram_progress](visualisation/sonority-ngram-progress.md)**: Plot low-line sonority n-grams by normalized score progress
 
 ### Playback
 

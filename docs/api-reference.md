@@ -22,6 +22,7 @@ Complete reference for all encoding-music-mcp tools.
 | `show_notation` | `filename: str \| None = None, start_measure: int = None, end_measure: int = None, page: int = 1` | SVG notation | [Docs](tools/notation.md) |
 | `plot_weighted_note_distribution` | `filename: str | None = None, filenames: list[str] | None = None, pitch_class_order: str = "fifths", group_by_staff: bool = False, limit_to_active: bool = True` | Radar plot payload | [Docs](tools/visualisation/weighted-note-distribution.md) |
 | `plot_melodic_ngram_heatmap` | `filename: str | None = None, filenames: list[str] | None = None, n: int = 4, kind: str = "d", entries: bool = False, top_n: int = 2, combine_unisons: bool \| None = None, compound: bool = False` | Melodic n-gram heatmap payload | [Docs](tools/visualisation/melodic-ngram-heatmap.md) |
+| `plot_sonority_ngram_progress` | `filename: str | None = None, filenames: list[str] | None = None, n: int = 4, compound: bool = True, sort: bool = False, minimum_beat_strength: float = 0.0` | Sonority n-gram progress payload | [Docs](tools/visualisation/sonority-ngram-progress.md) |
 | `play_excerpt` | `filename: str | None = None, start_q: float = 0.0, end_q: float = None, bpm: int = 60` | Audio player payload | [Docs](tools/play-excerpt.md) |
 
 ## Discovery Tools
@@ -439,6 +440,38 @@ offset to end offset.
     Requires the [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps) for inline display.
 
 [Full Documentation →](tools/visualisation/melodic-ngram-heatmap.md)
+
+### plot_sonority_ngram_progress(filename=None, filenames=None, n=4, compound=True, sort=False, minimum_beat_strength=0.0)
+
+Plot low-line sonority n-gram occurrences by normalized score progress. The
+viewer samples dense y-axis rows at low zoom levels and reveals more rows as the
+user zooms in.
+
+**Parameters**:
+- `filename` (str | None): One MEI filename
+- `filenames` (list[str] | None): Multiple MEI filenames
+- `n` (int, optional): Sonority n-gram length (default: `4`)
+- `compound` (bool, optional): Use compound interval classes (default: `True`)
+- `sort` (bool, optional): Sort sonority contents in CRIM analysis (default: `False`)
+- `minimum_beat_strength` (float, optional): Minimum CRIM beat strength filter (default: `0.0`)
+
+**Returns**:
+```python
+{
+    "filenames": list[str],
+    "score_count": int,
+    "scores": list[dict[str, Any]],
+    "rows": list[dict[str, Any]],
+    "occurrences": list[dict[str, Any]],
+    "x_min": 0.0,
+    "x_max": 1.0,
+}
+```
+
+!!! note
+    Requires the [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps) for inline display.
+
+[Full Documentation →](tools/visualisation/sonority-ngram-progress.md)
 
 ### play_excerpt(filename=None, start_q=0.0, end_q=None, bpm=60)
 
