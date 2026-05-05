@@ -66,9 +66,9 @@ uv sync
 
 ### With Claude Desktop
 
-1. **Find your Claude Desktop configuration file:**
-   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - **Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
+1. **Open your Claude Desktop configuration file:**
+   - In Claude Desktop, open **Settings > Developer**
+   - Under **Local MCP servers**, click **Edit Config**
 
 2. **Add configuration (choose one method):**
 
