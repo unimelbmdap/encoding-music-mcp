@@ -8,6 +8,7 @@ from src.encoding_music_mcp.tools.intervals import (
     get_harmonic_intervals,
     get_melodic_ngrams,
     count_melodic_ngrams,
+    resolve_note_ids_for_highlight,
     get_melodic_ngram_matches,
     get_first_occur_melodic_ngrams,
     get_cadences,
@@ -253,6 +254,72 @@ def test_get_melodic_ngram_matches_groups_occurrences_by_pattern():
     assert "note_ids" in match
     assert match["pattern"] == ["2", "2", "2", "-3"]
     assert isinstance(match["note_ids"], list)
+
+
+def test_resolve_note_ids_for_highlight_supports_melodic_ngram_span():
+    """Test generic note-ID resolution for a melodic n-gram style span."""
+    matches = get_melodic_ngram_matches(
+        "Bach_BWV_0772.mei",
+        n=4,
+        patterns=["2_2_2_-3"],
+    )["matches_by_pattern"]["2_2_2_-3"]
+    match = matches[0]
+
+    result = resolve_note_ids_for_highlight(
+        "Bach_BWV_0772.mei",
+        [
+            {
+                "column": match["column"],
+                "start_measure": match["start_measure"],
+                "start_beat": match["start_beat"],
+                "start_offset": match["start_offset"],
+                "note_count": 5,
+            }
+        ],
+    )
+
+    resolved = result["spans"][0]
+    assert resolved["note_ids"] == match["note_ids"]
+    assert resolved["matched_parts"] == [match["column"]]
+
+
+def test_resolve_note_ids_for_highlight_supports_harmonic_location():
+    """Test generic note-ID resolution for a harmonic/cadence style location."""
+    result = resolve_note_ids_for_highlight(
+        "Bach_BWV_0772.mei",
+        [{"start_measure": 1.0, "start_beat": 3.5, "voice_pair": "1,2"}],
+    )
+
+    resolved = result["spans"][0]
+    assert resolved["matched_parts"] == ["1", "2"]
+    assert len(resolved["note_ids"]) == 2
+    assert all(isinstance(note_id, str) for note_id in resolved["note_ids"])
+
+
+def test_resolve_note_ids_for_highlight_inherits_score_ppq():
+    """Test score-level ppq inheritance for cadence beat resolution."""
+    result = resolve_note_ids_for_highlight(
+        "Morley_1595_01_Go_ye_my_canzonettes.mei",
+        [{"start_measure": 13.0, "start_beat": 3.0}],
+    )
+
+    resolved = result["spans"][0]
+    assert resolved["matched_parts"] == ["1", "2"]
+    assert len(resolved["note_ids"]) == 2
+    assert all(isinstance(note_id, str) for note_id in resolved["note_ids"])
+
+
+def test_resolve_note_ids_for_highlight_supports_offset_span():
+    """Test generic note-ID resolution for visualisation payload offset spans."""
+    result = resolve_note_ids_for_highlight(
+        "Bach_BWV_0772.mei",
+        [{"staff": "1", "start_q": 0.0, "end_q": 1.0}],
+    )
+
+    resolved = result["spans"][0]
+    assert resolved["matched_parts"] == ["1"]
+    assert len(resolved["note_ids"]) > 0
+    assert all(isinstance(note_id, str) for note_id in resolved["note_ids"])
 
 
 def test_get_first_occur_melodic_ngrams_bach():

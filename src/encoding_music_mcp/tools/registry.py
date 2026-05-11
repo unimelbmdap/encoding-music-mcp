@@ -13,6 +13,7 @@ from .intervals import (
     get_harmonic_intervals,
     get_melodic_ngrams,
     count_melodic_ngrams,
+    resolve_note_ids_for_highlight,
     get_melodic_ngram_matches,
     get_first_occur_melodic_ngrams,
     get_cadences,
@@ -42,6 +43,7 @@ mcp.tool()(get_melodic_intervals)
 mcp.tool()(get_harmonic_intervals)
 mcp.tool()(get_melodic_ngrams)
 mcp.tool()(count_melodic_ngrams)
+mcp.tool()(resolve_note_ids_for_highlight)
 mcp.tool()(get_melodic_ngram_matches)
 mcp.tool()(get_cadences)
 mcp.tool(

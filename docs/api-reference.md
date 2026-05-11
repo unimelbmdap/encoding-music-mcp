@@ -17,6 +17,7 @@ Complete reference for all encoding-music-mcp tools.
 | `get_harmonic_intervals` | `filename: str` | `dict` with intervals | [Docs](tools/intervals/harmonic.md) |
 | `get_melodic_ngrams` | `filename: str, n: int = 4, kind: str = "d", entries: bool = False, include_note_ids: bool = False` | `dict` with n-grams | [Docs](tools/intervals/ngrams.md) |
 | `count_melodic_ngrams` | `filename: str, n: int = 4, kind: str = "d", entries: bool = False, combine_unisons: bool \| None = None, compound: bool = False` | `dict` with ranked n-gram counts | [Docs](tools/intervals/ngram-counts.md) |
+| `resolve_note_ids_for_highlight` | `filename: str, spans: list[dict[str, Any]]` | `dict` with resolved note-ID spans | [Docs](tools/intervals/note-id-resolution.md) |
 | `get_melodic_ngram_matches` | `filename: str, n: int = 4, kind: str = "d", entries: bool = False, patterns: list[str] \| None = None, combine_unisons: bool \| None = None, compound: bool = False` | `dict` with pattern-keyed note-id matches | [Docs](tools/intervals/ngram-matches.md) |
 | `get_first_occur_melodic_ngrams` | `filename: str, n: int = 4, kind: str = "d", combine_unisons: bool = True, compound: bool = False` | `dict` with first-occurrence patterns | [Docs](tools/intervals/first-occur.md) |
 | `show_notation` | `filename: str \| None = None, start_measure: int = None, end_measure: int = None, page: int = 1` | SVG notation | [Docs](tools/notation.md) |
@@ -255,6 +256,34 @@ Count how many times each melodic n-gram occurs.
 ```
 
 [Full Documentation →](tools/intervals/ngram-counts.md)
+
+### resolve_note_ids_for_highlight(filename, spans)
+
+Resolve analysis locations or spans to MEI note IDs for notation highlighting.
+
+**Parameters**:
+- `filename` (str): MEI filename
+- `spans` (list[dict]): Locations from analysis output. Each span may provide
+  `start_measure`/`start_beat`, `start_q`, or `start_offset`; optional
+  `staff`, `part`, `column`, or `voice_pair`; optional `duration`, `end_q`,
+  `end_offset`, or `note_count`.
+
+**Returns**:
+```python
+{
+    "filename": str,
+    "spans": [
+        {
+            "index": int,
+            "matched_parts": list[str],
+            "note_ids": list[str],
+            # original span fields are preserved
+        }
+    ]
+}
+```
+
+[Full Documentation →](tools/intervals/note-id-resolution.md)
 
 ### get_melodic_ngram_matches(filename, n=4, kind="d", entries=False, patterns=None, combine_unisons=None, compound=False)
 
@@ -591,6 +620,10 @@ def count_melodic_ngrams(
     entries: bool = False,
     combine_unisons: bool | None = None,
     compound: bool = False,
+) -> dict[str, Any]: ...
+def resolve_note_ids_for_highlight(
+    filename: str,
+    spans: list[dict[str, Any]],
 ) -> dict[str, Any]: ...
 def get_melodic_ngram_matches(
     filename: str,

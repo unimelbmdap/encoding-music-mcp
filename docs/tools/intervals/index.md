@@ -15,6 +15,7 @@ The interval analysis tools provide detailed melodic and harmonic analysis of ME
 | [`get_harmonic_intervals`](harmonic.md) | Calculate harmonic intervals between voices | [Documentation](harmonic.md) |
 | [`get_melodic_ngrams`](ngrams.md) | Find recurring melodic patterns (n-grams) | [Documentation](ngrams.md) |
 | [`count_melodic_ngrams`](ngram-counts.md) | Count and rank melodic n-gram patterns | [Documentation](ngram-counts.md) |
+| [`resolve_note_ids_for_highlight`](note-id-resolution.md) | Resolve analysis locations to MEI note IDs for highlighting | [Documentation](note-id-resolution.md) |
 | [`get_melodic_ngram_matches`](ngram-matches.md) | Group note-ID spans by melodic n-gram pattern | [Documentation](ngram-matches.md) |
 | [`get_first_occur_melodic_ngrams`](first-occur.md) | Find the first occurrence of each unique melodic n-gram | [Documentation](first-occur.md) |
 | [`get_cadences`](cadences.md) | Detect and classify cadences in Renaissance counterpoint | [Documentation](cadences.md) |
@@ -99,9 +100,10 @@ A typical analysis workflow might be:
 3. **Analyze Harmony** with [`get_harmonic_intervals`](harmonic.md)
 4. **Find Patterns** with [`get_melodic_ngrams`](ngrams.md)
 5. **Count and Rank Patterns** with [`count_melodic_ngrams`](ngram-counts.md)
-6. **Collect Highlightable Matches** with [`get_melodic_ngram_matches`](ngram-matches.md)
-7. **Find First Occurrences** with [`get_first_occur_melodic_ngrams`](first-occur.md)
-8. **Detect Cadences** with [`get_cadences`](cadences.md) (for Renaissance music)
+6. **Resolve Highlight IDs** with [`resolve_note_ids_for_highlight`](note-id-resolution.md)
+7. **Collect Pattern Matches** with [`get_melodic_ngram_matches`](ngram-matches.md)
+8. **Find First Occurrences** with [`get_first_occur_melodic_ngrams`](first-occur.md)
+9. **Detect Cadences** with [`get_cadences`](cadences.md) (for Renaissance music)
 
 ## Use Cases
 
@@ -143,6 +145,7 @@ Explore the individual tool documentation:
 - [Harmonic Intervals](harmonic.md)
 - [Melodic N-grams](ngrams.md)
 - [N-gram Counts](ngram-counts.md)
+- [Note-ID Resolution](note-id-resolution.md)
 - [N-gram Matches](ngram-matches.md)
 - [First-Occurrence N-grams](first-occur.md)
 - [Cadence Detection](cadences.md)

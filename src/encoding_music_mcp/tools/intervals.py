@@ -14,6 +14,7 @@ __all__ = [
     "get_harmonic_intervals",
     "get_melodic_ngrams",
     "count_melodic_ngrams",
+    "resolve_note_ids_for_highlight",
     "get_melodic_ngram_matches",
     "get_first_occur_melodic_ngrams",
     "get_cadences",
@@ -24,13 +25,14 @@ _XML_ID = "{http://www.w3.org/XML/1998/namespace}id"
 
 
 def _get_staff_ppq(root: ET.Element) -> dict[str, int]:
-    """Return ppq values for each staff number, defaulting to 480."""
+    """Return ppq values for each staff number, inheriting score-level ppq."""
+    score_def = root.find(".//mei:scoreDef", _MEI_NS)
+    default_ppq = int(score_def.get("ppq", "480")) if score_def is not None else 480
     staff_ppq: dict[str, int] = {}
     for staff_def in root.findall(".//mei:staffDef", _MEI_NS):
         staff_n = staff_def.get("n")
-        ppq = staff_def.get("ppq")
-        if staff_n and ppq:
-            staff_ppq[staff_n] = int(ppq)
+        if staff_n:
+            staff_ppq[staff_n] = int(staff_def.get("ppq", default_ppq))
     return staff_ppq
 
 
@@ -149,12 +151,10 @@ def _build_part_note_events(filepath: Path) -> dict[str, list[dict[str, Any]]]:
     return part_events
 
 
-def _build_note_id_matches(
-    filepath: Path, mel_ngrams: Any, n: int
-) -> list[dict[str, Any]]:
-    """Build structured note-id spans for each melodic n-gram match."""
-    part_events = _build_part_note_events(filepath)
-
+def _build_note_event_lookup(
+    part_events: dict[str, list[dict[str, Any]]],
+) -> dict[str, dict[tuple[float, float, float], int]]:
+    """Index note events by measure, beat, and offset for each part."""
     note_lookup: dict[str, dict[tuple[float, float, float], int]] = {}
     for part_label, events in part_events.items():
         part_lookup: dict[tuple[float, float, float], int] = {}
@@ -166,12 +166,163 @@ def _build_note_id_matches(
             )
             part_lookup[key] = idx
         note_lookup[part_label] = part_lookup
+    return note_lookup
 
+
+def _normalise_part_labels(value: Any) -> list[str]:
+    """Convert a staff/part/voice-pair field into CRIM part labels."""
+    if value is None:
+        return []
+    if isinstance(value, (list, tuple, set)):
+        labels: list[str] = []
+        for item in value:
+            labels.extend(_normalise_part_labels(item))
+        return labels
+
+    text = str(value).strip()
+    if not text:
+        return []
+    for separator in ("::", "-", ",", "/"):
+        if separator in text:
+            return [
+                label
+                for chunk in text.split(separator)
+                for label in _normalise_part_labels(chunk)
+            ]
+    return [text]
+
+
+def _span_location_key(span: dict[str, Any]) -> tuple[float, float, float] | None:
+    """Return a rounded MEI/CRIM location key from a requested span."""
+    if "start_measure" in span and "start_beat" in span:
+        offset = span.get("start_offset", span.get("start_q"))
+        if offset is None:
+            return None
+        return (
+            round(float(span["start_measure"]), 5),
+            round(float(span["start_beat"]), 5),
+            round(float(offset), 5),
+        )
+    return None
+
+
+def _event_starts_in_span(
+    event: dict[str, Any],
+    span: dict[str, Any],
+    start_q: float | None,
+) -> bool:
+    """Return True when an event onset belongs to a requested highlight span."""
+    event_offset = float(event["offset"])
+    if start_q is not None:
+        if round(event_offset, 5) < round(start_q, 5):
+            return False
+        end_q = span.get("end_q", span.get("end_offset"))
+        if end_q is None and "duration" in span:
+            end_q = start_q + float(span["duration"])
+        if end_q is None:
+            return round(event_offset, 5) == round(start_q, 5)
+        return round(event_offset, 5) < round(float(end_q), 5)
+
+    if "start_measure" in span and "start_beat" in span:
+        return (
+            round(float(event["measure"]), 5) == round(float(span["start_measure"]), 5)
+            and round(float(event["beat"]), 5) == round(float(span["start_beat"]), 5)
+        )
+
+    return False
+
+
+def _resolve_note_id_spans(
+    filepath: Path,
+    spans: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Resolve generic measure/beat/offset spans to MEI note IDs."""
+    part_events = _build_part_note_events(filepath)
+    note_lookup = _build_note_event_lookup(part_events)
+
+    resolved_spans: list[dict[str, Any]] = []
+    for index, span in enumerate(spans):
+        requested_parts = _normalise_part_labels(
+            span.get("column", span.get("staff", span.get("part", span.get("voice_pair"))))
+        )
+        part_labels = requested_parts or list(part_events.keys())
+        note_count = span.get("note_count")
+        location_key = _span_location_key(span)
+        start_q = span.get("start_q", span.get("start_offset"))
+        start_q_float = float(start_q) if start_q is not None else None
+
+        note_ids: list[str] = []
+        matched_parts: list[str] = []
+        for part_label in part_labels:
+            events = part_events.get(str(part_label), [])
+            if not events:
+                continue
+
+            part_note_ids: list[str] = []
+            if note_count is not None:
+                start_idx = (
+                    note_lookup.get(str(part_label), {}).get(location_key)
+                    if location_key is not None
+                    else None
+                )
+                if start_idx is None and start_q_float is not None:
+                    start_idx = next(
+                        (
+                            event_index
+                            for event_index, event in enumerate(events)
+                            if round(float(event["offset"]), 5)
+                            == round(start_q_float, 5)
+                        ),
+                        None,
+                    )
+                if (
+                    start_idx is None
+                    and "start_measure" in span
+                    and "start_beat" in span
+                ):
+                    start_idx = next(
+                        (
+                            event_index
+                            for event_index, event in enumerate(events)
+                            if round(float(event["measure"]), 5)
+                            == round(float(span["start_measure"]), 5)
+                            and round(float(event["beat"]), 5)
+                            == round(float(span["start_beat"]), 5)
+                        ),
+                        None,
+                    )
+                if start_idx is not None:
+                    for event in events[start_idx : start_idx + int(note_count)]:
+                        part_note_ids.extend(event["note_ids"])
+            else:
+                for event in events:
+                    if _event_starts_in_span(event, span, start_q_float):
+                        part_note_ids.extend(event["note_ids"])
+
+            if part_note_ids:
+                matched_parts.append(str(part_label))
+                note_ids.extend(part_note_ids)
+
+        resolved_spans.append(
+            {
+                **span,
+                "index": index,
+                "matched_parts": matched_parts,
+                "note_ids": note_ids,
+            }
+        )
+
+    return resolved_spans
+
+
+def _build_note_id_matches(
+    filepath: Path, mel_ngrams: Any, n: int
+) -> list[dict[str, Any]]:
+    """Build structured note-id spans for each melodic n-gram match."""
     matches: list[dict[str, Any]] = []
 
     for row in mel_ngrams.index:
         measure, beat, offset = (float(row[0]), float(row[1]), float(row[2]))
-        row_key = (round(measure, 5), round(beat, 5), round(offset, 5))
 
         for column in mel_ngrams.columns:
             pattern = mel_ngrams.loc[row, column]
@@ -185,25 +336,6 @@ def _build_note_id_matches(
                 continue
 
             part_label = str(column)
-            part_lookup = note_lookup.get(part_label, {})
-            start_idx = part_lookup.get(row_key)
-            events = part_events.get(part_label, [])
-
-            note_ids: list[str] = []
-            duration = 0.0
-            if start_idx is not None:
-                span = events[start_idx : start_idx + n + 1]
-                for event in span:
-                    note_ids.extend(event["note_ids"])
-                if span:
-                    first_event = span[0]
-                    last_event = span[-1]
-                    duration = (
-                        float(last_event["offset"])
-                        + float(last_event["duration"])
-                        - float(first_event["offset"])
-                    )
-
             matches.append(
                 {
                     "pattern": pattern_values,
@@ -212,13 +344,41 @@ def _build_note_id_matches(
                     "start_measure": measure,
                     "start_beat": beat,
                     "start_offset": offset,
-                    "duration": duration,
-                    "end_offset": offset + duration,
-                    "note_ids": note_ids,
+                    "note_count": n + 1,
                 }
             )
 
-    return matches
+    resolved_matches = _resolve_note_id_spans(filepath, matches)
+    part_events = _build_part_note_events(filepath)
+    events_by_part_and_note_id = {
+        part_label: {
+            note_id: event
+            for event in events
+            for note_id in event["note_ids"]
+        }
+        for part_label, events in part_events.items()
+    }
+    for match in resolved_matches:
+        match.pop("index", None)
+        match.pop("matched_parts", None)
+        match.pop("note_count", None)
+        note_ids = match["note_ids"]
+        duration = 0.0
+        if note_ids:
+            event_by_note_id = events_by_part_and_note_id.get(match["column"], {})
+            span_events = [event_by_note_id[note_id] for note_id in note_ids if note_id in event_by_note_id]
+            if span_events:
+                first_event = span_events[0]
+                last_event = span_events[-1]
+                duration = (
+                    float(last_event["offset"])
+                    + float(last_event["duration"])
+                    - float(first_event["offset"])
+                )
+        match["duration"] = duration
+        match["end_offset"] = float(match["start_offset"]) + duration
+
+    return resolved_matches
 
 
 def _normalise_pattern(pattern: Any) -> tuple[list[str], str]:
@@ -530,6 +690,51 @@ def count_melodic_ngrams(
         "combine_unisons": combine_unisons,
         "compound": compound,
         "pattern_counts": _count_patterns(mel_ngrams),
+    }
+
+
+def resolve_note_ids_for_highlight(
+    filename: str,
+    spans: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Resolve analysis locations or spans to MEI note IDs for highlighting.
+
+    This helper decouples note-ID retrieval from any one analysis tool. A span
+    can come from melodic n-grams, harmonic intervals, cadence rows, or
+    visualisation payloads.
+
+    Inputs:
+        filename: Name of the MEI file, for example ``"Bach_BWV_0772.mei"``.
+        spans: Analysis locations or ranges to resolve. Each span should provide
+            one of these location shapes:
+
+            - ``start_measure`` and ``start_beat`` for measure/beat rows
+            - ``start_q`` or ``start_offset`` for quarter-note offsets
+
+            Optional fields narrow or widen the result:
+
+            - ``staff``, ``part``, ``column``, or ``voice_pair`` restricts
+              matching to one or more CRIM part labels. Voice pairs such as
+              ``"1,2"`` match both parts.
+            - ``duration``, ``end_q``, or ``end_offset`` returns note IDs whose
+              onsets fall inside a span.
+            - ``note_count`` returns a fixed number of consecutive note events
+              from the starting location, which is useful for melodic n-grams
+              where ``n`` intervals correspond to ``n + 1`` notes.
+
+    Returns:
+        Dictionary containing:
+        - filename: The input filename.
+        - spans: Resolved span dictionaries. Each resolved span preserves the
+          original input span fields and adds:
+            - index: Zero-based index of the requested span.
+            - matched_parts: CRIM part labels that contributed note IDs.
+            - note_ids: MEI ``xml:id`` values for notes matched by the span.
+    """
+    filepath = get_mei_filepath(filename)
+    return {
+        "filename": filename,
+        "spans": _resolve_note_id_spans(filepath, spans),
     }
 
 
