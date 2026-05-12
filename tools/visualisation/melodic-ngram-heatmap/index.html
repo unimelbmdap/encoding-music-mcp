@@ -13,10 +13,10 @@
       
       
       
-        <link rel="prev" href="../note-id-resolution/">
+        <link rel="prev" href="../weighted-note-distribution/">
       
       
-        <link rel="next" href="../../../resources/mei-files/">
+        <link rel="next" href="../sonority-ngram-progress/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>Cadences - encoding-music-mcp</title>
+        <title>Melodic N-gram Heatmap - encoding-music-mcp</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cadence-detection" class="md-skip">
+        <a href="#melodic-n-gram-heatmap" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Cadences
+              Melodic N-gram Heatmap
             
           </span>
         </div>
@@ -715,8 +715,10 @@
                 
   
   
+    
   
   
+  
     
     
     
@@ -730,13 +732,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" checked>
         
           
           <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="">
@@ -752,7 +752,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3_7">
             <span class="md-nav__icon md-icon"></span>
             Visualisation
@@ -766,7 +766,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../visualisation/voice-ranges/" class="md-nav__link">
+      <a href="../voice-ranges/" class="md-nav__link">
         
   
   
@@ -789,7 +789,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../visualisation/weighted-note-distribution/" class="md-nav__link">
+      <a href="../weighted-note-distribution/" class="md-nav__link">
         
   
   
@@ -809,10 +809,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../visualisation/melodic-ngram-heatmap/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Melodic N-gram Heatmap
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -823,6 +845,53 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#payload-sent-to-the-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      Payload Sent To The App
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -835,7 +904,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../visualisation/sonority-ngram-progress/" class="md-nav__link">
+      <a href="../sonority-ngram-progress/" class="md-nav__link">
         
   
   
@@ -886,8 +955,6 @@
                 
   
   
-    
-  
   
   
     
@@ -903,11 +970,13 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_9" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_9" >
         
           
           <label class="md-nav__link" for="__nav_3_9" id="__nav_3_9_label" tabindex="">
@@ -923,7 +992,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_9_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_9">
             <span class="md-nav__icon md-icon"></span>
             Intervals
@@ -937,7 +1006,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../intervals/" class="md-nav__link">
         
   
   
@@ -960,7 +1029,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../notes/" class="md-nav__link">
+      <a href="../../intervals/notes/" class="md-nav__link">
         
   
   
@@ -983,7 +1052,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../melodic/" class="md-nav__link">
+      <a href="../../intervals/melodic/" class="md-nav__link">
         
   
   
@@ -1006,7 +1075,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../harmonic/" class="md-nav__link">
+      <a href="../../intervals/harmonic/" class="md-nav__link">
         
   
   
@@ -1029,7 +1098,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ngrams/" class="md-nav__link">
+      <a href="../../intervals/ngrams/" class="md-nav__link">
         
   
   
@@ -1052,7 +1121,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ngram-counts/" class="md-nav__link">
+      <a href="../../intervals/ngram-counts/" class="md-nav__link">
         
   
   
@@ -1075,7 +1144,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ngram-matches/" class="md-nav__link">
+      <a href="../../intervals/ngram-matches/" class="md-nav__link">
         
   
   
@@ -1098,7 +1167,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../first-occur/" class="md-nav__link">
+      <a href="../../intervals/first-occur/" class="md-nav__link">
         
   
   
@@ -1121,7 +1190,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../note-id-resolution/" class="md-nav__link">
+      <a href="../../intervals/note-id-resolution/" class="md-nav__link">
         
   
   
@@ -1141,32 +1210,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Cadences
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../intervals/cadences/" class="md-nav__link">
         
   
   
@@ -1177,284 +1224,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      Overview
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Usage
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Parameters
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#returns" class="md-nav__link">
-    <span class="md-ellipsis">
-      Returns
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#output-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      Output Format
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Output Format">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example-output" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example Output
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cadence-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      Cadence Types
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Cadence Types">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#authentic-cadence" class="md-nav__link">
-    <span class="md-ellipsis">
-      Authentic Cadence
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#plagal-cadence" class="md-nav__link">
-    <span class="md-ellipsis">
-      Plagal Cadence
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phrygian-cadence" class="md-nav__link">
-    <span class="md-ellipsis">
-      Phrygian Cadence
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#evaded-cadence" class="md-nav__link">
-    <span class="md-ellipsis">
-      Evaded Cadence
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cadential-voice-functions-cvfs" class="md-nav__link">
-    <span class="md-ellipsis">
-      Cadential Voice Functions (CVFs)
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      Best Practices
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Best Practices">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#suitable-repertoire" class="md-nav__link">
-    <span class="md-ellipsis">
-      Suitable Repertoire
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#interpretation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Interpretation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#analysis-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      Analysis Workflow
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example Analysis
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#use-cases" class="md-nav__link">
-    <span class="md-ellipsis">
-      Use Cases
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Use Cases">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#form-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      Form Analysis
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#style-comparison" class="md-nav__link">
-    <span class="md-ellipsis">
-      Style Comparison
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#voice-leading" class="md-nav__link">
-    <span class="md-ellipsis">
-      Voice Leading
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#structural-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      Structural Analysis
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      Related Tools
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#technical-details" class="md-nav__link">
-    <span class="md-ellipsis">
-      Technical Details
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#limitations" class="md-nav__link">
-    <span class="md-ellipsis">
-      Limitations
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      See Also
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1789,24 +1558,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      Overview
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Usage
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#parameters" class="md-nav__link">
     <span class="md-ellipsis">
       Parameters
@@ -1825,222 +1576,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#output-format" class="md-nav__link">
+  <a href="#payload-sent-to-the-app" class="md-nav__link">
     <span class="md-ellipsis">
-      Output Format
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Output Format">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example-output" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example Output
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cadence-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      Cadence Types
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Cadence Types">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#authentic-cadence" class="md-nav__link">
-    <span class="md-ellipsis">
-      Authentic Cadence
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#plagal-cadence" class="md-nav__link">
-    <span class="md-ellipsis">
-      Plagal Cadence
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#phrygian-cadence" class="md-nav__link">
-    <span class="md-ellipsis">
-      Phrygian Cadence
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#evaded-cadence" class="md-nav__link">
-    <span class="md-ellipsis">
-      Evaded Cadence
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cadential-voice-functions-cvfs" class="md-nav__link">
-    <span class="md-ellipsis">
-      Cadential Voice Functions (CVFs)
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      Best Practices
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Best Practices">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#suitable-repertoire" class="md-nav__link">
-    <span class="md-ellipsis">
-      Suitable Repertoire
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#interpretation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Interpretation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#analysis-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      Analysis Workflow
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example Analysis
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#use-cases" class="md-nav__link">
-    <span class="md-ellipsis">
-      Use Cases
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Use Cases">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#form-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      Form Analysis
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#style-comparison" class="md-nav__link">
-    <span class="md-ellipsis">
-      Style Comparison
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#voice-leading" class="md-nav__link">
-    <span class="md-ellipsis">
-      Voice Leading
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#structural-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      Structural Analysis
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      Related Tools
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#technical-details" class="md-nav__link">
-    <span class="md-ellipsis">
-      Technical Details
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#limitations" class="md-nav__link">
-    <span class="md-ellipsis">
-      Limitations
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      See Also
+      Payload Sent To The App
     </span>
   </a>
   
@@ -2065,244 +1603,150 @@
   
 
 
-<h1 id="cadence-detection">Cadence Detection</h1>
-<p>Extract and analyze predicted cadences in Renaissance counterpoint using CRIM Intervals.</p>
-<h2 id="overview">Overview</h2>
-<p>The <code>get_cadences</code> tool uses machine learning to identify and classify cadences in Renaissance polyphonic music. It analyzes voice leading patterns and harmonic progressions to predict cadence locations and types.</p>
-<h2 id="usage">Usage</h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">encoding_music_mcp.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_cadences</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_cadences</span><span class="p">(</span><span class="s2">&quot;Morley_1595_01_Go_ye_my_canzonettes.mei&quot;</span><span class="p">)</span>
-</span></code></pre></div>
+<h1 id="melodic-n-gram-heatmap">Melodic N-gram Heatmap</h1>
+<p><code>plot_melodic_ngram_heatmap</code> plots repeated melodic n-gram patterns as
+timeline rectangles for one or more MEI scores. Rows are separated by score and
+staff, and colours identify the most frequent patterns across the selected
+pieces.</p>
 <h2 id="parameters">Parameters</h2>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>filename</code></td>
-<td><code>str</code></td>
-<td>Yes</td>
-<td>Name of the MEI file to analyze</td>
-</tr>
-</tbody>
-</table>
+<ul>
+<li><code>filename</code> (<code>str | None</code>): One MEI filename.</li>
+<li><code>filenames</code> (<code>list[str] | None</code>): Multiple MEI filenames.</li>
+<li><code>n</code> (<code>int</code>, optional): N-gram length. Defaults to <code>4</code>.</li>
+<li><code>kind</code> (<code>str</code>, optional): CRIM interval kind. Defaults to <code>"d"</code>.</li>
+<li><code>entries</code> (<code>bool</code>, optional): Restrict to entry-filtered n-grams. Defaults to
+  <code>False</code>.</li>
+<li><code>top_n</code> (<code>int</code>, optional): Number of top patterns to colour and plot. Defaults
+  to <code>2</code>.</li>
+<li><code>combine_unisons</code> (<code>bool | None</code>, optional): Passed through to CRIM note
+  extraction.</li>
+<li><code>compound</code> (<code>bool</code>, optional): Whether to use compound intervals. Defaults to
+  <code>False</code>.</li>
+</ul>
 <h2 id="returns">Returns</h2>
-<p>Returns a dictionary with the following keys:</p>
-<table>
-<thead>
-<tr>
-<th>Key</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>filename</code></td>
-<td><code>str</code></td>
-<td>The input filename</td>
-</tr>
-<tr>
-<td><code>cadences</code></td>
-<td><code>str</code></td>
-<td>CSV representation of the cadences dataframe</td>
-</tr>
-</tbody>
-</table>
-<h2 id="output-format">Output Format</h2>
-<p>The cadences dataframe includes the following columns:</p>
-<table>
-<thead>
-<tr>
-<th>Column</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Composer</code></td>
-<td>Composer name from MEI metadata</td>
-</tr>
-<tr>
-<td><code>Title</code></td>
-<td>Work title from MEI metadata</td>
-</tr>
-<tr>
-<td><code>Measure</code></td>
-<td>Measure number where cadence occurs</td>
-</tr>
-<tr>
-<td><code>Beat</code></td>
-<td>Beat position within the measure</td>
-</tr>
-<tr>
-<td><code>Progress</code></td>
-<td>Progress through the piece (0.0-1.0)</td>
-</tr>
-<tr>
-<td><code>CadType</code></td>
-<td>Cadence type (Authentic, Plagal, etc.)</td>
-</tr>
-<tr>
-<td><code>Tone</code></td>
-<td>The tonal centre of the cadence</td>
-</tr>
-<tr>
-<td><code>CVFs</code></td>
-<td>Cadential Voice Functions for each voice</td>
-</tr>
-</tbody>
-</table>
-<h3 id="example-output">Example Output</h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Composer,Title,Measure,Beat,Progress,CadType,Tone,CVFs
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>&quot;Morley, Thomas&quot;,Go ye my canzonettes,14,2.0,0.186,Authentic,G,&quot;[&#39;Ct&#39;, &#39;T&#39;]&quot;
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>&quot;Morley, Thomas&quot;,Go ye my canzonettes,21,4.0,0.298,Plagal,D,&quot;[&#39;Ct&#39;, &#39;T&#39;]&quot;
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>&quot;Morley, Thomas&quot;,Go ye my canzonettes,30,4.0,0.421,Authentic,C,&quot;[&#39;Ct&#39;, &#39;T&#39;]&quot;
+<p>The tool returns an MCP App payload with:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="s2">&quot;filenames&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="s2">&quot;score_count&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="s2">&quot;top_n&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="s2">&quot;patterns&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        <span class="p">{</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>            <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>            <span class="s2">&quot;pattern_string&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>            <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>            <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        <span class="p">}</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="p">],</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="p">{</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>            <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>            <span class="s2">&quot;score_label&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>            <span class="s2">&quot;staff&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>            <span class="s2">&quot;end_q&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>        <span class="p">}</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="p">],</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="s2">&quot;occurrences&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>        <span class="p">{</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>            <span class="s2">&quot;row_id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>            <span class="s2">&quot;pattern_string&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>            <span class="s2">&quot;start_q&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>            <span class="s2">&quot;end_q&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>            <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>            <span class="s2">&quot;start_measure&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>            <span class="s2">&quot;start_beat&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>            <span class="s2">&quot;note_ids&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>            <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>        <span class="p">}</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    <span class="p">],</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="p">}</span>
 </span></code></pre></div>
-<h2 id="cadence-types">Cadence Types</h2>
-<p>The tool identifies several cadence types common in Renaissance music:</p>
-<h3 id="authentic-cadence">Authentic Cadence</h3>
-<ul>
-<li>Strongest conclusive cadence</li>
-<li>Typically involves dominant-to-tonic motion</li>
-<li>Features characteristic voice leading patterns</li>
-</ul>
-<h3 id="plagal-cadence">Plagal Cadence</h3>
-<ul>
-<li>Subdominant-to-tonic motion</li>
-<li>Often called the "Amen" cadence</li>
-<li>Provides a sense of resolution</li>
-</ul>
-<h3 id="phrygian-cadence">Phrygian Cadence</h3>
-<ul>
-<li>Half cadence with distinctive semitone motion in the bass</li>
-<li>Common in Renaissance music</li>
-<li>Often signals a temporary resting point</li>
-</ul>
-<h3 id="evaded-cadence">Evaded Cadence</h3>
-<ul>
-<li>Expected cadence is avoided or interrupted</li>
-<li>Creates harmonic surprise or continuation</li>
-</ul>
-<h2 id="cadential-voice-functions-cvfs">Cadential Voice Functions (CVFs)</h2>
-<p>The CVFs column describes the role each voice plays in the cadence:</p>
-<table>
-<thead>
-<tr>
-<th>Function</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>T</code></td>
-<td>Tenor (structural voice)</td>
-</tr>
-<tr>
-<td><code>Ct</code></td>
-<td>Cantus (often the highest voice)</td>
-</tr>
-<tr>
-<td><code>B</code></td>
-<td>Bassus (lowest voice)</td>
-</tr>
-<tr>
-<td><code>A</code></td>
-<td>Altus (middle voice)</td>
-</tr>
-</tbody>
-</table>
-<h2 id="best-practices">Best Practices</h2>
-<h3 id="suitable-repertoire">Suitable Repertoire</h3>
-<p>This tool is optimised for:
-- Renaissance polyphony (15th-17th century)
-- Sacred and secular vocal music
-- Italian, English, and Franco-Flemish styles
-- Works with clear voice leading</p>
-<h3 id="interpretation">Interpretation</h3>
-<p>Remember that:
-- Cadence detection uses machine learning predictions
-- Results may vary based on texture and style
-- Some cadences may be more clearly defined than others
-- Context and musical judgment are still important</p>
-<h3 id="analysis-workflow">Analysis Workflow</h3>
-<ol>
-<li><strong>Initial Detection</strong>: Run <code>get_cadences</code> to identify potential cadences</li>
-<li><strong>Review Locations</strong>: Check measure and beat positions</li>
-<li><strong>Verify Types</strong>: Confirm cadence types match musical context</li>
-<li><strong>Analyse Patterns</strong>: Look for recurring cadential formulas</li>
-<li><strong>Compare Pieces</strong>: Study cadence usage across works</li>
-</ol>
-<h2 id="example-analysis">Example Analysis</h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Analyse cadences in a Morley canzonet</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">result</span> <span class="o">=</span> <span class="n">get_cadences</span><span class="p">(</span><span class="s2">&quot;Morley_1595_01_Go_ye_my_canzonettes.mei&quot;</span><span class="p">)</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># The output shows:</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># - 8 cadences throughout the piece</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># - Mix of Authentic and Plagal types</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># - Cadences at structural points (measures 14, 21, 30, etc.)</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># - Consistent voice functions in two-part texture</span>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Requires the MCP Apps extension for inline display.</p>
+</div>
+<h2 id="payload-sent-to-the-app">Payload Sent To The App</h2>
+<p>The Python tool returns a <code>ToolResult</code> with a short text fallback plus
+<code>structured_content</code>. The HTML app reads that payload from
+<code>result.structuredContent</code>:</p>
+<div class="language-javascript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">ontoolresult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">result</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">structured</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">result</span><span class="p">.</span><span class="nx">structuredContent</span><span class="p">;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nx">render</span><span class="p">(</span><span class="nx">structured</span><span class="p">);</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">};</span>
 </span></code></pre></div>
-<h2 id="use-cases">Use Cases</h2>
-<h3 id="form-analysis">Form Analysis</h3>
+<p>Example <code>structured_content</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="s2">&quot;filenames&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span> <span class="s2">&quot;Bartok_Mikrokosmos_022.mei&quot;</span><span class="p">],</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="s2">&quot;score_count&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="s2">&quot;scores&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="p">{</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>            <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>            <span class="s2">&quot;composer&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="p">},</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        <span class="p">{</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>            <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;Bartok_Mikrokosmos_022.mei&quot;</span><span class="p">,</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>            <span class="s2">&quot;composer&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="p">},</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="p">],</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="s2">&quot;entries&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>    <span class="s2">&quot;top_n&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    <span class="s2">&quot;combine_unisons&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>    <span class="s2">&quot;compound&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>    <span class="s2">&quot;patterns&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>        <span class="p">{</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>            <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="s2">&quot;-3&quot;</span><span class="p">],</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>            <span class="s2">&quot;pattern_string&quot;</span><span class="p">:</span> <span class="s2">&quot;2_2_2_-3&quot;</span><span class="p">,</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>            <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>            <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#d92b8a&quot;</span><span class="p">,</span>
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>        <span class="p">}</span>
+</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>    <span class="p">],</span>
+</span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>    <span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-2-32"><a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>        <span class="p">{</span>
+</span><span id="__span-2-33"><a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;Bach_BWV_0772.mei::1&quot;</span><span class="p">,</span>
+</span><span id="__span-2-34"><a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>            <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span>
+</span><span id="__span-2-35"><a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>            <span class="s2">&quot;score_label&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+</span><span id="__span-2-36"><a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>            <span class="s2">&quot;staff&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+</span><span id="__span-2-37"><a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;... - Staff 1&quot;</span><span class="p">,</span>
+</span><span id="__span-2-38"><a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>            <span class="s2">&quot;end_q&quot;</span><span class="p">:</span> <span class="mf">104.0</span><span class="p">,</span>
+</span><span id="__span-2-39"><a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>        <span class="p">}</span>
+</span><span id="__span-2-40"><a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>    <span class="p">],</span>
+</span><span id="__span-2-41"><a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>    <span class="s2">&quot;occurrences&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-2-42"><a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>        <span class="p">{</span>
+</span><span id="__span-2-43"><a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;Bach_BWV_0772.mei::1::2_2_2_-3::0.0&quot;</span><span class="p">,</span>
+</span><span id="__span-2-44"><a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>            <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;Bach_BWV_0772.mei&quot;</span><span class="p">,</span>
+</span><span id="__span-2-45"><a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>            <span class="s2">&quot;row_id&quot;</span><span class="p">:</span> <span class="s2">&quot;Bach_BWV_0772.mei::1&quot;</span><span class="p">,</span>
+</span><span id="__span-2-46"><a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a>            <span class="s2">&quot;staff&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+</span><span id="__span-2-47"><a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a>            <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="s2">&quot;-3&quot;</span><span class="p">],</span>
+</span><span id="__span-2-48"><a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a>            <span class="s2">&quot;pattern_string&quot;</span><span class="p">:</span> <span class="s2">&quot;2_2_2_-3&quot;</span><span class="p">,</span>
+</span><span id="__span-2-49"><a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a>            <span class="s2">&quot;start_q&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+</span><span id="__span-2-50"><a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a>            <span class="s2">&quot;end_q&quot;</span><span class="p">:</span> <span class="mf">2.5</span><span class="p">,</span>
+</span><span id="__span-2-51"><a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a>            <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="mf">2.5</span><span class="p">,</span>
+</span><span id="__span-2-52"><a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a>            <span class="s2">&quot;start_measure&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+</span><span id="__span-2-53"><a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a>            <span class="s2">&quot;start_beat&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+</span><span id="__span-2-54"><a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a>            <span class="s2">&quot;note_ids&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;...&quot;</span><span class="p">],</span>
+</span><span id="__span-2-55"><a id="__codelineno-2-55" name="__codelineno-2-55" href="#__codelineno-2-55"></a>            <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#d92b8a&quot;</span><span class="p">,</span>
+</span><span id="__span-2-56"><a id="__codelineno-2-56" name="__codelineno-2-56" href="#__codelineno-2-56"></a>        <span class="p">}</span>
+</span><span id="__span-2-57"><a id="__codelineno-2-57" name="__codelineno-2-57" href="#__codelineno-2-57"></a>    <span class="p">],</span>
+</span><span id="__span-2-58"><a id="__codelineno-2-58" name="__codelineno-2-58" href="#__codelineno-2-58"></a>    <span class="s2">&quot;x_min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+</span><span id="__span-2-59"><a id="__codelineno-2-59" name="__codelineno-2-59" href="#__codelineno-2-59"></a>    <span class="s2">&quot;x_max&quot;</span><span class="p">:</span> <span class="mf">104.0</span><span class="p">,</span>
+</span><span id="__span-2-60"><a id="__codelineno-2-60" name="__codelineno-2-60" href="#__codelineno-2-60"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>The app mainly uses:</p>
 <ul>
-<li>Identify section boundaries</li>
-<li>Map large-scale structure</li>
-<li>Study phrase lengths</li>
-</ul>
-<h3 id="style-comparison">Style Comparison</h3>
-<ul>
-<li>Compare cadential practices between composers</li>
-<li>Analyse historical trends</li>
-<li>Study regional differences</li>
-</ul>
-<h3 id="voice-leading">Voice Leading</h3>
-<ul>
-<li>Examine cadential formulas</li>
-<li>Study approach patterns</li>
-<li>Analyse resolution types</li>
-</ul>
-<h3 id="structural-analysis">Structural Analysis</h3>
-<ul>
-<li>Identify important arrival points</li>
-<li>Understand tonal hierarchy</li>
-<li>Map harmonic rhythm</li>
-</ul>
-<h2 id="related-tools">Related Tools</h2>
-<ul>
-<li><a href="../notes/"><code>get_notes</code></a> - View the actual notes at cadence points</li>
-<li><a href="../harmonic/"><code>get_harmonic_intervals</code></a> - Analyse voice leading at cadences</li>
-<li><a href="../melodic/"><code>get_melodic_intervals</code></a> - Study melodic approach to cadences</li>
-</ul>
-<h2 id="technical-details">Technical Details</h2>
-<p>The cadence detection algorithm:
-- Analyses simultaneous intervals between voices
-- Identifies characteristic voice-leading patterns
-- Considers melodic motion in approach to cadence
-- Classifies cadence type based on learned patterns
-- Extracts tonal centre from harmonic context</p>
-<h2 id="limitations">Limitations</h2>
-<ul>
-<li>Optimised for Renaissance counterpoint</li>
-<li>May be less accurate for:</li>
-<li>Highly chromatic passages</li>
-<li>Unusual textures</li>
-<li>Non-Western music</li>
-<li>Instrumental music with different conventions</li>
-<li>Predictions should be verified musically</li>
-</ul>
-<h2 id="see-also">See Also</h2>
-<ul>
-<li><a href="https://github.com/HCDigitalScholarship/intervals">CRIM Intervals Documentation</a></li>
-<li><a href="https://www.britannica.com/art/cadence-music">Renaissance Cadence Types</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Voice_leading">Voice Leading in Renaissance Music</a></li>
+<li><code>scores</code> for the header metadata</li>
+<li><code>n</code>, <code>kind</code>, <code>entries</code>, and <code>patterns.length</code> for the summary line</li>
+<li><code>patterns</code> for the legend</li>
+<li><code>rows</code> for the y-axis score/staff rows</li>
+<li><code>occurrences</code> for coloured rectangles</li>
+<li><code>x_max</code> for scaling the timeline axis</li>
 </ul>
 
 
