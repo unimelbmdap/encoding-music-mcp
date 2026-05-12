@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>Weighted Note Distribution</title>
+    <style>
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            background:
+                radial-gradient(circle at top, rgba(227, 196, 125, 0.35), transparent 36%),
+                linear-gradient(180deg, #f6f0e3 0%, #ebe2cd 100%);
+            color: #241d14;
+        }
+        body { padding: 12px; }
+        .panel {
+            background: rgba(255, 251, 244, 0.88);
+            border: 1px solid rgba(103, 78, 45, 0.2);
+            border-radius: 22px;
+            box-shadow: 0 16px 40px rgba(81, 55, 22, 0.12);
+            padding: 18px;
+            backdrop-filter: blur(6px);
+        }
+        h1 {
+            margin: 0;
+            font-size: 1.55rem;
+            line-height: 1.15;
+        }
+        .meta, .summary {
+            color: #6a5438;
+            font-size: 0.95rem;
+        }
+        .meta {
+            margin-top: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .meta-line {
+            line-height: 1.25;
+        }
+        .summary { margin-top: 8px; }
+        #status {
+            color: #8b0000;
+            font-size: 0.95rem;
+        }
+        #status.hidden { display: none; }
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+            gap: 18px;
+            margin-top: 16px;
+        }
+        .chart-card, .legend-card {
+            border-radius: 18px;
+            border: 1px solid rgba(103, 78, 45, 0.14);
+            background: rgba(255, 255, 255, 0.52);
+            padding: 14px;
+        }
+        .chart-wrap {
+            width: 100%;
+            overflow: auto;
+        }
+        svg {
+            display: block;
+            width: 100%;
+            height: auto;
+            min-height: 540px;
+        }
+        .legend-card h2 {
+            margin: 0 0 10px;
+            font-size: 1rem;
+        }
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .legend-item {
+            display: grid;
+            grid-template-columns: 14px minmax(0, 1fr);
+            gap: 10px;
+            align-items: start;
+            padding: 10px 12px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(103, 78, 45, 0.1);
+        }
+        .swatch {
+            width: 14px;
+            height: 14px;
+            border-radius: 999px;
+            margin-top: 3px;
+        }
+        .legend-label {
+            font-weight: 700;
+            line-height: 1.25;
+        }
+        .legend-meta {
+            margin-top: 2px;
+            color: #6a5438;
+            font-size: 0.88rem;
+        }
+        @media (max-width: 860px) {
+            .layout { grid-template-columns: 1fr; }
+            svg { min-height: 460px; }
+        }
+        @media (prefers-color-scheme: dark) {
+            html, body {
+                background:
+                    radial-gradient(circle at top, rgba(206, 149, 55, 0.22), transparent 34%),
+                    linear-gradient(180deg, #1b1612 0%, #120f0c 100%);
+                color: #f3eadc;
+            }
+            .panel {
+                background: rgba(36, 28, 21, 0.82);
+                border-color: rgba(255, 255, 255, 0.1);
+                box-shadow: none;
+            }
+            .meta, .summary, .legend-meta { color: #d0bea3; }
+            .chart-card, .legend-card, .legend-item {
+                background: rgba(255, 255, 255, 0.04);
+                border-color: rgba(255, 255, 255, 0.12);
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="panel">
+        <div id="status">Waiting for weighted note data...</div>
+        <div id="content" hidden>
+            <h1 id="title"></h1>
+            <div id="meta" class="meta"></div>
+            <div id="summary" class="summary"></div>
+            <div class="layout">
+                <section class="chart-card">
+                    <div class="chart-wrap">
+                        <svg id="chart" role="img" aria-label="Weighted note distribution radar chart"></svg>
+                    </div>
+                </section>
+                <aside class="legend-card">
+                    <h2>Traces</h2>
+                    <div id="legend" class="legend"></div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { App } from "https://unpkg.com/@modelcontextprotocol/ext-apps@0.4.0/app-with-deps";
+
+        const statusEl = document.getElementById("status");
+        const contentEl = document.getElementById("content");
+        const titleEl = document.getElementById("title");
+        const metaEl = document.getElementById("meta");
+        const summaryEl = document.getElementById("summary");
+        const chartEl = document.getElementById("chart");
+        const legendEl = document.getElementById("legend");
+
+        function setStatus(text, isError = false) {
+            statusEl.textContent = text;
+            statusEl.style.color = isError ? "#b42318" : "";
+            statusEl.classList.remove("hidden");
+            contentEl.hidden = true;
+        }
+
+        function svgNode(tag, attrs = {}) {
+            const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
+            Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+            return node;
+        }
+
+        function cartesianPoint(cx, cy, radius, angleDeg) {
+            const radians = ((angleDeg - 90) * Math.PI) / 180;
+            return {
+                x: cx + radius * Math.cos(radians),
+                y: cy + radius * Math.sin(radians),
+            };
+        }
+
+        function polygonPoints(values, maxRadius, cx, cy, outerRadius) {
+            return values.map((value, index) => {
+                const angle = (360 / values.length) * index;
+                const scaledRadius = maxRadius === 0 ? 0 : (value / maxRadius) * outerRadius;
+                const point = cartesianPoint(cx, cy, scaledRadius, angle);
+                return `${point.x},${point.y}`;
+            }).join(" ");
+        }
+
+        function formatPercent(value) {
+            return `${(value * 100).toFixed(1)}%`;
+        }
+
+        function render(structured) {
+            const {
+                title,
+                composer,
+                filename,
+                scores,
+                score_count,
+                pitch_class_order,
+                group_by_staff,
+                categories,
+                radial_max,
+                traces,
+            } = structured;
+
+            titleEl.textContent = title || filename;
+            if (score_count > 1 && Array.isArray(scores)) {
+                metaEl.innerHTML = scores.map((score) => {
+                    const line = score.composer
+                        ? `${score.composer} | ${score.title}`
+                        : score.title;
+                    return `<div class="meta-line">${line}</div>`;
+                }).join("");
+            } else {
+                const line = composer ? `${composer} | ${filename}` : filename;
+                metaEl.innerHTML = `<div class="meta-line">${line}</div>`;
+            }
+            const traceSummary = group_by_staff
+                ? "one polygon per staff"
+                : (score_count > 1 ? "one overlaid polygon per score" : "one polygon for the score");
+            summaryEl.textContent =
+                `Scaled by note duration, ordered by ${pitch_class_order}, ${traceSummary}.`;
+
+            const width = 680;
+            const height = 620;
+            const cx = 330;
+            const cy = 318;
+            const outerRadius = 210;
+            const labelRadius = 224;
+            const ringSteps = 4;
+            const safeMax = radial_max > 0 ? radial_max : 1;
+
+            chartEl.setAttribute("viewBox", `0 0 ${width} ${height}`);
+            chartEl.innerHTML = "";
+
+            const titleNode = svgNode("text", {
+                x: cx,
+                y: 28,
+                "text-anchor": "middle",
+                "font-size": "18",
+                "font-weight": "700",
+                fill: "currentColor",
+            });
+            titleNode.textContent = "Weighted Note Distribution";
+            chartEl.appendChild(titleNode);
+
+            for (let ring = ringSteps; ring >= 1; ring -= 1) {
+                const radius = (outerRadius / ringSteps) * ring;
+                const points = categories.map((_, index) => {
+                    const angle = (360 / categories.length) * index;
+                    const point = cartesianPoint(cx, cy, radius, angle);
+                    return `${point.x},${point.y}`;
+                }).join(" ");
+                chartEl.appendChild(svgNode("polygon", {
+                    points,
+                    fill: ring % 2 === 0 ? "rgba(140, 112, 73, 0.06)" : "rgba(140, 112, 73, 0.02)",
+                    stroke: "rgba(140, 112, 73, 0.24)",
+                    "stroke-width": "1",
+                }));
+
+                const tick = svgNode("text", {
+                    x: cx + 10,
+                    y: cy - radius + 14,
+                    "font-size": "11",
+                    fill: "currentColor",
+                });
+                tick.textContent = formatPercent((safeMax / ringSteps) * ring);
+                chartEl.appendChild(tick);
+            }
+
+            categories.forEach((category, index) => {
+                const angle = (360 / categories.length) * index;
+                const axisPoint = cartesianPoint(cx, cy, outerRadius, angle);
+                const labelPoint = cartesianPoint(cx, cy, labelRadius, angle);
+
+                chartEl.appendChild(svgNode("line", {
+                    x1: cx,
+                    y1: cy,
+                    x2: axisPoint.x,
+                    y2: axisPoint.y,
+                    stroke: "rgba(140, 112, 73, 0.3)",
+                    "stroke-width": "1",
+                }));
+
+                const label = svgNode("text", {
+                    x: labelPoint.x,
+                    y: labelPoint.y,
+                    "text-anchor": Math.abs(labelPoint.x - cx) < 12 ? "middle" : (labelPoint.x < cx ? "end" : "start"),
+                    "dominant-baseline": Math.abs(labelPoint.y - cy) < 12 ? "middle" : (labelPoint.y < cy ? "auto" : "hanging"),
+                    "font-size": "15",
+                    "font-weight": "700",
+                    fill: "currentColor",
+                });
+                label.textContent = category;
+                chartEl.appendChild(label);
+            });
+
+            traces.forEach((trace) => {
+                const points = polygonPoints(trace.values, safeMax, cx, cy, outerRadius);
+                chartEl.appendChild(svgNode("polygon", {
+                    points,
+                    fill: trace.color,
+                    "fill-opacity": "0.18",
+                    stroke: trace.color,
+                    "stroke-width": "2.5",
+                    "stroke-linejoin": "round",
+                }));
+
+                trace.values.forEach((value, index) => {
+                    const angle = (360 / trace.values.length) * index;
+                    const point = cartesianPoint(cx, cy, (value / safeMax) * outerRadius, angle);
+                    chartEl.appendChild(svgNode("circle", {
+                        cx: point.x,
+                        cy: point.y,
+                        r: "4.5",
+                        fill: trace.color,
+                        stroke: "rgba(255,255,255,0.85)",
+                        "stroke-width": "1.5",
+                    }));
+                });
+            });
+
+            legendEl.innerHTML = "";
+            traces.forEach((trace) => {
+                const item = document.createElement("div");
+                item.className = "legend-item";
+
+                const topPitch = categories
+                    .map((category, index) => ({ category, value: trace.values[index] }))
+                    .sort((a, b) => b.value - a.value)
+                    .slice(0, 3)
+                    .map((entry) => `${entry.category} ${formatPercent(entry.value)}`)
+                    .join(" | ");
+
+                item.innerHTML = `
+                    <span class="swatch" style="background:${trace.color}"></span>
+                    <div>
+                        <div class="legend-label">${trace.label}</div>
+                        <div class="legend-meta">${trace.note_count} sounded note events</div>
+                        <div class="legend-meta">${topPitch}</div>
+                    </div>
+                `;
+                legendEl.appendChild(item);
+            });
+
+            statusEl.classList.add("hidden");
+            contentEl.hidden = false;
+        }
+
+        const app = new App({ name: "Weighted Note Distribution", version: "1.0.0" });
+
+        app.ontoolinput = () => {
+            setStatus("Rendering weighted note distribution...");
+        };
+
+        app.ontoolresult = (result) => {
+            const structured = result.structuredContent;
+            if (structured && structured.traces && structured.categories) {
+                render(structured);
+                return;
+            }
+            setStatus("No weighted note data in result.", true);
+        };
+
+        app.onerror = (err) => {
+            console.error("App error:", err);
+            setStatus("Error: " + (err.message || err), true);
+        };
+
+        await app.connect();
+        setStatus("Connected, waiting for weighted note data...");
+    </script>
+</body>
+</html>

@@ -8,6 +8,8 @@ dependencies = [
     "fastmcp>=3.0.0",
     "crim-intervals @ git+https://github.com/HCDigitalScholarship/intervals.git@rich_dev_24_dev",
     "mcp[cli]>=1.25.0",
+    "music21>=8.3.0",
+    "pandas>=2.3.3",
     "verovio>=5.5.0",
 ]
 

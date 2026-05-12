@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>Notation Highlight Viewer</title>
+    <style>
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            font-size: 1rem;
+            background: #fffdf5;
+            color: #2f2419;
+        }
+        @media (prefers-color-scheme: dark) {
+            html, body { background: #16120f; color: #f8f1df; }
+        }
+        .main {
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+        }
+        #status {
+            font-size: 0.875rem;
+            color: #8a5a22;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        #status.error { color: #dc2626; }
+        #status.hidden { display: none; }
+        .sheet-section {
+            background: #fffaf0;
+            border-radius: 10px;
+            padding: 16px;
+            border: 1px solid #ead7b7;
+        }
+        @media (prefers-color-scheme: dark) {
+            .sheet-section {
+                background: #fffaf0;
+                border-color: #7c5b2c;
+            }
+        }
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #fff4d6;
+            border: 1px solid #f0cf87;
+            color: #7c4a03;
+        }
+        .notation-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+        .notation-container svg {
+            width: 100%;
+            height: auto;
+        }
+        .notation-container .note.note-highlight .notehead * {
+            fill: #d9480f !important;
+            stroke: #d9480f !important;
+        }
+        .notation-container .note.note-highlight .stem *,
+        .notation-container .note.note-highlight .flag *,
+        .notation-container .note.note-highlight .accid *,
+        .notation-container .note.note-highlight .dots * {
+            stroke: #d9480f !important;
+            fill: #d9480f !important;
+        }
+        .notation-container .note.note-highlight {
+            filter: drop-shadow(0 0 3px rgba(217, 72, 15, 0.45));
+        }
+        .pagination {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 4px 0;
+        }
+        .pagination.visible { display: flex; }
+        .pagination button {
+            padding: 4px 14px;
+            border: 1px solid #d6b57c;
+            border-radius: 6px;
+            background: #fff;
+            color: #6b3e09;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        .pagination button:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+        .pagination button:not(:disabled):hover {
+            background: #fff5df;
+        }
+        @media (prefers-color-scheme: dark) {
+            .pagination button {
+                background: #fff4d6;
+                border-color: #c08b33;
+                color: #6b3e09;
+            }
+        }
+        .page-info {
+            font-size: 0.8rem;
+            color: #6b7280;
+            min-width: 80px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <main class="main">
+        <span id="status">Waiting for notation...</span>
+        <section class="sheet-section">
+            <div class="toolbar">
+                <div id="highlight-summary" class="chip">No highlights loaded</div>
+            </div>
+            <div id="notation" class="notation-container"></div>
+        </section>
+        <nav id="pagination" class="pagination">
+            <button id="prev-btn">&larr; Prev</button>
+            <span id="page-info" class="page-info"></span>
+            <button id="next-btn">Next &rarr;</button>
+        </nav>
+    </main>
+
+    <script type="module">
+        import { App } from "https://unpkg.com/@modelcontextprotocol/ext-apps@0.4.0/app-with-deps";
+
+        const statusEl = document.getElementById("status");
+        const notationEl = document.getElementById("notation");
+        const paginationEl = document.getElementById("pagination");
+        const pageInfoEl = document.getElementById("page-info");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
+        const summaryEl = document.getElementById("highlight-summary");
+
+        let currentState = null;
+
+        function setStatus(text, isError = false) {
+            statusEl.textContent = text;
+            statusEl.classList.toggle("error", isError);
+            statusEl.classList.remove("hidden");
+        }
+
+        function applyHighlights(noteIds = []) {
+            let highlighted = 0;
+            for (const noteId of noteIds) {
+                const noteEl = notationEl.querySelector(`#${CSS.escape(noteId)}.note`);
+                if (noteEl) {
+                    noteEl.classList.add("note-highlight");
+                    highlighted += 1;
+                }
+            }
+            summaryEl.textContent = highlighted > 0
+                ? `Highlighted ${highlighted} note${highlighted === 1 ? "" : "s"}`
+                : "No highlighted notes on this page";
+        }
+
+        function render(structured) {
+            currentState = structured;
+            notationEl.innerHTML = structured.svg;
+            applyHighlights(structured.highlight_note_ids || []);
+            statusEl.classList.add("hidden");
+
+            const { page, total_pages } = structured;
+            if (total_pages > 1) {
+                paginationEl.classList.add("visible");
+                pageInfoEl.textContent = `Page ${page} of ${total_pages}`;
+                prevBtn.disabled = page <= 1;
+                nextBtn.disabled = page >= total_pages;
+            } else {
+                paginationEl.classList.remove("visible");
+            }
+        }
+
+        async function goToPage(newPage) {
+            if (!currentState) return;
+            setStatus("Loading page...");
+            const args = {
+                filename: currentState.filename,
+                page: newPage,
+                highlight_note_ids: currentState.highlight_note_ids || [],
+            };
+            if (currentState.start_measure != null) {
+                args.start_measure = currentState.start_measure;
+                args.end_measure = currentState.end_measure;
+            }
+            try {
+                const result = await app.callServerTool({ name: "show_notation_highlight", arguments: args });
+                if (result && result.structuredContent && result.structuredContent.svg) {
+                    render(result.structuredContent);
+                } else {
+                    setStatus("Unexpected result format", true);
+                }
+            } catch (err) {
+                setStatus("Error loading page: " + (err.message || err), true);
+            }
+        }
+
+        prevBtn.addEventListener("click", () => {
+            if (currentState && currentState.page > 1) {
+                goToPage(currentState.page - 1);
+            }
+        });
+
+        nextBtn.addEventListener("click", () => {
+            if (currentState && currentState.page < currentState.total_pages) {
+                goToPage(currentState.page + 1);
+            }
+        });
+
+        const app = new App({ name: "Notation Highlight Viewer", version: "1.0.0" });
+
+        app.ontoolresult = (result) => {
+            const structured = result.structuredContent;
+            if (structured && structured.svg) {
+                render(structured);
+                return;
+            }
+            setStatus("No notation data in result", true);
+        };
+
+        app.ontoolinput = () => {
+            setStatus("Rendering notation...");
+        };
+
+        app.onerror = (err) => {
+            console.error("App error:", err);
+            setStatus("Error: " + (err.message || err), true);
+        };
+
+        await app.connect();
+        setStatus("Connected, waiting for notation...");
+    </script>
+</body>
+</html>

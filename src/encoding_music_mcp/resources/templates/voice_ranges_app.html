@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>Voice Ranges</title>
+    <style>
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            background: #f5efe3;
+            color: #2b241b;
+        }
+        body { padding: 12px; }
+        .panel {
+            background: linear-gradient(180deg, #fbf7ef 0%, #f3ead6 100%);
+            border: 1px solid #dbcdb4;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(76, 57, 34, 0.12);
+            padding: 16px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            line-height: 1.2;
+        }
+        .meta {
+            margin-top: 6px;
+            color: #6f5d47;
+            font-size: 0.95rem;
+        }
+        #status {
+            color: #8b0000;
+            font-size: 0.95rem;
+        }
+        #status.hidden { display: none; }
+        .chart-wrap {
+            margin-top: 14px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(125, 97, 61, 0.15);
+        }
+        svg { display: block; }
+        .legend {
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(125, 97, 61, 0.18);
+            font-size: 0.88rem;
+        }
+        .swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 999px;
+        }
+        @media (prefers-color-scheme: dark) {
+            html, body {
+                background: #201914;
+                color: #f4ead8;
+            }
+            .panel {
+                background: linear-gradient(180deg, #3b2d22 0%, #241c16 100%);
+                border-color: #5e4937;
+                box-shadow: none;
+            }
+            .meta { color: #cdb79c; }
+            .chart-wrap, .legend-item {
+                background: rgba(255, 255, 255, 0.04);
+                border-color: rgba(255, 255, 255, 0.12);
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="panel">
+        <div id="status">Waiting for voice-range data...</div>
+        <div id="content" hidden>
+            <h1 id="title"></h1>
+            <div id="meta" class="meta"></div>
+            <div class="chart-wrap">
+                <svg id="chart" role="img" aria-label="Voice range chart"></svg>
+            </div>
+            <div id="legend" class="legend"></div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { App } from "https://unpkg.com/@modelcontextprotocol/ext-apps@0.4.0/app-with-deps";
+
+        const statusEl = document.getElementById("status");
+        const contentEl = document.getElementById("content");
+        const titleEl = document.getElementById("title");
+        const metaEl = document.getElementById("meta");
+        const chartEl = document.getElementById("chart");
+        const legendEl = document.getElementById("legend");
+
+        function setStatus(text, isError = false) {
+            statusEl.textContent = text;
+            statusEl.style.color = isError ? "#b42318" : "";
+            statusEl.classList.remove("hidden");
+            contentEl.hidden = true;
+        }
+
+        function line(x1, y1, x2, y2, attrs = {}) {
+            const el = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            el.setAttribute("x1", x1);
+            el.setAttribute("y1", y1);
+            el.setAttribute("x2", x2);
+            el.setAttribute("y2", y2);
+            Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
+            return el;
+        }
+
+        function rect(x, y, width, height, attrs = {}) {
+            const el = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            el.setAttribute("x", x);
+            el.setAttribute("y", y);
+            el.setAttribute("width", width);
+            el.setAttribute("height", height);
+            Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
+            return el;
+        }
+
+        function text(x, y, value, attrs = {}) {
+            const el = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            el.setAttribute("x", x);
+            el.setAttribute("y", y);
+            el.textContent = value;
+            Object.entries(attrs).forEach(([key, attrValue]) => el.setAttribute(key, attrValue));
+            return el;
+        }
+
+        function render(structured) {
+            const { title, composer, filename, x_min_midi, x_max_midi, tick_labels, staff_ranges } = structured;
+            titleEl.textContent = title || filename;
+            metaEl.textContent = composer ? `${composer} | ${filename}` : filename;
+
+            const leftMargin = 88;
+            const rightMargin = 18;
+            const topMargin = 52;
+            const bottomMargin = 40;
+            const rowHeight = 42;
+            const barHeight = 18;
+            const cellWidth = 15;
+            const valueCount = x_max_midi - x_min_midi + 1;
+            const plotWidth = valueCount * cellWidth;
+            const width = leftMargin + plotWidth + rightMargin;
+            const height = topMargin + bottomMargin + staff_ranges.length * rowHeight;
+
+            chartEl.setAttribute("viewBox", `0 0 ${width} ${height}`);
+            chartEl.setAttribute("width", width);
+            chartEl.setAttribute("height", height);
+            chartEl.innerHTML = "";
+
+            chartEl.appendChild(text(leftMargin, 24, "Note Range", {
+                "font-size": "16",
+                "font-weight": "700",
+                fill: "currentColor"
+            }));
+
+            for (let i = 0; i < valueCount; i += 1) {
+                const x = leftMargin + i * cellWidth;
+                const isC = tick_labels[i].startsWith("C");
+                chartEl.appendChild(line(x, topMargin - 8, x, height - bottomMargin + 2, {
+                    stroke: isC ? "rgba(100, 78, 49, 0.35)" : "rgba(100, 78, 49, 0.15)",
+                    "stroke-width": isC ? "1.5" : "1"
+                }));
+                chartEl.appendChild(text(x + (cellWidth / 2), height - 10, tick_labels[i], {
+                    "font-size": "9",
+                    "text-anchor": "middle",
+                    transform: `rotate(90 ${x + (cellWidth / 2)} ${height - 10})`,
+                    fill: "currentColor"
+                }));
+            }
+            chartEl.appendChild(line(leftMargin + plotWidth, topMargin - 8, leftMargin + plotWidth, height - bottomMargin + 2, {
+                stroke: "rgba(100, 78, 49, 0.2)",
+                "stroke-width": "1"
+            }));
+
+            staff_ranges.forEach((staff, index) => {
+                const rowY = topMargin + index * rowHeight;
+                const laneY = rowY + ((rowHeight - barHeight) / 2);
+                const startIndex = staff.lowest_midi - x_min_midi;
+                const endIndex = staff.highest_midi - x_min_midi;
+                const barX = leftMargin + startIndex * cellWidth;
+                const barWidth = (endIndex - startIndex + 1) * cellWidth;
+
+                chartEl.appendChild(rect(leftMargin, laneY, plotWidth, barHeight, {
+                    rx: "8",
+                    fill: "rgba(100, 78, 49, 0.08)"
+                }));
+                chartEl.appendChild(rect(barX, laneY, barWidth, barHeight, {
+                    rx: "8",
+                    fill: staff.colour,
+                    opacity: "0.72"
+                }));
+                chartEl.appendChild(text(leftMargin - 12, rowY + 31, staff.label, {
+                    "font-size": "12",
+                    "font-weight": "700",
+                    "text-anchor": "end",
+                    fill: "currentColor"
+                }));
+                chartEl.appendChild(text(barX + 6, rowY + 27, `${staff.lowest_note} to ${staff.highest_note}`, {
+                    "font-size": "10",
+                    "font-weight": "600",
+                    fill: "#1f1a14"
+                }));
+            });
+
+            legendEl.innerHTML = "";
+            staff_ranges.forEach((staff) => {
+                const item = document.createElement("div");
+                item.className = "legend-item";
+                item.innerHTML = `<span class="swatch" style="background:${staff.colour}"></span><span>${staff.label}: ${staff.lowest_note} to ${staff.highest_note}</span>`;
+                legendEl.appendChild(item);
+            });
+
+            statusEl.classList.add("hidden");
+            contentEl.hidden = false;
+        }
+
+        const app = new App({ name: "Voice Ranges", version: "1.0.0" });
+
+        app.ontoolinput = () => {
+            setStatus("Rendering voice ranges...");
+        };
+
+        app.ontoolresult = (result) => {
+            const structured = result.structuredContent;
+            if (structured && structured.staff_ranges) {
+                render(structured);
+                return;
+            }
+            setStatus("No voice-range data in result.", true);
+        };
+
+        app.onerror = (err) => {
+            console.error("App error:", err);
+            setStatus("Error: " + (err.message || err), true);
+        };
+
+        await app.connect();
+        setStatus("Connected, waiting for voice-range data...");
+    </script>
+</body>
+</html>

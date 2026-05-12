@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      padding: 16px;
+      font: 16px sans-serif;
+      box-sizing: border-box;
+    }
+    .meta {
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    audio {
+      width: 100%;
+      max-width: 720px;
+    }
+    #status {
+      margin-top: 10px;
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="meta" id="meta">Connecting...</div>
+  <audio id="player" controls preload="metadata"></audio>
+  <div id="status">Waiting for tool result...</div>
+
+  <script type="module">
+    import { App } from "https://unpkg.com/@modelcontextprotocol/ext-apps@0.4.0/app-with-deps";
+
+    const meta = document.getElementById("meta");
+    const player = document.getElementById("player");
+    const status = document.getElementById("status");
+    let currentObjectUrl = null;
+
+    const app = new App({ name: "Play Excerpt", version: "1.0.0" });
+
+    function log(msg) {
+      status.textContent = msg;
+      console.log(msg);
+    }
+
+    function decodeBase64ToUint8Array(base64) {
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i += 1) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      return bytes;
+    }
+
+    function tryParseJsonObjectFromText(text) {
+      const trimmed = text.trim();
+
+      if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+        return JSON.parse(trimmed);
+      }
+
+      const firstBrace = trimmed.indexOf("{");
+      const lastBrace = trimmed.lastIndexOf("}");
+
+      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+        const candidate = trimmed.slice(firstBrace, lastBrace + 1);
+        return JSON.parse(candidate);
+      }
+
+      throw new Error("Tool text did not contain a JSON object");
+    }
+
+    function extractPayload(content, structuredContent) {
+      if (structuredContent && typeof structuredContent === "object") {
+        return structuredContent;
+      }
+
+      const textItem = content?.find(c => c.type === "text" && typeof c.text === "string");
+      if (!textItem) {
+        throw new Error("No usable tool content found");
+      }
+
+      return tryParseJsonObjectFromText(textItem.text);
+    }
+
+    app.ontoolresult = async ({ content, structuredContent }) => {
+      try {
+        const payload = extractPayload(content, structuredContent);
+
+        if (!payload.audio_resource_uri) {
+          throw new Error("Missing audio_resource_uri in payload");
+        }
+
+        const rangeText = payload.end_q == null
+          ? "full piece"
+          : `beats ${payload.start_q} to ${payload.end_q}`;
+
+        meta.textContent =
+          `${payload.filename} | ${rangeText} | ${payload.bpm} bpm | ${payload.duration_sec?.toFixed?.(2) ?? "?"}s`;
+
+        log("Loading audio resource...");
+
+        const audioResult = await app.callServerTool({
+          name: "load_audio_resource",
+          arguments: { resource_uri: payload.audio_resource_uri },
+        });
+        const audioPayload = extractPayload(audioResult.content, audioResult.structuredContent);
+        if (!audioPayload.audio_base64) {
+          throw new Error("Audio resource did not return audio_base64");
+        }
+
+        player.pause();
+        if (currentObjectUrl) {
+          URL.revokeObjectURL(currentObjectUrl);
+          currentObjectUrl = null;
+        }
+        player.removeAttribute("src");
+        player.load();
+
+        const bytes = decodeBase64ToUint8Array(audioPayload.audio_base64);
+        const blob = new Blob([bytes], { type: audioPayload.mime_type || payload.mime_type });
+        currentObjectUrl = URL.createObjectURL(blob);
+        player.src = currentObjectUrl;
+        log("Audio loaded");
+      } catch (err) {
+        log("Failed to parse tool output: " + err.message);
+      }
+    };
+
+    try {
+      await app.connect();
+      log("Connected. Waiting for tool result...");
+    } catch (err) {
+      log("Connect error: " + err.message);
+    }
+  </script>
+</body>
+</html>

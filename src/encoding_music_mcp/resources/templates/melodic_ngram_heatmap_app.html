@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>Melodic N-gram Heatmap</title>
+    <style>
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #10141b;
+            color: #f3f6fb;
+        }
+        body { padding: 12px; }
+        .panel {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            background: #121821;
+            padding: 16px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            line-height: 1.25;
+        }
+        .meta, .summary, .scores {
+            color: #a9b3c1;
+            font-size: 0.9rem;
+            margin-top: 6px;
+        }
+        .scores {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            line-height: 1.3;
+        }
+        .score-line {
+            overflow-wrap: anywhere;
+        }
+        #status {
+            color: #ffb4a8;
+            font-size: 0.95rem;
+        }
+        #status.hidden { display: none; }
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 260px;
+            gap: 16px;
+            margin-top: 14px;
+            align-items: start;
+        }
+        .chart-shell {
+            overflow: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: #0e131a;
+        }
+        svg {
+            display: block;
+            min-width: 760px;
+            width: 100%;
+            height: auto;
+        }
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .legend-item {
+            display: grid;
+            grid-template-columns: 14px minmax(0, 1fr);
+            gap: 8px;
+            align-items: start;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 9px;
+        }
+        .swatch {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            margin-top: 2px;
+        }
+        .legend-label {
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+        .legend-meta {
+            color: #a9b3c1;
+            font-size: 0.82rem;
+            margin-top: 2px;
+        }
+        @media (max-width: 840px) {
+            .layout { grid-template-columns: 1fr; }
+            .panel { padding: 12px; }
+        }
+        @media (prefers-color-scheme: light) {
+            html, body {
+                background: #f4f6f8;
+                color: #18202b;
+            }
+            .panel, .chart-shell {
+                background: #ffffff;
+                border-color: rgba(26, 36, 49, 0.12);
+            }
+            .chart-shell { background: #f9fbfd; }
+            .meta, .summary, .scores, .legend-meta { color: #546173; }
+            .legend-item {
+                background: #ffffff;
+                border-color: rgba(26, 36, 49, 0.12);
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="panel">
+        <div id="status">Waiting for melodic n-gram heatmap data...</div>
+        <div id="content" hidden>
+            <h1 id="title"></h1>
+            <div id="meta" class="meta"></div>
+            <div id="scores" class="scores"></div>
+            <div id="summary" class="summary"></div>
+            <div class="layout">
+                <section class="chart-shell">
+                    <svg id="chart" role="img" aria-label="Melodic n-gram heatmap"></svg>
+                </section>
+                <aside>
+                    <div id="legend" class="legend"></div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { App } from "https://unpkg.com/@modelcontextprotocol/ext-apps@0.4.0/app-with-deps";
+
+        const statusEl = document.getElementById("status");
+        const contentEl = document.getElementById("content");
+        const titleEl = document.getElementById("title");
+        const metaEl = document.getElementById("meta");
+        const scoresEl = document.getElementById("scores");
+        const summaryEl = document.getElementById("summary");
+        const chartEl = document.getElementById("chart");
+        const legendEl = document.getElementById("legend");
+
+        function setStatus(text, isError = false) {
+            statusEl.textContent = text;
+            statusEl.style.color = isError ? "#ff8a7a" : "";
+            statusEl.classList.remove("hidden");
+            contentEl.hidden = true;
+        }
+
+        function svgNode(tag, attrs = {}) {
+            const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
+            Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+            return node;
+        }
+
+        function formatOffset(value) {
+            return Number(value).toFixed(Number.isInteger(value) ? 0 : 2);
+        }
+
+        function render(structured) {
+            const { filenames, scores, rows, occurrences, patterns, n, kind, entries, x_max } = structured;
+            const rowHeight = 54;
+            const rowGap = 6;
+            const left = 178;
+            const right = 32;
+            const top = 48;
+            const axisHeight = 28;
+            const plotWidth = Math.max(620, Math.ceil((x_max || 1) * 8));
+            const width = left + plotWidth + right;
+            const height = top + axisHeight + rows.length * (rowHeight + rowGap) + 22;
+            const maxX = x_max > 0 ? x_max : 1;
+
+            titleEl.textContent = "Melodic N-gram Heatmap";
+            metaEl.textContent = `${filenames.length} score${filenames.length === 1 ? "" : "s"}`;
+            if (Array.isArray(scores) && scores.length > 0) {
+                scoresEl.innerHTML = scores.map((score) => {
+                    const title = score.title || score.filename;
+                    const composer = score.composer ? `${score.composer} | ` : "";
+                    return `<div class="score-line">- ${composer}${title}</div>`;
+                }).join("");
+            } else {
+                scoresEl.innerHTML = filenames
+                    .map((filename) => `<div class="score-line">- ${filename}</div>`)
+                    .join("");
+            }
+            summaryEl.textContent = entries
+                ? `n=${n} | kind=${kind} | top ${patterns.length} entry-filtered pattern${patterns.length === 1 ? "" : "s"} across all selected scores.`
+                : `n=${n} | kind=${kind} | top ${patterns.length} pattern${patterns.length === 1 ? "" : "s"} across all selected scores.`;
+
+            chartEl.setAttribute("viewBox", `0 0 ${width} ${height}`);
+            chartEl.style.minWidth = `${Math.min(width, 1200)}px`;
+            chartEl.innerHTML = "";
+
+            const gridGroup = svgNode("g");
+            const tickCount = 8;
+            for (let tick = 0; tick <= tickCount; tick += 1) {
+                const value = (maxX / tickCount) * tick;
+                const x = left + (value / maxX) * plotWidth;
+                gridGroup.appendChild(svgNode("line", {
+                    x1: x,
+                    y1: top,
+                    x2: x,
+                    y2: height - 18,
+                    stroke: "currentColor",
+                    "stroke-opacity": tick === 0 ? "0.35" : "0.13",
+                    "stroke-width": "1",
+                }));
+                const label = svgNode("text", {
+                    x,
+                    y: 24,
+                    "text-anchor": "middle",
+                    "font-size": "12",
+                    fill: "currentColor",
+                    "fill-opacity": "0.72",
+                });
+                label.textContent = formatOffset(value);
+                gridGroup.appendChild(label);
+            }
+            chartEl.appendChild(gridGroup);
+
+            const axisTitle = svgNode("text", {
+                x: left + plotWidth / 2,
+                y: height - 2,
+                "text-anchor": "middle",
+                "font-size": "12",
+                fill: "currentColor",
+                "fill-opacity": "0.75",
+            });
+            axisTitle.textContent = "start, end (quarter-note offsets)";
+            chartEl.appendChild(axisTitle);
+
+            const rowY = new Map();
+            rows.forEach((row, index) => {
+                const y = top + axisHeight + index * (rowHeight + rowGap);
+                rowY.set(row.id, y);
+                chartEl.appendChild(svgNode("rect", {
+                    x: left,
+                    y,
+                    width: plotWidth,
+                    height: rowHeight,
+                    rx: "0",
+                    fill: index % 2 === 0 ? "currentColor" : "transparent",
+                    "fill-opacity": "0.035",
+                }));
+                const label = svgNode("text", {
+                    x: left - 12,
+                    y: y + rowHeight / 2 + 5,
+                    "text-anchor": "end",
+                    "font-size": "12",
+                    fill: "currentColor",
+                    "fill-opacity": "0.82",
+                });
+                label.textContent = row.label;
+                chartEl.appendChild(label);
+            });
+
+            occurrences.forEach((occurrence) => {
+                const y = rowY.get(occurrence.row_id);
+                if (y === undefined) return;
+                const startX = left + (occurrence.start_q / maxX) * plotWidth;
+                const endX = left + (occurrence.end_q / maxX) * plotWidth;
+                const rect = svgNode("rect", {
+                    x: startX,
+                    y: y + 10,
+                    width: Math.max(2, endX - startX),
+                    height: rowHeight - 20,
+                    rx: "0",
+                    fill: occurrence.color,
+                    "fill-opacity": "0.72",
+                });
+                rect.appendChild(svgNode("title"));
+                rect.firstChild.textContent =
+                    `${occurrence.pattern_string} | Staff ${occurrence.staff} | ${formatOffset(occurrence.start_q)}-${formatOffset(occurrence.end_q)}`;
+                chartEl.appendChild(rect);
+            });
+
+            legendEl.innerHTML = "";
+            patterns.forEach((pattern) => {
+                const item = document.createElement("div");
+                item.className = "legend-item";
+                item.innerHTML = `
+                    <span class="swatch" style="background:${pattern.color}"></span>
+                    <div>
+                        <div class="legend-label">${pattern.pattern_string}</div>
+                        <div class="legend-meta">${pattern.count} occurrence${pattern.count === 1 ? "" : "s"}</div>
+                    </div>
+                `;
+                legendEl.appendChild(item);
+            });
+
+            statusEl.classList.add("hidden");
+            contentEl.hidden = false;
+        }
+
+        const app = new App({ name: "Melodic N-gram Heatmap", version: "1.0.0" });
+
+        app.ontoolinput = () => {
+            setStatus("Rendering melodic n-gram heatmap...");
+        };
+
+        app.ontoolresult = (result) => {
+            const structured = result.structuredContent;
+            if (structured && structured.rows && structured.occurrences && structured.patterns) {
+                render(structured);
+                return;
+            }
+            setStatus("No melodic n-gram heatmap data in result.", true);
+        };
+
+        app.onerror = (err) => {
+            console.error("App error:", err);
+            setStatus("Error: " + (err.message || err), true);
+        };
+
+        await app.connect();
+        setStatus("Connected, waiting for melodic n-gram heatmap data...");
+    </script>
+</body>
+</html>

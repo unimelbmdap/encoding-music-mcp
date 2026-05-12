@@ -6,9 +6,17 @@ This guide explains how to configure encoding-music-mcp with various MCP clients
 
 Claude Desktop is the most common MCP client for using encoding-music-mcp.
 
-### Locating the Configuration File
+### Opening the Configuration File
 
-The configuration file location depends on your operating system:
+The easiest way to open the configuration file is from Claude Desktop:
+
+1. Open **Settings**
+2. Select **Developer**
+3. Under **Local MCP servers**, click **Edit Config**
+
+This locates the correct `claude_desktop_config.json` file for your installation.
+
+If you need to find the file manually, common locations are:
 
 === "macOS"
 
