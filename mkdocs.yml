@@ -56,6 +56,7 @@ nav:
   - Tools:
       - Overview: tools/index.md
       - Discovery: tools/discovery.md
+      - Uploads: tools/uploads.md
       - Metadata: tools/metadata.md
       - Key Analysis: tools/key-analysis.md
       - Notation: tools/notation.md
@@ -74,6 +75,8 @@ nav:
           - N-gram Counts: tools/intervals/ngram-counts.md
           - N-gram Matches: tools/intervals/ngram-matches.md
           - First-Occurrence N-grams: tools/intervals/first-occur.md
+          - Note ID Resolution: tools/intervals/note-id-resolution.md
+          - Cadences: tools/intervals/cadences.md
   - Resources:
       - MEI Files: resources/mei-files.md
       - Bach Inventions: resources/bach.md

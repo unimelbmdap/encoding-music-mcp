@@ -372,12 +372,14 @@ def _build_progress_payload(
 
 
 def _format_score_name(score: dict[str, Any]) -> str:
+    """Format a score label for the text summary."""
     composer = score.get("composer")
     title = score.get("title") or score.get("filename")
     return f"{composer} | {title}" if composer else str(title)
 
 
 def _progress_percent(value: float) -> str:
+    """Format normalized progress as a whole-number percentage."""
     return f"{round(value * 100)}%"
 
 
@@ -458,6 +460,19 @@ def plot_sonority_ngram_progress(
     plotted at their start progress from 0 to 1. In multi-score mode, each score
     introduces only patterns that have not appeared in earlier scores, so
     repeated ideas are not duplicated in later score groups.
+
+    Args:
+        filename: Name of one MEI file to plot.
+        filenames: Optional list of MEI filenames for multi-score comparison.
+        n: Length of the sonority n-grams.
+        compound: Whether CRIM should use compound interval classes.
+        sort: Whether CRIM should sort pitches within each sonority.
+        minimum_beat_strength: Minimum beat-strength filter passed to CRIM.
+
+    Returns:
+        ToolResult with a text summary and structured app payload containing
+        score metadata, displayed pattern rows, occurrence positions, fallback
+        warnings, and the normalized x-axis range.
     """
     structured = _build_progress_payload(
         filename=filename,

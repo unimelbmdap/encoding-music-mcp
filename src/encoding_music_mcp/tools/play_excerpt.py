@@ -41,22 +41,7 @@ ET.register_namespace("xml", "http://www.w3.org/XML/1998/namespace")
 
 
 def _inject_or_replace_tempo(mei_text: str, bpm: int) -> str:
-    """Insert a tempo marking into MEI text or replace an existing MIDI tempo.
-
-    If the MEI already contains a ``midi.bpm="..."`` attribute, this function
-    replaces its first occurrence with the requested BPM value. Otherwise, it
-    inserts a ``<tempo>`` element immediately after the first ``<measure>`` tag.
-
-    Args:
-        mei_text : str
-            The MEI document as a string.
-        bpm : int
-            The tempo in beats per minute.
-
-    Returns:
-        str
-            The modified MEI text with the requested tempo.
-    """
+    """Apply the requested MIDI tempo to the MEI text."""
     if 'midi.bpm="' in mei_text:
         return re.sub(
             r'midi\.bpm="\d+(\.\d+)?"',
@@ -73,14 +58,11 @@ def _inject_or_replace_tempo(mei_text: str, bpm: int) -> str:
     )
 
 
-def _normalize_zero_velocities(mei_text: str, default_velocity: int = _DEFAULT_PLAYBACK_VELOCITY) -> str:
-    """Replace silent note/chord velocities with a practical playback default.
-
-    Some source MEI files encode notes with ``vel="0"``. That value is fine as
-    source data, but once converted to MIDI it effectively produces silent note
-    events. To make playback audible, these zero-velocity note and chord events
-    are rewritten to a moderate default velocity before rendering to MIDI.
-    """
+def _normalize_zero_velocities(
+    mei_text: str,
+    default_velocity: int = _DEFAULT_PLAYBACK_VELOCITY,
+) -> str:
+    """Replace silent note/chord velocities with an audible playback default."""
     return re.sub(
         r'(<(?:note|chord)\b[^>]*\bvel=")0(")',
         rf"\g<1>{default_velocity}\2",
@@ -149,13 +131,7 @@ def _contains_numbered_endings(region: list[ET.Element]) -> bool:
 
 
 def _expand_region_with_numbered_endings(region: list[ET.Element]) -> list[ET.Element]:
-    """Expand a repeat region that uses numbered endings.
-
-    This handles the MEI pattern seen in the Morley files where the first
-    ending begins with an ``<ending n="1">`` wrapper, continues through
-    subsequent plain measures, and the second ending is wrapped later as
-    ``<ending n="2">``.
-    """
+    """Expand a repeated MEI region that uses first and second endings."""
     prefix: list[ET.Element] = []
     first_ending: list[ET.Element] = []
     second_ending: list[ET.Element] = []
@@ -262,19 +238,7 @@ def _render_mei_to_midi_b64(filepath: Path, mei_text: str, bpm: int) -> str:
 
 
 def _find_fluidsynth_executable() -> Path:
-    """Locate the FluidSynth executable.
-
-    The function first looks for ``fluidsynth`` on the system PATH. If it is
-    not found, it falls back to a predefined Windows installation path.
-
-    Returns:
-        Path
-            The path to the FluidSynth executable.
-
-    Raises:
-        FileNotFoundError
-            If FluidSynth cannot be found in either location.
-    """
+    """Locate FluidSynth on PATH or at the configured Windows fallback."""
     exe = shutil.which("fluidsynth")
     if exe:
         return Path(exe)
@@ -306,24 +270,7 @@ def _find_ffmpeg_executable() -> Path:
 
 
 def _render_midi_b64_to_wav_file(midi_b64: str, wav_path: Path) -> None:
-    """Render a base64-encoded MIDI file to WAV using FluidSynth.
-
-    The MIDI data are decoded, written to a temporary ``.mid`` file, and then
-    synthesised to a WAV file using the configured SoundFont and FluidSynth
-    executable.
-
-    Parameters:
-        midi_b64 : str
-            Base64-encoded MIDI data.
-        wav_path : Path
-            Output path for the rendered WAV file.
-
-    Raises:
-        FileNotFoundError
-            If the SoundFont or FluidSynth executable cannot be found.
-        RuntimeError
-            If FluidSynth fails or does not produce the WAV file.
-    """
+    """Render base64 MIDI to WAV using FluidSynth and the bundled SoundFont."""
     if not _SOUNDFONT_PATH.exists():
         raise FileNotFoundError(
             f"SoundFont not found at {_SOUNDFONT_PATH}. "
@@ -371,23 +318,7 @@ def _render_midi_b64_to_wav_file(midi_b64: str, wav_path: Path) -> None:
 
 
 def _trim_wav_file(input_wav: Path, output_wav: Path, start_sec: float, end_sec: float) -> None:
-    """Trim a time interval from a WAV file and save it as a new WAV file.
-
-    Parameters:
-        input_wav : Path
-            Path to the source WAV file.
-        output_wav : Path
-            Path where the trimmed WAV file will be written.
-        start_sec : float
-            Start time of the excerpt in seconds.
-        end_sec : float
-            End time of the excerpt in seconds.
-
-    Raises:
-        ValueError
-            If ``end_sec`` is not greater than ``start_sec``, or if the excerpt is
-            empty after clamping to the audio duration.
-    """
+    """Trim a time interval from one WAV file into another WAV file."""
     if end_sec <= start_sec:
         raise ValueError("end_sec must be greater than start_sec")
 
@@ -466,12 +397,7 @@ def _convert_wav_to_mp3(input_wav: Path, output_mp3: Path) -> None:
 
 
 def _build_audio_cache_key(filename: str, start_q: float, end_q: float | None, bpm: int) -> str:
-    """Create a stable cache key for a rendered audio request.
-
-    The cache key is derived from the musical request. That means repeated requests 
-    for the same file, tempo, and quarter-note range can reuse the same MP3 instead 
-    of re-rendering it.
-    """
+    """Create a stable cache key for a rendered audio request."""
     payload = (
         f"{_AUDIO_CACHE_VERSION}|{filename}|{start_q:.6f}|"
         f"{end_q if end_q is None else f'{end_q:.6f}'}|{bpm}"
@@ -492,7 +418,15 @@ def _register_audio_file(audio_path: Path, mime_type: str, duration_sec: float) 
 
 
 def get_registered_audio(token: str) -> dict[str, Any] | None:
-    """Look up a registered prepared audio file by token."""
+    """Look up a prepared audio file by registry token.
+
+    Args:
+        token: Opaque token returned in an ``audio://files/{token}`` URI.
+
+    Returns:
+        Registry metadata for the prepared audio file, or ``None`` if the token
+        is unknown.
+    """
     with _AUDIO_REGISTRY_LOCK:
         return _AUDIO_REGISTRY.get(token)
 
@@ -591,12 +525,15 @@ async def play_excerpt(
 
         _render_midi_b64_to_wav_file(midi_b64, full_wav_path)
 
-        if end_q is None:
+        if end_q is None and start_q == 0:
             shutil.copyfile(full_wav_path, working_wav_path)
         else:
             start_sec = start_q * 60.0 / bpm
-            # Add a small buffer to avoid cutting off the final note too early.
-            end_sec = (end_q + 0.25) * 60.0 / bpm
+            if end_q is None:
+                end_sec = _get_wav_duration_sec(full_wav_path)
+            else:
+                # Add a small buffer to avoid cutting off the final note too early.
+                end_sec = (end_q + 0.25) * 60.0 / bpm
             _trim_wav_file(full_wav_path, working_wav_path, start_sec, end_sec)
 
         if not output_mp3_path.exists():

@@ -498,18 +498,8 @@ def _count_patterns(mel_ngrams: Any) -> list[dict[str, Any]]:
     ]
 
 
-def _load_piece_with_details(filepath) -> tuple[Any, Any]:
-    """Load a piece and prepare detailed note dataframe.
-
-    Args:
-        filepath: Path to the MEI file
-
-    Returns:
-        Tuple of (piece, detailed_notes_dataframe)
-
-    Raises:
-        FileNotFoundError: If the file cannot be loaded
-    """
+def _load_piece_with_details(filepath: Path) -> tuple[Any, Any]:
+    """Load a score and its detailed note dataframe."""
     piece = importScore(str(filepath))
     if piece is None:
         raise FileNotFoundError(f"Could not load MEI file: {filepath}")
@@ -671,7 +661,31 @@ def count_melodic_ngrams(
     combine_unisons: bool | None = None,
     compound: bool = False,
 ) -> dict[str, Any]:
-    """Count melodic n-gram occurrences and rank patterns by frequency."""
+    """Count melodic n-gram occurrences and rank patterns by frequency.
+
+    Computes melodic n-grams with CRIM Intervals, normalises each pattern into
+    a stable underscore-separated key, and returns counts sorted by descending
+    frequency.
+
+    Args:
+        filename: Name of the MEI file (e.g., "Bach_BWV_0772.mei").
+        n: Length of the n-grams.
+        kind: Interval representation used for melodic intervals.
+        entries: Whether to restrict results to entry-filtered n-grams.
+        combine_unisons: Whether CRIM should combine repeated unisons before
+            melodic interval extraction. ``None`` uses the default CRIM path.
+        compound: Whether to use compound intervals.
+
+    Returns:
+        Dictionary containing:
+        - filename: The input filename
+        - n: The n-gram length used
+        - kind: The interval type used
+        - entries: Whether entry filtering was applied
+        - combine_unisons: Whether unisons were combined
+        - compound: Whether compound intervals were used
+        - pattern_counts: Ranked list of pattern/count records
+    """
     filepath = get_mei_filepath(filename)
     mel_ngrams = _load_melodic_ngram_dataframe(
         filepath,
@@ -747,7 +761,34 @@ def get_melodic_ngram_matches(
     combine_unisons: bool | None = None,
     compound: bool = False,
 ) -> dict[str, Any]:
-    """Return note-id matches grouped by melodic n-gram pattern."""
+    """Return note-ID matches grouped by melodic n-gram pattern.
+
+    Computes melodic n-grams, resolves each occurrence to MEI note IDs, and
+    groups the results by pattern string. This is the main data source for
+    notation-highlighting workflows that need every occurrence of one or more
+    melodic patterns.
+
+    Args:
+        filename: Name of the MEI file (e.g., "Bach_BWV_0772.mei").
+        n: Length of the n-grams.
+        kind: Interval representation used for melodic intervals.
+        entries: Whether to restrict results to entry-filtered n-grams.
+        patterns: Optional list of underscore-separated pattern strings to keep.
+        combine_unisons: Whether CRIM should combine repeated unisons before
+            melodic interval extraction. ``None`` uses the default CRIM path.
+        compound: Whether to use compound intervals.
+
+    Returns:
+        Dictionary containing:
+        - filename: The input filename
+        - n: The n-gram length used
+        - kind: The interval type used
+        - entries: Whether entry filtering was applied
+        - patterns: Pattern filters that were applied
+        - combine_unisons: Whether unisons were combined
+        - compound: Whether compound intervals were used
+        - matches_by_pattern: Mapping of pattern strings to occurrence records
+    """
     filepath = get_mei_filepath(filename)
     mel_ngrams = _load_melodic_ngram_dataframe(
         filepath,

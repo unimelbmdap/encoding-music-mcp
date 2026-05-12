@@ -4,7 +4,7 @@ The `play_excerpt` tool renders an MEI score to audio and opens an inline audio 
 
 ## Overview
 
-This tool converts MEI notation into playable audio by rendering MIDI with Verovio, synthesising that MIDI with FluidSynth, trimming the requested segment if needed, and converting the result to MP3 for streaming in the app viewer.
+This tool converts MEI notation into playable audio by rendering MIDI with music21, synthesising that MIDI with FluidSynth, trimming the requested segment if needed, and converting the result to MP3 for streaming in the app viewer.
 
 ## Prerequisites
 
@@ -73,7 +73,7 @@ Renders only the requested excerpt and opens it in the audio player.
 1. The MEI file is loaded from the built-in collection
 2. The requested tempo is inserted or updated in the MEI
 3. Silent `vel="0"` note events are normalised for audible playback
-4. Verovio renders the score to MIDI
+4. music21 renders the score to MIDI
 5. FluidSynth synthesises the MIDI to WAV using the bundled SoundFont
 6. If `start_q` and/or `end_q` are provided, the WAV is trimmed to the requested quarter-note range
 7. FFmpeg converts the result to MP3
@@ -91,3 +91,12 @@ Renders only the requested excerpt and opens it in the audio player.
 ## Related Tools
 
 - [show_notation](notation.md) - View the same score as rendered notation
+
+## load_audio_resource
+
+The `load_audio_resource` tool is a widget helper. It accepts the
+`audio_resource_uri` returned by `play_excerpt`, resolves the server-side audio
+registry token, and returns base64 MP3 data plus MIME and duration metadata.
+
+Most users do not need to call this directly; the playback app calls it when it
+needs the audio bytes.

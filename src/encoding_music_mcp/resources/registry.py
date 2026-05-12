@@ -41,6 +41,7 @@ _play_excerpt_html_path = _templates_dir / "play_excerpt_app.html"
     ),
 )
 def notation_viewer() -> str:
+    """Return the HTML template for the notation viewer app."""
     return _notation_html_path.read_text(encoding="utf-8")
 
 
@@ -57,6 +58,7 @@ def notation_viewer() -> str:
     ),
 )
 def notation_highlight_viewer() -> str:
+    """Return the HTML template for highlighted notation rendering."""
     return _notation_highlight_html_path.read_text(encoding="utf-8")
 
 
@@ -73,6 +75,7 @@ def notation_highlight_viewer() -> str:
     ),
 )
 def voice_ranges_viewer() -> str:
+    """Return the HTML template for the voice range visualisation app."""
     return _voice_ranges_html_path.read_text(encoding="utf-8")
 
 
@@ -89,6 +92,7 @@ def voice_ranges_viewer() -> str:
     ),
 )
 def weighted_note_distribution_viewer() -> str:
+    """Return the HTML template for the weighted note distribution app."""
     return _weighted_note_distribution_html_path.read_text(encoding="utf-8")
 
 
@@ -105,6 +109,7 @@ def weighted_note_distribution_viewer() -> str:
     ),
 )
 def melodic_ngram_heatmap_viewer() -> str:
+    """Return the HTML template for the melodic n-gram heatmap app."""
     return _melodic_ngram_heatmap_html_path.read_text(encoding="utf-8")
 
 
@@ -121,6 +126,7 @@ def melodic_ngram_heatmap_viewer() -> str:
     ),
 )
 def sonority_ngram_progress_viewer() -> str:
+    """Return the HTML template for the sonority n-gram progress app."""
     return _sonority_ngram_progress_html_path.read_text(encoding="utf-8")
 
 
@@ -137,12 +143,24 @@ def sonority_ngram_progress_viewer() -> str:
     ),
 )
 def play_excerpt_viewer() -> str:
+    """Return the HTML template for the excerpt playback app."""
     return _play_excerpt_html_path.read_text(encoding="utf-8")
 
 
 @mcp.resource("audio://files/{token}")
 def audio_file_resource(token: str) -> ResourceResult:
-    """Expose prepared audio files as MCP resources for stdio-compatible apps."""
+    """Expose prepared audio files as MCP resources for stdio-compatible apps.
+
+    Args:
+        token: Opaque token from an ``audio://files/{token}`` URI.
+
+    Returns:
+        Resource result containing the prepared audio bytes and MIME type.
+
+    Raises:
+        FileNotFoundError: If the token is unknown or the cached audio file is
+            no longer present.
+    """
     audio_entry = get_registered_audio(token)
     if not audio_entry:
         raise FileNotFoundError(f"Audio resource not found for token: {token}")

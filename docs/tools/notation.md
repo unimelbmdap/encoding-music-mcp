@@ -34,6 +34,36 @@ The notation viewer displays one system per page. For multi-page pieces, use the
 !!! example "Try asking:"
     "Show page 3 of Bach_BWV_0772.mei"
 
+## show_notation_highlight
+
+The `show_notation_highlight` tool renders the same notation payload as
+`show_notation`, then adds a list of MEI note IDs for the viewer to highlight.
+Use `resolve_note_ids_for_highlight`, `get_melodic_ngram_matches`, or
+`get_first_occur_melodic_ngrams` to obtain note IDs from analysis locations.
+
+Call this tool once for the requested score or excerpt. The widget handles page
+navigation with the same highlight set, so clients do not need to call the tool
+once per page.
+
+### Highlight Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `filename` | string | Yes | None | MEI filename to render |
+| `highlight_note_ids` | list[string] | Yes | None | MEI `xml:id` values to highlight |
+| `start_measure` | integer | No | None | First measure to display |
+| `end_measure` | integer | No | start_measure | Last measure to display |
+| `page` | integer | No | 1 | Page number to display |
+
+The structured result includes the same SVG and pagination fields as
+`show_notation`, plus:
+
+```python
+{
+    "highlight_note_ids": ["note-1", "note-2"]
+}
+```
+
 ## Parameters
 
 | Parameter | Type | Required | Default | Description |

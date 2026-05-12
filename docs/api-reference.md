@@ -6,8 +6,6 @@ Complete reference for all encoding-music-mcp tools.
 
 | Tool | Parameters | Returns | Documentation |
 |------|------------|---------|---------------|
-| `run_comprehensive_analysis` | `filename: str` | `str` comprehensive analysis text | N/A |
-| `diagnose_sampling` | None | `dict` sampling diagnostic status | N/A |
 | `list_available_mei_files` | None | `dict` with file lists | [Docs](tools/discovery.md) |
 | `register_mei_file_from_path` | `file_path: str | None = None, filename: str | None = None` | `dict` registration status | [Docs](tools/uploads.md) |
 | `get_mei_metadata` | `filename: str` | `dict` with metadata | [Docs](tools/metadata.md) |
@@ -20,11 +18,15 @@ Complete reference for all encoding-music-mcp tools.
 | `resolve_note_ids_for_highlight` | `filename: str, spans: list[dict[str, Any]]` | `dict` with resolved note-ID spans | [Docs](tools/intervals/note-id-resolution.md) |
 | `get_melodic_ngram_matches` | `filename: str, n: int = 4, kind: str = "d", entries: bool = False, patterns: list[str] \| None = None, combine_unisons: bool \| None = None, compound: bool = False` | `dict` with pattern-keyed note-id matches | [Docs](tools/intervals/ngram-matches.md) |
 | `get_first_occur_melodic_ngrams` | `filename: str, n: int = 4, kind: str = "d", combine_unisons: bool = True, compound: bool = False` | `dict` with first-occurrence patterns | [Docs](tools/intervals/first-occur.md) |
+| `get_cadences` | `filename: str` | `dict` with predicted cadences | [Docs](tools/intervals/cadences.md) |
 | `show_notation` | `filename: str \| None = None, start_measure: int = None, end_measure: int = None, page: int = 1` | SVG notation | [Docs](tools/notation.md) |
+| `show_notation_highlight` | `filename: str, highlight_note_ids: list[str], start_measure: int = None, end_measure: int = None, page: int = 1` | Highlighted SVG notation | [Docs](tools/notation.md#show_notation_highlight) |
+| `plot_voice_ranges` | `filename: str` | Voice range plot payload | [Docs](tools/visualisation/voice-ranges.md) |
 | `plot_weighted_note_distribution` | `filename: str | None = None, filenames: list[str] | None = None, pitch_class_order: str = "fifths", group_by_staff: bool = False, limit_to_active: bool = True` | Radar plot payload | [Docs](tools/visualisation/weighted-note-distribution.md) |
 | `plot_melodic_ngram_heatmap` | `filename: str | None = None, filenames: list[str] | None = None, n: int = 4, kind: str = "d", entries: bool = False, top_n: int = 2, combine_unisons: bool \| None = None, compound: bool = False` | Melodic n-gram heatmap payload | [Docs](tools/visualisation/melodic-ngram-heatmap.md) |
 | `plot_sonority_ngram_progress` | `filename: str | None = None, filenames: list[str] | None = None, n: int = 4, compound: bool = True, sort: bool = False, minimum_beat_strength: float = 0.0` | Sonority n-gram progress payload | [Docs](tools/visualisation/sonority-ngram-progress.md) |
 | `play_excerpt` | `filename: str | None = None, start_q: float = 0.0, end_q: float = None, bpm: int = 60` | Audio player payload | [Docs](tools/play-excerpt.md) |
+| `load_audio_resource` | `resource_uri: str` | Base64 audio payload | [Docs](tools/play-excerpt.md#load_audio_resource) |
 
 ## Discovery Tools
 
@@ -45,7 +47,7 @@ Discover all built-in MEI files and user-registered MEI files.
 }
 ```
 
-[Full Documentation →](tools/discovery.md)
+[Full Documentation ->](tools/discovery.md)
 
 ## Uploaded MEI Tools
 
@@ -95,40 +97,9 @@ Extract metadata from MEI file header.
 }
 ```
 
-[Full Documentation →](tools/metadata.md)
+[Full Documentation ->](tools/metadata.md)
 
 ## Analysis Tools
-
-### run_comprehensive_analysis(filename)
-
-Run the comprehensive analysis workflow and return the final analysis text.
-
-**Parameters**:
-- `filename` (str): MEI filename
-
-**Returns**:
-```python
-"[sampled path]\\n..." | "[legacy fallback]\\n..."
-```
-
-### diagnose_sampling()
-
-Run a tiny sampling diagnostic to determine whether this tool call has
-usable MCP sampling support.
-
-**Parameters**: None
-
-**Returns**:
-```python
-{
-    "status": "no_context" | "sampling_unsupported" | "sampling_ok",
-    "has_context": bool,
-    "supports_sampling_tools": bool,
-    "sampling_attempted": bool,
-    "error": str,          # present when unsupported
-    "sample_text": str,    # present when successful
-}
-```
 
 ### analyze_key(filename)
 
@@ -145,7 +116,7 @@ Detect musical key using music21.
 }
 ```
 
-[Full Documentation →](tools/key-analysis.md)
+[Full Documentation ->](tools/key-analysis.md)
 
 ### get_notes(filename)
 
@@ -162,7 +133,7 @@ Extract all notes with pitch and octave.
 }
 ```
 
-[Full Documentation →](tools/intervals/notes.md)
+[Full Documentation ->](tools/intervals/notes.md)
 
 ### get_melodic_intervals(filename)
 
@@ -179,7 +150,7 @@ Calculate melodic intervals within voices.
 }
 ```
 
-[Full Documentation →](tools/intervals/melodic.md)
+[Full Documentation ->](tools/intervals/melodic.md)
 
 ### get_harmonic_intervals(filename)
 
@@ -196,7 +167,7 @@ Calculate harmonic intervals between voices.
 }
 ```
 
-[Full Documentation →](tools/intervals/harmonic.md)
+[Full Documentation ->](tools/intervals/harmonic.md)
 
 ### get_melodic_ngrams(filename, n=4, kind="d", entries=False, include_note_ids=False)
 
@@ -222,7 +193,7 @@ Find recurring melodic patterns.
 }
 ```
 
-[Full Documentation →](tools/intervals/ngrams.md)
+[Full Documentation ->](tools/intervals/ngrams.md)
 
 ### count_melodic_ngrams(filename, n=4, kind="d", entries=False, combine_unisons=None, compound=False)
 
@@ -255,7 +226,7 @@ Count how many times each melodic n-gram occurs.
 }
 ```
 
-[Full Documentation →](tools/intervals/ngram-counts.md)
+[Full Documentation ->](tools/intervals/ngram-counts.md)
 
 ### resolve_note_ids_for_highlight(filename, spans)
 
@@ -283,7 +254,7 @@ Resolve analysis locations or spans to MEI note IDs for notation highlighting.
 }
 ```
 
-[Full Documentation →](tools/intervals/note-id-resolution.md)
+[Full Documentation ->](tools/intervals/note-id-resolution.md)
 
 ### get_melodic_ngram_matches(filename, n=4, kind="d", entries=False, patterns=None, combine_unisons=None, compound=False)
 
@@ -325,7 +296,7 @@ Group note-id spans by melodic n-gram pattern.
 }
 ```
 
-[Full Documentation →](tools/intervals/ngram-matches.md)
+[Full Documentation ->](tools/intervals/ngram-matches.md)
 
 ### get_first_occur_melodic_ngrams(filename, n=4, kind="d", combine_unisons=True, compound=False)
 
@@ -361,7 +332,24 @@ Find the first occurrence of each unique melodic n-gram in a score.
 }
 ```
 
-[Full Documentation â†’](tools/intervals/first-occur.md)
+[Full Documentation ->](tools/intervals/first-occur.md)
+
+### get_cadences(filename)
+
+Extract predicted cadences from Renaissance counterpoint.
+
+**Parameters**:
+- `filename` (str): MEI filename
+
+**Returns**:
+```python
+{
+    "filename": str,
+    "cadences": str    # CSV representation or explanatory message
+}
+```
+
+[Full Documentation ->](tools/intervals/cadences.md)
 
 ## Notation Tools
 
@@ -390,7 +378,54 @@ Render MEI file as sheet music notation using Verovio.
 !!! note
     Requires the [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps) for inline display.
 
-[Full Documentation →](tools/notation.md)
+[Full Documentation ->](tools/notation.md)
+
+### show_notation_highlight(filename, highlight_note_ids, start_measure=None, end_measure=None, page=1)
+
+Render MEI notation and highlight selected MEI note IDs.
+
+**Parameters**:
+- `filename` (str): MEI filename
+- `highlight_note_ids` (list[str]): MEI `xml:id` values to highlight
+- `start_measure` (int, optional): First measure to display
+- `end_measure` (int, optional): Last measure to display
+- `page` (int, optional): Page number (default: 1)
+
+**Returns**:
+```python
+{
+    "filename": str,
+    "svg": str,
+    "page": int,
+    "total_pages": int,
+    "highlight_note_ids": list[str],
+}
+```
+
+[Full Documentation ->](tools/notation.md#show_notation_highlight)
+
+## Visualisation Tools
+
+### plot_voice_ranges(filename)
+
+Plot the lowest and highest pitch reached by each staff in a single score.
+
+**Parameters**:
+- `filename` (str): MEI filename
+
+**Returns**:
+```python
+{
+    "filename": str,
+    "title": str,
+    "composer": str | None,
+    "staves": list[dict[str, Any]],
+    "pitch_min": int,
+    "pitch_max": int,
+}
+```
+
+[Full Documentation ->](tools/visualisation/voice-ranges.md)
 
 ### plot_weighted_note_distribution(filename=None, filenames=None, pitch_class_order="fifths", group_by_staff=False, limit_to_active=True)
 
@@ -433,7 +468,7 @@ Plot a duration-weighted pitch-class radar chart for one or more scores.
 !!! note
     Requires the [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps) for inline display.
 
-[Full Documentation →](tools/visualisation/weighted-note-distribution.md)
+[Full Documentation ->](tools/visualisation/weighted-note-distribution.md)
 
 ### plot_melodic_ngram_heatmap(filename=None, filenames=None, n=4, kind="d", entries=False, top_n=2, combine_unisons=None, compound=False)
 
@@ -468,7 +503,7 @@ offset to end offset.
 !!! note
     Requires the [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps) for inline display.
 
-[Full Documentation →](tools/visualisation/melodic-ngram-heatmap.md)
+[Full Documentation ->](tools/visualisation/melodic-ngram-heatmap.md)
 
 ### plot_sonority_ngram_progress(filename=None, filenames=None, n=4, compound=True, sort=False, minimum_beat_strength=0.0)
 
@@ -503,7 +538,9 @@ user zooms in.
 !!! note
     Requires the [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps) for inline display.
 
-[Full Documentation →](tools/visualisation/sonority-ngram-progress.md)
+[Full Documentation ->](tools/visualisation/sonority-ngram-progress.md)
+
+## Playback Tools
 
 ### play_excerpt(filename=None, start_q=0.0, end_q=None, bpm=60)
 
@@ -528,7 +565,27 @@ Render an MEI file or excerpt to streamed MP3 audio.
 }
 ```
 
-[Full Documentation â†’](tools/play-excerpt.md)
+[Full Documentation ->](tools/play-excerpt.md)
+
+### load_audio_resource(resource_uri)
+
+Load the base64-encoded MP3 bytes for an `audio://` resource prepared by
+`play_excerpt`.
+
+**Parameters**:
+- `resource_uri` (str): `audio://files/{token}` URI returned by `play_excerpt`
+
+**Returns**:
+```python
+{
+    "resource_uri": str,
+    "mime_type": "audio/mpeg",
+    "audio_base64": str,
+    "duration_sec": float,
+}
+```
+
+[Full Documentation ->](tools/play-excerpt.md#load_audio_resource)
 
 ## Common Patterns
 

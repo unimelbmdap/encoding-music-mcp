@@ -20,8 +20,6 @@ encoding-music-mcp/
 |       |   |-- intervals.py                # Interval and n-gram analysis
 |       |   |-- notation.py                 # Notation display (Verovio)
 |       |   |-- play_excerpt.py             # Audio playback
-|       |   |-- comprehensive_analysis.py   # Multi-tool summary workflow
-|       |   |-- sampling_diagnostics.py     # Sampling diagnostics
 |       |   `-- visualisation/
 |       |       |-- __init__.py
 |       |       |-- melodic_ngram_heatmap.py
@@ -38,7 +36,6 @@ encoding-music-mcp/
 |       |   |-- __init__.py
 |       |   |-- registry.py                 # Prompt registration
 |       |   |-- comprehensive_analysis.py
-|       |   `-- comprehensive_analysis_sampled.py
 |       `-- templates/
 |           `-- incipit_verovio_app.html
 |-- tests/

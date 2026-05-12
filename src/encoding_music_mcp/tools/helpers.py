@@ -18,6 +18,7 @@ _UPLOADS_LOCK = Lock()
 
 
 def _builtin_mei_dir() -> Path:
+    """Return the directory containing bundled MEI files."""
     return Path(__file__).parent.parent / "resources" / "mei_files"
 
 
@@ -56,7 +57,22 @@ def register_uploaded_mei_from_path(
     file_path: str,
     filename: str | None = None,
 ) -> dict[str, Any]:
-    """Register a local MEI path exposed by the user."""
+    """Register a local MEI path exposed by the user.
+
+    The file is validated as MEI XML and stored in an in-memory registry for
+    the current server session. The original file is not copied; tools resolve
+    the registered filename back to this local path when they run.
+
+    Args:
+        file_path: Local path to an MEI file visible to the server process.
+        filename: Optional simple ``.mei`` filename to use for the registration.
+            Defaults to the source path basename.
+
+    Returns:
+        Dictionary containing:
+        - filename: The registered filename to pass to analysis tools
+        - source_path: Absolute path of the registered local MEI file
+    """
     source_path = Path(file_path).expanduser().resolve()
     if not source_path.exists():
         raise FileNotFoundError(f"MEI file not found: {file_path}")
@@ -79,7 +95,14 @@ def register_uploaded_mei_from_path(
 
 
 def remove_uploaded_mei(filename: str) -> bool:
-    """Remove an uploaded MEI registration from this server session."""
+    """Remove an uploaded MEI registration from this server session.
+
+    Args:
+        filename: Registered MEI filename to remove.
+
+    Returns:
+        ``True`` if a registration was removed, otherwise ``False``.
+    """
     safe_filename = _normalise_uploaded_filename(filename)
     with _UPLOADS_LOCK:
         entry = _UPLOADS.pop(safe_filename, None)
@@ -88,7 +111,13 @@ def remove_uploaded_mei(filename: str) -> bool:
 
 
 def get_uploaded_mei_files() -> list[str]:
-    """Return filenames currently registered from user-uploaded MEI content."""
+    """Return filenames currently registered from user-uploaded MEI content.
+
+    Only registrations whose source paths still exist are included.
+
+    Returns:
+        Sorted list of registered upload filenames.
+    """
     with _UPLOADS_LOCK:
         return sorted(
             filename

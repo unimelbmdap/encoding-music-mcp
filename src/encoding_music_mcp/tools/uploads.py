@@ -26,6 +26,20 @@ async def register_mei_file_from_path(
     If ``file_path`` is omitted and the client supports elicitation, the server
     asks the user to provide a local path that is visible to the MCP server
     process.
+
+    Args:
+        file_path: Local path to an MEI file. If omitted, elicitation is used
+            when an MCP context is available.
+        filename: Optional simple ``.mei`` filename to use for the session
+            registration. Defaults to the source path basename.
+        ctx: MCP context used for elicitation when ``file_path`` is omitted.
+
+    Returns:
+        Dictionary containing:
+        - filename: Registered filename to pass to other tools
+        - source_path: Absolute path of the local MEI file
+        - registered: Always ``True`` on success
+        - message: Human-readable registration summary
     """
     if file_path is None:
         if ctx is None:
@@ -54,5 +68,11 @@ async def register_mei_file_from_path(
 
 
 def list_uploaded_mei_files() -> dict[str, list[str]]:
-    """List MEI filenames registered from user-supplied content."""
+    """List MEI filenames registered from user-supplied content.
+
+    Returns:
+        Dictionary containing:
+        - uploaded_mei_files: Sorted registered filenames whose source paths
+          still exist
+    """
     return {"uploaded_mei_files": get_uploaded_mei_files()}

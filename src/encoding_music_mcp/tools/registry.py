@@ -3,7 +3,6 @@
 from fastmcp.server.apps import AppConfig
 
 from ..server import mcp
-from .comprehensive_analysis import run_comprehensive_analysis
 from .metadata import get_mei_metadata
 from .discovery import list_available_mei_files
 from .key_analysis import analyze_key
@@ -23,7 +22,6 @@ from .notation import (
     show_notation_highlight,
 )
 from .play_excerpt import load_audio_resource, play_excerpt
-from .sampling_diagnostics import diagnose_sampling
 from .uploads import register_mei_file_from_path
 from .visualisation.voice_ranges import plot_voice_ranges
 from .visualisation.weighted_note_distribution import plot_weighted_note_distribution
@@ -32,8 +30,6 @@ from .visualisation.sonority_ngram_progress import plot_sonority_ngram_progress
 
 # Register all tools here
 # To add a new tool: import it, then add mcp.tool()(your_tool) below
-mcp.tool()(run_comprehensive_analysis)
-mcp.tool()(diagnose_sampling)
 mcp.tool()(list_available_mei_files)
 mcp.tool()(register_mei_file_from_path)
 mcp.tool()(get_mei_metadata)
