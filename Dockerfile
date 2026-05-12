@@ -33,10 +33,11 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # Final stage - minimal runtime image
 FROM python:3.12-slim-bookworm
 
-# Install only required system dependencies
-# (none needed for this project, but keeping structure for future additions)
+# Install runtime tools used by play_excerpt for audio rendering.
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+        ffmpeg \
+        fluidsynth \
     && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user for security
