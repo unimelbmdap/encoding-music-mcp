@@ -167,11 +167,13 @@ def get_mei_collections() -> dict[str, list[str]]:
     bach = [f for f in built_in_files if f.startswith("Bach")]
     bartok = [f for f in built_in_files if f.startswith("Bartok")]
     morley = [f for f in built_in_files if f.startswith("Morley")]
+    crim = [f for f in built_in_files if f.startswith("CRIM")]
 
     return {
         "bach_inventions": bach,
         "bartok_mikrokosmos": bartok,
         "morley_canzonets": morley,
+        "crim_corpus": crim,
         "uploaded_mei_files": uploaded_files,
         "all_files": all_files,
     }

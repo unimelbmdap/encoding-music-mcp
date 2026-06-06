@@ -14,6 +14,7 @@ def test_list_available_mei_files():
     assert "bach_inventions" in result, "Should include bach_inventions"
     assert "bartok_mikrokosmos" in result, "Should include bartok_mikrokosmos"
     assert "morley_canzonets" in result, "Should include morley_canzonets"
+    assert "crim_corpus" in result, "Should include crim_corpus"
     assert "all_files" in result, "Should include all_files"
 
     # Check that each category is a list
@@ -26,19 +27,21 @@ def test_list_available_mei_files():
     assert isinstance(result["morley_canzonets"], list), (
         "morley_canzonets should be a list"
     )
+    assert isinstance(result["crim_corpus"], list), "crim_corpus should be a list"
     assert isinstance(result["all_files"], list), "all_files should be a list"
 
     # Check expected counts
     assert len(result["bach_inventions"]) == 15, "Should have 15 Bach inventions"
     assert len(result["bartok_mikrokosmos"]) == 19, "Should have 19 Bartók pieces"
     assert len(result["morley_canzonets"]) == 12, "Should have 12 Morley canzonets"
-    assert len(result["all_files"]) == 46, "Should have 46 total files"
+    assert len(result["crim_corpus"]) == 325, "Should have 325 CRIM corpus files"
 
     # Check that all_files contains all individual files
     all_combined = (
         result["bach_inventions"]
         + result["bartok_mikrokosmos"]
         + result["morley_canzonets"]
+        + result["crim_corpus"]
     )
     assert set(all_combined) == set(result["all_files"]), (
         "all_files should match combined list"
