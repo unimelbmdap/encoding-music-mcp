@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "fastmcp>=3.2.0",
-    "crim-intervals @ git+https://github.com/HCDigitalScholarship/intervals.git@rich_dev_24_dev",
+    "crim-intervals @ git+https://github.com/HCDigitalScholarship/intervals.git",
     "mcp[cli]>=1.25.0",
     "music21>=8.3.0",
     "pandas>=2.3.3",
