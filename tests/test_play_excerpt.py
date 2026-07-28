@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 from fastmcp.server.elicitation import AcceptedElicitation, DeclinedElicitation
 
+from src.encoding_music_mcp.server import mcp
 from src.encoding_music_mcp.tools import play_excerpt as play_excerpt_module
 
 
@@ -49,7 +50,9 @@ def test_play_excerpt_full_piece_returns_stream_url(monkeypatch: pytest.MonkeyPa
     monkeypatch.setattr(play_excerpt_module, "_render_midi_b64_to_wav_file", fake_render)
     monkeypatch.setattr(play_excerpt_module, "_convert_wav_to_mp3", fake_convert)
 
-    result = asyncio.run(play_excerpt_module.play_excerpt("sample.mei", bpm=72))
+    result = asyncio.run(
+        mcp.call_tool("play_excerpt", {"filename": "sample.mei", "bpm": 72})
+    )
     payload = result.structured_content
 
     assert payload is not None
@@ -236,7 +239,12 @@ def test_load_audio_resource_returns_base64(monkeypatch: pytest.MonkeyPatch, tmp
         }
     })
 
-    result = play_excerpt_module.load_audio_resource("audio://files/token123")
+    result = asyncio.run(
+        mcp.call_tool(
+            "load_audio_resource",
+            {"resource_uri": "audio://files/token123"},
+        )
+    )
     payload = result.structured_content
 
     assert payload is not None

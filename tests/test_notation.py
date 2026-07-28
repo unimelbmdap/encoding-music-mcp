@@ -214,9 +214,17 @@ def test_show_notation_highlight_includes_note_ids():
     assert result.structured_content["svg"].startswith("<svg")
 
 
-def test_notation_tools_do_not_require_custom_output_schemas():
-    """App-backed notation tools should register without handwritten schemas."""
+def test_notation_tools_advertise_structured_output_schemas():
+    """MCP hosts should know which structured payloads to pass to notation apps."""
     tools = {tool.name: tool for tool in asyncio.run(mcp.list_tools())}
 
-    assert tools["show_notation"].output_schema is None
-    assert tools["show_notation_highlight"].output_schema is None
+    notation_schema = tools["show_notation"].output_schema
+    highlight_schema = tools["show_notation_highlight"].output_schema
+
+    assert notation_schema is not None
+    assert notation_schema["required"] == ["filename", "svg", "page", "total_pages"]
+    assert notation_schema["properties"]["svg"]["type"] == "string"
+
+    assert highlight_schema is not None
+    assert "highlight_note_ids" in highlight_schema["required"]
+    assert highlight_schema["properties"]["highlight_note_ids"]["type"] == "array"
