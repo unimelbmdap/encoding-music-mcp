@@ -1,9 +1,11 @@
 """Notation display tool using MCP Apps extension with Verovio."""
 
+import os
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import verovio
+from anyio import to_process
 from mcp.types import TextContent
 
 from fastmcp import Context
@@ -45,6 +47,12 @@ _VEROVIO_OPTIONS = {
     "pageMarginTop": 20,
     "pageMarginBottom": 20,
 }
+try:
+    _NOTATION_PROCESS_CONCURRENCY = max(
+        1, int(os.environ.get("MCP_NOTATION_PROCESS_CONCURRENCY", "2"))
+    )
+except ValueError:
+    _NOTATION_PROCESS_CONCURRENCY = 2
 
 
 def _filter_measures(mei_data: str, start: int, end: int) -> str:
@@ -82,6 +90,27 @@ def _normalise_svg_text(svg: str) -> str:
         .replace("\u00e2\u20ac\u201c", "-")
     )
     return normalised.replace("<text ", '<text xml:space="preserve" ')
+
+
+def _render_notation_page(
+    filepath: Path,
+    start_measure: int | None,
+    end_measure: int | None,
+    page: int,
+) -> tuple[str, int, int]:
+    """Render one page synchronously so callers can offload it to a worker."""
+    mei_data = filepath.read_text(encoding="utf-8")
+
+    if start_measure is not None:
+        if end_measure is None:
+            end_measure = start_measure
+        mei_data = _filter_measures(mei_data, start_measure, end_measure)
+
+    tk = _create_toolkit(mei_data)
+    total_pages = tk.getPageCount()
+    page = max(1, min(page, total_pages))
+    svg = _normalise_svg_text(tk.renderToSVG(page))
+    return svg, page, total_pages
 
 
 def _missing_registration_filename(filename: str | None) -> str | None:
@@ -184,18 +213,22 @@ async def show_notation(
     if not filepath.exists():
         raise FileNotFoundError(f"MEI file not found: {filename}")
 
-    mei_data = filepath.read_text(encoding="utf-8")
-
     if start_measure is not None:
         if end_measure is None:
             end_measure = start_measure
-        mei_data = _filter_measures(mei_data, start_measure, end_measure)
 
-    tk = _create_toolkit(mei_data)
-    total_pages = tk.getPageCount()
-
-    page = max(1, min(page, total_pages))
-    svg = _normalise_svg_text(tk.renderToSVG(page))
+    # The Verovio binding holds Python's GIL during native rendering, so a
+    # thread is not sufficient to keep other MCP sessions responsive.
+    process_limiter = to_process.current_default_process_limiter()
+    process_limiter.total_tokens = _NOTATION_PROCESS_CONCURRENCY
+    svg, page, total_pages = await to_process.run_sync(
+        _render_notation_page,
+        filepath,
+        start_measure,
+        end_measure,
+        page,
+        limiter=process_limiter,
+    )
 
     if start_measure is not None:
         measure_text = (

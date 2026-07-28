@@ -1,13 +1,20 @@
 encoding-music.drdanielrb.com {
-    log {
-        output stdout
-        format json
-    }
-    encode gzip
-    reverse_proxy mcp:8000 {
-        transport http {
-            keepalive 30s
-            keepalive_idle_conns 10
-        }
-    }
+	log {
+		output stdout
+		format json
+	}
+	encode gzip
+	# Accept both common endpoint spellings without redirecting MCP POSTs.
+	@mcp_trailing_slash path /mcp/
+	rewrite @mcp_trailing_slash /mcp
+	reverse_proxy mcp:8000 {
+		# Smooth over the short window while a rebuilt backend starts.
+		lb_try_duration 10s
+		lb_try_interval 250ms
+		stream_close_delay 5m
+		transport http {
+			keepalive 30s
+			keepalive_idle_conns 10
+		}
+	}
 }

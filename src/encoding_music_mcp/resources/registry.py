@@ -3,7 +3,7 @@
 from pathlib import Path
 
 from fastmcp.resources import ResourceContent, ResourceResult
-from fastmcp.server.apps import AppConfig, ResourceCSP
+from fastmcp.apps import AppConfig, ResourceCSP
 
 from ..server import mcp
 from .mei import mei_collections_list, mei_file_content

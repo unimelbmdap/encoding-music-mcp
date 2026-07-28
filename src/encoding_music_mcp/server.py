@@ -32,7 +32,23 @@ def main():
     if transport == "http":
         host = os.environ.get("MCP_HOST", "0.0.0.0")
         port = int(os.environ.get("MCP_PORT", "8000"))
-        mcp.run(transport="http", host=host, port=port)
+        # Caddy is the only published service in the Docker deployment. Trust
+        # its forwarded scheme so redirects and generated URLs remain HTTPS,
+        # and keep upstream connections alive slightly longer than Caddy does.
+        forwarded_allow_ips = os.environ.get(
+            "MCP_FORWARDED_ALLOW_IPS", "127.0.0.1"
+        )
+        keep_alive = int(os.environ.get("MCP_HTTP_KEEP_ALIVE", "35"))
+        mcp.run(
+            transport="http",
+            host=host,
+            port=port,
+            uvicorn_config={
+                "proxy_headers": True,
+                "forwarded_allow_ips": forwarded_allow_ips,
+                "timeout_keep_alive": keep_alive,
+            },
+        )
     else:
         mcp.run()
 

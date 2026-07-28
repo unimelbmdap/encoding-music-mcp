@@ -55,14 +55,19 @@ COPY --from=builder --chown=mcp:mcp /app/src /app/src
 
 # Add virtual environment to PATH
 ENV PATH="/app/.venv/bin:$PATH" \
+    MPLCONFIGDIR="/app/.cache/matplotlib" \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
 
-# Create directory for user-provided MEI files (optional)
-RUN mkdir -p /data && chown mcp:mcp /data
+# Create writable data/cache directories and build Matplotlib's font cache into
+# the image instead of delaying the first server startup.
+RUN mkdir -p /data /app/.cache/matplotlib && \
+    chown -R mcp:mcp /data /app/.cache
 
 # Switch to non-root user
 USER mcp
+
+RUN python -c "import matplotlib.font_manager"
 
 # Health check - verify HTTP server is responding
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
