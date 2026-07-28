@@ -606,6 +606,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#remote-http-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      Remote HTTP endpoint
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#standalone-mode" class="md-nav__link">
     <span class="md-ellipsis">
       Standalone Mode
@@ -1645,6 +1654,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#remote-http-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      Remote HTTP endpoint
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#standalone-mode" class="md-nav__link">
     <span class="md-ellipsis">
       Standalone Mode
@@ -1787,9 +1805,17 @@
 </span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>Consult your MCP client's documentation for specific configuration instructions.</p>
+<h2 id="remote-http-endpoint">Remote HTTP endpoint</h2>
+<p>Clients that support remote Streamable HTTP can connect to:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>https://encoding-music.drdanielrb.com/mcp
+</span></code></pre></div>
+<p>Use the MCP endpoint as written rather than the <code>/health</code> URL. Opening <code>/mcp</code>
+in an ordinary browser can return HTTP 406 because browsers do not send MCP
+streaming headers; this is expected. The <code>/health</code> endpoint is available for a
+simple browser or uptime check.</p>
 <h2 id="standalone-mode">Standalone Mode</h2>
 <p>You can also run the server directly without an MCP client (useful for testing):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>uv<span class="w"> </span>run<span class="w"> </span>encoding-music-mcp
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>uv<span class="w"> </span>run<span class="w"> </span>encoding-music-mcp
 </span></code></pre></div>
 <p>This starts the server and listens for MCP connections via stdio.</p>
 <h2 id="next-steps">Next Steps</h2>
