@@ -104,6 +104,12 @@ uv sync
   }
 }
 ```
+> [!NOTE]
+> Replace `/absolute/path/to/encoding-music-mcp` with the full path to your cloned repository.
+>
+> On Windows, an absolute path is formatted using `\\` in place of `/`.
+> 
+> For example: `C:\\absolute\\path\\to\\encoding-music-mcp`
 
 3. **Restart Claude Desktop**
 
