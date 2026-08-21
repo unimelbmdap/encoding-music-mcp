@@ -27,6 +27,8 @@ encoding-music-mcp provides a suite of tools for analyzing MEI files. Tools work
 | Tool | Purpose | Learn More |
 |------|---------|------------|
 | [`analyze_key`](key-analysis.md) | Detect musical key with confidence scores | [Documentation](key-analysis.md) |
+| [`inspect_harmony`](chord-progression.md#inspect_harmony) | Inspect explicit harmony coverage and voice identifiers | [Documentation](chord-progression.md#inspect_harmony) |
+| [`get_chord_progression`](chord-progression.md#get_chord_progression) | Retrieve explicit or inferred chord events | [Documentation](chord-progression.md#get_chord_progression) |
 | [`get_notes`](intervals/notes.md) | Extract all notes with pitch and octave information | [Documentation](intervals/notes.md) |
 | [`get_melodic_intervals`](intervals/melodic.md) | Analyze melodic intervals within voices | [Documentation](intervals/melodic.md) |
 | [`get_harmonic_intervals`](intervals/harmonic.md) | Analyze harmonic intervals between voices | [Documentation](intervals/harmonic.md) |
@@ -42,6 +44,7 @@ encoding-music-mcp provides a suite of tools for analyzing MEI files. Tools work
 | Tool | Purpose | Learn More |
 |------|---------|------------|
 | [`show_notation`](notation.md) | Display rendered sheet music with interactive pagination | [Documentation](notation.md) |
+| [`show_chord_notation`](notation.md#show_chord_notation) | Display a selected page with an appended chord reduction and interactive pagination | [Documentation](notation.md#show_chord_notation) |
 | [`show_notation_highlight`](notation.md#show_notation_highlight) | Display rendered notation with selected MEI note IDs highlighted | [Documentation](notation.md#show_notation_highlight) |
 
 ### Visualisation Tools
@@ -80,6 +83,7 @@ Tools for extracting descriptive information:
 Tools for analyzing musical content:
 
 - **[analyze_key](key-analysis.md)**: Key detection using music21
+- **[Chord Progression](chord-progression.md)**: Inspect explicit harmony and retrieve explicit or inferred chord events
 - **[Interval Analysis](intervals/index.md)**: Comprehensive interval analysis using CRIM Intervals
     - Notes extraction
     - Melodic intervals
@@ -92,6 +96,7 @@ Tools for analyzing musical content:
 Tools for viewing rendered sheet music:
 
 - **[show_notation](notation.md)**: Render MEI files as SVG notation with interactive pagination (requires [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps))
+- **[show_chord_notation](notation.md#show_chord_notation)**: Render the selected page of the original score plus an appended chord-reduction staff
 - **[show_notation_highlight](notation.md#show_notation_highlight)**: Render notation with selected MEI note IDs highlighted
 
 ### Visualisation

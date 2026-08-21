@@ -36,6 +36,18 @@ SHOW_NOTATION_OUTPUT_SCHEMA: dict[str, Any] = {
     "required": ["filename", "svg", "page", "total_pages"],
 }
 
+SHOW_CHORD_NOTATION_OUTPUT_SCHEMA: dict[str, Any] = {
+    **SHOW_NOTATION_OUTPUT_SCHEMA,
+    "properties": {
+        **SHOW_NOTATION_OUTPUT_SCHEMA["properties"],
+        "notation_mode": {"type": "string", "const": "chord_reduction"},
+    },
+    "required": [
+        *SHOW_NOTATION_OUTPUT_SCHEMA["required"],
+        "notation_mode",
+    ],
+}
+
 SHOW_NOTATION_HIGHLIGHT_OUTPUT_SCHEMA: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,

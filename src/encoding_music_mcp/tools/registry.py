@@ -6,6 +6,8 @@ from ..server import mcp
 from .metadata import get_mei_metadata
 from .discovery import list_available_mei_files
 from .key_analysis import analyze_key
+from .chord_notation import show_chord_notation
+from .get_chord_progression import get_chord_progression, inspect_harmony
 from .intervals import (
     get_notes,
     get_melodic_intervals,
@@ -30,6 +32,7 @@ from .output_schemas import (
     PLAY_EXCERPT_OUTPUT_SCHEMA,
     SHOW_NOTATION_HIGHLIGHT_OUTPUT_SCHEMA,
     SHOW_NOTATION_OUTPUT_SCHEMA,
+    SHOW_CHORD_NOTATION_OUTPUT_SCHEMA,
     SONORITY_NGRAM_PROGRESS_OUTPUT_SCHEMA,
     VOICE_RANGES_OUTPUT_SCHEMA,
     WEIGHTED_NOTE_DISTRIBUTION_OUTPUT_SCHEMA,
@@ -45,6 +48,8 @@ mcp.tool()(list_available_mei_files)
 mcp.tool()(register_mei_file_from_path)
 mcp.tool()(get_mei_metadata)
 mcp.tool()(performant_analysis_tool(analyze_key))
+mcp.tool()(performant_analysis_tool(inspect_harmony))
+mcp.tool()(performant_analysis_tool(get_chord_progression))
 mcp.tool()(performant_analysis_tool(get_notes))
 mcp.tool()(performant_analysis_tool(get_melodic_intervals))
 mcp.tool()(performant_analysis_tool(get_harmonic_intervals))
@@ -57,6 +62,10 @@ mcp.tool(
     app=AppConfig(resource_uri="ui://notation/view.html"),
     output_schema=SHOW_NOTATION_OUTPUT_SCHEMA,
 )(show_notation)
+mcp.tool(
+    app=AppConfig(resource_uri="ui://notation/view.html"),
+    output_schema=SHOW_CHORD_NOTATION_OUTPUT_SCHEMA,
+)(show_chord_notation)
 mcp.tool(
     app=AppConfig(resource_uri="ui://notation/highlight.html"),
     output_schema=SHOW_NOTATION_HIGHLIGHT_OUTPUT_SCHEMA,

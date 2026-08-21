@@ -64,7 +64,44 @@ The structured result includes the same SVG and pagination fields as
 }
 ```
 
-## Parameters
+## show_chord_notation
+
+The `show_chord_notation` tool displays the original score with a final
+chord-reduction staff appended. It uses music21 to combine notes sounding at
+the same time into chord sonorities, puts every derived chord in closed position
+with its bass in octave 4, and retains the source staves in their original order
+before rendering the combined score through the same notation viewer. Redundant
+pitch-class doublings in the reduction are removed by music21's closed-position
+operation.
+
+!!! example "Try asking:"
+    "Show me the chord notation for measures 3 to 6 of Bach_BWV_0772.mei"
+
+It accepts an optional `filename`, optional inclusive `start_measure` and
+`end_measure`, and `page`. If the filename is omitted or unavailable, the tool
+elicits a score when supported. A lone `start_measure` selects one measure, and
+the initial page is clamped to the available rendered pages.
+
+The requested page is rendered as SVG. `ToolResult.content` contains one summary
+`TextContent`, while structured content contains `filename`, the selected `svg`,
+`page`, `total_pages`, optional measure fields, and
+`notation_mode: "chord_reduction"`. The viewer uses that fixed mode marker so
+Next and Previous call `show_chord_notation`; ordinary notation continues to
+call `show_notation`.
+
+This view keeps the original parts and appends the reduction as the final
+staff. It does not add Roman numerals, chord symbols, or key-relative labels.
+
+### Chord notation parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `filename` | string | No | None | MEI filename to render. If omitted or unavailable, the tool elicits a file when supported. |
+| `start_measure` | integer | No | None | First measure to display |
+| `end_measure` | integer | No | start_measure | Last measure to display |
+| `page` | integer | No | 1 | Page number to display |
+
+## show_notation parameters
 
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|

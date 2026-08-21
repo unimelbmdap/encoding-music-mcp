@@ -561,6 +561,7 @@ dependencies = [
     { name = "mcp", extra = ["cli"] },
     { name = "music21" },
     { name = "pandas" },
+    { name = "pydantic" },
     { name = "verovio" },
 ]
 
@@ -578,6 +579,7 @@ requires-dist = [
     { name = "mcp", extras = ["cli"], specifier = ">=1.25.0" },
     { name = "music21", specifier = ">=8.3.0" },
     { name = "pandas", specifier = ">=2.3.3" },
+    { name = "pydantic", specifier = ">=2.12.0" },
     { name = "verovio", specifier = ">=5.5.0" },
 ]
 

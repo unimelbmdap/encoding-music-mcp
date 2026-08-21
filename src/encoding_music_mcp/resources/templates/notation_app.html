@@ -154,8 +154,11 @@
                 args.start_measure = currentState.start_measure;
                 args.end_measure = currentState.end_measure;
             }
+            const toolName = currentState.notation_mode === "chord_reduction"
+                ? "show_chord_notation"
+                : "show_notation";
             try {
-                const result = await app.callServerTool({ name: "show_notation", arguments: args });
+                const result = await app.callServerTool({ name: toolName, arguments: args });
                 if (result && result.structuredContent && result.structuredContent.svg) {
                     render(result.structuredContent);
                 } else if (result && result.content) {

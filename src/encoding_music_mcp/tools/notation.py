@@ -12,7 +12,11 @@ from fastmcp import Context
 from fastmcp.server.elicitation import CancelledElicitation, DeclinedElicitation
 from fastmcp.tools.tool import ToolResult
 
-from .helpers import get_mei_collections, get_mei_filepath, register_uploaded_mei_from_path
+from .helpers import (
+    get_mei_collections,
+    get_mei_filepath,
+    register_uploaded_mei_from_path,
+)
 
 # Resolve the Verovio resource path from the installed package.
 # The verovio __init__.py sets this via importlib.resources, but that can
@@ -20,6 +24,7 @@ from .helpers import get_mei_collections, get_mei_filepath, register_uploaded_me
 _VEROVIO_RESOURCE_PATH = str(Path(verovio.__file__).parent / "data")
 
 __all__ = [
+    "render_notation_data",
     "show_notation",
     "show_notation_highlight",
 ]
@@ -92,6 +97,15 @@ def _normalise_svg_text(svg: str) -> str:
     return normalised.replace("<text ", '<text xml:space="preserve" ')
 
 
+def render_notation_data(notation_data: str, page: int) -> tuple[str, int, int]:
+    """Render one clamped page from in-memory MEI or MusicXML notation data."""
+    tk = _create_toolkit(notation_data)
+    total_pages = tk.getPageCount()
+    page = max(1, min(page, total_pages))
+    svg = _normalise_svg_text(tk.renderToSVG(page))
+    return svg, page, total_pages
+
+
 def _render_notation_page(
     filepath: Path,
     start_measure: int | None,
@@ -106,11 +120,7 @@ def _render_notation_page(
             end_measure = start_measure
         mei_data = _filter_measures(mei_data, start_measure, end_measure)
 
-    tk = _create_toolkit(mei_data)
-    total_pages = tk.getPageCount()
-    page = max(1, min(page, total_pages))
-    svg = _normalise_svg_text(tk.renderToSVG(page))
-    return svg, page, total_pages
+    return render_notation_data(mei_data, page)
 
 
 def _missing_registration_filename(filename: str | None) -> str | None:
@@ -168,7 +178,9 @@ async def _resolve_notation_filename(
     path = Path(selected).expanduser()
     if is_path_like and path.exists():
         registered_filename = _missing_registration_filename(filename)
-        return register_uploaded_mei_from_path(selected, registered_filename)["filename"]
+        return register_uploaded_mei_from_path(selected, registered_filename)[
+            "filename"
+        ]
 
     selected_filepath = get_mei_filepath(selected)
     if selected_filepath.exists():
@@ -176,7 +188,9 @@ async def _resolve_notation_filename(
 
     if path.exists():
         registered_filename = _missing_registration_filename(filename)
-        return register_uploaded_mei_from_path(selected, registered_filename)["filename"]
+        return register_uploaded_mei_from_path(selected, registered_filename)[
+            "filename"
+        ]
 
     raise FileNotFoundError(
         f"MEI file not found as a registered filename or local path: {selected}"
@@ -236,7 +250,9 @@ async def show_notation(
             if start_measure == end_measure
             else f"measures {start_measure}-{end_measure}"
         )
-        description = f"Showing {filename}, {measure_text}, page {page} of {total_pages}"
+        description = (
+            f"Showing {filename}, {measure_text}, page {page} of {total_pages}"
+        )
     else:
         description = f"Showing {filename}, page {page} of {total_pages}"
 
