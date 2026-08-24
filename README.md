@@ -105,7 +105,9 @@ uv sync
 }
 ```
 > [!NOTE]
-> If you are developing on a Windows system, use `\\` in place of `/`.
+> **Windows**: If using Claude Desktop, run uv sync from PowerShell rather than WSL. Claude Desktop launches the Windows uv.exe, so the project environment should be created as a Windows virtual environment.
+> 
+> also use `\\` in place of `/`.
 > 
 > For example: ```C:\\absolute\\path\\to\\encoding-music-mcp```
 > 
