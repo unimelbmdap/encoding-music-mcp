@@ -105,12 +105,16 @@ uv sync
 }
 ```
 > [!NOTE]
-> Replace `/absolute/path/to/encoding-music-mcp` with the full path to your cloned repository.
->
-> On Windows, an absolute path is formatted using `\\` in place of `/`.
+> If you are developing on a Windows system, use `\\` in place of `/`.
 > 
-> For example: `C:\\absolute\\path\\to\\encoding-music-mcp`
-
+> For example: ```C:\\absolute\\path\\to\\encoding-music-mcp```
+> 
+> If you are also using Windows Subsystem Linux, replace ```"command": "uv"``` with the absolute path to the uv executable.
+> 
+> For example: ```"command": "C:\\Users\\username\\.local\\bin\\uv.exe"```
+> 
+> 
+> 
 3. **Restart Claude Desktop**
 
 4. **Try it out:**
