@@ -8,7 +8,7 @@
 [![MCP](https://img.shields.io/badge/MCP-Server-green)](https://modelcontextprotocol.io)
 [![MEI](https://img.shields.io/badge/MEI-Music%20Encoding%20Initiative-purple)](https://music-encoding.org/)
 
-MCP server for analyzing MEI (Music Encoding Initiative) files. Provides tools to extract metadata, analyze musical structure, and understand encoded scores.
+MCP server for analyzing MEI (Music Encoding Initiative) files. Provides tools to extract metadata, analyze musical structure, and understand encoded scores. The distribution also contains an optional standalone workflow that converts complete scores to validated MusicXML, extracts CLaMP 3 embeddings, and stores them in SQLite.
 
 ## Features
 
@@ -17,6 +17,7 @@ MCP server for analyzing MEI (Music Encoding Initiative) files. Provides tools t
 - **Key Analysis**: Detect musical keys with confidence scores using music21
 - **Interval Analysis**: Extract notes, melodic intervals, harmonic intervals, and melodic n-grams using CRIM Intervals
 - **Notation Display**: Render sheet music as SVG with interactive pagination using Verovio (requires [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps))
+- **Score Embeddings**: Optional standalone CLaMP 3 pipeline for complete-score embeddings and local SQLite vector retrieval
 - **Simple & Efficient**: Tools read directly from disk - no token waste
 
 ## Documentation
@@ -25,6 +26,7 @@ MCP server for analyzing MEI (Music Encoding Initiative) files. Provides tools t
 
 - Detailed tool reference
 - Quick start guides
+- CLaMP 3 pipeline setup and architecture
 - MEI file collection details
 - Development guides
 - API reference
@@ -61,6 +63,14 @@ git clone https://github.com/unimelbmdap/encoding-music-mcp.git
 cd encoding-music-mcp
 uv sync
 ```
+
+Install the optional local vector-storage dependency for score-embedding development:
+
+```bash
+uv sync --extra score-embeddings
+```
+
+The CLaMP model runtime remains a separate Python 3.10 environment. See the [CLaMP 3 pipeline setup guide](docs/getting-started/clamp3-pipeline.md) for the pinned source, model, cache, and offline-execution policy.
 
 ## Usage
 
@@ -129,6 +139,14 @@ Run the server directly:
 uv run encoding-music-mcp
 ```
 
+Run the separate score-embedding entry point with:
+
+```bash
+uv run encoding-music-embeddings --help
+```
+
+Batch generation is intentionally isolated from the MCP server. A prepared database can be searched through the query-only `search_songs_by_emotion` MCP tool. See the [pipeline guide](docs/getting-started/clamp3-pipeline.md) for setup, extraction, database access, configuration, and similarity queries.
+
 ## Available Tools
 
 ### `list_available_mei_files`
@@ -169,6 +187,12 @@ Extract detailed metadata from a built-in MEI file.
   "publication_date": "2024-11-19"
 }
 ```
+
+### `search_songs_by_emotion`
+
+Search a prepared whole-song embedding catalog along an ordered emotion contrast. For example, Claude maps “happiest songs” to `positive_emotion="happy"` and `negative_emotion="sad"`; the server computes the compatible CLaMP `happy - sad` direction and returns ranked title, artist, work-date, and distance metadata without exposing vectors.
+
+See [Emotion Retrieval](docs/tools/emotion-retrieval.md) for required server environment variables.
 
 ### `analyze_key`
 

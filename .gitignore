@@ -17,9 +17,17 @@ htmlcov/
 # Documentation
 site/
 
-notebooks
+notebooks/*
+!notebooks/score_embeddings_colab.ipynb
 
 output/
+
+# Score-embedding pipeline artifacts
+.clamp3/
+.clamp3-cache/
+tmp/score-embeddings/
+score-embeddings.sqlite3
+*.clamp3-download
 
 .DS_Store
 

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bower — project state</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <div class="shell">
+      <nav class="rail" id="rail" aria-label="Documentation">
+        <div class="rail-head">
+          <div class="rail-project" id="rail-project">…</div>
+          <div class="eyebrow">Bower project state</div>
+        </div>
+
+        <form class="search" role="search" onsubmit="return false">
+          <input
+            id="q"
+            type="search"
+            placeholder="Search docs   /"
+            autocomplete="off"
+            aria-label="Search documentation"
+          />
+        </form>
+
+        <div id="rail-nav"></div>
+
+        <div class="rail-foot">
+          <button id="theme" type="button" class="ghost" aria-label="Switch colour theme">
+            <span data-theme-label>Dark</span>
+          </button>
+          <span class="rail-rev eyebrow" id="rev"></span>
+        </div>
+      </nav>
+
+      <main id="main" tabindex="-1">
+        <div id="view" class="view"><p class="muted">Loading graph…</p></div>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script src="/vendor/marked.min.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>

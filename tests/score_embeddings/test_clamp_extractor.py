@@ -1,0 +1,447 @@
+"""Tests for pinned CLaMP setup and extraction."""
+
+from __future__ import annotations
+
+import hashlib
+import subprocess
+import sys
+from pathlib import Path
+
+import numpy as np
+import pytest
+
+from encoding_music_mcp.score_embeddings.clamp_extractor import (
+    ClampExecutionError,
+    ClampRuntimeConfig,
+    EmbeddingValidationError,
+    embed_clamp3_texts,
+    load_and_normalize_embeddings,
+    run_clamp3_extraction,
+    setup_clamp3,
+)
+
+
+def _completed(args: list[str], stdout: str = "") -> subprocess.CompletedProcess[str]:
+    return subprocess.CompletedProcess(args, 0, stdout=stdout, stderr="")
+
+
+def _write_fake_checkout(path: Path) -> None:
+    (path / ".git").mkdir(parents=True)
+    (path / "code").mkdir()
+    (path / "preprocessing" / "abc").mkdir(parents=True)
+    (path / "code" / "config.py").write_text(
+        'CLAMP3_WEIGHTS_PATH = "weights_clamp3_saas"\n',
+        encoding="utf-8",
+    )
+    for script in (
+        path / "code" / "extract_clamp3.py",
+        path / "preprocessing" / "abc" / "batch_xml2abc.py",
+        path / "preprocessing" / "abc" / "batch_interleaved_abc.py",
+    ):
+        script.write_text("# fake\n", encoding="utf-8")
+
+
+def test_setup_is_idempotent_and_records_pinned_symbolic_runtime(tmp_path: Path):
+    payload = b"test c2 weights"
+    source_weight = tmp_path / "source-weight.pth"
+    source_weight.write_bytes(payload)
+    commit = "a" * 40
+    calls: list[list[str]] = []
+
+    config = ClampRuntimeConfig(
+        python_executable=Path(sys.executable),
+        cache_dir=tmp_path / "cache",
+        commit=commit,
+        model_revision="model-revision",
+        weight_url=source_weight.as_uri(),
+        weight_sha256=hashlib.sha256(payload).hexdigest(),
+        weight_filename="weights.pth",
+    )
+
+    def runner(args, cwd, env, timeout):
+        command = [str(value) for value in args]
+        calls.append(command)
+        if command[:3] == ["git", "clone", "--no-checkout"]:
+            _write_fake_checkout(Path(command[-1]))
+        if command[:3] == ["git", "rev-parse", "HEAD"]:
+            return _completed(command, stdout=commit + "\n")
+        return _completed(command)
+
+    first = setup_clamp3(config, runner=runner, perform_readiness=False)
+    second = setup_clamp3(config, runner=runner, perform_readiness=False)
+
+    assert first.weight_path.read_bytes() == payload
+    assert second.commit == commit
+    assert first.offline_ready is False
+    assert sum(command[:2] == ["git", "clone"] for command in calls) == 1
+    assert '"weights_clamp3_c2"' in (
+        config.checkout_dir / "code" / "config.py"
+    ).read_text(encoding="utf-8")
+    assert config.manifest_path.is_file()
+
+
+def test_setup_runs_online_then_offline_readiness(tmp_path: Path):
+    payload = b"weights"
+    source_weight = tmp_path / "source.pth"
+    source_weight.write_bytes(payload)
+    commit = "b" * 40
+    readiness_offline: list[bool] = []
+    config = ClampRuntimeConfig(
+        python_executable=Path(sys.executable),
+        cache_dir=tmp_path / "cache",
+        commit=commit,
+        model_revision="revision",
+        weight_url=source_weight.as_uri(),
+        weight_sha256=hashlib.sha256(payload).hexdigest(),
+        weight_filename="weights.pth",
+    )
+
+    def runner(args, cwd, env, timeout):
+        command = [str(value) for value in args]
+        if command[:3] == ["git", "clone", "--no-checkout"]:
+            _write_fake_checkout(Path(command[-1]))
+        elif command[-1:] == ["--get_global"]:
+            readiness_offline.append(env.get("HF_HUB_OFFLINE") == "1")
+        return _completed(
+            command, stdout=commit + "\n" if "rev-parse" in command else ""
+        )
+
+    result = setup_clamp3(config, runner=runner)
+
+    assert readiness_offline == [False, True]
+    assert result.offline_ready is True
+
+
+def test_run_extraction_uses_three_argument_array_commands_and_offline_env(
+    tmp_path: Path,
+):
+    checkout = tmp_path / "cache" / "source"
+    _write_fake_checkout(checkout)
+    input_dir = tmp_path / "xml"
+    input_dir.mkdir()
+    (input_dir / "score.xml").write_text("<score-partwise/>", encoding="utf-8")
+    output_dir = tmp_path / "features"
+    calls: list[tuple[list[str], Path, dict[str, str]]] = []
+    config = ClampRuntimeConfig(
+        python_executable=Path(sys.executable),
+        cache_dir=tmp_path / "cache",
+    )
+
+    def runner(args, cwd, env, timeout):
+        calls.append(([str(value) for value in args], cwd, dict(env)))
+        return _completed(list(args))
+
+    results = run_clamp3_extraction(
+        input_dir,
+        output_dir,
+        config,
+        runner=runner,
+        verify_setup=False,
+    )
+
+    assert len(results) == 3
+    assert all(isinstance(command, list) for command, _, _ in calls)
+    assert all(environment["HF_HUB_OFFLINE"] == "1" for _, _, environment in calls)
+    assert calls[-1][0][-1] == "--get_global"
+
+
+def test_run_extraction_propagates_process_failure(tmp_path: Path):
+    checkout = tmp_path / "cache" / "source"
+    _write_fake_checkout(checkout)
+    input_dir = tmp_path / "xml"
+    input_dir.mkdir()
+    (input_dir / "score.xml").write_text("<score-partwise/>", encoding="utf-8")
+    config = ClampRuntimeConfig(
+        python_executable=Path(sys.executable),
+        cache_dir=tmp_path / "cache",
+    )
+
+    def runner(args, cwd, env, timeout):
+        raise ClampExecutionError("fake failure")
+
+    with pytest.raises(ClampExecutionError, match="fake failure"):
+        run_clamp3_extraction(
+            input_dir,
+            tmp_path / "output",
+            config,
+            runner=runner,
+            verify_setup=False,
+        )
+
+
+def test_run_extraction_translates_subprocess_timeout(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    checkout = tmp_path / "cache" / "source"
+    _write_fake_checkout(checkout)
+    input_dir = tmp_path / "xml"
+    input_dir.mkdir()
+    (input_dir / "score.xml").write_text("<score-partwise/>", encoding="utf-8")
+    config = ClampRuntimeConfig(
+        python_executable=Path(sys.executable),
+        cache_dir=tmp_path / "cache",
+        timeout_seconds=12.5,
+    )
+
+    def time_out(command, **kwargs):
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+    monkeypatch.setattr(subprocess, "run", time_out)
+
+    with pytest.raises(ClampExecutionError, match="timed out after 12.5s"):
+        run_clamp3_extraction(
+            input_dir,
+            tmp_path / "output",
+            config,
+            verify_setup=False,
+        )
+
+
+def test_run_extraction_rejects_missing_pinned_script(tmp_path: Path):
+    checkout = tmp_path / "cache" / "source"
+    _write_fake_checkout(checkout)
+    missing = checkout / "preprocessing" / "abc" / "batch_interleaved_abc.py"
+    missing.unlink()
+    input_dir = tmp_path / "xml"
+    input_dir.mkdir()
+    (input_dir / "score.xml").write_text("<score-partwise/>", encoding="utf-8")
+    config = ClampRuntimeConfig(
+        python_executable=Path(sys.executable),
+        cache_dir=tmp_path / "cache",
+    )
+
+    with pytest.raises(
+        ClampExecutionError,
+        match="Required pinned CLaMP script is missing",
+    ):
+        run_clamp3_extraction(
+            input_dir,
+            tmp_path / "output",
+            config,
+            verify_setup=False,
+        )
+
+
+def test_load_and_normalize_embeddings_preserves_expected_order_and_zero(
+    tmp_path: Path,
+):
+    first = np.zeros(768, dtype=np.float32)
+    second = np.zeros((1, 768), dtype=np.float64)
+    second[0, :2] = [3.0, 4.0]
+    np.save(tmp_path / "b.npy", first)
+    np.save(tmp_path / "a.npy", second)
+
+    batch = load_and_normalize_embeddings(
+        tmp_path,
+        expected_stems=["b", "a"],
+    )
+
+    assert batch.stems == ("b", "a")
+    assert batch.raw.dtype == np.float32
+    assert np.array_equal(batch.normalized[0], np.zeros(768, dtype=np.float32))
+    assert batch.normalized[1, :2] == pytest.approx([0.6, 0.8])
+
+
+@pytest.mark.parametrize(
+    "array",
+    [
+        np.zeros(767, dtype=np.float32),
+        np.full(768, np.nan, dtype=np.float32),
+    ],
+)
+def test_load_embeddings_rejects_bad_shape_and_non_finite(
+    tmp_path: Path,
+    array: np.ndarray,
+):
+    np.save(tmp_path / "bad.npy", array)
+
+    with pytest.raises(EmbeddingValidationError):
+        load_and_normalize_embeddings(tmp_path)
+
+
+def test_load_embeddings_rejects_missing_and_unexpected_stems(tmp_path: Path):
+    np.save(tmp_path / "unexpected.npy", np.zeros(768, dtype=np.float32))
+
+    with pytest.raises(EmbeddingValidationError, match="missing=.*expected"):
+        load_and_normalize_embeddings(tmp_path, expected_stems=["expected"])
+
+
+def test_load_embeddings_allows_missing_expected_in_requested_order(tmp_path: Path):
+    np.save(tmp_path / "third.npy", np.full(768, 3.0, dtype=np.float32))
+    np.save(tmp_path / "first.npy", np.full(768, 1.0, dtype=np.float32))
+
+    batch = load_and_normalize_embeddings(
+        tmp_path,
+        expected_stems=["first", "missing", "third"],
+        allow_missing_expected=True,
+    )
+
+    assert batch.stems == ("first", "third")
+    assert batch.raw[:, 0].tolist() == [1.0, 3.0]
+
+
+def test_load_embeddings_partial_mode_still_rejects_unexpected_stems(tmp_path: Path):
+    np.save(tmp_path / "expected.npy", np.zeros(768, dtype=np.float32))
+    np.save(tmp_path / "unexpected.npy", np.zeros(768, dtype=np.float32))
+
+    with pytest.raises(EmbeddingValidationError, match="unexpected=.*unexpected"):
+        load_and_normalize_embeddings(
+            tmp_path,
+            expected_stems=["expected", "missing"],
+            allow_missing_expected=True,
+        )
+
+
+def test_embed_texts_preserves_order_and_uses_safe_offline_command(tmp_path: Path):
+    checkout = tmp_path / "cache" / "source"
+    _write_fake_checkout(checkout)
+    config = ClampRuntimeConfig(
+        python_executable=Path(sys.executable),
+        cache_dir=tmp_path / "cache",
+        commit="c" * 40,
+        model_revision="text-model",
+        weight_sha256="d" * 64,
+        expected_dimension=3,
+        timeout_seconds=17.0,
+    )
+    calls: list[tuple[list[str], Path, dict[str, str], float]] = []
+    workspace: Path | None = None
+
+    def runner(args, cwd, env, timeout):
+        nonlocal workspace
+        command = [str(value) for value in args]
+        calls.append((command, cwd, dict(env), timeout))
+        input_dir = Path(command[2])
+        output_dir = Path(command[3])
+        workspace = input_dir.parent
+        assert [path.name for path in sorted(input_dir.iterdir())] == [
+            "text_000000.txt",
+            "text_000001.txt",
+        ]
+        assert (input_dir / "text_000000.txt").read_text(encoding="utf-8") == "joy"
+        assert (input_dir / "text_000001.txt").read_text(encoding="utf-8") == "sad"
+        np.save(output_dir / "text_000001.npy", np.array([0.0, 3.0, 4.0]))
+        np.save(output_dir / "text_000000.npy", np.array([1.0, 0.0, 0.0]))
+        return _completed(command)
+
+    result = embed_clamp3_texts(
+        ["joy", "sad"],
+        config,
+        runner=runner,
+        verify_setup=False,
+    )
+
+    extract = checkout / "code" / "extract_clamp3.py"
+    command, cwd, environment, timeout = calls[0]
+    assert command[:2] == [str(config.python_executable), str(extract)]
+    assert command[-1] == "--get_global"
+    assert command[2].endswith("/input")
+    assert command[3].endswith("/output")
+    assert "joy" not in command and "sad" not in command
+    assert cwd == extract.parent
+    assert timeout == 17.0
+    assert environment["HF_HUB_OFFLINE"] == "1"
+    assert environment["TRANSFORMERS_OFFLINE"] == "1"
+    assert result.texts == ("joy", "sad")
+    assert result.stems == ("text_000000", "text_000001")
+    assert result.raw.tolist() == [[1.0, 0.0, 0.0], [0.0, 3.0, 4.0]]
+    assert np.allclose(
+        result.normalized,
+        np.array([[1.0, 0.0, 0.0], [0.0, 0.6, 0.8]]),
+    )
+    assert result.model_identity.model_commit == "c" * 40
+    assert result.model_identity.model_revision == "text-model"
+    assert result.model_identity.model_weight_sha256 == "d" * 64
+    assert result.model_identity.dimension == 3
+    assert workspace is not None and not workspace.exists()
+
+
+@pytest.mark.parametrize("text", ["", " ", "\n\t"])
+def test_embed_texts_rejects_blank_input_actionably(tmp_path: Path, text: str):
+    config = ClampRuntimeConfig(
+        python_executable=Path(sys.executable),
+        cache_dir=tmp_path,
+    )
+
+    with pytest.raises(
+        EmbeddingValidationError,
+        match="Text input at index 1 must not be blank",
+    ):
+        embed_clamp3_texts(["valid", text], config, verify_setup=False)
+
+
+def test_embed_texts_cleans_workspace_after_runner_failure(tmp_path: Path):
+    checkout = tmp_path / "cache" / "source"
+    _write_fake_checkout(checkout)
+    config = ClampRuntimeConfig(
+        python_executable=Path(sys.executable),
+        cache_dir=tmp_path / "cache",
+    )
+    workspace: Path | None = None
+
+    def runner(args, cwd, env, timeout):
+        nonlocal workspace
+        workspace = Path(args[2]).parent
+        raise ClampExecutionError("text inference failed")
+
+    with pytest.raises(ClampExecutionError, match="text inference failed"):
+        embed_clamp3_texts(
+            ["calm"],
+            config,
+            runner=runner,
+            verify_setup=False,
+        )
+
+    assert workspace is not None and not workspace.exists()
+
+
+@pytest.mark.parametrize(
+    ("malformation", "message"),
+    [
+        ("missing", "missing=.*text_000001"),
+        ("unexpected", "unexpected=.*other"),
+        ("duplicate", "Duplicate embedding stem 'text_000000'"),
+        ("dimension", r"has shape .* expected \(3,\)"),
+        ("nonfinite", "contains non-finite values"),
+    ],
+)
+def test_embed_texts_rejects_malformed_outputs(
+    tmp_path: Path,
+    malformation: str,
+    message: str,
+):
+    checkout = tmp_path / "cache" / "source"
+    _write_fake_checkout(checkout)
+    config = ClampRuntimeConfig(
+        python_executable=Path(sys.executable),
+        cache_dir=tmp_path / "cache",
+        expected_dimension=3,
+    )
+
+    def runner(args, cwd, env, timeout):
+        output_dir = Path(args[3])
+        first = np.array([1.0, 2.0, 3.0])
+        second = np.array([4.0, 5.0, 6.0])
+        if malformation == "dimension":
+            first = np.array([1.0, 2.0])
+        elif malformation == "nonfinite":
+            first = np.array([1.0, np.nan, 3.0])
+        np.save(output_dir / "text_000000.npy", first)
+        if malformation != "missing":
+            np.save(output_dir / "text_000001.npy", second)
+        if malformation == "unexpected":
+            np.save(output_dir / "other.npy", second)
+        elif malformation == "duplicate":
+            nested = output_dir / "nested"
+            nested.mkdir()
+            np.save(nested / "text_000000.npy", first)
+        return _completed(list(args))
+
+    with pytest.raises(EmbeddingValidationError, match=message):
+        embed_clamp3_texts(
+            ["positive", "negative"],
+            config,
+            runner=runner,
+            verify_setup=False,
+        )

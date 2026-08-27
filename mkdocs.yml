@@ -53,11 +53,13 @@ nav:
       - Installation: getting-started/installation.md
       - Quick Start: getting-started/quick-start.md
       - Configuration: getting-started/configuration.md
+      - CLaMP 3 Score Embeddings: getting-started/clamp3-pipeline.md
   - Tools:
       - Overview: tools/index.md
       - Discovery: tools/discovery.md
       - Uploads: tools/uploads.md
       - Metadata: tools/metadata.md
+      - Emotion Retrieval: tools/emotion-retrieval.md
       - Key Analysis: tools/key-analysis.md
       - Notation: tools/notation.md
       - Visualisation:

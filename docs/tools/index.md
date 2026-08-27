@@ -22,6 +22,12 @@ encoding-music-mcp provides a suite of tools for analyzing MEI files. Tools work
 |------|---------|------------|
 | [`get_mei_metadata`](metadata.md) | Extract title, composer, editors, dates, and copyright info | [Documentation](metadata.md) |
 
+### Retrieval Tools
+
+| Tool | Purpose | Learn More |
+|------|---------|------------|
+| [`search_songs_by_emotion`](emotion-retrieval.md) | Search a prepared song catalog using a positive-minus-negative CLaMP emotion direction | [Documentation](emotion-retrieval.md) |
+
 ### Analysis Tools
 
 | Tool | Purpose | Learn More |
@@ -77,6 +83,10 @@ Tools for exploring the MEI collection:
 Tools for extracting descriptive information:
 
 - **[get_mei_metadata](metadata.md)**: Get complete metadata from MEI headers
+
+### Retrieval
+
+- **[search_songs_by_emotion](emotion-retrieval.md)**: Map ordered emotion poles such as happy/sad into exact-model song similarity
 
 ### Musical Analysis
 
@@ -178,6 +188,7 @@ Simply ask your AI assistant in natural language:
 - "What MEI files are available?"
 - "Analyze the key of Bach_BWV_0772.mei"
 - "Get melodic 5-grams from Bartok_Mikrokosmos_022.mei"
+- "Find the happiest songs" (requires a configured score-embedding catalog)
 
 ### Direct Tool Invocation
 

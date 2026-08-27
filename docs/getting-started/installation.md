@@ -80,8 +80,21 @@ For development or if you want to modify the code:
     - `ruff` for code formatting
     - `mkdocs-material` for documentation
 
+## Optional score-embedding environment
+
+The score-embedding pipeline is a separate local workflow and does not change the base MCP server installation. Install its SQLite vector dependency with:
+
+```bash
+uv sync --extra score-embeddings
+```
+
+CLaMP 3 itself runs in a separately provisioned Python 3.10 environment because its PyTorch and accelerator requirements are independent of the Python 3.12 MCP server. The explicit pipeline setup command will acquire and verify the pinned source and model artifacts, but it will not install hardware-specific PyTorch packages.
+
+See [CLaMP 3 Score Embeddings](clamp3-pipeline.md) for the complete setup, cache, offline, CLI, and troubleshooting contract.
+
 ## Next Steps
 
 - [Configure your MCP client](configuration.md) to use the server
 - Try the [Quick Start guide](quick-start.md) to test the tools
+- Set up the optional [CLaMP 3 score-embedding pipeline](clamp3-pipeline.md)
 - Explore the [Tools documentation](../tools/index.md) to learn what's available

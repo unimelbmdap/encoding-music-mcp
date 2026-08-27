@@ -26,6 +26,7 @@ from .notation import (
 from .play_excerpt import load_audio_resource, play_excerpt
 from .uploads import register_mei_file_from_path
 from .performance import limit_analysis_concurrency, performant_analysis_tool
+from .emotion_retrieval import search_songs_by_emotion
 from .output_schemas import (
     LOAD_AUDIO_RESOURCE_OUTPUT_SCHEMA,
     MELODIC_NGRAM_HEATMAP_OUTPUT_SCHEMA,
@@ -46,6 +47,7 @@ from .visualisation.sonority_ngram_progress import plot_sonority_ngram_progress
 # To add a new tool: import it, then add mcp.tool()(your_tool) below
 mcp.tool()(list_available_mei_files)
 mcp.tool()(register_mei_file_from_path)
+mcp.tool()(search_songs_by_emotion)
 mcp.tool()(get_mei_metadata)
 mcp.tool()(performant_analysis_tool(analyze_key))
 mcp.tool()(performant_analysis_tool(inspect_harmony))

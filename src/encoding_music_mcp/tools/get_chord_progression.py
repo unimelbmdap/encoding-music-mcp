@@ -21,6 +21,39 @@ __all__ = [
 
 _XML_ID = "{http://www.w3.org/XML/1998/namespace}id"
 
+def get_chord_progression(
+    filename: str,
+    start_measure: int | None = None,
+    end_measure: int | None = None,
+    staff: str | None = None,
+    layer: str | None = None,
+) -> list[ChordEvent]:
+    """Return explicit MEI harmony labels or inferred multi-pitch sonorities.  """
+    filepath, root = _load_mei(filename)
+    staves, _ = _validate_filters(
+        root,
+        start_measure=start_measure,
+        end_measure=end_measure,
+        staff=staff,
+        layer=layer,
+    )
+    harmonies = _elements(root, "harm")
+    if harmonies and all(_harmony_label(harmony) for harmony in harmonies):
+        return _extract_explicit_harmony(
+            root,
+            start_measure=start_measure,
+            end_measure=end_measure,
+            staff=staff,
+            layer=layer,
+        )
+    return _infer_with_music21(
+        filepath,
+        staff_ids=staves,
+        start_measure=start_measure,
+        end_measure=end_measure,
+        staff=staff,
+        layer=layer,
+    )
 
 class HarmonyInspection(BaseModel):
     """Summary of the harmony annotations and voice identifiers in an MEI score."""
@@ -312,36 +345,3 @@ def inspect_harmony(filename: str) -> HarmonyInspection:
     )
 
 
-def get_chord_progression(
-    filename: str,
-    start_measure: int | None = None,
-    end_measure: int | None = None,
-    staff: str | None = None,
-    layer: str | None = None,
-) -> list[ChordEvent]:
-    """Return explicit MEI harmony labels or inferred multi-pitch sonorities."""
-    filepath, root = _load_mei(filename)
-    staves, _ = _validate_filters(
-        root,
-        start_measure=start_measure,
-        end_measure=end_measure,
-        staff=staff,
-        layer=layer,
-    )
-    harmonies = _elements(root, "harm")
-    if harmonies and all(_harmony_label(harmony) for harmony in harmonies):
-        return _extract_explicit_harmony(
-            root,
-            start_measure=start_measure,
-            end_measure=end_measure,
-            staff=staff,
-            layer=layer,
-        )
-    return _infer_with_music21(
-        filepath,
-        staff_ids=staves,
-        start_measure=start_measure,
-        end_measure=end_measure,
-        staff=staff,
-        layer=layer,
-    )

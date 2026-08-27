@@ -36,6 +36,12 @@ encoding-music-mcp/
 |       |   |-- __init__.py
 |       |   |-- registry.py                 # Prompt registration
 |       |   |-- comprehensive_analysis.py
+|       |-- score_embeddings/               # Standalone whole-score embeddings
+|       |   |-- __init__.py
+|       |   |-- music_processing.py         # Standardize, export XML, validate
+|       |   |-- clamp_extractor.py          # CLaMP setup and subprocess adapter
+|       |   |-- storage.py                  # SQLite and sqlite-vec repository
+|       |   `-- pipeline.py                 # Python orchestration and CLI entry
 |       `-- templates/
 |           `-- incipit_verovio_app.html
 |-- tests/
@@ -49,7 +55,10 @@ encoding-music-mcp/
 |   |-- test_voice_ranges.py
 |   |-- test_weighted_note_distribution.py
 |   |-- test_melodic_ngram_heatmap.py
+|   |-- score_embeddings/                   # Pipeline unit/integration tests
 |   `-- README.md
+|-- notebooks/
+|   `-- score_embeddings_colab.ipynb      # Hosted-GPU batch extraction workflow
 |-- docs/                               # Documentation
 |   |-- index.md
 |   |-- api-reference.md
@@ -167,6 +176,7 @@ For visualisation tools, use the matching nested locations:
 - `intervals.py`: CRIM Intervals analysis
 - `notation.py`: Verovio-based notation rendering
 - `play_excerpt.py`: Audio rendering and playback payloads
+- `emotion_retrieval.py`: Query-only contrastive CLaMP emotion search over a prepared catalog
 - `visualisation/`: Visual summary tools and app payload builders
 
 ### Documentation Tools (`docs/tools/`)
@@ -174,6 +184,22 @@ For visualisation tools, use the matching nested locations:
 - Top-level tool docs live beside `docs/tools/index.md`
 - Interval tool docs live in `docs/tools/intervals/`
 - Visualisation tool docs live in `docs/tools/visualisation/`
+
+### Score Embeddings (`src/encoding_music_mcp/score_embeddings/`)
+
+- `music_processing.py`: Non-mutating whole-score standardization, `.xml` MusicXML export, event extraction, and round-trip validation
+- `clamp_extractor.py`: Explicit pinned CLaMP setup checks and offline subprocess execution
+- `mei_metadata.py`: Nullable title, composer, and work-creation-date extraction from arbitrary MEI paths
+- `storage.py`: Transactional SQLite provenance/catalog storage and exact-model `sqlite-vec` similarity search
+- `pipeline.py`: Typed orchestration plus the standalone `encoding-music-embeddings` CLI
+
+Batch generation remains independent of `tools/registry.py`. The query-only `tools/emotion_retrieval.py` consumer uses its public text-encoding and repository APIs.
+
+The operational `notebooks/score_embeddings_colab.ipynb` workflow installs one
+locally built project wheel, resolves its complete bundled MEI corpus, provisions
+a separate hosted CLaMP runtime, and invokes the standalone pipeline CLI. It does
+not require a hosted Git checkout or duplicate score processing or SQLite
+persistence code in the notebook.
 
 ### Tests Module (`tests/`)
 
@@ -194,7 +220,11 @@ dependencies = [
     "crim-intervals",
     "verovio>=5.5",
     "music21",
+    "numpy",
 ]
+
+[project.optional-dependencies]
+score-embeddings = ["sqlite-vec==0.1.9"]
 
 [dependency-groups]
 dev = [
@@ -216,6 +246,8 @@ Documentation site configuration using the Material theme.
 - **crim-intervals**: Interval, n-gram, and cadence analysis
 - **verovio**: Music notation engraving (MEI to SVG)
 - **music21**: Key detection and music analysis helpers
+- **numpy**: Embedding validation and normalization
+- **sqlite-vec**: Optional local vector search for score embeddings
 
 ### Development
 
@@ -228,7 +260,7 @@ Documentation site configuration using the Material theme.
 Uses `uv_build` backend with src-layout:
 
 - Package installed as `encoding-music-mcp`
-- Entry point: `encoding_music_mcp.server:main`
+- Entry points: `encoding_music_mcp.server:main` and `encoding_music_mcp.score_embeddings.pipeline:main`
 - Editable installs supported
 
 ## Related Documentation

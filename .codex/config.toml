@@ -1,0 +1,11 @@
+# Codex project configuration.
+#
+# Seeded by Bower's scaffold because this project had no .codex/config.toml.
+# It is project-owned from here on — the scaffold never edits it again. Codex
+# reads it only after you trust the repository on first open.
+#
+# This is convenience, not enforcement. Bower's gates are semantic: they live in
+# the skill instructions, not in the sandbox. Loosening the sandbox does not
+# loosen a gate, and tightening it does not create one.
+
+sandbox_mode = "workspace-write"

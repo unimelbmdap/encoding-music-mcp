@@ -38,6 +38,32 @@ This MCP server provides a comprehensive suite of tools for analyzing encoded mu
 - [Tools Overview](tools/index.md)
 - [API Reference](api-reference.md)
 
+## Project Design
+
+- [Architecture](/docs/architecture.md) — Runtime and software architecture
+- [Problem Space](/docs/design/problem-space.md) — What the project solves and why
+- [Decision Log](/docs/adr/index.md) — Architectural Decision Records (3 accepted, 1 superseded)
+
+## Feature Modules
+
+### Score embeddings [✓] · Review: ✓ 2026-08-25 (4 of 4 features)
+
+Convert complete symbolic scores into validated XML representations and reproducible CLaMP 3 embeddings, retain catalog metadata, encode compatible CLaMP text queries, and store vectors for retrieval.
+
+- [sheet-music-processing](/docs/modules/score-embeddings/sheet-music-processing/) [✓]
+- [clamp3-extraction](/docs/modules/score-embeddings/clamp3-extraction/) [✓]
+- [sqlite-vector-storage](/docs/modules/score-embeddings/sqlite-vector-storage/) [✓]
+- [embedding-pipeline-cli](/docs/modules/score-embeddings/embedding-pipeline-cli/) [✓]
+- [gpu-extraction-notebook](/docs/modules/score-embeddings/gpu-extraction-notebook/) [✓]
+- [Module Status](/docs/modules/score-embeddings/module-status.md)
+
+### Emotion retrieval [✓] · Review: ⏸
+
+Expose Claude-facing contrastive emotion search and return catalog-shaped song matches.
+
+- [contrastive-emotion-search](/docs/modules/emotion-retrieval/contrastive-emotion-search/) [✓]
+- [Module Status](/docs/modules/emotion-retrieval/module-status.md)
+
 ## What is MCP?
 
 The [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) is an open standard that enables AI assistants to securely access data and tools. This server implements MCP to provide music analysis capabilities to any MCP-compatible client, such as Claude Desktop.

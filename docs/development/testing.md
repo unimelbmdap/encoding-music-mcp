@@ -10,6 +10,16 @@ encoding-music-mcp includes a comprehensive test suite to ensure reliability.
 uv run pytest
 ```
 
+### Score Embeddings Module
+
+```bash
+uv run --extra score-embeddings pytest -q tests/score_embeddings
+```
+
+The `score-embeddings` extra is required because it installs the pinned
+`sqlite-vec` extension used by the module's storage and integration tests. The
+extension remains optional for users who only run the MCP server.
+
 ### Verbose Output
 
 ```bash
