@@ -119,6 +119,19 @@ encoding-music-mcp should work with any MCP-compatible client. The general confi
 
 Consult your MCP client's documentation for specific configuration instructions.
 
+## Remote HTTP endpoint
+
+Clients that support remote Streamable HTTP can connect to:
+
+```text
+https://encoding-music.drdanielrb.com/mcp
+```
+
+Use the MCP endpoint as written rather than the `/health` URL. Opening `/mcp`
+in an ordinary browser can return HTTP 406 because browsers do not send MCP
+streaming headers; this is expected. The `/health` endpoint is available for a
+simple browser or uptime check.
+
 ## Standalone Mode
 
 You can also run the server directly without an MCP client (useful for testing):

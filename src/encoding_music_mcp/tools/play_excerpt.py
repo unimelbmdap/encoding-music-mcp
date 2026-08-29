@@ -1,5 +1,7 @@
+import asyncio
 import base64
 import hashlib
+import os
 import re
 import secrets
 import shutil
@@ -8,7 +10,7 @@ import tempfile
 import wave
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from threading import Lock
+from threading import BoundedSemaphore, Lock
 from typing import Any
 
 from fastmcp import Context
@@ -30,6 +32,15 @@ _FALLBACK_FFMPEG_EXE = Path(r"C:\ProgramData\chocolatey\bin\ffmpeg.exe")
 
 _AUDIO_REGISTRY: dict[str, dict[str, Any]] = {}
 _AUDIO_REGISTRY_LOCK = Lock()
+_AUDIO_RENDER_LOCKS: dict[str, Lock] = {}
+_AUDIO_RENDER_LOCKS_GUARD = Lock()
+try:
+    _AUDIO_RENDER_CONCURRENCY = max(
+        1, int(os.environ.get("MCP_AUDIO_RENDER_CONCURRENCY", "1"))
+    )
+except ValueError:
+    _AUDIO_RENDER_CONCURRENCY = 1
+_AUDIO_RENDER_SEMAPHORE = BoundedSemaphore(_AUDIO_RENDER_CONCURRENCY)
 
 __all__ = ["play_excerpt", "load_audio_resource", "get_registered_audio"]
 _DEFAULT_PLAYBACK_VELOCITY = 64
@@ -396,13 +407,137 @@ def _convert_wav_to_mp3(input_wav: Path, output_mp3: Path) -> None:
         raise RuntimeError("FFmpeg did not produce an MP3 file.")
 
 
-def _build_audio_cache_key(filename: str, start_q: float, end_q: float | None, bpm: int) -> str:
+def _build_audio_cache_key(
+    filename: str,
+    start_q: float,
+    end_q: float | None,
+    bpm: int,
+    filepath: Path | None = None,
+) -> str:
     """Create a stable cache key for a rendered audio request."""
+    file_signature = ""
+    if filepath is not None:
+        try:
+            stat = filepath.stat()
+            file_signature = (
+                f"|{filepath.resolve()}|{stat.st_mtime_ns}|{stat.st_size}"
+            )
+        except OSError:
+            file_signature = f"|{filepath.resolve()}|missing"
     payload = (
         f"{_AUDIO_CACHE_VERSION}|{filename}|{start_q:.6f}|"
-        f"{end_q if end_q is None else f'{end_q:.6f}'}|{bpm}"
+        f"{end_q if end_q is None else f'{end_q:.6f}'}|{bpm}{file_signature}"
     )
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _get_audio_render_lock(cache_key: str) -> Lock:
+    """Return the per-output lock used to coalesce identical render requests."""
+    with _AUDIO_RENDER_LOCKS_GUARD:
+        return _AUDIO_RENDER_LOCKS.setdefault(cache_key, Lock())
+
+
+def _cached_audio_duration(output_mp3_path: Path, duration_path: Path) -> float | None:
+    """Return persisted duration when a complete cached output is available."""
+    if not output_mp3_path.exists() or not duration_path.exists():
+        return None
+    try:
+        duration = float(duration_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return duration if duration >= 0 else None
+
+
+def _prepare_audio_payload(
+    filename: str,
+    filepath: Path,
+    start_q: float,
+    end_q: float | None,
+    bpm: int,
+) -> dict[str, Any]:
+    """Prepare or reuse rendered audio without blocking the asyncio event loop."""
+    _AUDIO_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    cache_key = _build_audio_cache_key(
+        filename, start_q, end_q, bpm, filepath=filepath
+    )
+    output_mp3_path = _AUDIO_CACHE_DIR / f"{cache_key}.mp3"
+    duration_path = _AUDIO_CACHE_DIR / f"{cache_key}.duration"
+    render_lock = _get_audio_render_lock(cache_key)
+
+    try:
+        with render_lock:
+            duration_sec = _cached_audio_duration(output_mp3_path, duration_path)
+            if duration_sec is None:
+                with _AUDIO_RENDER_SEMAPHORE:
+                    # A different process may have completed the same output
+                    # while this request waited for a render slot.
+                    duration_sec = _cached_audio_duration(
+                        output_mp3_path, duration_path
+                    )
+                    if duration_sec is None:
+                        mei_text = filepath.read_text(encoding="utf-8")
+                        mei_text = _inject_or_replace_tempo(mei_text, bpm)
+                        mei_text = _normalize_zero_velocities(mei_text)
+                        midi_b64 = _render_mei_to_midi_b64(
+                            filepath, mei_text, bpm
+                        )
+
+                        with tempfile.TemporaryDirectory() as tmpdir:
+                            tmpdir_path = Path(tmpdir)
+                            full_wav_path = tmpdir_path / "full.wav"
+                            working_wav_path = tmpdir_path / "working.wav"
+
+                            _render_midi_b64_to_wav_file(
+                                midi_b64, full_wav_path
+                            )
+
+                            if end_q is None and start_q == 0:
+                                shutil.copyfile(
+                                    full_wav_path, working_wav_path
+                                )
+                            else:
+                                start_sec = start_q * 60.0 / bpm
+                                if end_q is None:
+                                    end_sec = _get_wav_duration_sec(
+                                        full_wav_path
+                                    )
+                                else:
+                                    # Keep the release of the final note.
+                                    end_sec = (end_q + 0.25) * 60.0 / bpm
+                                _trim_wav_file(
+                                    full_wav_path,
+                                    working_wav_path,
+                                    start_sec,
+                                    end_sec,
+                                )
+
+                            _convert_wav_to_mp3(
+                                working_wav_path, output_mp3_path
+                            )
+                            duration_sec = _get_wav_duration_sec(
+                                working_wav_path
+                            )
+
+                        duration_path.write_text(
+                            f"{duration_sec:.9f}", encoding="utf-8"
+                        )
+    finally:
+        with _AUDIO_RENDER_LOCKS_GUARD:
+            if _AUDIO_RENDER_LOCKS.get(cache_key) is render_lock:
+                _AUDIO_RENDER_LOCKS.pop(cache_key, None)
+
+    audio_token = _register_audio_file(
+        output_mp3_path, "audio/mpeg", duration_sec
+    )
+    return {
+        "filename": filename,
+        "audio_resource_uri": f"audio://files/{audio_token}",
+        "mime_type": "audio/mpeg",
+        "start_q": start_q,
+        "end_q": end_q,
+        "bpm": bpm,
+        "duration_sec": duration_sec,
+    }
 
 
 def _register_audio_file(audio_path: Path, mime_type: str, duration_sec: float) -> str:
@@ -509,50 +644,16 @@ async def play_excerpt(
     if not filepath.exists():
         raise FileNotFoundError(f"MEI file not found: {filename}")
 
-    mei_text = filepath.read_text(encoding="utf-8")
-    mei_text = _inject_or_replace_tempo(mei_text, bpm)
-    mei_text = _normalize_zero_velocities(mei_text)
-
-    _AUDIO_CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    midi_b64 = _render_mei_to_midi_b64(filepath, mei_text, bpm)
-    cache_key = _build_audio_cache_key(filename, start_q, end_q, bpm)
-    output_mp3_path = _AUDIO_CACHE_DIR / f"{cache_key}.mp3"
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        tmpdir_path = Path(tmpdir)
-        full_wav_path = tmpdir_path / "full.wav"
-        working_wav_path = tmpdir_path / "working.wav"
-
-        _render_midi_b64_to_wav_file(midi_b64, full_wav_path)
-
-        if end_q is None and start_q == 0:
-            shutil.copyfile(full_wav_path, working_wav_path)
-        else:
-            start_sec = start_q * 60.0 / bpm
-            if end_q is None:
-                end_sec = _get_wav_duration_sec(full_wav_path)
-            else:
-                # Add a small buffer to avoid cutting off the final note too early.
-                end_sec = (end_q + 0.25) * 60.0 / bpm
-            _trim_wav_file(full_wav_path, working_wav_path, start_sec, end_sec)
-
-        if not output_mp3_path.exists():
-            _convert_wav_to_mp3(working_wav_path, output_mp3_path)
-
-        duration_sec = _get_wav_duration_sec(working_wav_path)
-
-    audio_token = _register_audio_file(output_mp3_path, "audio/mpeg", duration_sec)
-    audio_resource_uri = f"audio://files/{audio_token}"
-
-    payload = {
-        "filename": filename,
-        "audio_resource_uri": audio_resource_uri,
-        "mime_type": "audio/mpeg",
-        "start_q": start_q,
-        "end_q": end_q,
-        "bpm": bpm,
-        "duration_sec": duration_sec,
-    }
+    # music21 parsing, FluidSynth, and FFmpeg are all synchronous. Offloading
+    # the complete pipeline keeps other MCP sessions and /health responsive.
+    payload = await asyncio.to_thread(
+        _prepare_audio_payload,
+        filename,
+        filepath,
+        start_q,
+        end_q,
+        bpm,
+    )
 
     return ToolResult(
         content=[TextContent(type="text", text="Prepared streaming audio")],

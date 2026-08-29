@@ -6,6 +6,14 @@ services:
       - MCP_TRANSPORT=http
       - MCP_HOST=0.0.0.0
       - MCP_PORT=8000
+      # The backend is only exposed to Caddy, so forwarded proxy headers are trusted.
+      - MCP_FORWARDED_ALLOW_IPS=*
+      # Must exceed Caddy's 30-second upstream keep-alive.
+      - MCP_HTTP_KEEP_ALIVE=35
+      - MCP_ANALYSIS_CONCURRENCY=2
+      - MCP_NOTATION_PROCESS_CONCURRENCY=2
+      - MCP_AUDIO_RENDER_CONCURRENCY=1
+      - MCP_RESULT_CACHE_SIZE=32
     expose:
       - "8000"
     logging:

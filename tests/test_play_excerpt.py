@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 from fastmcp.server.elicitation import AcceptedElicitation, DeclinedElicitation
 
+from src.encoding_music_mcp.server import mcp
 from src.encoding_music_mcp.tools import play_excerpt as play_excerpt_module
 
 
@@ -49,7 +50,9 @@ def test_play_excerpt_full_piece_returns_stream_url(monkeypatch: pytest.MonkeyPa
     monkeypatch.setattr(play_excerpt_module, "_render_midi_b64_to_wav_file", fake_render)
     monkeypatch.setattr(play_excerpt_module, "_convert_wav_to_mp3", fake_convert)
 
-    result = asyncio.run(play_excerpt_module.play_excerpt("sample.mei", bpm=72))
+    result = asyncio.run(
+        mcp.call_tool("play_excerpt", {"filename": "sample.mei", "bpm": 72})
+    )
     payload = result.structured_content
 
     assert payload is not None
@@ -102,6 +105,56 @@ def test_play_excerpt_range_trims_audio(monkeypatch: pytest.MonkeyPatch, tmp_pat
     assert payload is not None
     assert trim_calls == [(1.0, 3.125)]
     assert pytest.approx(payload["duration_sec"], rel=1e-3) == 2.125
+
+
+def test_play_excerpt_reuses_completed_audio_cache(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    fake_mei_file: Path,
+):
+    """A repeated request should skip music21, FluidSynth, and FFmpeg."""
+    output_dir = tmp_path / "audio-cache"
+    monkeypatch.setattr(play_excerpt_module, "_AUDIO_CACHE_DIR", output_dir)
+    monkeypatch.setattr(
+        play_excerpt_module,
+        "get_mei_filepath",
+        lambda filename: fake_mei_file,
+    )
+
+    calls = {"midi": 0, "synth": 0, "convert": 0}
+
+    def fake_midi(filepath: Path, mei_data: str, bpm: int) -> str:
+        calls["midi"] += 1
+        return "ZHVtbXk="
+
+    def fake_render(midi_b64: str, wav_path: Path) -> None:
+        calls["synth"] += 1
+        _write_test_wav(wav_path, duration_sec=1.25)
+
+    def fake_convert(input_wav: Path, output_mp3: Path) -> None:
+        calls["convert"] += 1
+        output_mp3.write_bytes(b"fake-mp3")
+
+    monkeypatch.setattr(
+        play_excerpt_module, "_render_mei_to_midi_b64", fake_midi
+    )
+    monkeypatch.setattr(
+        play_excerpt_module, "_render_midi_b64_to_wav_file", fake_render
+    )
+    monkeypatch.setattr(
+        play_excerpt_module, "_convert_wav_to_mp3", fake_convert
+    )
+
+    first = asyncio.run(
+        play_excerpt_module.play_excerpt("sample.mei", bpm=72)
+    )
+    second = asyncio.run(
+        play_excerpt_module.play_excerpt("sample.mei", bpm=72)
+    )
+
+    assert calls == {"midi": 1, "synth": 1, "convert": 1}
+    assert first.structured_content["duration_sec"] == pytest.approx(1.25)
+    assert second.structured_content["duration_sec"] == pytest.approx(1.25)
 
 
 def test_play_excerpt_rejects_invalid_range():
@@ -186,7 +239,12 @@ def test_load_audio_resource_returns_base64(monkeypatch: pytest.MonkeyPatch, tmp
         }
     })
 
-    result = play_excerpt_module.load_audio_resource("audio://files/token123")
+    result = asyncio.run(
+        mcp.call_tool(
+            "load_audio_resource",
+            {"resource_uri": "audio://files/token123"},
+        )
+    )
     payload = result.structured_content
 
     assert payload is not None
