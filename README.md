@@ -255,6 +255,12 @@ Display musical notation for an MEI file as rendered SVG. Requires the [MCP Apps
 
 **Returns**: SVG notation rendered by Verovio, displayed in an interactive viewer with pagination controls.
 
+For example:
+
+
+![alt text](images/show_notes.png)
+
+
 ## Built-in Files
 
 The server includes 46 MEI files:

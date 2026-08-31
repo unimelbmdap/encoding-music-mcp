@@ -3,6 +3,10 @@
 The `plot_sonority_ngram_progress` tool displays sonority n-grams as a scatter
 plot against normalized progress through one or more MEI scores.
 
+For example:
+
+![alt text](../../../images/sonority.png)
+
 ## Overview
 
 This view uses CRIM Intervals' corpus-level sonority n-gram analysis. Each point

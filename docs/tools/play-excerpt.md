@@ -6,6 +6,10 @@ The `play_excerpt` tool renders an MEI score to audio and opens an inline audio 
 
 This tool converts MEI notation into playable audio by rendering MIDI with music21, synthesising that MIDI with FluidSynth, trimming the requested segment if needed, and converting the result to MP3 for streaming in the app viewer.
 
+For example:
+
+![alt text](../../images/audio_player.png)
+
 ## Prerequisites
 
 This tool requires:

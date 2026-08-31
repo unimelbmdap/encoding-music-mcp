@@ -15,6 +15,8 @@ This tool requires an MCP client that supports the MCP Apps extension (e.g., Cla
 
 Displays the first page of the piece with prev/next pagination controls.
 
+![alt text](../../images/show_notes.png)
+
 When `filename` is omitted, or when the requested filename is not available and
 the MCP client supports elicitation, the tool asks which MEI file to show. You
 can select a built-in or registered filename, type another registered filename,
@@ -26,6 +28,8 @@ or type a local path to a `.mei` file on the machine running the MCP server.
     "Show me measures 19 to 22 of Bach_BWV_0772.mei"
 
 Filters the MEI to only include the requested measures before rendering.
+
+![alt text](../../images/show_notes_exc.png)
 
 ### Page navigation
 
@@ -40,6 +44,8 @@ The `show_notation_highlight` tool renders the same notation payload as
 `show_notation`, then adds a list of MEI note IDs for the viewer to highlight.
 Use `resolve_note_ids_for_highlight`, `get_melodic_ngram_matches`, or
 `get_first_occur_melodic_ngrams` to obtain note IDs from analysis locations.
+
+
 
 Call this tool once for the requested score or excerpt. The widget handles page
 navigation with the same highlight set, so clients do not need to call the tool
@@ -63,6 +69,12 @@ The structured result includes the same SVG and pagination fields as
     "highlight_note_ids": ["note-1", "note-2"]
 }
 ```
+
+For example:
+
+![alt text](../../images/note_highlight.png)
+
+
 
 ## Parameters
 

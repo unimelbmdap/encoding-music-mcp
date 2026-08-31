@@ -5,6 +5,12 @@ timeline rectangles for one or more MEI scores. Rows are separated by score and
 staff, and colours identify the most frequent patterns across the selected
 pieces.
 
+For example:
+
+
+![alt text](../../../images/mel_ngram.png)
+
+
 ## Parameters
 
 - `filename` (`str | None`): One MEI filename.

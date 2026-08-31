@@ -2,6 +2,12 @@
 
 The `plot_weighted_note_distribution` tool displays a radar chart of pitch-class usage for one or more MEI scores, weighted by note duration.
 
+For example:
+
+
+![alt text](../../../images/note_radar.png)
+
+
 ## Overview
 
 This tool is designed for the kind of "weighted note distribution" view shown in the notebook example. Instead of counting each note event equally, it weights each pitch class by `dur.ppq`, so longer notes contribute more strongly than short passing notes.

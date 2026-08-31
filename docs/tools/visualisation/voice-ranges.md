@@ -2,6 +2,12 @@
 
 The `plot_voice_ranges` tool displays the pitch range of each staff in a single MEI score as a compact horizontal chart.
 
+For example:
+
+
+![alt text](../../../images/voice_range.png)
+
+
 ## Overview
 
 This tool is useful for quickly seeing the ambitus of each staff or voice layer in one piece. It reuses the note data produced by `get_notes`, finds the lowest and highest sounding pitch in each staff, and sends that summary to an interactive viewer.
