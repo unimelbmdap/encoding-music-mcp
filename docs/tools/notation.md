@@ -15,7 +15,7 @@ This tool requires an MCP client that supports the MCP Apps extension (e.g., Cla
 
 Displays the first page of the piece with prev/next pagination controls.
 
-![alt text](../../images/show_notes.png)
+![alt text](../../images/show_notes2.png)
 
 When `filename` is omitted, or when the requested filename is not available and
 the MCP client supports elicitation, the tool asks which MEI file to show. You
