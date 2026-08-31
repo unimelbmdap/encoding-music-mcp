@@ -50,6 +50,28 @@ Each span may include:
 The original fields from each requested span are preserved, and the resolver
 adds `index`, `matched_parts`, and `note_ids`.
 
+## How It Works
+
+Note events are timed via CRIM Intervals' own music21 machinery
+(`numberParts` + `detailIndex` over `_getM21ObjsNoTies()`) — the same
+`(measure, beat, offset)` coordinate system every other interval tool
+produces. Each span is matched against this table rather than against an
+independently-computed timeline, so results always line up with the
+locations returned by `get_melodic_ngrams`, `get_harmonic_intervals`,
+`get_cadences`, and the visualisation tools.
+
+For each matched music21 note or chord, `note_ids` are read from `.id`,
+which music21's MEI importer sets to the real `xml:id` when one is present.
+Rests contribute no IDs. A chord contributes the IDs of all of its
+constituent notes, not just one.
+
+**Known limitation:** CRIM Intervals' own `_getPartSeries()` collapses a
+chord to its highest note before this resolver ever sees it, which detaches
+the other pitches from their position in the score. Those notes are dropped
+from every CRIM-based tool, not just highlighting — see
+[Note-ID Resolution Review and Fix](../../development/note-id-resolution-fix.md#known-remaining-limitation)
+for details.
+
 ## Examples
 
 Resolve a cadence or harmonic interval row:
