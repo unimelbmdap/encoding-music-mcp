@@ -1,6 +1,5 @@
 """MEI interval analysis tools using CRIM Intervals."""
 
-import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
@@ -20,134 +19,48 @@ __all__ = [
     "get_cadences",
 ]
 
-_MEI_NS = {"mei": "http://www.music-encoding.org/ns/mei"}
-_XML_ID = "{http://www.w3.org/XML/1998/namespace}id"
+def _note_ids_from_m21_obj(obj: Any) -> list[str]:
+    """Return MEI xml:id values carried by a music21 note/chord object.
+
+    music21's MEI importer sets `.id` to the real xml:id string when one is
+    present; an object with no xml:id keeps music21's default int id, so
+    filtering on `str` reliably distinguishes real ids from that default.
+    """
+    if obj is None or getattr(obj, "isRest", False):
+        return []
+    if getattr(obj, "isChord", False):
+        return [n.id for n in obj.notes if isinstance(n.id, str)]
+    return [obj.id] if isinstance(obj.id, str) else []
 
 
-def _get_staff_ppq(root: ET.Element) -> dict[str, int]:
-    """Return ppq values for each staff number, inheriting score-level ppq."""
-    score_def = root.find(".//mei:scoreDef", _MEI_NS)
-    default_ppq = int(score_def.get("ppq", "480")) if score_def is not None else 480
-    staff_ppq: dict[str, int] = {}
-    for staff_def in root.findall(".//mei:staffDef", _MEI_NS):
-        staff_n = staff_def.get("n")
-        if staff_n:
-            staff_ppq[staff_n] = int(staff_def.get("ppq", default_ppq))
-    return staff_ppq
+def _build_part_note_events(piece: Any) -> dict[str, list[dict[str, Any]]]:
+    """Return sounded-note events for each CRIM part number.
 
+    Timed via the same music21 offset/measure/beat machinery CRIM Intervals
+    uses for its own analysis dataframes (numberParts + detailIndex over
+    `_getM21ObjsNoTies()`), so results share one coordinate system with the
+    melodic n-gram output instead of a second, independently-computed one.
+    """
+    objs = piece.numberParts(piece._getM21ObjsNoTies())
+    detailed = piece.detailIndex(objs, offset=True)
 
-def _iter_layer_events(
-    element: ET.Element,
-    current_ppq: int,
-) -> list[dict[str, Any]]:
-    """Flatten a layer subtree into timed events in document order."""
-    events: list[dict[str, Any]] = []
-
-    tag = element.tag.rsplit("}", 1)[-1]
-
-    if tag in {"beam", "tuplet", "bTrem", "fTrem"}:
-        for child in list(element):
-            events.extend(_iter_layer_events(child, current_ppq))
-        return events
-
-    if tag == "chord":
-        note_ids = [
-            note.get(_XML_ID)
-            for note in element.findall("mei:note", _MEI_NS)
-            if note.get(_XML_ID)
-        ]
-        dur_ppq = element.get("dur.ppq")
-        if dur_ppq is None:
-            return events
-        events.append(
-            {
-                "kind": "note",
-                "dur_ppq": int(dur_ppq),
-                "note_ids": note_ids,
-            }
-        )
-        return events
-
-    if tag == "note":
-        dur_ppq = element.get("dur.ppq")
-        if dur_ppq is None:
-            return events
-        xml_id = element.get(_XML_ID)
-        events.append(
-            {
-                "kind": "note",
-                "dur_ppq": int(dur_ppq),
-                "note_ids": [xml_id] if xml_id else [],
-            }
-        )
-        return events
-
-    if tag in {"rest", "mRest", "space", "mSpace"}:
-        dur_ppq = element.get("dur.ppq")
-        if dur_ppq is None:
-            if tag in {"mRest", "mSpace"}:
-                dur_ppq = str(current_ppq * 4)
-            else:
-                return events
-        events.append({"kind": "rest", "dur_ppq": int(dur_ppq)})
-        return events
-
-    return events
-
-
-def _build_part_note_events(filepath: Path) -> dict[str, list[dict[str, Any]]]:
-    """Parse MEI and return sounded-note events for each CRIM part number."""
-    root = ET.parse(filepath).getroot()
-    staff_ppq = _get_staff_ppq(root)
-
-    part_key_to_label: dict[tuple[str, str], str] = {}
     part_events: dict[str, list[dict[str, Any]]] = {}
-    global_offsets_ppq: dict[str, int] = {}
-
-    for measure in root.findall(".//mei:measure", _MEI_NS):
-        measure_n = float(measure.get("n", "0"))
-        measure_offsets_ppq: dict[str, int] = {}
-
-        for staff in measure.findall("mei:staff", _MEI_NS):
-            staff_n = staff.get("n", "")
-            current_ppq = staff_ppq.get(staff_n, 480)
-
-            for layer in staff.findall("mei:layer", _MEI_NS):
-                layer_n = layer.get("n", "1")
-                part_key = (staff_n, layer_n)
-                if part_key not in part_key_to_label:
-                    part_label = str(len(part_key_to_label) + 1)
-                    part_key_to_label[part_key] = part_label
-                    part_events[part_label] = []
-                    global_offsets_ppq[part_label] = 0
-
-                part_label = part_key_to_label[part_key]
-                measure_offset_ppq = measure_offsets_ppq.get(part_label, 0)
-                layer_events: list[dict[str, Any]] = []
-
-                for child in list(layer):
-                    layer_events.extend(_iter_layer_events(child, current_ppq))
-
-                for event in layer_events:
-                    dur_ppq = event["dur_ppq"]
-                    if event["kind"] == "note" and event["note_ids"]:
-                        onset_q = global_offsets_ppq[part_label] / current_ppq
-                        beat = 1 + (measure_offset_ppq / current_ppq)
-                        part_events[part_label].append(
-                            {
-                                "measure": measure_n,
-                                "beat": beat,
-                                "offset": onset_q,
-                                "duration": dur_ppq / current_ppq,
-                                "note_ids": event["note_ids"],
-                            }
-                        )
-
-                    measure_offset_ppq += dur_ppq
-                    global_offsets_ppq[part_label] += dur_ppq
-
-                measure_offsets_ppq[part_label] = measure_offset_ppq
-
+    for part_label in detailed.columns:
+        events: list[dict[str, Any]] = []
+        for (measure, beat, offset), obj in detailed[part_label].dropna().items():
+            note_ids = _note_ids_from_m21_obj(obj)
+            if not note_ids:
+                continue
+            events.append(
+                {
+                    "measure": float(measure),
+                    "beat": float(beat),
+                    "offset": float(offset),
+                    "duration": float(obj.quarterLength),
+                    "note_ids": note_ids,
+                }
+            )
+        part_events[str(part_label)] = events
     return part_events
 
 
@@ -233,11 +146,11 @@ def _event_starts_in_span(
 
 
 def _resolve_note_id_spans(
-    filepath: Path,
+    piece: Any,
     spans: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
     """Resolve generic measure/beat/offset spans to MEI note IDs."""
-    part_events = _build_part_note_events(filepath)
+    part_events = _build_part_note_events(piece)
     note_lookup = _build_note_event_lookup(part_events)
 
     resolved_spans: list[dict[str, Any]] = []
@@ -319,6 +232,10 @@ def _build_note_id_matches(
     filepath: Path, mel_ngrams: Any, n: int
 ) -> list[dict[str, Any]]:
     """Build structured note-id spans for each melodic n-gram match."""
+    piece = importScore(str(filepath))
+    if piece is None:
+        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+
     matches: list[dict[str, Any]] = []
 
     for row in mel_ngrams.index:
@@ -348,8 +265,8 @@ def _build_note_id_matches(
                 }
             )
 
-    resolved_matches = _resolve_note_id_spans(filepath, matches)
-    part_events = _build_part_note_events(filepath)
+    resolved_matches = _resolve_note_id_spans(piece, matches)
+    part_events = _build_part_note_events(piece)
     events_by_part_and_note_id = {
         part_label: {
             note_id: event
@@ -746,9 +663,13 @@ def resolve_note_ids_for_highlight(
             - note_ids: MEI ``xml:id`` values for notes matched by the span.
     """
     filepath = get_mei_filepath(filename)
+    piece = importScore(str(filepath))
+    if piece is None:
+        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+
     return {
         "filename": filename,
-        "spans": _resolve_note_id_spans(filepath, spans),
+        "spans": _resolve_note_id_spans(piece, spans),
     }
 
 
