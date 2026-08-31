@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from crim_intervals.main_objs import importScore
 from fastmcp.tools.tool import ToolResult
 from mcp.types import TextContent
 
@@ -78,7 +79,10 @@ def _build_score_payload(
         combine_unisons=combine_unisons,
         compound=compound,
     )
-    part_events = _build_part_note_events(filepath)
+    piece = importScore(str(filepath))
+    if piece is None:
+        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+    part_events = _build_part_note_events(piece)
 
     rows: list[dict[str, Any]] = []
     for staff in sorted(part_events.keys(), key=lambda value: int(value) if value.isdigit() else value):
