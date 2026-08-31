@@ -1198,6 +1198,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      How It Works
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
       Examples
@@ -1603,6 +1612,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      How It Works
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
       Examples
@@ -1740,6 +1758,24 @@ occurrences.</p>
 </span></code></pre></div>
 <p>The original fields from each requested span are preserved, and the resolver
 adds <code>index</code>, <code>matched_parts</code>, and <code>note_ids</code>.</p>
+<h2 id="how-it-works">How It Works</h2>
+<p>Note events are timed via CRIM Intervals' own music21 machinery
+(<code>numberParts</code> + <code>detailIndex</code> over <code>_getM21ObjsNoTies()</code>) — the same
+<code>(measure, beat, offset)</code> coordinate system every other interval tool
+produces. Each span is matched against this table rather than against an
+independently-computed timeline, so results always line up with the
+locations returned by <code>get_melodic_ngrams</code>, <code>get_harmonic_intervals</code>,
+<code>get_cadences</code>, and the visualisation tools.</p>
+<p>For each matched music21 note or chord, <code>note_ids</code> are read from <code>.id</code>,
+which music21's MEI importer sets to the real <code>xml:id</code> when one is present.
+Rests contribute no IDs. A chord contributes the IDs of all of its
+constituent notes, not just one.</p>
+<p><strong>Known limitation:</strong> CRIM Intervals' own <code>_getPartSeries()</code> collapses a
+chord to its highest note before this resolver ever sees it, which detaches
+the other pitches from their position in the score. Those notes are dropped
+from every CRIM-based tool, not just highlighting — see
+<a href="../../../development/note-id-resolution-fix/#known-remaining-limitation">Note-ID Resolution Review and Fix</a>
+for details.</p>
 <h2 id="examples">Examples</h2>
 <p>Resolve a cadence or harmonic interval row:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">resolve_note_ids_for_highlight</span><span class="p">(</span>
