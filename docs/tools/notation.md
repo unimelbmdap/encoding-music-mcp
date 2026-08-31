@@ -29,7 +29,7 @@ or type a local path to a `.mei` file on the machine running the MCP server.
 
 Filters the MEI to only include the requested measures before rendering.
 
-![alt text](../../images/show_notes_exc.png)
+![alt text](../../images/show_notes_excw.png)
 
 ### Page navigation
 
