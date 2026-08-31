@@ -29,13 +29,13 @@ def get_mei_metadata(filename: str) -> dict[str, Any]:
     metadata: dict[str, Any] = {
         "title": None,
         "composer": None,
-        "mei editors": [],
-        "xml editors": [],
+        "mei_editors": [],
+        "xml_editors": [],
         "analysts": [],
-        "publication date": None,
+        "publication_date": None,
         "availability": None,
         "application": None,
-        "work title": None,
+        "work_title": None,
     }
 
     # Title
@@ -50,10 +50,10 @@ def get_mei_metadata(filename: str) -> dict[str, Any]:
         name = person.text.strip() if person.text else ""
         if role == "composer":
             metadata["composer"] = name
-        elif role == "mei editor":
-            metadata["mei editors"].append(name)
-        elif role == "xml editor":
-            metadata["xml editors"].append(name)
+        elif role == "mei_editor":
+            metadata["mei_editors"].append(name)
+        elif role == "xml_editor":
+            metadata["xml_editors"].append(name)
         elif role == "analyst":
             metadata["analysts"].append(name)
 
