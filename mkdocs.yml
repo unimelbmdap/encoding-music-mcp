@@ -59,7 +59,7 @@ nav:
       - Discovery: tools/discovery.md
       - Uploads: tools/uploads.md
       - Metadata: tools/metadata.md
-      - Emotion Retrieval: tools/emotion-retrieval.md
+      - Semantic Axis Retrieval: tools/semantic-axis-retrieval.md
       - Key Analysis: tools/key-analysis.md
       - Notation: tools/notation.md
       - Visualisation:

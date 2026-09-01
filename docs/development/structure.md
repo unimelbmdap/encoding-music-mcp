@@ -20,6 +20,7 @@ encoding-music-mcp/
 |       |   |-- intervals.py                # Interval and n-gram analysis
 |       |   |-- notation.py                 # Notation display (Verovio)
 |       |   |-- play_excerpt.py             # Audio playback
+|       |   |-- semantic_axis_retrieval.py  # Matched-prompt CLaMP catalog search
 |       |   `-- visualisation/
 |       |       |-- __init__.py
 |       |       |-- melodic_ngram_heatmap.py
@@ -176,7 +177,7 @@ For visualisation tools, use the matching nested locations:
 - `intervals.py`: CRIM Intervals analysis
 - `notation.py`: Verovio-based notation rendering
 - `play_excerpt.py`: Audio rendering and playback payloads
-- `emotion_retrieval.py`: Query-only contrastive CLaMP emotion search over a prepared catalog
+- `semantic_axis_retrieval.py`: Query-only matched-prompt CLaMP semantic-axis search over a prepared catalog
 - `visualisation/`: Visual summary tools and app payload builders
 
 ### Documentation Tools (`docs/tools/`)
@@ -193,7 +194,7 @@ For visualisation tools, use the matching nested locations:
 - `storage.py`: Transactional SQLite provenance/catalog storage and exact-model `sqlite-vec` similarity search
 - `pipeline.py`: Typed orchestration plus the standalone `encoding-music-embeddings` CLI
 
-Batch generation remains independent of `tools/registry.py`. The query-only `tools/emotion_retrieval.py` consumer uses its public text-encoding and repository APIs.
+Batch generation remains independent of `tools/registry.py`. The query-only `tools/semantic_axis_retrieval.py` consumer uses its public text-encoding and repository APIs.
 
 The operational `notebooks/score_embeddings_colab.ipynb` workflow installs one
 locally built project wheel, resolves its complete bundled MEI corpus, provisions

@@ -14,9 +14,9 @@
 - Store score identity, source provenance, validation results, embedding dimensions, and CLaMP model/version metadata with each embedding.
 - Persist MEI-derived song title, artist or composer, and nullable work-creation date without making descriptive metadata part of embedding identity.
 - Use a SQLite vector extension to support similarity queries over normalized embeddings.
-- Encode ordered positive and negative emotion poles with the CLaMP configuration aligned to stored score vectors.
-- Construct and L2-normalize a deterministic positive-minus-negative contrast vector and retrieve catalog-shaped song matches through SQLite cosine search.
-- Expose contrastive emotion retrieval, but not batch embedding generation, as a Claude-facing MCP tool.
+- Encode two ordered, equal-length ensembles of 3–5 caption-like semantic prompts using the CLaMP configuration aligned to stored score vectors.
+- L2-normalize every prompt embedding, average each pole's unit vectors, L2-normalize both centroids, construct the ordered positive-centroid-minus-negative-centroid direction, and L2-normalize that final direction.
+- Retrieve catalog-shaped semantic-axis matches through SQLite cosine search and expose this query-time workflow—but not batch embedding generation—as a Claude-facing MCP tool.
 - Apply schema migrations and database writes transactionally.
 - Provide a standalone batch CLI with configurable inputs, outputs, cache paths, database paths, logging, validation policy, and intermediate-file retention.
 
@@ -33,6 +33,7 @@
 - Committing third-party CLaMP source code or model weights to this repository.
 - Operating a remote, distributed, or multi-user vector database service.
 - Providing a general-purpose database administration interface.
+- Retrieving exact key, BPM, individual chords, notes, or bar-level events through the semantic-axis embedding workflow.
 
 ## Success criteria
 
@@ -62,11 +63,13 @@
   *Delivered by: score-embeddings*
 - Stored embeddings retain faithful MEI-derived title, artist or composer, and nullable work-creation date while ingestion timestamps remain distinct.
   *Delivered by: score-embeddings*
-- Both emotion poles are encoded with the same compatible CLaMP model configuration as the stored score vectors.
-  *Delivered by: score-embeddings, emotion-retrieval*
-- Emotion queries compute and L2-normalize the ordered positive-minus-negative direction and reject incompatible, non-finite, or zero directions actionably.
-  *Delivered by: score-embeddings, emotion-retrieval*
-- Contrastive similarity executes inside SQLite with stable ordering and without loading the complete embedding collection into Python.
-  *Delivered by: score-embeddings, emotion-retrieval*
-- MCP emotion results include the ordered poles and deterministic title, artist or composer, work-date, score identity, and distance metadata.
-  *Delivered by: emotion-retrieval*
+- The MCP tool accepts ordered `positive_prompts` and `negative_prompts` ensembles with equal cardinality between 3 and 5, rejects blank prompts and structurally invalid ensembles, and instructs Claude to produce positionally matched, equally detailed music descriptions.
+  *Delivered by: semantic-axis-retrieval*
+- Every prompt is encoded with the same compatible CLaMP model configuration as the stored score vectors, and encoded output ordering matches input ordering.
+  *Delivered by: score-embeddings, semantic-axis-retrieval*
+- Semantic-axis queries L2-normalize individual prompt embeddings, average each ensemble, L2-normalize both centroids, subtract the negative centroid from the positive centroid, and L2-normalize the final direction while rejecting incompatible, non-finite, or zero vectors actionably.
+  *Delivered by: score-embeddings, semantic-axis-retrieval*
+- Semantic-axis cosine retrieval executes inside SQLite with stable ordering and without loading the complete embedding collection into Python.
+  *Delivered by: score-embeddings, semantic-axis-retrieval*
+- MCP results include the exact ordered prompt ensembles, aggregation operation, model provenance, deterministic title, artist or composer, work date, score identity, and distance metadata.
+  *Delivered by: semantic-axis-retrieval*

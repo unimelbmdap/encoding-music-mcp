@@ -4,12 +4,12 @@
 
 Encoding Music MCP is a Python distribution with two coordinated runtime entry points:
 
-1. The FastMCP server exposes MEI discovery, analysis, rendering, playback, and query-time contrastive emotion retrieval over stdio or HTTP.
+1. The FastMCP server exposes MEI discovery, analysis, rendering, playback, and query-time semantic-axis retrieval over stdio or HTTP.
 2. The standalone score-embedding pipeline converts complete symbolic scores to validated `.xml` MusicXML, extracts CLaMP 3 embeddings, and stores them in SQLite.
 
-Batch embedding generation is not registered as an MCP tool and is not included in the container deployment. The MCP emotion tool consumes an explicitly configured database and external CLaMP runtime at query time; it does not install or download them.
+Batch embedding generation is not registered as an MCP tool and is not included in the container deployment. The MCP semantic-axis tool consumes an explicitly configured database and external CLaMP runtime at query time; it does not install or download them.
 
-The CLaMP boundary follows ADR-0001. Vector persistence follows ADR-0003. Contrastive cross-modal retrieval follows ADR-0004.
+The CLaMP boundary follows ADR-0001. Vector persistence follows ADR-0003. Matched-prompt-ensemble cross-modal retrieval follows ADR-0005.
 
 ## Runtime topology
 
@@ -19,11 +19,15 @@ MCP clients
     v
 FastMCP server --> existing tools, resources, prompts, and notation apps
     |
-    +--> contrastive emotion retrieval
+    +--> semantic-axis retrieval
+             |
+             +--> matched positive/negative prompt ensembles
              |
              +--> pinned external CLaMP text encoder
              |
-             +--> positive-minus-negative normalization
+             +--> prompt normalization and pole centroids
+             |
+             +--> positive-centroid-minus-negative-centroid normalization
              |
              +--> SQLite/sqlite-vec cosine search
 
@@ -64,7 +68,7 @@ score orchestrator
 
 ### Existing MCP server
 
-`encoding_music_mcp.server` remains responsible for FastMCP transport, registration, and deployment. The score-embedding pipeline does not import the server or mutate its tool registry. The emotion-retrieval module registers a query-only tool that accepts ordered semantic poles and returns catalog-shaped results.
+`encoding_music_mcp.server` remains responsible for FastMCP transport, registration, and deployment. The score-embedding pipeline does not import the server or mutate its tool registry. The semantic-axis-retrieval module registers a query-only tool that accepts two ordered, equal-length prompt ensembles and returns catalog-shaped results with query provenance.
 
 ### Score processing
 
@@ -88,7 +92,7 @@ The runner receives only validated XML files. It invokes the pinned XML-to-ABC, 
 
 The runner does not install packages or access the network. Model setup is never triggered by import or implicitly by extraction.
 
-The same adapter exposes offline text encoding for emotion poles only when the pinned checkpoint provides a text path aligned with the stored symbolic-music vectors. Readiness checks verify that capability and the repository verifies compatible model identity and dimension before search.
+The same adapter exposes offline ordered-batch text encoding when the pinned checkpoint provides a text path aligned with the stored symbolic-music vectors. Readiness checks verify that capability, strict loading preserves prompt order, and the repository verifies compatible model identity and dimension before search. Semantic-axis aggregation remains the consumer's responsibility.
 
 ### Embedding loader and normalizer
 
@@ -108,9 +112,9 @@ The repository rejects incompatible schema versions, vector dimensions, and non-
 
 The repository also accepts an arbitrary validated normalized query vector. It performs cosine KNN inside SQLite and returns stable distance-and-ID ordering with catalog metadata; it never loads the complete vector collection into Python.
 
-### Contrastive emotion retrieval
+### Semantic-axis retrieval
 
-The emotion-retrieval component accepts a positive target pole and negative contrast pole chosen by Claude. It delegates text encoding to the score-embeddings CLaMP adapter, verifies both outputs against stored model identity, computes and L2-normalizes `positive - negative`, rejects zero and non-finite directions, and queries the repository. It returns both poles, ranking metadata, score identity, title, artist or composer, and work-creation date. Claude does not create or subtract numeric embeddings.
+The semantic-axis-retrieval component accepts ordered `positive_prompts` and `negative_prompts` ensembles chosen by Claude. It validates equal cardinality between 3 and 5 and delegates one ordered text batch to the score-embeddings CLaMP adapter. Under ADR-0005, it verifies output order and model identity, L2-normalizes every prompt embedding, averages each pole's unit vectors, L2-normalizes both centroids, subtracts the negative centroid from the positive centroid, and L2-normalizes the resulting direction. Zero or non-finite prompts, centroids, and directions are rejected. The component queries the repository and returns exact prompt ensembles, aggregation and model provenance, ranking metadata, score identity, title, artist or composer, and work-creation date. Claude constructs semantic descriptions but never creates or manipulates numeric embeddings.
 
 ### Pipeline CLI
 
@@ -134,13 +138,13 @@ The CLI returns a non-zero status when setup, validation, extraction, or persist
 10. Transactionally upsert relational provenance, the raw vector, and the normalized vector index for each matched score.
 11. Write the run manifest, retaining validation and extraction omissions, and clean temporary artifacts unless retention was requested.
 
-Contrastive retrieval follows a separate query path:
+Semantic-axis retrieval follows a separate query path:
 
-1. Claude converts an emotion request into ordered positive and negative text poles.
-2. The MCP tool validates the pole strings and sends both to the pinned offline CLaMP text encoder.
-3. The application verifies compatible dimensions and model identity, computes `positive - negative`, L2-normalizes it, and rejects invalid or zero directions.
-4. The repository performs cosine KNN through `sqlite-vec` with stable tie ordering.
-5. The tool returns catalog-shaped matches plus the exact poles and model/query provenance.
+1. Claude converts a broad musical-characteristic request into ordered positive and negative ensembles of 3–5 positionally matched, equally detailed music descriptions.
+2. The MCP tool validates ensemble structure and sends all prompts to the pinned offline CLaMP text encoder in one deterministic order.
+3. The application verifies output ordering, compatible dimensions, and model identity; L2-normalizes each prompt; averages and L2-normalizes each pole centroid; constructs `positive_centroid - negative_centroid`; and L2-normalizes the final direction.
+4. The repository performs cosine KNN through `sqlite-vec` with exact-model filtering and stable tie ordering.
+5. The tool returns catalog-shaped matches plus the exact prompt ensembles and model/query provenance.
 
 A score never reaches CLaMP or SQLite without passing XML validation. A database transaction never commits one side of the relational/vector pair without the other.
 
@@ -171,6 +175,7 @@ A score never reaches CLaMP or SQLite without passing XML validation. A database
 - SQLite extension loading is limited to the packaged `sqlite-vec` binary and disabled immediately afterward.
 - Default automated tests do not require the CLaMP repository, weights, network access, or accelerator hardware.
 - Query-time MCP retrieval requires explicit database, external-interpreter, and cache configuration and fails actionably when compatible text assets or stored model identity are unavailable.
+- Semantic-axis retrieval targets broad characteristics represented in CLaMP embeddings. Exact key, BPM, chord, note, and bar-level properties remain outside this workflow and should use deterministic analysis tools where available.
 - The SQLite database is local and embedded; distributed coordination and multi-user service semantics are not provided.
 
 ## Extension points
@@ -191,14 +196,14 @@ A score never reaches CLaMP or SQLite without passing XML validation. A database
 
 **Dependencies:** Depends on music21 and NumPy, the ADR-0001 external CLaMP runtime, and the ADR-0003 SQLite vector boundary. It does not depend on the FastMCP server or tool registry.
 
-**Consumed by:** The standalone batch CLI, typed Python callers, and emotion-retrieval.
+**Consumed by:** The standalone batch CLI, typed Python callers, and semantic-axis-retrieval.
 
-### emotion-retrieval
+### semantic-axis-retrieval
 
-**Purpose:** Expose Claude-facing contrastive emotion search and return catalog-shaped song matches.
+**Purpose:** Expose Claude-facing ranking along broad musical semantic contrasts using matched prompt ensembles.
 
-**Data concern:** Owns ordered semantic poles, query provenance, contrast-vector construction, MCP error translation, and retrieval-result presentation. It does not own stored score vectors.
+**Data concern:** Owns ordered prompt ensembles, ensemble and query provenance, prompt and centroid normalization, aggregation and contrast-vector construction, MCP error translation, and retrieval-result presentation. It does not own stored score vectors.
 
-**Dependencies:** Depends on score-embeddings for the ADR-0001 CLaMP runtime adapter and ADR-0003 SQLite repository, and on the FastMCP registry for tool exposure.
+**Dependencies:** Depends on score-embeddings for the ADR-0001 CLaMP runtime adapter and ADR-0003 SQLite repository, follows ADR-0005 for semantic-axis construction, and depends on the FastMCP registry for tool exposure.
 
 **Consumed by:** MCP clients, including Claude.

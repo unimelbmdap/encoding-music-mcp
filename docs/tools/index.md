@@ -26,7 +26,7 @@ encoding-music-mcp provides a suite of tools for analyzing MEI files. Tools work
 
 | Tool | Purpose | Learn More |
 |------|---------|------------|
-| [`search_songs_by_emotion`](emotion-retrieval.md) | Search a prepared song catalog using a positive-minus-negative CLaMP emotion direction | [Documentation](emotion-retrieval.md) |
+| [`search_songs_by_semantic_axis`](semantic-axis-retrieval.md) | Rank a prepared song catalog along a matched-prompt CLaMP semantic contrast | [Documentation](semantic-axis-retrieval.md) |
 
 ### Analysis Tools
 
@@ -86,7 +86,7 @@ Tools for extracting descriptive information:
 
 ### Retrieval
 
-- **[search_songs_by_emotion](emotion-retrieval.md)**: Map ordered emotion poles such as happy/sad into exact-model song similarity
+- **[search_songs_by_semantic_axis](semantic-axis-retrieval.md)**: Map matched prompt ensembles into an exact-model semantic-axis ranking
 
 ### Musical Analysis
 

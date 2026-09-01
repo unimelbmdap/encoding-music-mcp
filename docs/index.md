@@ -42,7 +42,7 @@ This MCP server provides a comprehensive suite of tools for analyzing encoded mu
 
 - [Architecture](/docs/architecture.md) — Runtime and software architecture
 - [Problem Space](/docs/design/problem-space.md) — What the project solves and why
-- [Decision Log](/docs/adr/index.md) — Architectural Decision Records (3 accepted, 1 superseded)
+- [Decision Log](/docs/adr/index.md) — Architectural Decision Records (3 accepted, 2 superseded)
 
 ## Feature Modules
 
@@ -57,12 +57,12 @@ Convert complete symbolic scores into validated XML representations and reproduc
 - [gpu-extraction-notebook](/docs/modules/score-embeddings/gpu-extraction-notebook/) [✓]
 - [Module Status](/docs/modules/score-embeddings/module-status.md)
 
-### Emotion retrieval [✓] · Review: ⏸
+### Semantic axis retrieval [✓] · Review: ⏸
 
-Expose Claude-facing contrastive emotion search and return catalog-shaped song matches.
+Expose Claude-facing ranking along broad musical semantic contrasts using matched prompt ensembles.
 
-- [contrastive-emotion-search](/docs/modules/emotion-retrieval/contrastive-emotion-search/) [✓]
-- [Module Status](/docs/modules/emotion-retrieval/module-status.md)
+- [semantic-axis-search](/docs/modules/semantic-axis-retrieval/semantic-axis-search/) [✓]
+- [Module Status](/docs/modules/semantic-axis-retrieval/module-status.md)
 
 ## What is MCP?
 

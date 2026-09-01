@@ -34,10 +34,11 @@ Supersession retires a decision; **narrowing does not**. An ADR carrying `narrow
 |---|---|---|---|---|---|---|
 | [ADR-0001](/docs/adr/0001-clamp3-external-runtime.md) | CLaMP 3 external runtime | module | score-embeddings | clamp3, model-artifacts, subprocess, supply-chain | — | 2026-08-25 |
 | [ADR-0003](/docs/adr/0003-sqlite-vector-storage-and-embedding-identity.md) | SQLite vector storage and embedding identity | module | score-embeddings | sqlite, vector-storage, persistence, embedding-identity | supersedes ADR-0002 | 2026-08-25 |
-| [ADR-0004](/docs/adr/0004-contrastive-clamp-text-to-score-emotion-retrieval.md) | Contrastive CLaMP text-to-score emotion retrieval | integration | score-embeddings, emotion-retrieval | clamp3, cross-modal-retrieval, emotion, sqlite-vec, mcp | — | 2026-08-25 |
+| [ADR-0005](/docs/adr/0005-matched-prompt-ensemble-clamp-semantic-axis-retrieval.md) | Matched-prompt-ensemble CLaMP semantic-axis retrieval | integration | score-embeddings, semantic-axis-retrieval | clamp3, cross-modal-retrieval, semantic-axis, prompt-ensembles, sqlite-vec, mcp | supersedes ADR-0004 | 2026-09-01 |
 
 ## Superseded and deprecated
 
 | ID | Title | Status | Superseded by | Date |
 |---|---|---|---|---|
 | [ADR-0002](/docs/adr/0002-sqlite-vector-storage.md) | SQLite vector storage | superseded | ADR-0003 | 2026-08-25 |
+| [ADR-0004](/docs/adr/0004-contrastive-clamp-text-to-score-emotion-retrieval.md) | Contrastive CLaMP text-to-score emotion retrieval | superseded | ADR-0005 | 2026-08-25 |

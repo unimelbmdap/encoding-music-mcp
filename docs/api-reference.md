@@ -9,7 +9,7 @@ Complete reference for all encoding-music-mcp tools.
 | `list_available_mei_files` | None | `dict` with file lists | [Docs](tools/discovery.md) |
 | `register_mei_file_from_path` | `file_path: str | None = None, filename: str | None = None` | `dict` registration status | [Docs](tools/uploads.md) |
 | `get_mei_metadata` | `filename: str` | `dict` with metadata | [Docs](tools/metadata.md) |
-| `search_songs_by_emotion` | `positive_emotion: str, negative_emotion: str, limit: int = 10` | contrast query and ranked catalog matches | [Docs](tools/emotion-retrieval.md) |
+| `search_songs_by_semantic_axis` | `positive_prompts: list[str], negative_prompts: list[str], limit: int = 10` | semantic-axis provenance and ranked catalog matches | [Docs](tools/semantic-axis-retrieval.md) |
 | `analyze_key` | `filename: str` | `dict` with key info | [Docs](tools/key-analysis.md) |
 | `get_notes` | `filename: str` | `dict` with notes | [Docs](tools/intervals/notes.md) |
 | `get_melodic_intervals` | `filename: str` | `dict` with intervals | [Docs](tools/intervals/melodic.md) |
@@ -102,19 +102,19 @@ Extract metadata from MEI file header.
 
 ## Retrieval Tools
 
-### search_songs_by_emotion(positive_emotion, negative_emotion, limit=10)
+### search_songs_by_semantic_axis(positive_prompts, negative_prompts, limit=10)
 
-Search prepared whole-song CLaMP embeddings along an ordered emotion contrast. Claude supplies semantic poles such as `happy` and `sad`; deterministic application code computes the aligned, normalized `happy - sad` vector and performs exact-model cosine retrieval inside SQLite.
+Search prepared whole-song CLaMP embeddings along a high-level semantic contrast. Claude supplies two ordered, positionally matched ensembles of caption-like music descriptions; deterministic application code constructs a normalized positive-centroid-minus-negative-centroid direction and performs exact-model cosine retrieval inside SQLite.
 
 **Parameters**:
 
-- `positive_emotion` (str): Target emotion pole
-- `negative_emotion` (str): Opposing emotion pole to subtract
+- `positive_prompts` (`list[str]`): 3–5 nonblank descriptions of the requested pole
+- `negative_prompts` (`list[str]`): equally many matched descriptions of the contrasting pole
 - `limit` (int, optional): Number of matches from 1 to 100 (default: 10)
 
-**Returns**: Ordered poles, the operation, CLaMP model provenance, and vector-free matches containing embedding/score IDs, title, artist, work-creation date, and distance.
+**Returns**: Both ordered ensembles, aggregation and CLaMP model provenance, and vector-free matches containing embedding/score IDs, title, artist, work-creation date, and cosine distance.
 
-[Full Documentation ->](tools/emotion-retrieval.md)
+[Full Documentation ->](tools/semantic-axis-retrieval.md)
 
 ## Analysis Tools
 

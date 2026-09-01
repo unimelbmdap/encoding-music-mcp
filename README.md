@@ -145,7 +145,7 @@ Run the separate score-embedding entry point with:
 uv run encoding-music-embeddings --help
 ```
 
-Batch generation is intentionally isolated from the MCP server. A prepared database can be searched through the query-only `search_songs_by_emotion` MCP tool. See the [pipeline guide](docs/getting-started/clamp3-pipeline.md) for setup, extraction, database access, configuration, and similarity queries.
+Batch generation is intentionally isolated from the MCP server. A prepared database can be searched through the query-only `search_songs_by_semantic_axis` MCP tool. See the [pipeline guide](docs/getting-started/clamp3-pipeline.md) for setup, extraction, database access, configuration, and similarity queries.
 
 ## Available Tools
 
@@ -188,11 +188,11 @@ Extract detailed metadata from a built-in MEI file.
 }
 ```
 
-### `search_songs_by_emotion`
+### `search_songs_by_semantic_axis`
 
-Search a prepared whole-song embedding catalog along an ordered emotion contrast. For example, Claude maps “happiest songs” to `positive_emotion="happy"` and `negative_emotion="sad"`; the server computes the compatible CLaMP `happy - sad` direction and returns ranked title, artist, work-date, and distance metadata without exposing vectors.
+Search a prepared whole-song embedding catalog along a broad semantic contrast such as joyful–sorrowful, energetic–subdued, or bright–dark. Claude supplies two positionally matched ensembles of 3–5 caption-like prompts. The server normalizes every prompt embedding, averages and normalizes each pole, computes the normalized positive-minus-negative axis, and returns ranked title, artist, work-date, model, and aggregation metadata without exposing vectors.
 
-See [Emotion Retrieval](docs/tools/emotion-retrieval.md) for required server environment variables.
+See [Semantic Axis Retrieval](docs/tools/semantic-axis-retrieval.md) for the prompt contract and required server environment variables.
 
 ### `analyze_key`
 

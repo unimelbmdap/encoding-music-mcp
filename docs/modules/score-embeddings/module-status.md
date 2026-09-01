@@ -3,7 +3,7 @@
 ## Module integration
 
 Test: `tests/score_embeddings/test_integration.py` — ✓
-Notes: Exercise bundled MEI through real standardization, `.xml` validation, MEI metadata persistence, compatible fake CLaMP text/music outputs, positive-minus-negative normalization, transactional schema migration and SQLite/`sqlite-vec` persistence, contrast-vector ranking, manifests, cleanup, logging, and subprocess failure propagation without network access or model weights.
+Notes: Exercise bundled MEI through real standardization, `.xml` validation, MEI metadata persistence, compatible fake CLaMP text/music outputs, transactional SQLite/`sqlite-vec` persistence, manifests, cleanup, logging, and subprocess failure propagation without network access or model weights. Semantic-axis integration separately verifies individually normalized prompts, normalized ensemble centroids, and normalized centroid-difference construction.
 
 ## Build order
 

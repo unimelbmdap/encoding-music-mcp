@@ -2,7 +2,7 @@
 
 The optional score-embedding workflow processes complete symbolic scores. It standardizes each score without mutating caller-owned music21 streams, exports and reparses `.xml` MusicXML, extracts one 768-dimensional CLaMP 3 C2 embedding, and stores raw and normalized vectors with catalog metadata in SQLite.
 
-Batch generation remains separate from the MCP server and does not segment scores, produce MIDI, or run inside the project's Docker deployment. A query-only MCP tool can search a prepared local database using an ordered emotion contrast.
+Batch generation remains separate from the MCP server and does not segment scores, produce MIDI, or run inside the project's Docker deployment. A query-only MCP tool can search a prepared local database using matched prompt ensembles for an ordered semantic contrast.
 
 ## Prerequisites
 
@@ -103,7 +103,7 @@ FROM song_catalog;
 
 The view joins the production provenance table to the `sqlite-vec` index; it is not a second source of truth. The project repository API loads the extension automatically. A standalone `sqlite3` shell must load the packaged extension before querying the view. Use the Python or MCP APIs for vector search because they also validate vectors and filter results to the exact model identity.
 
-## Contrastive emotion retrieval through Claude
+## Semantic-axis retrieval through Claude
 
 Configure the MCP server process after the database and pinned CLaMP assets exist:
 
@@ -114,9 +114,9 @@ export ENCODING_MUSIC_CLAMP_CACHE_DIR=/absolute/path/to/clamp-cache  # optional
 export ENCODING_MUSIC_CLAMP_TIMEOUT_SECONDS=3600                     # optional
 ```
 
-Claude can then call `search_songs_by_emotion`. For “find the happiest songs,” it supplies `happy` as `positive_emotion` and `sad` as `negative_emotion`. The application embeds both strings with the same pinned CLaMP checkpoint as the scores, computes and L2-normalizes `happy - sad`, and runs cosine search inside SQLite. Claude never constructs or receives the numeric vectors.
+Claude can then call `search_songs_by_semantic_axis`. For “find the happiest songs,” it supplies 3–5 caption-like descriptions of joyful music and an equally sized, positionally matched ensemble describing sorrowful music. Each pair should share musical context and differ mainly in happiness. The application embeds the ordered batch with the same pinned CLaMP checkpoint as the scores, L2-normalizes every prompt before averaging, normalizes both centroids, and L2-normalizes `positive_centroid - negative_centroid` before cosine search inside SQLite. Claude never constructs or receives the numeric vectors.
 
-Only rows with the exact matching CLaMP commit, model revision, weight hash, and dimension are eligible. Results contain the ordered poles, model provenance, distance, score identity, title, artist, and work-creation date.
+Only rows with the exact matching CLaMP commit, model revision, weight hash, and dimension are eligible. Results contain the complete ordered ensembles, aggregation and model provenance, distance, score identity, title, artist, and work-creation date. See [Semantic Axis Retrieval](../tools/semantic-axis-retrieval.md) for the full prompt contract.
 
 ## Output layout
 

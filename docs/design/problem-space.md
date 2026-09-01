@@ -12,7 +12,7 @@ Computational musicologists and developers need to convert complete symbolic sco
 
 They need both a typed Python API and a command-line workflow that can be automated without reproducing notebook setup steps. They also need durable local storage that keeps vectors connected to their source, validation evidence, and model provenance.
 
-Researchers and MCP clients also need to discover songs by an emotional direction rather than by a known reference score. They need catalog-shaped matches with human-readable title, artist or composer, and work-creation date. Claude can interpret a request into an ordered pair of emotional poles, such as `happy` and `sad`, but compatible text encoding, vector arithmetic, validation, and ranking must remain deterministic application behavior.
+Researchers and MCP clients also need to discover songs along high-level semantic directions rather than only from a known reference score. Relevant characteristics include mood or emotion, energy or arousal, genre or style character, atmosphere, and texture. Claude translates a request into two ordered, genuinely contrasting poles expressed as matched ensembles of short music descriptions. Compatible text encoding, prompt normalization, ensemble aggregation, contrast construction, validation, and ranking remain deterministic application behavior.
 
 ## Existing alternatives
 
@@ -33,12 +33,14 @@ The project provides a deterministic workflow that:
 - persists raw and normalized embeddings, score identity, validation evidence, and model provenance in a local SQLite database;
 - persists MEI-derived title, artist or composer, and nullable work-creation date alongside each score embedding;
 - makes normalized embeddings available to vector-similarity queries through a SQLite vector extension; and
-- embeds two ordered emotion poles in the same CLaMP space as the scores, L2-normalizes the positive-minus-negative direction, and retrieves catalog-shaped matches through SQLite; and
+- encodes two ordered, equal-length ensembles of 3–5 caption-like prompts in the same CLaMP space as the scores;
+- L2-normalizes each prompt embedding, averages each pole's unit vectors, L2-normalizes both centroids, and L2-normalizes the final positive-centroid-minus-negative-centroid direction;
+- retrieves catalog-shaped matches through SQLite cosine search; and
 - exposes actionable logs and failures through typed Python and CLI interfaces.
 
 ## Boundaries
 
-This work does not introduce musical segmentation, phrase detection, model training, hosted inference, MCP-based batch embedding generation, a remote vector database service, or CLaMP-enabled container deployment. It exposes only query-time contrastive emotion retrieval through MCP.
+This work does not introduce musical segmentation, phrase detection, model training, hosted inference, MCP-based batch embedding generation, a remote vector database service, or CLaMP-enabled container deployment. It exposes only query-time semantic-axis retrieval through MCP. This workflow is intended for broad musical characteristics represented in CLaMP embeddings, not exact key, BPM, chord, note, or bar-level properties.
 
 ## Constraints
 

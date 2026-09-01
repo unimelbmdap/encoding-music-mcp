@@ -1,11 +1,12 @@
 ---
 id: ADR-0004
 title: Contrastive CLaMP text-to-score emotion retrieval
-status: accepted
+status: superseded
 date: 2026-08-25
 scope: integration
 modules: [score-embeddings, emotion-retrieval]
 topics: [clamp3, cross-modal-retrieval, emotion, sqlite-vec, mcp]
+superseded-by: [ADR-0005]
 ---
 
 ## Context
