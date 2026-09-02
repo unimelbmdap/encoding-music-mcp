@@ -6,8 +6,11 @@ environment, open SQLite, or invoke the external CLaMP runtime.
 
 from __future__ import annotations
 
+import logging
 import math
 import os
+import threading
+import time
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -33,6 +36,8 @@ DEFAULT_TIMEOUT_SECONDS = 3600.0
 MIN_PROMPTS_PER_POLE = 3
 MAX_PROMPTS_PER_POLE = 5
 MAX_SEARCH_LIMIT = 100
+
+LOGGER = logging.getLogger(__name__)
 
 
 class SemanticAxisRetrievalError(RuntimeError):
@@ -164,6 +169,49 @@ class SemanticAxisSearchResult:
 
 EmbeddingFunction = Callable[..., TextEmbeddingBatch]
 RepositoryFactory = Callable[[Path], EmbeddingRepository]
+
+
+class _RepositoryPool:
+    """Serialize and reuse sqlite-vec connections by resolved database path."""
+
+    def __init__(self) -> None:
+        self._lock = threading.RLock()
+        self._repositories: dict[Path, EmbeddingRepository] = {}
+
+    def catalog_search(
+        self,
+        database_path: Path,
+        direction: np.ndarray,
+        *,
+        limit: int,
+        model_identity: ClampModelIdentity,
+    ) -> list[CatalogSimilarityResult]:
+        path = database_path.resolve()
+        with self._lock:
+            repository = self._repositories.get(path)
+            if repository is None:
+                repository = EmbeddingRepository(path, check_same_thread=False)
+                repository.open()
+                self._repositories[path] = repository
+            return repository.catalog_similarity_search(
+                direction,
+                limit=limit,
+                model_identity=model_identity,
+            )
+
+    def close(self) -> None:
+        with self._lock:
+            for repository in self._repositories.values():
+                repository.close()
+            self._repositories.clear()
+
+
+_REPOSITORY_POOL = _RepositoryPool()
+
+
+def close_semantic_axis_retrieval_resources() -> None:
+    """Close lazily opened semantic-axis database connections."""
+    _REPOSITORY_POOL.close()
 
 
 def _required_path(environment: Mapping[str, str], name: str) -> Path:
@@ -339,7 +387,7 @@ def run_semantic_axis_search(
     limit: int = 10,
     runner: CommandRunner | None = None,
     embed_texts: EmbeddingFunction = embed_clamp3_texts,
-    repository_factory: RepositoryFactory = EmbeddingRepository,
+    repository_factory: RepositoryFactory | None = None,
 ) -> SemanticAxisSearchResult:
     """Encode matched prompt ensembles and search compatible score vectors."""
     positive, negative = _validate_request(
@@ -349,17 +397,28 @@ def run_semantic_axis_search(
     embedding_options: dict[str, Any] = {}
     if runner is not None:
         embedding_options["runner"] = runner
+    encoding_started = time.perf_counter()
     batch = embed_texts(ordered_prompts, config.clamp, **embedding_options)
+    encoding_finished = time.perf_counter()
     direction = _semantic_axis_direction(batch, ordered_prompts, len(positive))
+    axis_finished = time.perf_counter()
 
     identity: ClampModelIdentity = batch.model_identity
     try:
-        with repository_factory(config.database_path) as repository:
-            matches = repository.catalog_similarity_search(
+        if repository_factory is None:
+            matches = _REPOSITORY_POOL.catalog_search(
+                config.database_path,
                 direction,
                 limit=limit,
                 model_identity=identity,
             )
+        else:
+            with repository_factory(config.database_path) as repository:
+                matches = repository.catalog_similarity_search(
+                    direction,
+                    limit=limit,
+                    model_identity=identity,
+                )
     except SemanticAxisRetrievalError:
         raise
     except Exception as exc:
@@ -368,7 +427,8 @@ def run_semantic_axis_search(
             f"{config.database_path}: {exc}"
         ) from exc
 
-    return SemanticAxisSearchResult(
+    retrieval_finished = time.perf_counter()
+    result = SemanticAxisSearchResult(
         positive_prompts=positive,
         negative_prompts=negative,
         aggregation=SemanticAxisAggregationProvenance(),
@@ -380,6 +440,26 @@ def run_semantic_axis_search(
         ),
         matches=tuple(_project_match(match) for match in matches),
     )
+    projection_finished = time.perf_counter()
+    stage_timings = {
+        "text_encoding_seconds": encoding_finished - encoding_started,
+        "axis_construction_seconds": axis_finished - encoding_finished,
+        "sqlite_vec_retrieval_seconds": retrieval_finished - axis_finished,
+        "result_projection_seconds": projection_finished - retrieval_finished,
+    }
+    LOGGER.info(
+        "Semantic-axis stages: text_encoding=%.6fs axis_construction=%.6fs "
+        "sqlite_vec_retrieval=%.6fs result_projection=%.6fs",
+        stage_timings["text_encoding_seconds"],
+        stage_timings["axis_construction_seconds"],
+        stage_timings["sqlite_vec_retrieval_seconds"],
+        stage_timings["result_projection_seconds"],
+        extra={
+            "timing_category": "semantic_axis_search",
+            "timings": stage_timings,
+        },
+    )
+    return result
 
 
 def search_songs_by_semantic_axis(

@@ -1,6 +1,9 @@
 """Tests for server transport configuration."""
 
 from src.encoding_music_mcp import server
+from src.encoding_music_mcp import score_embeddings
+from src.encoding_music_mcp.score_embeddings import clamp_extractor
+from src.encoding_music_mcp.tools import semantic_axis_retrieval
 
 
 def test_http_server_configures_proxy_and_keep_alive(monkeypatch):
@@ -40,3 +43,24 @@ def test_stdio_remains_the_default_transport(monkeypatch):
     server.main()
 
     assert calls == [{}]
+
+
+def test_server_startup_is_clamp_lazy_and_shutdown_closes_resources(monkeypatch):
+    clamp_extractor.close_persistent_clamp_text_encoder()
+    closed = []
+    monkeypatch.setattr(server.mcp, "run", lambda **kwargs: None)
+    monkeypatch.setattr(
+        score_embeddings,
+        "close_persistent_clamp_text_encoder",
+        lambda: closed.append("worker"),
+    )
+    monkeypatch.setattr(
+        semantic_axis_retrieval,
+        "close_semantic_axis_retrieval_resources",
+        lambda: closed.append("repository"),
+    )
+
+    server.main()
+
+    assert clamp_extractor._PERSISTENT_TEXT_ENCODER._worker is None
+    assert closed == ["repository", "worker"]

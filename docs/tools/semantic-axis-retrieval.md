@@ -48,6 +48,35 @@ The MCP server process requires:
 
 Optional overrides are `ENCODING_MUSIC_CLAMP_CACHE_DIR` and `ENCODING_MUSIC_CLAMP_TIMEOUT_SECONDS`. Assets and score embeddings must be prepared first; the tool never downloads assets or generates score embeddings.
 
+The CLaMP process is lazy: starting the MCP server does not import PyTorch or
+load the tokenizer, model, or checkpoint. The first semantic-axis call starts
+the offline worker, and compatible later calls reuse its full-precision model.
+Changing the configured interpreter, checkout/model configuration, or checkpoint
+identity replaces the worker safely.
+
+### Cold and warm timing pipeline
+
+With the configuration above pointing to an already prepared offline runtime,
+measure one cold search followed by warm searches with:
+
+```bash
+uv run --extra score-embeddings \
+  python -m encoding_music_mcp.score_embeddings.semantic_axis_timing \
+  --positive "Music expressing a joyful and optimistic mood." \
+  --positive "Happy energetic music with a cheerful character." \
+  --positive "Happy calm music with a warm contented character." \
+  --negative "Music expressing a sorrowful and pessimistic mood." \
+  --negative "Sad energetic music with a distressed character." \
+  --negative "Sad calm music with a melancholic subdued character." \
+  --warm-runs 3
+```
+
+The JSON output separates interpreter startup, model/tokenizer initialization,
+checkpoint loading, warm-up, tokenization, inference, axis construction,
+`sqlite-vec` retrieval, result projection, and total search time. The timing
+pipeline closes existing resources before the cold run and after measurement;
+it does not run setup or download assets.
+
 ### Returns
 
 ```json

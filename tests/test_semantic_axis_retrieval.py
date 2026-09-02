@@ -166,6 +166,85 @@ def test_valid_ensemble_cardinalities_use_one_ordered_batch(tmp_path: Path, coun
     assert captured["texts"] == ordered
 
 
+def test_repeated_searches_repeat_encoding_and_retrieval_without_query_cache(
+    tmp_path: Path,
+):
+    positive = _prompts("positive")
+    negative = _prompts("negative")
+    ordered = tuple(positive + negative)
+    raw = np.array([[1.0, 0.0, 0.0]] * 3 + [[0.0, 1.0, 0.0]] * 3)
+    captured: dict[str, object] = {"embedding_calls": 0, "retrieval_calls": 0}
+
+    def embed(texts, config, **kwargs):
+        captured["embedding_calls"] = int(captured["embedding_calls"]) + 1
+        return _batch(raw, texts=tuple(texts))
+
+    class CountingRepository(_FakeRepository):
+        def catalog_similarity_search(self, query, *, limit, model_identity):
+            captured["retrieval_calls"] = int(captured["retrieval_calls"]) + 1
+            return super().catalog_similarity_search(
+                query,
+                limit=limit,
+                model_identity=model_identity,
+            )
+
+    for _ in range(2):
+        retrieval.run_semantic_axis_search(
+            positive,
+            negative,
+            config=_config(tmp_path),
+            embed_texts=embed,
+            repository_factory=lambda path: CountingRepository(path, captured),
+        )
+
+    assert captured["embedding_calls"] == 2
+    assert captured["retrieval_calls"] == 2
+    assert ordered == tuple(positive + negative)
+
+
+def test_repository_pool_reuses_connection_and_closes_it(tmp_path: Path, monkeypatch):
+    created = []
+
+    class Repository:
+        def __init__(self, path, *, check_same_thread):
+            self.path = path
+            self.check_same_thread = check_same_thread
+            self.open_calls = 0
+            self.search_calls = 0
+            self.closed = False
+            created.append(self)
+
+        def open(self):
+            self.open_calls += 1
+
+        def catalog_similarity_search(self, query, *, limit, model_identity):
+            self.search_calls += 1
+            return []
+
+        def close(self):
+            self.closed = True
+
+    monkeypatch.setattr(retrieval, "EmbeddingRepository", Repository)
+    pool = retrieval._RepositoryPool()
+    identity = ClampModelIdentity("c" * 40, "revision-a", "d" * 64, 3)
+    direction = np.array([1.0, 0.0, 0.0], dtype=np.float32)
+
+    for _ in range(2):
+        pool.catalog_search(
+            tmp_path / "catalog.sqlite3",
+            direction,
+            limit=5,
+            model_identity=identity,
+        )
+    pool.close()
+
+    assert len(created) == 1
+    assert created[0].check_same_thread is False
+    assert created[0].open_calls == 1
+    assert created[0].search_calls == 2
+    assert created[0].closed is True
+
+
 def test_each_prompt_is_normalized_before_averaging(tmp_path: Path):
     positive = _prompts("positive")
     negative = _prompts("negative")

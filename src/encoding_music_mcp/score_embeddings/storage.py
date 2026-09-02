@@ -201,6 +201,7 @@ class EmbeddingRepository:
         database_path: str | Path,
         *,
         dimension: int = EXPECTED_EMBEDDING_DIMENSION,
+        check_same_thread: bool = True,
     ) -> None:
         if dimension != EXPECTED_EMBEDDING_DIMENSION:
             raise EmbeddingDimensionError(
@@ -209,6 +210,7 @@ class EmbeddingRepository:
             )
         self.database_path = Path(database_path).expanduser().resolve()
         self.dimension = dimension
+        self.check_same_thread = check_same_thread
         self._connection: sqlite3.Connection | None = None
         self._serialize_float32: Any = None
 
@@ -248,7 +250,10 @@ class EmbeddingRepository:
             )
 
         self.database_path.parent.mkdir(parents=True, exist_ok=True)
-        connection = sqlite3.connect(self.database_path)
+        connection = sqlite3.connect(
+            self.database_path,
+            check_same_thread=self.check_same_thread,
+        )
         connection.row_factory = sqlite3.Row
         connection.execute("PRAGMA foreign_keys = ON")
         try:

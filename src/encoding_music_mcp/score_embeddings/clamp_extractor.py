@@ -2,14 +2,19 @@
 
 from __future__ import annotations
 
+import atexit
 import hashlib
 import json
 import logging
 import math
 import os
+import queue
 import shutil
 import subprocess
 import tempfile
+import threading
+import time
+from collections import deque
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -159,6 +164,290 @@ CommandRunner = Callable[
     [Sequence[str], Path, Mapping[str, str], float],
     subprocess.CompletedProcess[str],
 ]
+
+
+@dataclass(frozen=True, slots=True)
+class ClampWorkerIdentity:
+    """Settings that determine whether a resident text worker is reusable."""
+
+    python_executable: Path
+    checkout_dir: Path
+    weight_path: Path
+    commit: str
+    model_revision: str
+    weight_sha256: str
+    expected_dimension: int
+
+    @classmethod
+    def from_config(cls, config: ClampRuntimeConfig) -> ClampWorkerIdentity:
+        return cls(
+            python_executable=config.python_executable,
+            checkout_dir=config.checkout_dir,
+            weight_path=config.weight_path,
+            commit=config.commit,
+            model_revision=config.model_revision,
+            weight_sha256=config.weight_sha256,
+            expected_dimension=config.expected_dimension,
+        )
+
+
+class _ClampTextWorker:
+    """One serialized JSON-lines connection to a resident CLaMP process."""
+
+    def __init__(self, config: ClampRuntimeConfig) -> None:
+        self.identity = ClampWorkerIdentity.from_config(config)
+        self._responses: queue.Queue[dict[str, Any] | None] = queue.Queue()
+        self._stderr: deque[str] = deque(maxlen=40)
+        self._request_id = 0
+        worker_script = Path(__file__).with_name("clamp_text_worker.py")
+        started = time.perf_counter()
+        try:
+            self._process = subprocess.Popen(
+                [str(config.python_executable), "-u", str(worker_script)],
+                cwd=str(config.checkout_dir / "code"),
+                env=_runtime_environment(config, offline=True),
+                text=True,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                bufsize=1,
+            )
+        except (OSError, ValueError) as exc:
+            raise ClampExecutionError(
+                f"Could not start persistent CLaMP text worker with "
+                f"{config.python_executable}: {exc}"
+            ) from exc
+        self._stdout_thread = threading.Thread(
+            target=self._read_stdout,
+            name="clamp-text-worker-stdout",
+            daemon=True,
+        )
+        self._stderr_thread = threading.Thread(
+            target=self._read_stderr,
+            name="clamp-text-worker-stderr",
+            daemon=True,
+        )
+        self._stdout_thread.start()
+        self._stderr_thread.start()
+        try:
+            boot = self._receive(config.timeout_seconds, stage="interpreter startup")
+            if boot.get("event") != "booted":
+                raise self._protocol_error("boot acknowledgement", boot)
+            interpreter_seconds = time.perf_counter() - started
+            self._send(
+                {
+                    "operation": "initialize",
+                    "checkout_dir": str(config.checkout_dir),
+                    "weight_path": str(config.weight_path),
+                    "expected_dimension": config.expected_dimension,
+                }
+            )
+            ready = self._receive(config.timeout_seconds, stage="model initialization")
+            if ready.get("event") != "ready":
+                raise self._protocol_error("ready acknowledgement", ready)
+        except Exception:
+            self.close()
+            raise
+        timings = ready.get("timings", {})
+        startup_timings = {
+            "interpreter_startup_seconds": interpreter_seconds,
+            "model_and_tokenizer_load_seconds": float(
+                timings.get("model_and_tokenizer_load_seconds", 0.0)
+            ),
+            "checkpoint_load_seconds": float(
+                timings.get("checkpoint_load_seconds", 0.0)
+            ),
+            "warmup_seconds": float(timings.get("warmup_seconds", 0.0)),
+        }
+        LOGGER.info(
+            "CLaMP text worker started: interpreter=%.6fs model_tokenizer=%.6fs "
+            "checkpoint=%.6fs warmup=%.6fs device=%s precision=%s",
+            interpreter_seconds,
+            startup_timings["model_and_tokenizer_load_seconds"],
+            startup_timings["checkpoint_load_seconds"],
+            startup_timings["warmup_seconds"],
+            ready.get("device", "unknown"),
+            ready.get("precision", "unknown"),
+            extra={
+                "timing_category": "clamp_worker_startup",
+                "timings": startup_timings,
+            },
+        )
+
+    def _read_stdout(self) -> None:
+        assert self._process.stdout is not None
+        try:
+            for line in self._process.stdout:
+                try:
+                    value = json.loads(line)
+                except json.JSONDecodeError:
+                    value = {
+                        "event": "protocol_error",
+                        "error": f"non-JSON worker output: {line.strip()!r}",
+                    }
+                self._responses.put(value)
+        finally:
+            self._responses.put(None)
+
+    def _read_stderr(self) -> None:
+        assert self._process.stderr is not None
+        for line in self._process.stderr:
+            self._stderr.append(line.rstrip())
+
+    def _diagnostics(self) -> str:
+        details = "\n".join(self._stderr).strip()
+        return details or "no worker diagnostics were captured"
+
+    def _protocol_error(
+        self, expected: str, response: dict[str, Any]
+    ) -> ClampExecutionError:
+        return ClampExecutionError(
+            f"Persistent CLaMP worker did not return {expected}: "
+            f"{response.get('error', response)!s}. Diagnostics: {self._diagnostics()}"
+        )
+
+    def _send(self, payload: dict[str, Any]) -> None:
+        if self._process.poll() is not None or self._process.stdin is None:
+            raise ClampExecutionError(
+                f"Persistent CLaMP worker exited with code {self._process.poll()}. "
+                f"Diagnostics: {self._diagnostics()}"
+            )
+        try:
+            self._process.stdin.write(json.dumps(payload, separators=(",", ":")) + "\n")
+            self._process.stdin.flush()
+        except (BrokenPipeError, OSError) as exc:
+            raise ClampExecutionError(
+                f"Persistent CLaMP worker stopped while accepting a request. "
+                f"Diagnostics: {self._diagnostics()}"
+            ) from exc
+
+    def _receive(self, timeout: float, *, stage: str) -> dict[str, Any]:
+        try:
+            response = self._responses.get(timeout=timeout)
+        except queue.Empty as exc:
+            self.terminate()
+            raise ClampExecutionError(
+                f"Persistent CLaMP worker timed out after {timeout:g}s during {stage}; "
+                "the worker was terminated and will be restarted on the next request"
+            ) from exc
+        if response is None:
+            raise ClampExecutionError(
+                f"Persistent CLaMP worker exited during {stage} with code "
+                f"{self._process.poll()}. Diagnostics: {self._diagnostics()}"
+            )
+        return response
+
+    def encode(self, texts: tuple[str, ...], timeout: float) -> np.ndarray:
+        self._request_id += 1
+        request_id = self._request_id
+        self._send(
+            {
+                "operation": "encode",
+                "request_id": request_id,
+                "texts": list(texts),
+            }
+        )
+        response = self._receive(timeout, stage="ordered text inference")
+        if response.get("event") != "encoded" or response.get("request_id") != request_id:
+            raise self._protocol_error("the matching encoded response", response)
+        if tuple(response.get("texts", ())) != texts:
+            raise ClampExecutionError(
+                "Persistent CLaMP worker returned embeddings in an unexpected text order"
+            )
+        timings = {
+            "tokenisation_seconds": float(
+                response.get("timings", {}).get("tokenisation_seconds", 0.0)
+            ),
+            "model_inference_seconds": float(
+                response.get("timings", {}).get("model_inference_seconds", 0.0)
+            ),
+        }
+        LOGGER.info(
+            "CLaMP warm text encoding: tokenisation=%.6fs inference=%.6fs count=%d",
+            timings["tokenisation_seconds"],
+            timings["model_inference_seconds"],
+            len(texts),
+            extra={
+                "timing_category": "clamp_text_encoding",
+                "timings": timings,
+            },
+        )
+        return np.asarray(response.get("raw"), dtype=np.float32)
+
+    def close(self) -> None:
+        process = getattr(self, "_process", None)
+        if process is None:
+            return
+        if process.poll() is None:
+            try:
+                self._send({"operation": "shutdown"})
+                process.wait(timeout=2.0)
+            except (ClampExecutionError, subprocess.TimeoutExpired):
+                self.terminate()
+                return
+        self._close_streams()
+
+    def terminate(self) -> None:
+        """Stop an unresponsive or failed worker without a graceful request."""
+        process = getattr(self, "_process", None)
+        if process is None:
+            return
+        if process.poll() is None:
+            process.terminate()
+            try:
+                process.wait(timeout=2.0)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait(timeout=2.0)
+        self._close_streams()
+
+    def _close_streams(self) -> None:
+        for stream in (
+            self._process.stdin,
+            self._process.stdout,
+            self._process.stderr,
+        ):
+            if stream is not None and not stream.closed:
+                stream.close()
+
+
+class PersistentClampTextEncoder:
+    """Lazily own one compatible worker and serialize concurrent requests."""
+
+    def __init__(self) -> None:
+        self._lock = threading.RLock()
+        self._worker: _ClampTextWorker | None = None
+
+    def encode(self, texts: tuple[str, ...], config: ClampRuntimeConfig) -> np.ndarray:
+        identity = ClampWorkerIdentity.from_config(config)
+        with self._lock:
+            if self._worker is not None and self._worker.identity != identity:
+                self._worker.close()
+                self._worker = None
+            if self._worker is None:
+                check_clamp3_setup(config)
+                self._worker = _ClampTextWorker(config)
+            try:
+                return self._worker.encode(texts, config.timeout_seconds)
+            except Exception:
+                self._worker.close()
+                self._worker = None
+                raise
+
+    def close(self) -> None:
+        with self._lock:
+            if self._worker is not None:
+                self._worker.close()
+                self._worker = None
+
+
+_PERSISTENT_TEXT_ENCODER = PersistentClampTextEncoder()
+atexit.register(_PERSISTENT_TEXT_ENCODER.close)
+
+
+def close_persistent_clamp_text_encoder() -> None:
+    """Terminate the lazily created text worker, if one exists."""
+    _PERSISTENT_TEXT_ENCODER.close()
 
 
 def _run_command(
@@ -636,14 +925,14 @@ def embed_clamp3_texts(
     texts: Sequence[str],
     config: ClampRuntimeConfig,
     *,
-    runner: CommandRunner = _run_command,
+    runner: CommandRunner | None = None,
     verify_setup: bool = True,
 ) -> TextEmbeddingBatch:
-    """Encode ordered text strings with the pinned CLaMP text projection.
+    """Encode ordered text strings with a lazy resident CLaMP text worker.
 
-    Text is passed only through controlled ``.txt`` files. It is never included
-    in subprocess arguments or filenames. The upstream extractor receives the
-    same configured checkpoint as symbolic-music extraction and runs offline.
+    The default path keeps the verified tokenizer, trained text encoder, and
+    text projection resident. Supplying a command runner retains the isolated
+    subprocess adapter for setup tests and output-parity verification.
     """
     ordered_texts = tuple(texts)
     if not ordered_texts:
@@ -658,6 +947,45 @@ def embed_clamp3_texts(
                 f"Text input at index {index} must not be blank"
             )
 
+    if runner is not None or not verify_setup:
+        return _embed_clamp3_texts_subprocess(
+            ordered_texts,
+            config,
+            runner=_run_command if runner is None else runner,
+            verify_setup=verify_setup,
+        )
+
+    raw = _PERSISTENT_TEXT_ENCODER.encode(ordered_texts, config)
+    expected_shape = (len(ordered_texts), config.expected_dimension)
+    if raw.shape != expected_shape:
+        raise EmbeddingValidationError(
+            f"Persistent CLaMP worker returned shape {raw.shape}; "
+            f"expected {expected_shape}"
+        )
+    if not np.isfinite(raw).all():
+        raise EmbeddingValidationError(
+            "Persistent CLaMP worker returned non-finite text embeddings"
+        )
+    norms = np.linalg.norm(raw, axis=1, keepdims=True)
+    normalized = np.divide(raw, norms, out=np.zeros_like(raw), where=norms != 0)
+    stems = tuple(f"text_{index:06d}" for index in range(len(ordered_texts)))
+    return TextEmbeddingBatch(
+        texts=ordered_texts,
+        stems=stems,
+        raw=raw,
+        normalized=normalized,
+        model_identity=_model_identity(config),
+    )
+
+
+def _embed_clamp3_texts_subprocess(
+    ordered_texts: tuple[str, ...],
+    config: ClampRuntimeConfig,
+    *,
+    runner: CommandRunner,
+    verify_setup: bool,
+) -> TextEmbeddingBatch:
+    """Run the original one-process-per-batch encoder for tests and parity."""
     if verify_setup:
         check_clamp3_setup(config, runner=runner)
     elif not config.python_executable.is_file():

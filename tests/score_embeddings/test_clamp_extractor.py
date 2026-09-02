@@ -3,17 +3,23 @@
 from __future__ import annotations
 
 import hashlib
+import inspect
+import queue
 import subprocess
 import sys
+import threading
+import time
 from pathlib import Path
 
 import numpy as np
 import pytest
 
+from encoding_music_mcp.score_embeddings import clamp_extractor, clamp_text_worker
 from encoding_music_mcp.score_embeddings.clamp_extractor import (
     ClampExecutionError,
     ClampRuntimeConfig,
     EmbeddingValidationError,
+    PersistentClampTextEncoder,
     embed_clamp3_texts,
     load_and_normalize_embeddings,
     run_clamp3_extraction,
@@ -39,6 +45,196 @@ def _write_fake_checkout(path: Path) -> None:
         path / "preprocessing" / "abc" / "batch_interleaved_abc.py",
     ):
         script.write_text("# fake\n", encoding="utf-8")
+
+
+class _ResidentWorkerStub:
+    created: list[_ResidentWorkerStub] = []
+    delay = 0.0
+    failure: Exception | None = None
+
+    def __init__(self, config: ClampRuntimeConfig):
+        self.identity = clamp_extractor.ClampWorkerIdentity.from_config(config)
+        self.calls: list[tuple[str, ...]] = []
+        self.closed = False
+        type(self).created.append(self)
+
+    def encode(self, texts: tuple[str, ...], timeout: float) -> np.ndarray:
+        self.calls.append(texts)
+        if self.delay:
+            time.sleep(self.delay)
+        if self.failure is not None:
+            raise self.failure
+        return np.ones((len(texts), self.identity.expected_dimension), dtype=np.float32)
+
+    def close(self) -> None:
+        self.closed = True
+
+
+@pytest.fixture
+def resident_worker_stub(monkeypatch: pytest.MonkeyPatch):
+    _ResidentWorkerStub.created = []
+    _ResidentWorkerStub.delay = 0.0
+    _ResidentWorkerStub.failure = None
+    monkeypatch.setattr(clamp_extractor, "_ClampTextWorker", _ResidentWorkerStub)
+    monkeypatch.setattr(clamp_extractor, "check_clamp3_setup", lambda config: None)
+    return _ResidentWorkerStub
+
+
+def _resident_config(tmp_path: Path, *, revision: str = "revision-a"):
+    return ClampRuntimeConfig(
+        python_executable=Path(sys.executable),
+        cache_dir=tmp_path / revision,
+        commit="c" * 40,
+        model_revision=revision,
+        weight_sha256="d" * 64,
+        expected_dimension=3,
+    )
+
+
+def test_resident_encoder_reuses_one_worker_without_query_caching(
+    tmp_path: Path,
+    resident_worker_stub,
+):
+    manager = PersistentClampTextEncoder()
+    config = _resident_config(tmp_path)
+
+    first = manager.encode(("first positive", "first negative"), config)
+    second = manager.encode(("second positive", "second negative"), config)
+
+    assert len(resident_worker_stub.created) == 1
+    assert resident_worker_stub.created[0].calls == [
+        ("first positive", "first negative"),
+        ("second positive", "second negative"),
+    ]
+    assert first.shape == second.shape == (2, 3)
+
+
+def test_resident_encoder_restarts_only_for_relevant_configuration_changes(
+    tmp_path: Path,
+    resident_worker_stub,
+):
+    manager = PersistentClampTextEncoder()
+    first_config = _resident_config(tmp_path, revision="revision-a")
+    timeout_only = _resident_config(tmp_path, revision="revision-a")
+    timeout_only.timeout_seconds = 0.5
+    changed = _resident_config(tmp_path, revision="revision-b")
+
+    manager.encode(("one",), first_config)
+    manager.encode(("two",), timeout_only)
+    manager.encode(("three",), changed)
+
+    assert len(resident_worker_stub.created) == 2
+    assert resident_worker_stub.created[0].closed is True
+    assert resident_worker_stub.created[0].calls == [("one",), ("two",)]
+    assert resident_worker_stub.created[1].calls == [("three",)]
+
+
+def test_simultaneous_first_requests_create_one_resident_worker(
+    tmp_path: Path,
+    resident_worker_stub,
+):
+    manager = PersistentClampTextEncoder()
+    config = _resident_config(tmp_path)
+    resident_worker_stub.delay = 0.01
+    barrier = threading.Barrier(5)
+    errors: list[BaseException] = []
+
+    def encode(index: int) -> None:
+        try:
+            barrier.wait()
+            manager.encode((f"prompt {index}",), config)
+        except BaseException as exc:  # pragma: no cover - assertion reports details
+            errors.append(exc)
+
+    threads = [threading.Thread(target=encode, args=(index,)) for index in range(5)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+
+    assert errors == []
+    assert len(resident_worker_stub.created) == 1
+    assert len(resident_worker_stub.created[0].calls) == 5
+
+
+@pytest.mark.parametrize(
+    "failure",
+    [
+        ClampExecutionError("timed out after 0.1s"),
+        ClampExecutionError("worker exited with code 9"),
+    ],
+)
+def test_resident_encoder_discards_failed_worker_and_restarts(
+    tmp_path: Path,
+    resident_worker_stub,
+    failure: Exception,
+):
+    manager = PersistentClampTextEncoder()
+    config = _resident_config(tmp_path)
+    resident_worker_stub.failure = failure
+
+    with pytest.raises(ClampExecutionError, match=str(failure)):
+        manager.encode(("first",), config)
+
+    assert resident_worker_stub.created[0].closed is True
+    resident_worker_stub.failure = None
+    manager.encode(("second",), config)
+    assert len(resident_worker_stub.created) == 2
+
+
+def test_resident_encoder_shutdown_closes_worker(
+    tmp_path: Path,
+    resident_worker_stub,
+):
+    manager = PersistentClampTextEncoder()
+    manager.encode(("prompt",), _resident_config(tmp_path))
+
+    manager.close()
+
+    assert resident_worker_stub.created[0].closed is True
+    assert manager._worker is None
+
+
+def test_resident_encoding_never_invokes_download_setup(
+    tmp_path: Path,
+    resident_worker_stub,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    monkeypatch.setattr(
+        clamp_extractor,
+        "_download_file",
+        lambda *args, **kwargs: pytest.fail("query encoding must never download assets"),
+    )
+    manager = PersistentClampTextEncoder()
+
+    manager.encode(("offline prompt",), _resident_config(tmp_path))
+
+    assert len(resident_worker_stub.created) == 1
+
+
+def test_worker_uses_one_full_precision_ordered_inference_batch():
+    initialization = inspect.getsource(clamp_text_worker.TextRuntime.__init__)
+    encoding = inspect.getsource(clamp_text_worker.TextRuntime.encode)
+
+    assert encoding.count("self.tokenizer(") == 1
+    assert encoding.count("self.model.get_text_features(") == 1
+    assert encoding.count("torch.inference_mode()") == 1
+    assert encoding.count(".to(") == 1
+    assert ".eval()" in initialization
+    assert "autocast" not in initialization + encoding
+    assert "float16" not in initialization + encoding
+
+
+def test_worker_receive_enforces_timeout_and_terminates(monkeypatch):
+    worker = object.__new__(clamp_extractor._ClampTextWorker)
+    worker._responses = queue.Queue()
+    closed = []
+    monkeypatch.setattr(worker, "terminate", lambda: closed.append(True))
+
+    with pytest.raises(ClampExecutionError, match="timed out after 0.001s"):
+        worker._receive(0.001, stage="ordered text inference")
+
+    assert closed == [True]
 
 
 def test_setup_is_idempotent_and_records_pinned_symbolic_runtime(tmp_path: Path):
