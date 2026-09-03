@@ -4,6 +4,7 @@ from src.encoding_music_mcp import server
 from src.encoding_music_mcp import score_embeddings
 from src.encoding_music_mcp.score_embeddings import clamp_extractor
 from src.encoding_music_mcp.tools import semantic_axis_retrieval
+from src.encoding_music_mcp.tools import prototype_retrieval
 
 
 def test_http_server_configures_proxy_and_keep_alive(monkeypatch):
@@ -59,8 +60,13 @@ def test_server_startup_is_clamp_lazy_and_shutdown_closes_resources(monkeypatch)
         "close_semantic_axis_retrieval_resources",
         lambda: closed.append("repository"),
     )
+    monkeypatch.setattr(
+        prototype_retrieval,
+        "close_prototype_retrieval_resources",
+        lambda: closed.append("prototype-repository"),
+    )
 
     server.main()
 
     assert clamp_extractor._PERSISTENT_TEXT_ENCODER._worker is None
-    assert closed == ["repository", "worker"]
+    assert closed == ["prototype-repository", "repository", "worker"]

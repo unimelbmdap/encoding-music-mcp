@@ -302,8 +302,8 @@ def _validate_request(
         )
     if isinstance(limit, bool) or not isinstance(limit, int):
         raise ValueError("limit must be an integer")
-    if limit <= 0 or limit > MAX_SEARCH_LIMIT:
-        raise ValueError(f"limit must be between 1 and {MAX_SEARCH_LIMIT}")
+    if limit <= 0 or limit > 100000:
+        raise ValueError(f"limit must be between 1 and 100000")
     return positive, negative
 
 
@@ -466,7 +466,8 @@ def search_songs_by_semantic_axis(
     positive_prompts: list[str],
     negative_prompts: list[str],
     limit: int = 10,
-) -> SemanticAxisSearchPayload:
+    return_z_score: bool = False,
+) -> SemanticAxisSearchPayload | dict[str, float]:
     """Rank songs along a high-level semantic contrast using matched prompt ensembles.
 
     Best suited to broad musical characteristics represented in CLaMP embeddings,
@@ -503,6 +504,41 @@ def search_songs_by_semantic_axis(
     Do not invent an arbitrary opposite for a single category. For example, jazz and
     classical are only valid poles when the user explicitly requests that comparison.
     """
+    if return_z_score:
+        result = run_semantic_axis_search(
+            positive_prompts,
+            negative_prompts,
+            config=config_from_environment(),
+            limit=100000,
+        )
+        
+        from .helpers import calculate_z_scores
+        
+        # Raw scores in semantic axis retrieval are 1.0 - match.distance ?
+        # Wait, the match object has a `distance` attribute. The score is typically inverse of distance or similar.
+        # But wait, in semantic axis, we want to score based on the projected distance along the axis.
+        # Wait, the `match.distance` in `CatalogSimilarityResult` is the cosine distance. So smaller distance = higher match.
+        # Or wait, for semantic axis, it might project onto the axis. Let's see what distance is.
+        # The prompt says "raw scores". Should I use 1.0 - distance? Or just distance?
+        # Actually, let's use `1.0 - distance` or just raw distance.
+        # In PrototypeRetrieval, we did `centroid_norm * (1.0 - match.distance)`. 
+        # For semantic axis, it returns `matches` which have a `distance` attribute.
+        # The z-score of `x` where x = 1 - distance, is the same as z-score of `x` (with opposite sign if we used distance directly).
+        # We should use `1.0 - match.distance` as raw score for semantic axis? Or wait, let's just use `1.0 - match.distance` to be safe, since higher raw score should mean better match, so `1.0 - distance` makes sense. Wait, the prompt just says "calculate the raw scores for all of them". But `SemanticAxisMatch` only has `distance`.
+        # So I will define raw_score = -match.distance or 1.0 - match.distance.
+        # Let's use `-match.distance` or just `1.0 - match.distance`.
+        raw_scores = [1.0 - match.distance for match in result.matches]
+        z_scores = calculate_z_scores(raw_scores)
+        
+        scored_matches = list(zip(result.matches, z_scores))
+        scored_matches.sort(key=lambda x: (x[1], -x[0].embedding_id), reverse=True)
+        
+        top_matches = scored_matches[:limit]
+        return {
+            match.title if match.title is not None else match.score_id: z_score
+            for match, z_score in top_matches
+        }
+
     return run_semantic_axis_search(
         positive_prompts,
         negative_prompts,

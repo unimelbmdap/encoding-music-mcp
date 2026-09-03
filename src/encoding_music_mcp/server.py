@@ -14,6 +14,7 @@ async def health_check(request):
     """Health check endpoint for container orchestration."""
     return JSONResponse({"status": "healthy"})
 
+
 # Import tools, resources, and prompts to trigger registration
 from .tools import registry as _tools_registry  # noqa: E402, F401
 from .resources import registry as _resources_registry  # noqa: E402, F401
@@ -36,9 +37,7 @@ def main():
             # Caddy is the only published service in the Docker deployment. Trust
             # its forwarded scheme so redirects and generated URLs remain HTTPS,
             # and keep upstream connections alive slightly longer than Caddy does.
-            forwarded_allow_ips = os.environ.get(
-                "MCP_FORWARDED_ALLOW_IPS", "127.0.0.1"
-            )
+            forwarded_allow_ips = os.environ.get("MCP_FORWARDED_ALLOW_IPS", "127.0.0.1")
             keep_alive = int(os.environ.get("MCP_HTTP_KEEP_ALIVE", "35"))
             mcp.run(
                 transport="http",
@@ -57,7 +56,9 @@ def main():
         from .tools.semantic_axis_retrieval import (
             close_semantic_axis_retrieval_resources,
         )
+        from .tools.prototype_retrieval import close_prototype_retrieval_resources
 
+        close_prototype_retrieval_resources()
         close_semantic_axis_retrieval_resources()
         close_persistent_clamp_text_encoder()
 

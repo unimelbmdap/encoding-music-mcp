@@ -4,12 +4,12 @@
 
 Encoding Music MCP is a Python distribution with two coordinated runtime entry points:
 
-1. The FastMCP server exposes MEI discovery, analysis, rendering, playback, and query-time semantic-axis retrieval over stdio or HTTP.
+1. The FastMCP server exposes MEI discovery, analysis, rendering, playback, semantic-axis retrieval, and dynamic single-concept prototype retrieval over stdio or HTTP.
 2. The standalone score-embedding pipeline converts complete symbolic scores to validated `.xml` MusicXML, extracts CLaMP 3 embeddings, and stores them in SQLite.
 
-Batch embedding generation is not registered as an MCP tool and is not included in the container deployment. The MCP semantic-axis tool consumes an explicitly configured database and external CLaMP runtime at query time; it does not install or download them.
+Batch embedding generation is not registered as an MCP tool and is not included in the container deployment. Query-time retrieval consumes an explicitly configured database and external CLaMP runtime; neither retrieval tool installs assets, downloads models, or generates corpus embeddings.
 
-The CLaMP boundary follows ADR-0001. Vector persistence follows ADR-0003. Matched-prompt-ensemble cross-modal retrieval follows ADR-0005.
+The CLaMP boundary follows ADR-0001, vector persistence follows ADR-0003, matched-prompt semantic axes follow ADR-0005, and dynamic single-concept prototypes follow ADR-0006.
 
 ## Runtime topology
 
@@ -20,16 +20,21 @@ MCP clients
 FastMCP server --> existing tools, resources, prompts, and notation apps
     |
     +--> semantic-axis retrieval
-             |
-             +--> matched positive/negative prompt ensembles
-             |
-             +--> pinned external CLaMP text encoder
-             |
-             +--> prompt normalization and pole centroids
-             |
-             +--> positive-centroid-minus-negative-centroid normalization
-             |
-             +--> SQLite/sqlite-vec cosine search
+    |        +--> matched positive/negative ensembles
+    |        +--> normalized centroid difference
+    |
+    +--> prototype retrieval
+             +--> one dynamic 3–5 prompt ensemble
+             +--> independently normalized prompts
+             +--> unnormalized mean centroid and norm
+             +--> normalized-direction SQLite KNN
+             +--> mean-cosine score recovery
+
+Both paths reuse:
+    pinned persistent CLaMP text encoder
+        |
+        v
+    SQLite/sqlite-vec catalog
 
 
 CLI or Python caller
@@ -68,7 +73,7 @@ score orchestrator
 
 ### Existing MCP server
 
-`encoding_music_mcp.server` remains responsible for FastMCP transport, registration, and deployment. The score-embedding pipeline does not import the server or mutate its tool registry. The semantic-axis-retrieval module registers a query-only tool that accepts two ordered, equal-length prompt ensembles and returns catalog-shaped results with query provenance.
+`encoding_music_mcp.server` remains responsible for FastMCP transport, registration, and deployment. The score-embedding pipeline does not import the server or mutate its tool registry. The server registers two query-only semantic retrieval tools. Semantic-axis retrieval accepts two matched prompt ensembles for a bipolar continuum. Prototype retrieval accepts one equivalent prompt ensemble for an independent high-level concept. Both return catalog-shaped, vector-free results with query and model provenance.
 
 ### Score processing
 
@@ -92,7 +97,7 @@ The runner receives only validated XML files. It invokes the pinned XML-to-ABC, 
 
 The runner does not install packages or access the network. Model setup is never triggered by import or implicitly by extraction.
 
-The same adapter exposes offline ordered-batch text encoding when the pinned checkpoint provides a text path aligned with the stored symbolic-music vectors. Readiness checks verify that capability, strict loading preserves prompt order, and the repository verifies compatible model identity and dimension before search. Semantic-axis aggregation remains the consumer's responsibility.
+The same adapter exposes offline ordered-batch text encoding when the pinned checkpoint provides a text path aligned with the stored symbolic-music vectors. The ordered, persistent text encoder is concept-agnostic and serves both retrieval paths. Semantic-axis and prototype aggregation remain responsibilities of their consuming modules. Readiness checks verify that capability, strict loading preserves prompt order, and the repository verifies compatible model identity and dimension before search.
 
 ### Embedding loader and normalizer
 
@@ -110,11 +115,19 @@ Migrations and paired relational/vector writes execute transactionally. Reproces
 
 The repository rejects incompatible schema versions, vector dimensions, and non-finite values before writing.
 
-The repository also accepts an arbitrary validated normalized query vector. It performs cosine KNN inside SQLite and returns stable distance-and-ID ordering with catalog metadata; it never loads the complete vector collection into Python.
+The repository also accepts an arbitrary validated normalized query vector. It performs cosine KNN inside SQLite and returns stable distance-and-ID ordering with catalog metadata. The repository exposes exact-model eligible and excluded row counts alongside catalog KNN results. Prototype retrieval uses a normalized mean-prompt direction for SQLite KNN and recovers the unrenormalized mean-cosine score outside the repository. This requires no schema migration and never loads the corpus into Python.
 
 ### Semantic-axis retrieval
 
 The semantic-axis-retrieval component accepts ordered `positive_prompts` and `negative_prompts` ensembles chosen by Claude. It validates equal cardinality between 3 and 5 and delegates one ordered text batch to the score-embeddings CLaMP adapter. Under ADR-0005, it verifies output order and model identity, L2-normalizes every prompt embedding, averages each pole's unit vectors, L2-normalizes both centroids, subtracts the negative centroid from the positive centroid, and L2-normalizes the resulting direction. Zero or non-finite prompts, centroids, and directions are rejected. The component queries the repository and returns exact prompt ensembles, aggregation and model provenance, ranking metadata, score identity, title, artist or composer, and work-creation date. Claude constructs semantic descriptions but never creates or manipulates numeric embeddings.
+
+### Dynamic prototype retrieval
+
+The prototype-retrieval component accepts a nonblank concept, 3–5 ordered equivalent prompts, and top_k from 1 through 100. It embeds all prompts in one CLaMP call, normalizes them independently, and computes their unnormalized mean c.
+
+Non-finite centroids and centroids with norm no greater than float32 machine epsilon are rejected. The component searches SQLite with c / ||c||, then converts each cosine distance d to the required mean-prompt similarity ||c|| × (1 - d). Results are ordered by descending score with stable embedding-ID ties and include model-ineligible exclusion accounting.
+
+The response presents `song_title` as its primary display identity while retaining technical identifiers and metadata. Scores are semantic alignment signals, not probabilities or definitive classifications.
 
 ### Pipeline CLI
 
@@ -146,6 +159,17 @@ Semantic-axis retrieval follows a separate query path:
 4. The repository performs cosine KNN through `sqlite-vec` with exact-model filtering and stable tie ordering.
 5. The tool returns catalog-shaped matches plus the exact prompt ensembles and model/query provenance.
 
+Prototype retrieval follows its own query path:
+
+1. Validate concept, ordered prompts, and top_k.
+2. Encode all prompts once with the persistent CLaMP worker.
+3. Verify order, dimension, finite values, and exact model identity.
+4. Normalize each prompt independently.
+5. Compute the unnormalized mean and reject a zero or near-zero norm.
+6. Query SQLite using the normalized mean direction.
+7. Recover each mean-cosine score using the centroid norm.
+8. Return descending scores with stable ID ties, title-first metadata, exact prompts, scoring definition, model provenance, and excluded count.
+
 A score never reaches CLaMP or SQLite without passing XML validation. A database transaction never commits one side of the relational/vector pair without the other.
 
 ## Technology stack
@@ -175,7 +199,7 @@ A score never reaches CLaMP or SQLite without passing XML validation. A database
 - SQLite extension loading is limited to the packaged `sqlite-vec` binary and disabled immediately afterward.
 - Default automated tests do not require the CLaMP repository, weights, network access, or accelerator hardware.
 - Query-time MCP retrieval requires explicit database, external-interpreter, and cache configuration and fails actionably when compatible text assets or stored model identity are unavailable.
-- Semantic-axis retrieval targets broad characteristics represented in CLaMP embeddings. Exact key, BPM, chord, note, and bar-level properties remain outside this workflow and should use deterministic analysis tools where available.
+- Use dynamic prototypes for independent high-level concepts, semantic axes for genuine bipolar continua, and symbolic-analysis tools for exact musical properties. Prototype retrieval supports one concept per call; fixed catalogues, multi-concept fusion, calibration, and pseudo-relevance feedback remain outside this architecture.
 - The SQLite database is local and embedded; distributed coordination and multi-user service semantics are not provided.
 
 ## Extension points
@@ -205,5 +229,15 @@ A score never reaches CLaMP or SQLite without passing XML validation. A database
 **Data concern:** Owns ordered prompt ensembles, ensemble and query provenance, prompt and centroid normalization, aggregation and contrast-vector construction, MCP error translation, and retrieval-result presentation. It does not own stored score vectors.
 
 **Dependencies:** Depends on score-embeddings for the ADR-0001 CLaMP runtime adapter and ADR-0003 SQLite repository, follows ADR-0005 for semantic-axis construction, and depends on the FastMCP registry for tool exposure.
+
+**Consumed by:** MCP clients, including Claude.
+
+### prototype-retrieval
+
+**Purpose:** Expose Claude-facing retrieval for one independent high-level musical concept using a dynamically generated prompt ensemble.
+
+**Data concern:** Owns ordered prompts, concept/query provenance, individual normalization, unrenormalized mean-cosine scoring, degenerate-centroid validation, exclusion semantics, MCP error translation, and title-first result presentation. It does not own durable score vectors.
+
+**Dependencies:** Depends on score-embeddings for ADR-0001 text encoding and ADR-0003 SQLite retrieval, follows ADR-0006 for prototype construction, and depends on the FastMCP registry.
 
 **Consumed by:** MCP clients, including Claude.

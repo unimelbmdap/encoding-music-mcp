@@ -103,7 +103,7 @@ FROM song_catalog;
 
 The view joins the production provenance table to the `sqlite-vec` index; it is not a second source of truth. The project repository API loads the extension automatically. A standalone `sqlite3` shell must load the packaged extension before querying the view. Use the Python or MCP APIs for vector search because they also validate vectors and filter results to the exact model identity.
 
-## Semantic-axis retrieval through Claude
+## Semantic retrieval through Claude
 
 Configure the MCP server process after the database and pinned CLaMP assets exist:
 
@@ -117,6 +117,14 @@ export ENCODING_MUSIC_CLAMP_TIMEOUT_SECONDS=3600                     # optional
 Claude can then call `search_songs_by_semantic_axis`. For “find the happiest songs,” it supplies 3–5 caption-like descriptions of joyful music and an equally sized, positionally matched ensemble describing sorrowful music. Each pair should share musical context and differ mainly in happiness. The application embeds the ordered batch with the same pinned CLaMP checkpoint as the scores, L2-normalizes every prompt before averaging, normalizes both centroids, and L2-normalizes `positive_centroid - negative_centroid` before cosine search inside SQLite. Claude never constructs or receives the numeric vectors.
 
 Only rows with the exact matching CLaMP commit, model revision, weight hash, and dimension are eligible. Results contain the complete ordered ensembles, aggregation and model provenance, distance, score identity, title, artist, and work-creation date. See [Semantic Axis Retrieval](../tools/semantic-axis-retrieval.md) for the full prompt contract.
+
+For one independent category without a necessary opposite, Claude calls
+`search_songs_by_prototype` with a concept label and 3–5 equivalent descriptions.
+The tool independently normalizes the prompt embeddings and reports each song's
+arithmetic mean cosine similarity to them. Use semantic-axis retrieval for a
+genuine continuum and symbolic tools for exact musical facts. See
+[Dynamic Prototype Retrieval](../tools/prototype-retrieval.md) for scoring,
+result interpretation, and the cold/warm timing command.
 
 ## Output layout
 

@@ -37,6 +37,7 @@ from .pipeline import (
 from .storage import (
     CatalogEmbedding,
     CatalogSimilarityResult,
+    CountedCatalogSimilarityResult,
     EmbeddingModelIdentity,
     EmbeddingRecord,
     EmbeddingRepository,
@@ -48,6 +49,7 @@ __all__ = [
     "ClampRuntimeConfig",
     "CatalogEmbedding",
     "CatalogSimilarityResult",
+    "CountedCatalogSimilarityResult",
     "ClampModelIdentity",
     "ConversionReport",
     "ConversionStatus",

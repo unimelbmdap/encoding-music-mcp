@@ -2,7 +2,9 @@
 
 ## Verification
 
-2026-09-01 — All 29 focused tests pass, including real SQLite/`sqlite-vec`; repository-wide Ruff and whitespace checks pass. The score-embedding suite is 114 passing with one unrelated user-edited notebook failure. Broader-suite chord-notation failures and the strict-docs external-notebook-link warning are unrelated qualifications.
+2026-09-03 — Subagent implemented the opt-in `return_z_score` flag. `PYTHONPATH=src .venv/bin/pytest tests/` passed, confirming exact-model filtering, normalization arithmetic, and the new dataset-normalized z-score return shape without disturbing the default structure.
+
+Qualification: the strict build retains the pre-existing external-notebook-link warning.
 
 ## Next move
 

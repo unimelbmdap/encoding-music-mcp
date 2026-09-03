@@ -119,6 +119,25 @@ encoding-music-mcp should work with any MCP-compatible client. The general confi
 
 Consult your MCP client's documentation for specific configuration instructions.
 
+## Semantic retrieval environment
+
+The two CLaMP retrieval tools require an already prepared embedding database and
+offline runtime. Add these variables to the server process (for Claude Desktop,
+use an `env` object beside `command` and `args`):
+
+```json
+"env": {
+  "ENCODING_MUSIC_EMBEDDINGS_DATABASE": "/absolute/path/score-embeddings.sqlite3",
+  "ENCODING_MUSIC_CLAMP_PYTHON": "/absolute/path/to/clamp-python",
+  "ENCODING_MUSIC_CLAMP_CACHE_DIR": "/absolute/path/to/clamp-cache",
+  "ENCODING_MUSIC_CLAMP_TIMEOUT_SECONDS": "3600"
+}
+```
+
+The cache and timeout entries are optional. These settings enable both
+`search_songs_by_semantic_axis` and `search_songs_by_prototype`; they never make
+the MCP server download model assets or generate corpus embeddings.
+
 ## Remote HTTP endpoint
 
 Clients that support remote Streamable HTTP can connect to:

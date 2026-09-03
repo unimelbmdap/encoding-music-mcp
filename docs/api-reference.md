@@ -10,6 +10,7 @@ Complete reference for all encoding-music-mcp tools.
 | `register_mei_file_from_path` | `file_path: str | None = None, filename: str | None = None` | `dict` registration status | [Docs](tools/uploads.md) |
 | `get_mei_metadata` | `filename: str` | `dict` with metadata | [Docs](tools/metadata.md) |
 | `search_songs_by_semantic_axis` | `positive_prompts: list[str], negative_prompts: list[str], limit: int = 10` | semantic-axis provenance and ranked catalog matches | [Docs](tools/semantic-axis-retrieval.md) |
+| `search_songs_by_prototype` | `concept: str, prompts: list[str], top_k: int = 10` | dynamic prototype provenance, eligibility counts, and ranked songs | [Docs](tools/prototype-retrieval.md) |
 | `analyze_key` | `filename: str` | `dict` with key info | [Docs](tools/key-analysis.md) |
 | `get_notes` | `filename: str` | `dict` with notes | [Docs](tools/intervals/notes.md) |
 | `get_melodic_intervals` | `filename: str` | `dict` with intervals | [Docs](tools/intervals/melodic.md) |
@@ -115,6 +116,25 @@ Search prepared whole-song CLaMP embeddings along a high-level semantic contrast
 **Returns**: Both ordered ensembles, aggregation and CLaMP model provenance, and vector-free matches containing embedding/score IDs, title, artist, work-creation date, and cosine distance.
 
 [Full Documentation ->](tools/semantic-axis-retrieval.md)
+
+### search_songs_by_prototype(concept, prompts, top_k=10)
+
+Search prepared whole-song CLaMP embeddings for one independent high-level
+concept. Claude supplies 3–5 equally specific descriptions of the same concept.
+The server independently normalizes them, averages their vectors, ranks in
+SQLite, and reports the exact arithmetic mean of the individual cosine
+similarities.
+
+**Parameters**:
+
+- `concept` (`str`): nonblank traceability label for one concept
+- `prompts` (`list[str]`): 3–5 ordered nonblank caption-like descriptions
+- `top_k` (`int`, optional): Number of results from 1 to 100 (default: 10)
+
+**Returns**: Exact inputs and model provenance, score definition and warning,
+exact-model eligibility counts, and title-first vector-free ranked results.
+
+[Full Documentation ->](tools/prototype-retrieval.md)
 
 ## Analysis Tools
 

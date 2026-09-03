@@ -14,11 +14,11 @@ The feature targets broad characteristics represented in CLaMP embeddings. It do
 | `src/encoding_music_mcp/tools/registry.py` | Query-only FastMCP tool registration |
 | `tests/test_semantic_axis_retrieval.py` | Unit coverage for the MCP contract, ensemble validation, normalization arithmetic, configuration, compatibility, result shape, and registration |
 | `tests/score_embeddings/test_semantic_axis_integration.py` | Offline boundary test with fake aligned CLaMP outputs and real SQLite/`sqlite-vec` retrieval |
-| `README.md`, `mkdocs.yml`, and `docs/` tool/operator references | Public API, navigation, setup, structure, and current semantic-axis usage documentation |
+| `README.md`, `mkdocs.yml`, and `docs/` tool/operator references | Public API, navigation, setup, structure, and an intuitive semantic-axis guide that progresses from the two-pole mental model through component ownership, cold/warm CLaMP loading, deterministic vector construction, SQLite ranking, and operational details |
 
 ## API surface
 
-`search_songs_by_semantic_axis(positive_prompts, negative_prompts, limit=10)` is the MCP-facing function. Both prompt arguments are `list[str]`, must contain 3–5 nonblank entries, and must have equal cardinality.
+`search_songs_by_semantic_axis(positive_prompts, negative_prompts, limit=10, return_z_score=False)` is the MCP-facing function. Both prompt arguments are `list[str]`, must contain 3–5 nonblank entries, and must have equal cardinality. When `return_z_score=True`, it retrieves all eligible vectors, calculates z-scores for all matches using `(raw - mean) / std`, and returns a `dict[str, float]` mapping song title to z-score for the top `limit` results.
 
 The former `search_songs_by_emotion` function, `emotion_retrieval.py` module, and emotion-named payload, configuration, result, match, provenance, error, and internal-runner symbols are replaced by semantic-axis names without compatibility aliases.
 
@@ -93,6 +93,12 @@ For each pole:
 
 The final direction is `positive_centroid - negative_centroid`. The tool rejects a zero or non-finite difference and L2-normalizes it once before repository search.
 
+## Operator documentation
+
+The semantic-axis guide begins with a non-mathematical “music on a ruler” mental model and a compact end-to-end workflow before introducing vector arithmetic. It distinguishes the responsibilities of the MCP client, the persistent CLaMP text worker, deterministic application code, and SQLite retrieval. A worked matched-prompt example explains why each positive prompt is paired with an equally detailed negative prompt, why individual vectors are normalized before aggregation, and how to interpret cosine distance.
+
+The same guide retains the exact tool contract, environment configuration, response shape, limitations, and actionable failure behavior. It also explains that the first compatible request lazily loads CLaMP while later requests reuse the resident worker; documentation does not imply that the query creates score embeddings, returns vectors, or performs deterministic note-level musical analysis.
+
 ## Configuration
 
 The MCP wrapper reads the existing database path, external CLaMP interpreter, optional cache path, and timeout from documented `ENCODING_MUSIC_*` environment variables at call time. No new environment variables are introduced. Imports remain side-effect free.
@@ -115,8 +121,10 @@ Depends on score-embeddings for `ClampRuntimeConfig`, ordered text encoding, mod
 - exact model-identity filtering in a mixed-model database
 - deterministic vector-free results with complete ensemble and aggregation provenance
 - offline integration using real SQLite/`sqlite-vec`, fake CLaMP output, and no network or model weights
+- documentation accuracy against the implemented positive-then-negative batch order, normalization sequence, exact-model filtering, cold/warm worker lifecycle, parameter names, response names, and cosine-distance interpretation
+- documentation rendering plus whitespace validation
 - focused, score-embedding, and full-suite pytest runs plus Ruff and whitespace validation
 
-Automated verification: all 29 focused semantic-axis unit and integration tests pass, including real SQLite/`sqlite-vec` retrieval. Repository-wide Ruff and whitespace checks pass. The score-embedding suite has 114 passing tests and one unrelated failure caused by a `%pip` cell in the user-modified Colab notebook. A broader run reached 97 passes before its eighth unrelated failure; the failures were the same notebook contract plus pre-existing chord-notation contract mismatches. The strict documentation build renders the site but rejects the pre-existing docs-to-notebook link because its target is outside the documentation tree.
+Automated verification: all 29 focused semantic-axis unit and integration tests pass, including real SQLite/`sqlite-vec` retrieval. Repository-wide Ruff and whitespace checks pass. The score-embedding suite has 114 passing tests and one unrelated failure caused by a `%pip` cell in the user-modified Colab notebook. A broader run reached 97 passes before its eighth unrelated failure; the failures were the same notebook contract plus pre-existing chord-notation contract mismatches. The intuitive operator-guide revision passes the non-strict MkDocs build and whitespace validation; the strict build renders the guide but still rejects the pre-existing docs-to-notebook link because its target is outside the documentation tree. Operator review confirmed all five accuracy, contract, usability, lifecycle, and example-field checks.
 
-Confirmed 2026-09-01
+Confirmed 2026-09-02

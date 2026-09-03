@@ -27,6 +27,8 @@ from .play_excerpt import load_audio_resource, play_excerpt
 from .uploads import register_mei_file_from_path
 from .performance import limit_analysis_concurrency, performant_analysis_tool
 from .semantic_axis_retrieval import search_songs_by_semantic_axis
+from .prototype_retrieval import search_songs_by_prototype
+from .combined_retrieval import search_songs_by_combined_criteria
 from .output_schemas import (
     LOAD_AUDIO_RESOURCE_OUTPUT_SCHEMA,
     MELODIC_NGRAM_HEATMAP_OUTPUT_SCHEMA,
@@ -48,6 +50,8 @@ from .visualisation.sonority_ngram_progress import plot_sonority_ngram_progress
 mcp.tool()(list_available_mei_files)
 mcp.tool()(register_mei_file_from_path)
 mcp.tool()(search_songs_by_semantic_axis)
+mcp.tool()(search_songs_by_prototype)
+mcp.tool()(search_songs_by_combined_criteria)
 mcp.tool()(get_mei_metadata)
 mcp.tool()(performant_analysis_tool(analyze_key))
 mcp.tool()(performant_analysis_tool(inspect_harmony))

@@ -178,6 +178,7 @@ For visualisation tools, use the matching nested locations:
 - `notation.py`: Verovio-based notation rendering
 - `play_excerpt.py`: Audio rendering and playback payloads
 - `semantic_axis_retrieval.py`: Query-only matched-prompt CLaMP semantic-axis search over a prepared catalog
+- `prototype_retrieval.py`: Query-only dynamic single-concept CLaMP prototype search over a prepared catalog
 - `visualisation/`: Visual summary tools and app payload builders
 
 ### Documentation Tools (`docs/tools/`)
@@ -194,7 +195,7 @@ For visualisation tools, use the matching nested locations:
 - `storage.py`: Transactional SQLite provenance/catalog storage and exact-model `sqlite-vec` similarity search
 - `pipeline.py`: Typed orchestration plus the standalone `encoding-music-embeddings` CLI
 
-Batch generation remains independent of `tools/registry.py`. The query-only `tools/semantic_axis_retrieval.py` consumer uses its public text-encoding and repository APIs.
+Batch generation remains independent of `tools/registry.py`. The query-only `tools/semantic_axis_retrieval.py` and `tools/prototype_retrieval.py` consumers use its public text-encoding and repository APIs.
 
 The operational `notebooks/score_embeddings_colab.ipynb` workflow installs one
 locally built project wheel, resolves its complete bundled MEI corpus, provisions

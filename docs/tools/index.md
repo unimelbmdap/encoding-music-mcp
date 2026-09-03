@@ -27,6 +27,7 @@ encoding-music-mcp provides a suite of tools for analyzing MEI files. Tools work
 | Tool | Purpose | Learn More |
 |------|---------|------------|
 | [`search_songs_by_semantic_axis`](semantic-axis-retrieval.md) | Rank a prepared song catalog along a matched-prompt CLaMP semantic contrast | [Documentation](semantic-axis-retrieval.md) |
+| [`search_songs_by_prototype`](prototype-retrieval.md) | Find songs aligned with one independent concept using a dynamic prompt ensemble | [Documentation](prototype-retrieval.md) |
 
 ### Analysis Tools
 
@@ -87,6 +88,7 @@ Tools for extracting descriptive information:
 ### Retrieval
 
 - **[search_songs_by_semantic_axis](semantic-axis-retrieval.md)**: Map matched prompt ensembles into an exact-model semantic-axis ranking
+- **[search_songs_by_prototype](prototype-retrieval.md)**: Rank exact-model catalog rows by mean similarity to one dynamic prompt ensemble
 
 ### Musical Analysis
 

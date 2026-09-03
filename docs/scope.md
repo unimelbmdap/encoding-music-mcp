@@ -17,6 +17,10 @@
 - Encode two ordered, equal-length ensembles of 3–5 caption-like semantic prompts using the CLaMP configuration aligned to stored score vectors.
 - L2-normalize every prompt embedding, average each pole's unit vectors, L2-normalize both centroids, construct the ordered positive-centroid-minus-negative-centroid direction, and L2-normalize that final direction.
 - Retrieve catalog-shaped semantic-axis matches through SQLite cosine search and expose this query-time workflow—but not batch embedding generation—as a Claude-facing MCP tool.
+- Dynamically encode one ordered ensemble of 3–5 equivalent prompts for an independent high-level musical concept without requiring a fixed prototype catalogue.
+- L2-normalize every prototype prompt independently and rank compatible songs by the arithmetic mean of their individual cosine similarities, without z-scores or prototype-centroid renormalization.
+- Execute prototype retrieval through exact-model SQLite KNN, preserve stable ordering, and report truthful model-ineligible exclusions.
+- Return `song_title` as the primary displayed prototype-result identity while retaining technical score and embedding provenance.
 - Apply schema migrations and database writes transactionally.
 - Provide a standalone batch CLI with configurable inputs, outputs, cache paths, database paths, logging, validation policy, and intermediate-file retention.
 
@@ -34,6 +38,10 @@
 - Operating a remote, distributed, or multi-user vector database service.
 - Providing a general-purpose database administration interface.
 - Retrieving exact key, BPM, individual chords, notes, or bar-level events through the semantic-axis embedding workflow.
+- Maintaining fixed or precalculated concept or prototype catalogues.
+- Multiple-concept score fusion, percentile calibration, z-score normalization, reciprocal-rank fusion, or combined-prototype ranking.
+- Pseudo-relevance feedback or automatic query expansion from initially retrieved songs.
+- Treating semantic alignment scores as probabilities or definitive genre or classification labels.
 
 ## Success criteria
 
@@ -73,3 +81,13 @@
   *Delivered by: score-embeddings, semantic-axis-retrieval*
 - MCP results include the exact ordered prompt ensembles, aggregation operation, model provenance, deterministic title, artist or composer, work date, score identity, and distance metadata.
   *Delivered by: semantic-axis-retrieval*
+- `search_songs_by_prototype` accepts a nonblank concept, 3–5 ordered nonblank prompts, and `top_k` from 1 through 100, with guidance that prompts remain equivalent in specificity and meaning.
+  *Delivered by: prototype-retrieval*
+- Prototype prompts are encoded once in order using the CLaMP identity compatible with stored score vectors, then normalized independently.
+  *Delivered by: score-embeddings, prototype-retrieval*
+- Prototype scoring equals the arithmetic mean of separate prompt cosine similarities; normalized-centroid SQLite KNN plus centroid-norm rescaling reproduces that score within documented floating-point tolerance and rejects zero or near-zero centroids.
+  *Delivered by: score-embeddings, prototype-retrieval*
+- Prototype ranking executes in SQLite with exact-model filtering, stable score-and-ID ordering, and no complete corpus scan in Python; `excluded_count` reports model-ineligible stored rows.
+  *Delivered by: score-embeddings, prototype-retrieval*
+- Prototype results return `song_title` as the primary display identity, technical IDs, metadata, concept, exact prompts, mean-cosine score definition, model provenance, excluded count, and a classification warning without exposing vectors.
+  *Delivered by: prototype-retrieval*

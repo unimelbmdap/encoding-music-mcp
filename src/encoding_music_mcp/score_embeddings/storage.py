@@ -147,6 +147,15 @@ class CatalogSimilarityResult:
     distance: float
 
 
+@dataclass(frozen=True, slots=True)
+class CountedCatalogSimilarityResult:
+    """Vector-free catalog matches with exact-model eligibility accounting."""
+
+    matches: tuple[CatalogSimilarityResult, ...]
+    eligible_count: int
+    excluded_count: int
+
+
 def embedding_logical_key(record: EmbeddingRecord) -> str:
     """Return the stable identity for one source/configuration/model tuple."""
     identity = {
@@ -336,7 +345,9 @@ class EmbeddingRepository:
                 )
             elif current_version == 1:
                 connection.execute("ALTER TABLE score_embeddings ADD COLUMN title TEXT")
-                connection.execute("ALTER TABLE score_embeddings ADD COLUMN artist TEXT")
+                connection.execute(
+                    "ALTER TABLE score_embeddings ADD COLUMN artist TEXT"
+                )
                 connection.execute(
                     "ALTER TABLE score_embeddings ADD COLUMN work_created_date TEXT"
                 )
@@ -481,7 +492,9 @@ class EmbeddingRepository:
             raise ValueError("limit must be positive")
         vector = _validated_query_vector(query, dimension=self.dimension)
         total_records = int(
-            self.connection.execute("SELECT count(*) FROM score_embeddings").fetchone()[0]
+            self.connection.execute("SELECT count(*) FROM score_embeddings").fetchone()[
+                0
+            ]
         )
         if total_records == 0:
             return []
@@ -553,6 +566,50 @@ class EmbeddingRepository:
                 model_identity=model_identity,
             )
         ]
+
+    def counted_catalog_similarity_search(
+        self,
+        query: np.ndarray | Sequence[float],
+        *,
+        limit: int = 10,
+        model_identity: EmbeddingModelIdentity,
+    ) -> CountedCatalogSimilarityResult:
+        """Return exact-model catalog KNN matches and compatibility counts.
+
+        ``excluded_count`` covers stored rows with different model provenance.
+        Invalid vectors never reach storage and therefore are not counted here.
+        """
+        counts = self.connection.execute(
+            """
+            SELECT
+                count(*) AS total_count,
+                count(*) FILTER (WHERE
+                    model_commit = ?
+                    AND model_revision = ?
+                    AND model_weight_sha256 = ?
+                    AND dimension = ?
+                ) AS eligible_count
+            FROM score_embeddings
+            """,
+            (
+                model_identity.model_commit,
+                model_identity.model_revision,
+                model_identity.model_weight_sha256,
+                model_identity.dimension,
+            ),
+        ).fetchone()
+        eligible_count = int(counts["eligible_count"])
+        total_count = int(counts["total_count"])
+        matches = self.catalog_similarity_search(
+            query,
+            limit=limit,
+            model_identity=model_identity,
+        )
+        return CountedCatalogSimilarityResult(
+            matches=tuple(matches),
+            eligible_count=eligible_count,
+            excluded_count=total_count - eligible_count,
+        )
 
     def similarity_search_by_id(
         self,

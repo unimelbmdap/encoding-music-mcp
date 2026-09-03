@@ -11,6 +11,7 @@ __all__ = [
     "register_uploaded_mei_from_path",
     "remove_uploaded_mei",
     "get_uploaded_mei_files",
+    "calculate_z_scores",
 ]
 
 _UPLOADS: dict[str, dict[str, Any]] = {}
@@ -177,3 +178,21 @@ def get_mei_collections() -> dict[str, list[str]]:
         "uploaded_mei_files": uploaded_files,
         "all_files": all_files,
     }
+
+
+def calculate_z_scores(raw_scores: list[float]) -> list[float]:
+    """Calculate the z-scores for a list of raw scores.
+    
+    Returns 0.0 for all items if the standard deviation is 0.
+    """
+    if not raw_scores:
+        return []
+    
+    import math
+    mean = sum(raw_scores) / len(raw_scores)
+    variance = sum((x - mean) ** 2 for x in raw_scores) / len(raw_scores)
+    std = math.sqrt(variance)
+    
+    if std == 0.0:
+        return [0.0 for _ in raw_scores]
+    return [(x - mean) / std for x in raw_scores]

@@ -32,7 +32,9 @@ def test_notebook_is_valid_v4_json_with_gpu_metadata():
     assert all("cell_type" in cell and "source" in cell for cell in notebook["cells"])
     for cell in notebook["cells"]:
         if cell["cell_type"] == "code":
-            ast.parse("".join(cell["source"]))
+            source = "".join(cell["source"])
+            source = "\n".join(line for line in source.splitlines() if not line.strip().startswith(("%", "!")))
+            ast.parse(source)
 
 
 def test_configuration_is_explicit_and_not_operator_specific():

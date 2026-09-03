@@ -14,6 +14,8 @@ They need both a typed Python API and a command-line workflow that can be automa
 
 Researchers and MCP clients also need to discover songs along high-level semantic directions rather than only from a known reference score. Relevant characteristics include mood or emotion, energy or arousal, genre or style character, atmosphere, and texture. Claude translates a request into two ordered, genuinely contrasting poles expressed as matched ensembles of short music descriptions. Compatible text encoding, prompt normalization, ensemble aggregation, contrast construction, validation, and ranking remain deterministic application behavior.
 
+Researchers and MCP clients also need to find music matching an independent high-level concept that has no meaningful opposite, such as jazz, piano, playful, pastoral, choral, or contrapuntal. Claude describes one concept with a dynamically generated ensemble of equivalent prompts. Compatible text encoding, individual normalization, mean-cosine scoring, validation, and ranking remain deterministic application behavior.
+
 ## Existing alternatives
 
 Researchers can run notebook cells that clone CLaMP, install dependencies, export files, and invoke extraction scripts. This is useful for experimentation but leaves dependency versions, model weights, cache ownership, error handling, output ordering, and storage semantics implicit.
@@ -35,12 +37,16 @@ The project provides a deterministic workflow that:
 - makes normalized embeddings available to vector-similarity queries through a SQLite vector extension; and
 - encodes two ordered, equal-length ensembles of 3–5 caption-like prompts in the same CLaMP space as the scores;
 - L2-normalizes each prompt embedding, averages each pole's unit vectors, L2-normalizes both centroids, and L2-normalizes the final positive-centroid-minus-negative-centroid direction;
+- encodes an ordered ensemble of 3–5 equivalent prompts for one independent concept;
+- normalizes each prototype prompt separately and ranks songs by the arithmetic mean of their prompt-level cosine similarities;
+- executes prototype ranking in SQLite without loading the corpus into Python;
+- returns title-first prototype results with concept, prompt, scoring, model, and exclusion provenance;
 - retrieves catalog-shaped matches through SQLite cosine search; and
 - exposes actionable logs and failures through typed Python and CLI interfaces.
 
 ## Boundaries
 
-This work does not introduce musical segmentation, phrase detection, model training, hosted inference, MCP-based batch embedding generation, a remote vector database service, or CLaMP-enabled container deployment. It exposes only query-time semantic-axis retrieval through MCP. This workflow is intended for broad musical characteristics represented in CLaMP embeddings, not exact key, BPM, chord, note, or bar-level properties.
+This work does not introduce musical segmentation, phrase detection, model training, hosted inference, MCP-based batch embedding generation, a remote vector database service, or CLaMP-enabled container deployment. MCP retrieval includes semantic axes for genuine bipolar continua and dynamic prototypes for independent high-level concepts. Exact key, BPM, note, chord, interval, progression, or bar-level requests remain the responsibility of deterministic symbolic-analysis tools.
 
 ## Constraints
 

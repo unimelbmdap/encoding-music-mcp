@@ -60,6 +60,7 @@ nav:
       - Uploads: tools/uploads.md
       - Metadata: tools/metadata.md
       - Semantic Axis Retrieval: tools/semantic-axis-retrieval.md
+      - Dynamic Prototype Retrieval: tools/prototype-retrieval.md
       - Key Analysis: tools/key-analysis.md
       - Notation: tools/notation.md
       - Visualisation:

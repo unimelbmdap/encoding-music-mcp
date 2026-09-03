@@ -117,9 +117,7 @@ def _upgrade_fixture_to_version_two(database: Path) -> None:
     connection = sqlite3.connect(database)
     connection.execute("ALTER TABLE score_embeddings ADD COLUMN title TEXT")
     connection.execute("ALTER TABLE score_embeddings ADD COLUMN artist TEXT")
-    connection.execute(
-        "ALTER TABLE score_embeddings ADD COLUMN work_created_date TEXT"
-    )
+    connection.execute("ALTER TABLE score_embeddings ADD COLUMN work_created_date TEXT")
     connection.execute("PRAGMA user_version = 2")
     connection.commit()
     connection.close()
@@ -455,6 +453,61 @@ def test_arbitrary_query_rejects_invalid_or_non_normalized_vectors(
         repository.upsert(_record())
         with pytest.raises(error, match=message):
             repository.similarity_search(query)
+
+
+def test_counted_catalog_search_reports_exact_model_eligibility(tmp_path: Path):
+    compatible_identity = ClampModelIdentity(
+        model_commit="compatible-commit",
+        model_revision="compatible-revision",
+        model_weight_sha256="compatible-weight",
+        dimension=768,
+    )
+    database = tmp_path / "embeddings.sqlite3"
+    with EmbeddingRepository(database) as repository:
+        compatible = repository.upsert(
+            replace(
+                _record("compatible", 0),
+                title="Compatible Song",
+                model_commit=compatible_identity.model_commit,
+                model_revision=compatible_identity.model_revision,
+                model_weight_sha256=compatible_identity.model_weight_sha256,
+            )
+        )
+        repository.upsert(_record("incompatible", 1))
+        counted = repository.counted_catalog_similarity_search(
+            _unit_vector(0),
+            limit=10,
+            model_identity=compatible_identity,
+        )
+        legacy = repository.catalog_similarity_search(
+            _unit_vector(0),
+            limit=10,
+            model_identity=compatible_identity,
+        )
+
+    assert counted.eligible_count == 1
+    assert counted.excluded_count == 1
+    assert counted.matches == tuple(legacy)
+    assert counted.matches[0].embedding_id == compatible.id
+    assert counted.matches[0].title == "Compatible Song"
+
+
+def test_counted_catalog_search_handles_empty_and_absent_identity(tmp_path: Path):
+    identity = ClampModelIdentity("absent", "absent", "absent", 768)
+    with EmbeddingRepository(tmp_path / "empty.sqlite3") as repository:
+        empty = repository.counted_catalog_similarity_search(
+            _unit_vector(0), model_identity=identity
+        )
+        repository.upsert(_record("incompatible"))
+        absent = repository.counted_catalog_similarity_search(
+            _unit_vector(0), model_identity=identity
+        )
+
+    assert empty.eligible_count == empty.excluded_count == 0
+    assert empty.matches == ()
+    assert absent.eligible_count == 0
+    assert absent.excluded_count == 1
+    assert absent.matches == ()
 
 
 def test_vector_insert_failure_rolls_back_relational_write(tmp_path: Path):

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Persist raw and normalized score embeddings with reproducibility evidence and catalog metadata, and provide local cosine-similarity retrieval under ADR-0003 and ADR-0004.
+Persist raw and normalized score embeddings with reproducibility evidence and catalog metadata, and provide local cosine-similarity retrieval for arbitrary normalized semantic query vectors under ADR-0003.
 
 ## Components
 
@@ -21,7 +21,7 @@ Database path is explicit. `sqlite-vec==0.1.9` is supplied by the optional `scor
 
 ## Integration points
 
-Consumes validated extraction results and serves persistence, catalog projection, score-to-score similarity, and arbitrary normalized query-vector search to the pipeline, semantic-axis retrieval, and Python callers.
+Consumes validated extraction results and serves persistence, catalog projection, score-to-score similarity, arbitrary normalized query-vector search, and exact-model eligibility accounting to the pipeline, semantic-axis retrieval, prototype retrieval, and Python callers.
 
 ## Testing
 
@@ -31,11 +31,15 @@ Consumes validated extraction results and serves persistence, catalog projection
 - Dimension and finite-value rejection
 - Cosine nearest-neighbor ordering without Python collection scans
 - Forward migration and round-trip behavior for nullable title, artist or composer, and work-creation date
-- Arbitrary normalized contrast-vector KNN with stable distance-and-ID ordering and catalog results
+- Arbitrary normalized semantic-query KNN with stable distance-and-ID ordering and catalog results
+- Exact-model eligible and excluded row counts for empty, all-compatible, mixed-model, and shorter-than-limit result sets
+- Compatibility of the existing vector-free `catalog_similarity_search` result contract
 
 Schema version 2 migrates version-1 databases in place by adding nullable `title`, `artist`, and `work_created_date` columns. Descriptive metadata updates on logical-key conflict but does not participate in the ADR-0003 identity. Query vectors must be finite, dimensionally valid, non-zero, and L2-normalized before SQLite search.
 
 Schema version 3 adds the `song_catalog` view with exactly `song_title`, `artist`, `date_created`, and normalized `vector_embedding`, while the relational and `sqlite-vec` tables remain authoritative. Exact model-identity predicates and the final limit execute inside SQLite.
+
+A typed counted-result API returns vector-free KNN matches with `eligible_count`, the number of rows matching the exact model commit, revision, weight hash, and dimension, and `excluded_count`, the total stored-row count minus that eligible count. The existing `catalog_similarity_search` list return remains stable for semantic-axis callers. Eligibility counting uses existing relational provenance and requires no schema migration.
 
 Verification: 19 focused real-`sqlite-vec` storage tests plus the combined boundary suite.
 

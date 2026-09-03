@@ -145,7 +145,7 @@ Run the separate score-embedding entry point with:
 uv run encoding-music-embeddings --help
 ```
 
-Batch generation is intentionally isolated from the MCP server. A prepared database can be searched through the query-only `search_songs_by_semantic_axis` MCP tool. See the [pipeline guide](docs/getting-started/clamp3-pipeline.md) for setup, extraction, database access, configuration, and similarity queries.
+Batch generation is intentionally isolated from the MCP server. A prepared database can be searched through the query-only `search_songs_by_semantic_axis` and `search_songs_by_prototype` MCP tools. See the [pipeline guide](docs/getting-started/clamp3-pipeline.md) for setup, extraction, database access, configuration, and similarity queries.
 
 ## Available Tools
 
@@ -193,6 +193,16 @@ Extract detailed metadata from a built-in MEI file.
 Search a prepared whole-song embedding catalog along a broad semantic contrast such as joyful–sorrowful, energetic–subdued, or bright–dark. Claude supplies two positionally matched ensembles of 3–5 caption-like prompts. The server normalizes every prompt embedding, averages and normalizes each pole, computes the normalized positive-minus-negative axis, and returns ranked title, artist, work-date, model, and aggregation metadata without exposing vectors.
 
 See [Semantic Axis Retrieval](docs/tools/semantic-axis-retrieval.md) for the prompt contract and required server environment variables.
+
+### `search_songs_by_prototype`
+
+Search a prepared whole-song embedding catalog for one independent concept such
+as jazz, piano-led, pastoral, or lo-fi production. Claude supplies 3–5 equivalent
+caption-like prompts. The server ranks exact-model rows by their arithmetic mean
+cosine similarity, returning title-first catalog metadata and no vectors.
+
+See [Dynamic Prototype Retrieval](docs/tools/prototype-retrieval.md) for prompt
+guidance, scoring, eligibility counts, timing, and configuration.
 
 ### `analyze_key`
 

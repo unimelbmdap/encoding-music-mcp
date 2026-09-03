@@ -42,7 +42,7 @@ This MCP server provides a comprehensive suite of tools for analyzing encoded mu
 
 - [Architecture](/docs/architecture.md) — Runtime and software architecture
 - [Problem Space](/docs/design/problem-space.md) — What the project solves and why
-- [Decision Log](/docs/adr/index.md) — Architectural Decision Records (3 accepted, 2 superseded)
+- [Decision Log](/docs/adr/index.md) — Architectural Decision Records (4 accepted, 2 superseded)
 
 ## Feature Modules
 
@@ -63,6 +63,13 @@ Expose Claude-facing ranking along broad musical semantic contrasts using matche
 
 - [semantic-axis-search](/docs/modules/semantic-axis-retrieval/semantic-axis-search/) [✓]
 - [Module Status](/docs/modules/semantic-axis-retrieval/module-status.md)
+
+### Prototype retrieval [⏸] · Review: ⏸
+
+Expose Claude-facing retrieval for one independent high-level musical concept using a dynamically generated prompt ensemble.
+
+- [dynamic-prototype-search](/docs/modules/prototype-retrieval/dynamic-prototype-search/) [⏸]
+- [Module Status](/docs/modules/prototype-retrieval/module-status.md)
 
 ## What is MCP?
 
