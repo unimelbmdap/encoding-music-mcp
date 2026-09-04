@@ -407,8 +407,13 @@ def test_environment_configuration_is_call_time_and_actionable(tmp_path: Path):
     assert config.clamp.cache_dir == (tmp_path / "model-cache").resolve()
     assert config.clamp.timeout_seconds == 12.5
 
+    # When DATABASE_ENV is omitted, it defaults to STATIC_DATABASE_PATH
+    default_env = {retrieval.CLAMP_PYTHON_ENV: sys.executable}
+    default_config = retrieval.config_from_environment(default_env)
+    assert default_config.database_path == retrieval.STATIC_DATABASE_PATH
+
     with pytest.raises(
-        retrieval.SemanticAxisRetrievalError, match=retrieval.DATABASE_ENV
+        retrieval.SemanticAxisRetrievalError, match=retrieval.CLAMP_PYTHON_ENV
     ):
         retrieval.config_from_environment({})
     with pytest.raises(retrieval.SemanticAxisRetrievalError, match="does not exist"):

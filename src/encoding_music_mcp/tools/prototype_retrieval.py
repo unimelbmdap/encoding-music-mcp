@@ -29,6 +29,9 @@ from ..score_embeddings import (
 from ..score_embeddings.clamp_extractor import CommandRunner
 
 DATABASE_ENV = "ENCODING_MUSIC_EMBEDDINGS_DATABASE"
+STATIC_DATABASE_PATH = (
+    Path(__file__).resolve().parent.parent / "resources" / "score-embeddings.sqlite"
+)
 CLAMP_PYTHON_ENV = "ENCODING_MUSIC_CLAMP_PYTHON"
 CLAMP_CACHE_ENV = "ENCODING_MUSIC_CLAMP_CACHE_DIR"
 CLAMP_TIMEOUT_ENV = "ENCODING_MUSIC_CLAMP_TIMEOUT_SECONDS"
@@ -202,18 +205,32 @@ def _required_path(environment: Mapping[str, str], name: str) -> Path:
     return Path(value).expanduser().absolute()
 
 
+def _resolve_database_path(environment: Mapping[str, str]) -> Path:
+    raw_path = environment.get(DATABASE_ENV, "").strip()
+    if raw_path:
+        path = Path(raw_path).expanduser().absolute()
+        if not path.is_file():
+            raise PrototypeRetrievalError(
+                f"Configured embedding database does not exist: {path} "
+                f"(from {DATABASE_ENV})"
+            )
+        return path
+    if not STATIC_DATABASE_PATH.is_file() and STATIC_DATABASE_PATH.with_suffix(".sqlite3").is_file():
+        return STATIC_DATABASE_PATH.with_suffix(".sqlite3")
+    if not STATIC_DATABASE_PATH.is_file():
+        raise PrototypeRetrievalError(
+            f"Embedding database does not exist: {STATIC_DATABASE_PATH}"
+        )
+    return STATIC_DATABASE_PATH
+
+
 def config_from_environment(
     environment: Mapping[str, str] | None = None,
 ) -> PrototypeSearchConfig:
     """Build query configuration from narrowly scoped environment variables."""
     values = os.environ if environment is None else environment
-    database_path = _required_path(values, DATABASE_ENV)
+    database_path = _resolve_database_path(values)
     python_executable = _required_path(values, CLAMP_PYTHON_ENV)
-    if not database_path.is_file():
-        raise PrototypeRetrievalError(
-            f"Configured embedding database does not exist: {database_path} "
-            f"(from {DATABASE_ENV})"
-        )
     if not python_executable.is_file():
         raise PrototypeRetrievalError(
             f"Configured CLaMP interpreter does not exist: {python_executable} "
@@ -266,7 +283,7 @@ def _validate_request(
     if isinstance(top_k, bool) or not isinstance(top_k, int):
         raise ValueError("top_k must be an integer")
     if not 1 <= top_k <= 100000:
-        raise ValueError(f"top_k must be between 1 and 100000")
+        raise ValueError("top_k must be between 1 and 100000")
     return concept.strip(), tuple(normalized_prompts)
 
 
