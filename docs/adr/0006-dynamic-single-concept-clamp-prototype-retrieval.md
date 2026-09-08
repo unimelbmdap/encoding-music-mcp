@@ -6,7 +6,7 @@ date: 2026-09-02
 scope: integration
 modules: [score-embeddings, prototype-retrieval]
 topics: [clamp3, cross-modal-retrieval, dynamic-prototypes, sqlite-vec, mcp]
-narrowed-by: [ADR-0007]
+narrowed-by: [ADR-0007, ADR-0008]
 ---
 
 ## Context

@@ -58,7 +58,7 @@ The FastMCP Client timing test closes resident retrieval and worker resources, i
 
 ## Integration points
 
-Depends on score-embeddings for ordered ADR-0001 CLaMP text encoding, canonical model identity, and ADR-0003 SQLite retrieval. It follows ADR-0006 for prompt normalization, score preservation, eligibility accounting, and result provenance. It registers with the existing FastMCP registry and shares the server's worker lifecycle without owning durable score vectors.
+Depends on score-embeddings for ordered ADR-0001 CLaMP text encoding, canonical model identity, ADR-0003 SQLite retrieval, and ADR-0008 `RetrievalService` / `PrototypeVector`. It follows ADR-0006 for prompt normalization, score preservation, eligibility accounting, and result provenance, and ADR-0008 for unified domain execution with z-index score standardisation so single scores are interpretable without corpus context. It registers with the existing FastMCP registry and shares the server's worker lifecycle without owning durable score vectors.
 
 Semantic-axis retrieval remains an independent sibling module. Public documentation routes independent concepts to this tool, genuine continua to `search_songs_by_semantic_axis`, and exact musical properties to symbolic-analysis tools.
 

@@ -9,7 +9,7 @@ Encoding Music MCP is a Python distribution with two coordinated runtime entry p
 
 Batch embedding generation is not registered as an MCP tool and is not included in the container deployment. Query-time retrieval consumes an explicitly configured database and external CLaMP runtime; neither retrieval tool installs assets, downloads models, or generates corpus embeddings.
 
-The CLaMP boundary follows ADR-0001, vector persistence follows ADR-0003, matched-prompt semantic axes follow ADR-0005, and dynamic single-concept prototypes follow ADR-0006.
+The CLaMP boundary follows ADR-0001, vector persistence follows ADR-0003, matched-prompt semantic axes follow ADR-0005, dynamic single-concept prototypes follow ADR-0006, opt-in z-scores follow ADR-0007, and composed weighted-vector retrieval follows ADR-0008.
 
 ## Runtime topology
 
@@ -19,23 +19,23 @@ MCP clients
     v
 FastMCP server --> existing tools, resources, prompts, and notation apps
     |
-    +--> semantic-axis retrieval
-    |        +--> matched positive/negative ensembles
-    |        +--> normalized centroid difference
+    +--> semantic-axis retrieval (delegates to RetrievalService)
     |
-    +--> prototype retrieval
-             +--> one dynamic 3–5 prompt ensemble
-             +--> independently normalized prompts
-             +--> unnormalized mean centroid and norm
-             +--> normalized-direction SQLite KNN
-             +--> mean-cosine score recovery
+    +--> prototype retrieval (delegates to RetrievalService)
+    |
+    +--> composed retrieval
+             +--> arbitrary mixture of prototypes and semantic axes
+             +--> single-batch prompt encoding via shared TextEncoder
+             +--> WeightedQuery baseline mean/std scaling (ADR-0008)
+             +--> single composite vector synthesis V_composed and offset C_composed
+             +--> single normalized-direction SQLite KNN
+             +--> exact combined z-score recovery: ||V|| * (1 - d) - C
 
-Both paths reuse:
-    pinned persistent CLaMP text encoder
-        |
-        v
-    SQLite/sqlite-vec catalog
-
+All retrieval paths reuse:
+    RetrievalService
+        +--> pinned persistent CLaMP TextEncoder (single-batch prompt encoding)
+        +--> SQLite/sqlite-vec EmbeddingRepository (fast baseline stats + KNN)
+```
 
 CLI or Python caller
     |
@@ -129,6 +129,18 @@ Non-finite centroids and centroids with norm no greater than float32 machine eps
 
 The response presents `song_title` as its primary display identity while retaining technical identifiers and metadata. Scores are semantic alignment signals, not probabilities or definitive classifications.
 
+### Composed retrieval and unified retrieval service
+
+Under ADR-0008, vector retrieval is unified into an object-oriented domain model (`QueryVector`, `PrototypeVector`, `SemanticAxisVector`, `WeightedQuery`, `ComposedQuery`, `TextEncoder`, `EmbeddingRepository`, `RetrievalService`, `SearchResult`).
+
+`RetrievalService` coordinates multi-criteria search:
+1. It aggregates all prompt texts across all sub-queries in a `ComposedQuery` and dispatches one single batch to `TextEncoder`, eliminating multiple subprocess IPC roundtrips and forward passes.
+2. It builds `PrototypeVector` and `SemanticAxisVector` instances.
+3. It obtains baseline dataset distribution statistics ($\mu_i, \sigma_i$) via `EmbeddingRepository` using a fast vectorized matrix product ($X \cdot V^T$).
+4. Each `WeightedQuery` scales its vector by $\frac{w_i}{\sigma_i}$ and records offset $\frac{w_i \mu_i}{\sigma_i}$.
+5. `ComposedQuery` produces a single composite vector $V_{\text{composed}} = \sum \frac{w_i}{\sigma_i} v_i$ and scalar offset $C_{\text{composed}} = \sum \frac{w_i \mu_i}{\sigma_i}$.
+6. `RetrievalService` executes a single SQLite KNN search with $q = V_{\text{composed}} / \|V_{\text{composed}}\|$ for the requested limit and recovers the exact combined z-score via $\|V_{\text{composed}}\| (1 - d) - C_{\text{composed}}$.
+
 ### Pipeline CLI
 
 A second console entry point uses `argparse` to expose setup, extraction, and similarity-query operations without changing the existing `encoding-music-mcp` command.
@@ -169,6 +181,18 @@ Prototype retrieval follows its own query path:
 6. Query SQLite using the normalized mean direction.
 7. Recover each mean-cosine score using the centroid norm.
 8. Return descending scores with stable ID ties, title-first metadata, exact prompts, scoring definition, model provenance, and excluded count.
+
+Composed retrieval follows a single-pass query path under ADR-0008:
+
+1. Validate composed query components (prototypes and/or axes) and positive weights.
+2. Collect all distinct prompt texts across all sub-queries and encode them in one batch using the resident CLaMP worker via `TextEncoder`.
+3. Construct component query vectors (`PrototypeVector`, `SemanticAxisVector`).
+4. Evaluate dataset baseline statistics $(\mu_i, \sigma_i)$ via `EmbeddingRepository` in a single vectorized pass.
+5. Compute adjusted component vectors $v'_i = \frac{w_i}{\sigma_i} v_i$ and offsets $\text{offset}_i = \frac{w_i \mu_i}{\sigma_i}$.
+6. Synthesize composite vector $V_{\text{composed}} = \sum v'_i$ and scalar offset $C_{\text{composed}} = \sum \text{offset}_i$.
+7. Query SQLite with the normalized composite direction $q = V_{\text{composed}} / \|V_{\text{composed}}\|$ for $k=\text{limit}$.
+8. Recover each combined z-score via $\|V_{\text{composed}}\| (1 - d) - C_{\text{composed}}$, and compute component z-scores for result reporting.
+9. Return ranked `SearchResult` instances with title-first display metadata and query provenance.
 
 A score never reaches CLaMP or SQLite without passing XML validation. A database transaction never commits one side of the relational/vector pair without the other.
 
@@ -214,13 +238,13 @@ A score never reaches CLaMP or SQLite without passing XML validation. A database
 
 ### score-embeddings
 
-**Purpose:** Convert complete symbolic scores into validated XML representations and reproducible CLaMP 3 embeddings, retain catalog metadata, encode compatible CLaMP text queries, and store vectors for retrieval.
+**Purpose:** Convert complete symbolic scores into validated XML representations and reproducible CLaMP 3 embeddings, retain catalog metadata, encode compatible CLaMP text queries, store vectors for retrieval, and host the unified vector retrieval domain model.
 
-**Data concern:** Owns score-processing identity, catalog metadata, standardized and validated XML artifacts, conversion evidence, compatible text/music model provenance, raw and normalized embedding vectors, arbitrary-vector search, database persistence, and run manifests.
+**Data concern:** Owns score-processing identity, catalog metadata, standardized and validated XML artifacts, conversion evidence, compatible text/music model provenance, raw and normalized embedding vectors, arbitrary-vector search, database persistence, run manifests, and the core retrieval domain (`QueryVector`, `TextEncoder`, `RetrievalService`, `SearchResult`).
 
 **Dependencies:** Depends on music21 and NumPy, the ADR-0001 external CLaMP runtime, and the ADR-0003 SQLite vector boundary. It does not depend on the FastMCP server or tool registry.
 
-**Consumed by:** The standalone batch CLI, typed Python callers, and semantic-axis-retrieval.
+**Consumed by:** The standalone batch CLI, typed Python callers, semantic-axis-retrieval, prototype-retrieval, and composed retrieval.
 
 ### semantic-axis-retrieval
 
@@ -228,7 +252,7 @@ A score never reaches CLaMP or SQLite without passing XML validation. A database
 
 **Data concern:** Owns ordered prompt ensembles, ensemble and query provenance, prompt and centroid normalization, aggregation and contrast-vector construction, MCP error translation, and retrieval-result presentation. It does not own stored score vectors.
 
-**Dependencies:** Depends on score-embeddings for the ADR-0001 CLaMP runtime adapter and ADR-0003 SQLite repository, follows ADR-0005 for semantic-axis construction, and depends on the FastMCP registry for tool exposure.
+**Dependencies:** Depends on score-embeddings for the ADR-0001 CLaMP runtime adapter, ADR-0003 SQLite repository, and ADR-0008 `RetrievalService`; follows ADR-0005 for semantic-axis construction, and depends on the FastMCP registry for tool exposure.
 
 **Consumed by:** MCP clients, including Claude.
 
@@ -238,6 +262,6 @@ A score never reaches CLaMP or SQLite without passing XML validation. A database
 
 **Data concern:** Owns ordered prompts, concept/query provenance, individual normalization, unrenormalized mean-cosine scoring, degenerate-centroid validation, exclusion semantics, MCP error translation, and title-first result presentation. It does not own durable score vectors.
 
-**Dependencies:** Depends on score-embeddings for ADR-0001 text encoding and ADR-0003 SQLite retrieval, follows ADR-0006 for prototype construction, and depends on the FastMCP registry.
+**Dependencies:** Depends on score-embeddings for ADR-0001 text encoding, ADR-0003 SQLite retrieval, and ADR-0008 `RetrievalService`; follows ADR-0006 for prototype construction, and depends on the FastMCP registry.
 
 **Consumed by:** MCP clients, including Claude.

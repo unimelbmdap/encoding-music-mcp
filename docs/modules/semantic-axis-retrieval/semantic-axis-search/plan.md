@@ -105,7 +105,7 @@ The MCP wrapper reads the existing database path, external CLaMP interpreter, op
 
 ## Integration points
 
-Depends on score-embeddings for `ClampRuntimeConfig`, ordered text encoding, model identity, the SQLite repository, and catalog projections. It registers with the existing FastMCP registry, consumes vectors transiently, and owns only ensemble/query provenance and result presentation.
+Depends on score-embeddings for `ClampRuntimeConfig`, ordered text encoding, model identity, the SQLite repository, catalog projections, and ADR-0008 `RetrievalService` / `SemanticAxisVector`. It registers with the existing FastMCP registry, consumes vectors transiently, and delegates to `RetrievalService` with z-index score standardisation so scores are interpretable without corpus context.
 
 ## Testing
 

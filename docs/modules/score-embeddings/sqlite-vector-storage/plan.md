@@ -21,7 +21,7 @@ Database path is explicit. `sqlite-vec==0.1.9` is supplied by the optional `scor
 
 ## Integration points
 
-Consumes validated extraction results and serves persistence, catalog projection, score-to-score similarity, arbitrary normalized query-vector search, and exact-model eligibility accounting to the pipeline, semantic-axis retrieval, prototype retrieval, and Python callers.
+Consumes validated extraction results and serves persistence, catalog projection, score-to-score similarity, arbitrary normalized query-vector search via `QueryVector`, vectorized baseline dataset statistics for z-index standardization (ADR-0008), and exact-model eligibility accounting to the pipeline, semantic-axis retrieval, prototype retrieval, composed retrieval, and Python callers.
 
 ## Testing
 

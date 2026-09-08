@@ -23,6 +23,7 @@
 - Return `song_title` as the primary displayed prototype-result identity while retaining technical score and embedding provenance.
 - Apply schema migrations and database writes transactionally.
 - Provide a standalone batch CLI with configurable inputs, outputs, cache paths, database paths, logging, validation policy, and intermediate-file retention.
+- Execute multi-criteria composed retrieval combining weighted prototype concepts and bipolar semantic axes with per-component dataset z-score standardization, synthesized into a single composite query vector.
 
 ## Current non-goals
 
@@ -39,7 +40,7 @@
 - Providing a general-purpose database administration interface.
 - Retrieving exact key, BPM, individual chords, notes, or bar-level events through the semantic-axis embedding workflow.
 - Maintaining fixed or precalculated concept or prototype catalogues.
-- Multiple-concept score fusion, percentile calibration, z-score normalization, reciprocal-rank fusion, or combined-prototype ranking.
+- Uncalibrated multiple-concept vector addition, percentile calibration, reciprocal-rank fusion, or fixed concept catalogues (composed multi-criteria retrieval requires explicit per-component z-score standardization under ADR-0007 and ADR-0008).
 - Pseudo-relevance feedback or automatic query expansion from initially retrieved songs.
 - Treating semantic alignment scores as probabilities or definitive genre or classification labels.
 
@@ -91,3 +92,5 @@
   *Delivered by: score-embeddings, prototype-retrieval*
 - Prototype results return `song_title` as the primary display identity, technical IDs, metadata, concept, exact prompts, mean-cosine score definition, model provenance, excluded count, and a classification warning without exposing vectors.
   *Delivered by: prototype-retrieval*
+- Composed multi-criteria retrieval combines weighted prototypes and semantic axes by standardizing each component query with its dataset mean and standard deviation, constructing a single composite search vector and scalar offset that reproduces exact dataset-normalized z-scores in a single vector search.
+  *Delivered by: score-embeddings, prototype-retrieval, semantic-axis-retrieval*

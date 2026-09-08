@@ -42,7 +42,7 @@ This MCP server provides a comprehensive suite of tools for analyzing encoded mu
 
 - [Architecture](/docs/architecture.md) — Runtime and software architecture
 - [Problem Space](/docs/design/problem-space.md) — What the project solves and why
-- [Decision Log](/docs/adr/index.md) — Architectural Decision Records (5 accepted, 2 superseded)
+- [Decision Log](/docs/adr/index.md) — Architectural Decision Records (6 accepted, 2 superseded)
 
 ## Feature Modules
 

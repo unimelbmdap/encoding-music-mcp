@@ -7,7 +7,7 @@ scope: integration
 modules: [score-embeddings, semantic-axis-retrieval]
 topics: [clamp3, cross-modal-retrieval, semantic-axis, prompt-ensembles, sqlite-vec, mcp]
 supersedes: [ADR-0004]
-narrowed-by: [ADR-0007]
+narrowed-by: [ADR-0007, ADR-0008]
 ---
 
 ## Context
