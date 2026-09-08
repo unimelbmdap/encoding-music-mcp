@@ -1131,3 +1131,35 @@ def config_to_dict(config: ClampRuntimeConfig) -> dict[str, object]:
     values["python_executable"] = str(config.python_executable)
     values["cache_dir"] = str(config.cache_dir)
     return values
+
+
+class TextEncoder:
+    """Shared text encoder coordinating with the persistent CLaMP worker."""
+
+    def __init__(self, config: ClampRuntimeConfig | None = None) -> None:
+        self.config = config
+
+    def encode(
+        self,
+        texts: Sequence[str],
+        config: ClampRuntimeConfig | None = None,
+        *,
+        runner: CommandRunner | None = None,
+        verify_setup: bool = True,
+    ) -> TextEmbeddingBatch:
+        """Encode ordered text descriptions into CLaMP embeddings."""
+        cfg = config or self.config
+        if cfg is None:
+            raise ClampExecutionError("ClampRuntimeConfig is required for text encoding")
+        return embed_clamp3_texts(texts, cfg, runner=runner, verify_setup=verify_setup)
+
+    def encode_batch(
+        self,
+        texts: Sequence[str],
+        config: ClampRuntimeConfig | None = None,
+        *,
+        runner: CommandRunner | None = None,
+        verify_setup: bool = True,
+    ) -> TextEmbeddingBatch:
+        """Encode all prompt strings in a single batch to maximize throughput."""
+        return self.encode(texts, config, runner=runner, verify_setup=verify_setup)

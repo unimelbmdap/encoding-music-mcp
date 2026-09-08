@@ -9,8 +9,9 @@ Complete reference for all encoding-music-mcp tools.
 | `list_available_mei_files` | None | `dict` with file lists | [Docs](tools/discovery.md) |
 | `register_mei_file_from_path` | `file_path: str | None = None, filename: str | None = None` | `dict` registration status | [Docs](tools/uploads.md) |
 | `get_mei_metadata` | `filename: str` | `dict` with metadata | [Docs](tools/metadata.md) |
-| `search_songs_by_semantic_axis` | `positive_prompts: list[str], negative_prompts: list[str], limit: int = 10` | semantic-axis provenance and ranked catalog matches | [Docs](tools/semantic-axis-retrieval.md) |
-| `search_songs_by_prototype` | `concept: str, prompts: list[str], top_k: int = 10` | dynamic prototype provenance, eligibility counts, and ranked songs | [Docs](tools/prototype-retrieval.md) |
+| `search_songs_by_semantic_axis` | `positive_prompts: list[str], negative_prompts: list[str], limit: int = 10, return_z_score: bool = True` | dataset-normalized z-scores or semantic-axis payload | [Docs](tools/semantic-axis-retrieval.md) |
+| `search_songs_by_prototype` | `concept: str, prompts: list[str], top_k: int = 10, return_z_score: bool = True` | dataset-normalized z-scores or dynamic prototype payload | [Docs](tools/prototype-retrieval.md) |
+| `search_songs_by_combined_criteria` | `prototypes: list[PrototypeQuery] \| None = None, semantic_axes: list[SemanticAxisQuery] \| None = None, limit: int = 10` | rich list of search results with z-index scores and component breakdowns | [Docs](tools/combined-retrieval.md) |
 | `analyze_key` | `filename: str` | `dict` with key info | [Docs](tools/key-analysis.md) |
 | `get_notes` | `filename: str` | `dict` with notes | [Docs](tools/intervals/notes.md) |
 | `get_melodic_intervals` | `filename: str` | `dict` with intervals | [Docs](tools/intervals/melodic.md) |
@@ -103,38 +104,59 @@ Extract metadata from MEI file header.
 
 ## Retrieval Tools
 
-### search_songs_by_semantic_axis(positive_prompts, negative_prompts, limit=10)
+> [!NOTE]
+> **LLM Presentation Guidance**: When presenting retrieval results to the user, Claude must stipulate that individual results might be incorrect, but usually the returned results are correct on average. Scores default to dataset-normalized z-scores measuring concept outlierness so a single score makes sense without context.
 
-Search prepared whole-song CLaMP embeddings along a high-level semantic contrast. Claude supplies two ordered, positionally matched ensembles of caption-like music descriptions; deterministic application code constructs a normalized positive-centroid-minus-negative-centroid direction and performs exact-model cosine retrieval inside SQLite.
+### search_songs_by_semantic_axis(positive_prompts, negative_prompts, limit=10, return_z_score=True)
+
+Search prepared whole-song CLaMP embeddings along a high-level semantic contrast. Claude supplies two ordered, positionally matched ensembles of caption-like music descriptions; deterministic application code constructs a normalized positive-centroid-minus-negative-centroid direction and performs exact-model retrieval inside SQLite. Defaults to dataset-normalized z-scores.
 
 **Parameters**:
 
 - `positive_prompts` (`list[str]`): 3–5 nonblank descriptions of the requested pole
 - `negative_prompts` (`list[str]`): equally many matched descriptions of the contrasting pole
 - `limit` (int, optional): Number of matches from 1 to 100 (default: 10)
+- `return_z_score` (bool, optional): When True (default), returns dataset-normalized z-scores mapping song title to score. When False, returns uncalibrated model provenance payload.
 
-**Returns**: Both ordered ensembles, aggregation and CLaMP model provenance, and vector-free matches containing embedding/score IDs, title, artist, work-creation date, and cosine distance.
+**Returns**: Dict mapping song title to dataset-normalized z-score (when `return_z_score=True`), or full provenance payload (when `return_z_score=False`).
 
 [Full Documentation ->](tools/semantic-axis-retrieval.md)
 
-### search_songs_by_prototype(concept, prompts, top_k=10)
+### search_songs_by_prototype(concept, prompts, top_k=10, return_z_score=True)
 
 Search prepared whole-song CLaMP embeddings for one independent high-level
 concept. Claude supplies 3–5 equally specific descriptions of the same concept.
-The server independently normalizes them, averages their vectors, ranks in
-SQLite, and reports the exact arithmetic mean of the individual cosine
-similarities.
+The server independently normalizes them, averages their vectors, and ranks in
+SQLite. Defaults to dataset-normalized z-scores.
 
 **Parameters**:
 
 - `concept` (`str`): nonblank traceability label for one concept
 - `prompts` (`list[str]`): 3–5 ordered nonblank caption-like descriptions
 - `top_k` (`int`, optional): Number of results from 1 to 100 (default: 10)
+- `return_z_score` (bool, optional): When True (default), returns dataset-normalized z-scores mapping song title to score. When False, returns uncalibrated model provenance payload.
 
-**Returns**: Exact inputs and model provenance, score definition and warning,
-exact-model eligibility counts, and title-first vector-free ranked results.
+**Returns**: Dict mapping song title to dataset-normalized z-score (when `return_z_score=True`), or full provenance payload (when `return_z_score=False`).
 
 [Full Documentation ->](tools/prototype-retrieval.md)
+
+### search_songs_by_combined_criteria(prototypes=None, semantic_axes=None, limit=10)
+
+Search prepared whole-song CLaMP embeddings by composing multiple independent
+prototype concepts and bipolar semantic axes with arbitrary weights under ADR-0008.
+Encodes all prompts across all components in a single batched inference pass, evaluates
+dataset baseline statistics, executes a single SQLite KNN search, and returns standardized
+z-indices.
+
+**Parameters**:
+
+- `prototypes` (`list[PrototypeQuery] | None`): List of prototype queries with `concept`, `prompts`, and `weight`
+- `semantic_axes` (`list[SemanticAxisQuery] | None`): List of semantic axis queries with `positive_prompts`, `negative_prompts`, and `weight`
+- `limit` (`int`, optional): Maximum number of ranked results to return (default: 10)
+
+**Returns**: Rich list of result dictionaries containing `rank`, `title`, `song_title`, `artist`, `work_created_date`, `score_id`, `embedding_id`, `score` (z-index), `component_scores`, and `score_definition`.
+
+[Full Documentation ->](tools/combined-retrieval.md)
 
 ## Analysis Tools
 

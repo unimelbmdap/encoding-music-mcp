@@ -13,6 +13,9 @@ The CLaMP boundary follows ADR-0001, vector persistence follows ADR-0003, matche
 
 ## Runtime topology
 
+> [!TIP]
+> For formal UML specifications (Class Diagrams, Sequence Diagrams, Component Architecture, and Pipeline State Diagrams), see **[docs/uml.md](uml.md)**.
+
 ```text
 MCP clients
     |

@@ -69,7 +69,9 @@ do not define a reliable direction.
 
 The response echoes the exact concept and ordered prompts, explains the score,
 warns that semantic alignment is not definitive classification, and includes
-exact CLaMP provenance. `eligible_count` counts rows made with that exact model;
+exact CLaMP provenance. When presenting results to the user, Claude stipulates
+that individual results might be incorrect, but usually the returned results are correct
+on average. `eligible_count` counts rows made with that exact model;
 `excluded_count` counts stored rows with different model provenance.
 
 Each vector-free result includes rank, `song_title` as the display identity,

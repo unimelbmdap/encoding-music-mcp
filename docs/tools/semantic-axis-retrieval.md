@@ -17,7 +17,9 @@ and the application asks SQLite which scores lie closest to the positive end.
 The tool is useful for broad characteristics represented in CLaMP embeddings,
 such as mood, energy, style, atmosphere, and texture.
 
-It is not a deterministic music-theory analyzer. Use the other analysis tools
+It is not a deterministic music-theory analyzer. When presenting results to
+the user, Claude stipulates that individual results might be incorrect, but
+usually the returned results are correct on average. Use the other analysis tools
 for exact key, BPM, chords, notes, or bar-level events.
 
 ## The workflow at a glance

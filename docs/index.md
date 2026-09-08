@@ -41,6 +41,7 @@ This MCP server provides a comprehensive suite of tools for analyzing encoded mu
 ## Project Design
 
 - [Architecture](/docs/architecture.md) — Runtime and software architecture
+- [UML Diagrams](/docs/uml.md) — Formal Component, Class, Sequence, and State diagrams
 - [Problem Space](/docs/design/problem-space.md) — What the project solves and why
 - [Decision Log](/docs/adr/index.md) — Architectural Decision Records (6 accepted, 2 superseded)
 
@@ -55,6 +56,7 @@ Convert complete symbolic scores into validated XML representations and reproduc
 - [sqlite-vector-storage](/docs/modules/score-embeddings/sqlite-vector-storage/) [✓]
 - [embedding-pipeline-cli](/docs/modules/score-embeddings/embedding-pipeline-cli/) [✓]
 - [gpu-extraction-notebook](/docs/modules/score-embeddings/gpu-extraction-notebook/) [✓]
+- [unified-vector-domain](/docs/modules/score-embeddings/unified-vector-domain/) [✓]
 - [Module Status](/docs/modules/score-embeddings/module-status.md)
 
 ### Semantic axis retrieval [✓] · Review: ⏸

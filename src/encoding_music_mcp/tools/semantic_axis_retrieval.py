@@ -447,7 +447,7 @@ def search_songs_by_semantic_axis(
     positive_prompts: list[str],
     negative_prompts: list[str],
     limit: int = 10,
-    return_z_score: bool = False,
+    return_z_score: bool = True,
 ) -> SemanticAxisSearchPayload | dict[str, float]:
     """Rank songs along a high-level semantic contrast using matched prompt ensembles.
 
@@ -484,6 +484,12 @@ def search_songs_by_semantic_axis(
 
     Do not invent an arbitrary opposite for a single category. For example, jazz and
     classical are only valid poles when the user explicitly requests that comparison.
+
+    Scores return by default as standardized z-indices measuring concept outlierness in
+    standard deviations from the dataset mean, so a single score makes sense without context.
+
+    LLM Presentation Guidance:
+    - When presenting results to the user, stipulate that individual results might be incorrect, but usually the returned results are correct on average.
     """
     if return_z_score:
         result = run_semantic_axis_search(

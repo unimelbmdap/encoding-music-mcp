@@ -12,6 +12,7 @@ Notes: Exercise bundled MEI through real standardization, `.xml` validation, MEI
 3. sqlite-vector-storage — ✓
 4. embedding-pipeline-cli — ✓
 5. gpu-extraction-notebook — ✓
+6. unified-vector-domain — ✓
 
 ## Module review
 

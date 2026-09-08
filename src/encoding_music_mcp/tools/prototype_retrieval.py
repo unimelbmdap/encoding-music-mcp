@@ -48,7 +48,8 @@ SCORE_DEFINITION = (
     "prototype prompts."
 )
 CLASSIFICATION_WARNING = (
-    "Scores indicate semantic alignment, not definitive classification."
+    "Scores indicate semantic alignment, not definitive classification. "
+    "Individual results might be incorrect, but usually the returned results are correct on average."
 )
 
 LOGGER = logging.getLogger(__name__)
@@ -425,7 +426,7 @@ def search_songs_by_prototype(
     concept: str,
     prompts: list[str],
     top_k: int = 10,
-    return_z_score: bool = False,
+    return_z_score: bool = True,
 ) -> PrototypeSearchPayload | dict[str, float]:
     """Rank songs for one independent high-level concept using prompt consensus.
 
@@ -437,6 +438,12 @@ def search_songs_by_prototype(
     Do not combine independent concepts in one call. Use semantic-axis retrieval
     for a genuine bipolar continuum and symbolic tools for exact key, BPM, notes,
     chords, intervals, progressions, or bar locations.
+
+    Scores return by default as standardized z-indices measuring concept outlierness in
+    standard deviations from the dataset mean, so a single score makes sense without context.
+
+    LLM Presentation Guidance:
+    - When presenting results to the user, stipulate that individual results might be incorrect, but usually the returned results are correct on average.
     """
     if return_z_score:
         # Fetch a large number of results to compute true z-scores across the dataset

@@ -202,6 +202,24 @@ def _validated_query_vector(
     return vector
 
 
+@dataclass(frozen=True, slots=True)
+class QueryVector:
+    """A validated query vector and its provenance."""
+
+    values: np.ndarray
+    dimension: int = EXPECTED_EMBEDDING_DIMENSION
+    model_identity: EmbeddingModelIdentity | None = None
+    query_type: str = "generic"
+    raw_norm: float = 1.0
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self,
+            "values",
+            _validated_query_vector(self.values, dimension=self.dimension),
+        )
+
+
 class EmbeddingRepository:
     """Own migrations and paired relational/vector embedding operations."""
 
@@ -479,7 +497,7 @@ class EmbeddingRepository:
 
     def similarity_search(
         self,
-        query: np.ndarray | Sequence[float],
+        query: QueryVector | np.ndarray | Sequence[float],
         *,
         limit: int = 10,
         model_identity: EmbeddingModelIdentity | None = None,
@@ -490,7 +508,12 @@ class EmbeddingRepository:
         """
         if limit <= 0:
             raise ValueError("limit must be positive")
-        vector = _validated_query_vector(query, dimension=self.dimension)
+        if isinstance(query, QueryVector):
+            vector = query.values
+            if model_identity is None and query.model_identity is not None:
+                model_identity = query.model_identity
+        else:
+            vector = _validated_query_vector(query, dimension=self.dimension)
         total_records = int(
             self.connection.execute("SELECT count(*) FROM score_embeddings").fetchone()[
                 0
@@ -545,7 +568,7 @@ class EmbeddingRepository:
 
     def catalog_similarity_search(
         self,
-        query: np.ndarray | Sequence[float],
+        query: QueryVector | np.ndarray | Sequence[float],
         *,
         limit: int = 10,
         model_identity: EmbeddingModelIdentity | None = None,
@@ -569,7 +592,7 @@ class EmbeddingRepository:
 
     def counted_catalog_similarity_search(
         self,
-        query: np.ndarray | Sequence[float],
+        query: QueryVector | np.ndarray | Sequence[float],
         *,
         limit: int = 10,
         model_identity: EmbeddingModelIdentity,
@@ -598,18 +621,103 @@ class EmbeddingRepository:
                 model_identity.dimension,
             ),
         ).fetchone()
-        eligible_count = int(counts["eligible_count"])
+        assert counts is not None
         total_count = int(counts["total_count"])
-        matches = self.catalog_similarity_search(
-            query,
-            limit=limit,
-            model_identity=model_identity,
+        eligible_count = int(counts["eligible_count"])
+        matches = tuple(
+            self.catalog_similarity_search(
+                query,
+                limit=limit,
+                model_identity=model_identity,
+            )
         )
         return CountedCatalogSimilarityResult(
-            matches=tuple(matches),
+            matches=matches,
             eligible_count=eligible_count,
-            excluded_count=total_count - eligible_count,
+            excluded_count=max(0, total_count - eligible_count),
         )
+
+    def get_corpus_matrix(
+        self,
+        *,
+        model_identity: EmbeddingModelIdentity | None = None,
+    ) -> tuple[tuple[StoredEmbedding, ...], np.ndarray]:
+        """Return all matching stored embeddings and an (N, dimension) L2-normalized float32 matrix."""
+        if model_identity is None:
+            rows = self.connection.execute(
+                "SELECT * FROM score_embeddings ORDER BY id"
+            ).fetchall()
+        else:
+            rows = self.connection.execute(
+                """
+                SELECT * FROM score_embeddings
+                WHERE model_commit = ?
+                  AND model_revision = ?
+                  AND model_weight_sha256 = ?
+                  AND dimension = ?
+                ORDER BY id
+                """,
+                (
+                    model_identity.model_commit,
+                    model_identity.model_revision,
+                    model_identity.model_weight_sha256,
+                    model_identity.dimension,
+                ),
+            ).fetchall()
+        if not rows:
+            return (), np.empty((0, self.dimension), dtype=np.float32)
+
+        embeddings = tuple(self._row_to_embedding(row) for row in rows)
+        raw_list = [emb.raw_embedding for emb in embeddings]
+        matrix = np.stack(raw_list).astype(np.float32)
+        norms = np.linalg.norm(matrix, axis=1, keepdims=True)
+        norms[norms == 0.0] = 1.0
+        normalized_matrix = matrix / norms
+        return embeddings, normalized_matrix
+
+    def compute_baseline_statistics(
+        self,
+        queries: Sequence[QueryVector | np.ndarray | Sequence[float]],
+        *,
+        model_identity: EmbeddingModelIdentity | None = None,
+    ) -> list[tuple[float, float]]:
+        """Compute (mean, std) of cosine similarities across the corpus for each query vector.
+
+        Uses a fast matrix multiplication against stored corpus embeddings.
+        """
+        if not queries:
+            return []
+
+        vectors = []
+        for q in queries:
+            if isinstance(q, QueryVector):
+                vectors.append(q.values)
+                if model_identity is None and q.model_identity is not None:
+                    model_identity = q.model_identity
+            else:
+                vectors.append(_validated_query_vector(q, dimension=self.dimension))
+
+        query_matrix = np.stack(vectors).astype(np.float32)
+        _, corpus_matrix = self.get_corpus_matrix(model_identity=model_identity)
+        if corpus_matrix.shape[0] == 0:
+            return [(0.0, 1.0) for _ in queries]
+
+        similarities = corpus_matrix @ query_matrix.T
+        for col_idx, q in enumerate(queries):
+            raw_norm = q.raw_norm if isinstance(q, QueryVector) else 1.0
+            if raw_norm != 1.0:
+                similarities[:, col_idx] *= raw_norm
+
+        means = similarities.mean(axis=0)
+        stds = similarities.std(axis=0, ddof=0)
+
+        results = []
+        for mean_val, std_val in zip(means, stds, strict=True):
+            std_float = float(std_val)
+            if std_float <= 1e-7:
+                std_float = 1.0
+            results.append((float(mean_val), std_float))
+        return results
 
     def similarity_search_by_id(
         self,
