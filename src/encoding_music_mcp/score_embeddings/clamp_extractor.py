@@ -425,7 +425,7 @@ class PersistentClampTextEncoder:
                 self._worker.close()
                 self._worker = None
             if self._worker is None:
-                check_clamp3_setup(config)
+                check_clamp3_setup(config, verify_checksum=False)
                 self._worker = _ClampTextWorker(config)
             try:
                 return self._worker.encode(texts, config.timeout_seconds)
@@ -759,6 +759,7 @@ def check_clamp3_setup(
     *,
     runner: CommandRunner = _run_command,
     require_offline_ready: bool = True,
+    verify_checksum: bool = True,
 ) -> ClampSetupResult:
     """Validate cached source, model, interpreter, and setup provenance."""
     if not config.manifest_path.is_file():
@@ -809,12 +810,13 @@ def check_clamp3_setup(
         )
     if not config.weight_path.is_file():
         raise ClampSetupError(f"CLaMP C2 weights are missing: {config.weight_path}")
-    actual_sha256 = _sha256_file(config.weight_path)
-    if actual_sha256 != config.weight_sha256:
-        raise ClampSetupError(
-            "CLaMP C2 weight checksum mismatch: "
-            f"expected {config.weight_sha256}, received {actual_sha256}"
-        )
+    if verify_checksum:
+        actual_sha256 = _sha256_file(config.weight_path)
+        if actual_sha256 != config.weight_sha256:
+            raise ClampSetupError(
+                "CLaMP C2 weight checksum mismatch: "
+                f"expected {config.weight_sha256}, received {actual_sha256}"
+            )
     _verify_interpreter(config, runner)
     return ClampSetupResult(
         checkout_dir=config.checkout_dir,

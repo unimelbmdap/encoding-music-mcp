@@ -1,0 +1,47 @@
+[project]
+name = "encoding-music-clamp-runtime"
+version = "0.1.0"
+requires-python = "==3.10.*"
+# Requirements from the CLaMP commit pinned in clamp_extractor.py.
+dependencies = [
+    "nnAudio==0.3.3",
+    "transformers==4.40.0",
+    "accelerate==0.34.0",
+    "scikit-learn==1.5.1",
+    "numpy==1.26.4",
+    "tqdm==4.66.5",
+    "unidecode==1.3.6",
+    "wandb==0.17.8",
+    "pillow==9.5.0",
+    "mido==1.3.0",
+    "samplings==0.1.7",
+    "abctoolkit==0.0.4",
+    "soundfile==0.12.1",
+]
+
+[project.optional-dependencies]
+cpu = ["torch==2.7.1", "torchvision==0.22.1", "torchaudio==2.7.1"]
+cu128 = ["torch==2.7.1", "torchvision==0.22.1", "torchaudio==2.7.1"]
+
+[tool.uv]
+package = false
+environments = [
+    "sys_platform == 'win32' and (platform_machine == 'AMD64' or platform_machine == 'x86_64')",
+    "sys_platform == 'linux' and platform_machine == 'x86_64'",
+]
+conflicts = [[{ extra = "cpu" }, { extra = "cu128" }]]
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu", extra = "cpu" }, { index = "pytorch-cu128", extra = "cu128" }]
+torchvision = [{ index = "pytorch-cpu", extra = "cpu" }, { index = "pytorch-cu128", extra = "cu128" }]
+torchaudio = [{ index = "pytorch-cpu", extra = "cpu" }, { index = "pytorch-cu128", extra = "cu128" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true

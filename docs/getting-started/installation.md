@@ -70,7 +70,7 @@ For development or if you want to modify the code:
 3. **Verify installation:**
 
     ```bash
-    uv run encoding-music-mcp
+    uv run --extra score-embeddings --locked encoding-music-mcp
     ```
 
 !!! note "Development Dependencies"

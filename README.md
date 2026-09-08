@@ -99,6 +99,20 @@ The CLaMP model runtime remains a separate Python 3.10 environment. See the [CLa
 ```
 
 **Method B: Using local clone**
+
+For semantic search, run this once from the clone before starting Claude:
+
+```bash
+uv run --extra score-embeddings --locked encoding-music-embeddings bootstrap
+```
+
+This prepares a locked CPU runtime in `.venv-clamp` and verified model assets in
+`.clamp3-cache`. Windows x64 and Linux x86_64 are supported. For a compatible
+NVIDIA GPU, add `--profile cu128`. Setup requires Git, network access, and several
+GB of disk space. Both retrieval tools then find these paths automatically;
+no CLaMP environment variables are needed. See the [setup guide](docs/getting-started/clamp3-pipeline.md)
+for profiles, requirements, and external-runtime overrides.
+
 ```json
 {
   "mcpServers": {
@@ -108,6 +122,9 @@ The CLaMP model runtime remains a separate Python 3.10 environment. See the [CLa
         "--directory",
         "/absolute/path/to/encoding-music-mcp",
         "run",
+        "--extra",
+        "score-embeddings",
+        "--locked",
         "encoding-music-mcp"
       ]
     }
@@ -136,7 +153,7 @@ The CLaMP model runtime remains a separate Python 3.10 environment. See the [CLa
 Run the server directly:
 
 ```bash
-uv run encoding-music-mcp
+uv run --extra score-embeddings --locked encoding-music-mcp
 ```
 
 Run the separate score-embedding entry point with:
@@ -307,7 +324,7 @@ The project uses uv for dependency management:
 uv sync
 
 # Run the server
-uv run encoding-music-mcp
+uv run --extra score-embeddings --locked encoding-music-mcp
 
 # Format code
 uv run ruff format .

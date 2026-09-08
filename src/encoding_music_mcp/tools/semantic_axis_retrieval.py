@@ -27,15 +27,18 @@ from ..score_embeddings import (
     embed_clamp3_texts,
 )
 from ..score_embeddings.clamp_extractor import CommandRunner
+from ..score_embeddings.runtime_config import (
+    CLAMP_PYTHON_ENV as CLAMP_PYTHON_ENV,
+    CLAMP_CACHE_ENV as CLAMP_CACHE_ENV,
+    CLAMP_TIMEOUT_ENV as CLAMP_TIMEOUT_ENV,
+    RuntimeConfigurationError,
+    resolve_clamp_runtime,
+)
 
 DATABASE_ENV = "ENCODING_MUSIC_EMBEDDINGS_DATABASE"
 STATIC_DATABASE_PATH = (
     Path(__file__).resolve().parent.parent / "resources" / "score-embeddings.sqlite"
 )
-CLAMP_PYTHON_ENV = "ENCODING_MUSIC_CLAMP_PYTHON"
-CLAMP_CACHE_ENV = "ENCODING_MUSIC_CLAMP_CACHE_DIR"
-CLAMP_TIMEOUT_ENV = "ENCODING_MUSIC_CLAMP_TIMEOUT_SECONDS"
-DEFAULT_TIMEOUT_SECONDS = 3600.0
 MIN_PROMPTS_PER_POLE = 3
 MAX_PROMPTS_PER_POLE = 5
 MAX_SEARCH_LIMIT = 100
@@ -217,16 +220,6 @@ def close_semantic_axis_retrieval_resources() -> None:
     _REPOSITORY_POOL.close()
 
 
-def _required_path(environment: Mapping[str, str], name: str) -> Path:
-    value = environment.get(name, "").strip()
-    if not value:
-        raise SemanticAxisRetrievalError(
-            f"Missing required environment variable {name}; configure it before "
-            "calling search_songs_by_semantic_axis"
-        )
-    return Path(value).expanduser().absolute()
-
-
 def _resolve_database_path(environment: Mapping[str, str]) -> Path:
     raw_path = environment.get(DATABASE_ENV, "").strip()
     if raw_path:
@@ -237,7 +230,10 @@ def _resolve_database_path(environment: Mapping[str, str]) -> Path:
                 f"(from {DATABASE_ENV})"
             )
         return path
-    if not STATIC_DATABASE_PATH.is_file() and STATIC_DATABASE_PATH.with_suffix(".sqlite3").is_file():
+    if (
+        not STATIC_DATABASE_PATH.is_file()
+        and STATIC_DATABASE_PATH.with_suffix(".sqlite3").is_file()
+    ):
         return STATIC_DATABASE_PATH.with_suffix(".sqlite3")
     if not STATIC_DATABASE_PATH.is_file():
         raise SemanticAxisRetrievalError(
@@ -252,39 +248,11 @@ def config_from_environment(
     """Build query configuration from narrowly scoped environment variables."""
     values = os.environ if environment is None else environment
     database_path = _resolve_database_path(values)
-    python_executable = _required_path(values, CLAMP_PYTHON_ENV)
-    if not python_executable.is_file():
-        raise SemanticAxisRetrievalError(
-            f"Configured CLaMP interpreter does not exist: {python_executable} "
-            f"(from {CLAMP_PYTHON_ENV})"
-        )
-
-    timeout_text = values.get(CLAMP_TIMEOUT_ENV, str(DEFAULT_TIMEOUT_SECONDS)).strip()
     try:
-        timeout_seconds = float(timeout_text)
-    except ValueError as exc:
-        raise SemanticAxisRetrievalError(
-            f"{CLAMP_TIMEOUT_ENV} must be a positive finite number; got "
-            f"{timeout_text!r}"
-        ) from exc
-    if not math.isfinite(timeout_seconds) or timeout_seconds <= 0:
-        raise SemanticAxisRetrievalError(
-            f"{CLAMP_TIMEOUT_ENV} must be a positive finite number; got "
-            f"{timeout_text!r}"
-        )
-
-    cache_text = values.get(CLAMP_CACHE_ENV, "").strip()
-    clamp_options: dict[str, Any] = {
-        "python_executable": python_executable,
-        "timeout_seconds": timeout_seconds,
-    }
-    if cache_text:
-        clamp_options["cache_dir"] = Path(cache_text)
-
-    return SemanticAxisSearchConfig(
-        database_path=database_path,
-        clamp=ClampRuntimeConfig(**clamp_options),
-    )
+        clamp = resolve_clamp_runtime(values)
+    except RuntimeConfigurationError as exc:
+        raise SemanticAxisRetrievalError(str(exc)) from exc
+    return SemanticAxisSearchConfig(database_path=database_path, clamp=clamp)
 
 
 def _validate_prompt_ensemble(value: object, name: str) -> tuple[str, ...]:
@@ -406,9 +374,7 @@ def run_semantic_axis_search(
     repository_factory: RepositoryFactory | None = None,
 ) -> SemanticAxisSearchResult:
     """Encode matched prompt ensembles and search compatible score vectors."""
-    positive, negative = _validate_request(
-        positive_prompts, negative_prompts, limit
-    )
+    positive, negative = _validate_request(positive_prompts, negative_prompts, limit)
     ordered_prompts = positive + negative
     embedding_options: dict[str, Any] = {}
     if runner is not None:
@@ -439,8 +405,7 @@ def run_semantic_axis_search(
         raise
     except Exception as exc:
         raise SemanticAxisRetrievalError(
-            f"Semantic-axis similarity search failed for "
-            f"{config.database_path}: {exc}"
+            f"Semantic-axis similarity search failed for {config.database_path}: {exc}"
         ) from exc
 
     retrieval_finished = time.perf_counter()
@@ -527,9 +492,9 @@ def search_songs_by_semantic_axis(
             config=config_from_environment(),
             limit=100000,
         )
-        
+
         from .helpers import calculate_z_scores
-        
+
         # Raw scores in semantic axis retrieval are 1.0 - match.distance ?
         # Wait, the match object has a `distance` attribute. The score is typically inverse of distance or similar.
         # But wait, in semantic axis, we want to score based on the projected distance along the axis.
@@ -537,7 +502,7 @@ def search_songs_by_semantic_axis(
         # Or wait, for semantic axis, it might project onto the axis. Let's see what distance is.
         # The prompt says "raw scores". Should I use 1.0 - distance? Or just distance?
         # Actually, let's use `1.0 - distance` or just raw distance.
-        # In PrototypeRetrieval, we did `centroid_norm * (1.0 - match.distance)`. 
+        # In PrototypeRetrieval, we did `centroid_norm * (1.0 - match.distance)`.
         # For semantic axis, it returns `matches` which have a `distance` attribute.
         # The z-score of `x` where x = 1 - distance, is the same as z-score of `x` (with opposite sign if we used distance directly).
         # We should use `1.0 - match.distance` as raw score for semantic axis? Or wait, let's just use `1.0 - match.distance` to be safe, since higher raw score should mean better match, so `1.0 - distance` makes sense. Wait, the prompt just says "calculate the raw scores for all of them". But `SemanticAxisMatch` only has `distance`.
@@ -545,10 +510,10 @@ def search_songs_by_semantic_axis(
         # Let's use `-match.distance` or just `1.0 - match.distance`.
         raw_scores = [1.0 - match.distance for match in result.matches]
         z_scores = calculate_z_scores(raw_scores)
-        
+
         scored_matches = list(zip(result.matches, z_scores))
         scored_matches.sort(key=lambda x: (x[1], -x[0].embedding_id), reverse=True)
-        
+
         top_matches = scored_matches[:limit]
         return {
             match.title if match.title is not None else match.score_id: z_score

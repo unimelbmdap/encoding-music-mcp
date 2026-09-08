@@ -79,7 +79,14 @@ as database identity.
 
 ## Configuration
 
-The server process needs a prepared database and offline CLaMP runtime:
+For a source checkout, run once:
+
+```bash
+uv run --extra score-embeddings --locked encoding-music-embeddings bootstrap
+```
+
+The server discovers `.venv-clamp`, `.clamp3-cache`, and the bundled database
+without environment variables. For external runtimes or to override these defaults:
 
 ```bash
 export ENCODING_MUSIC_EMBEDDINGS_DATABASE=/absolute/path/score-embeddings.sqlite3

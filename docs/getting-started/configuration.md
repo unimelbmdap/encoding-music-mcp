@@ -72,6 +72,9 @@ Choose the configuration method that matches your [installation method](installa
             "--directory",
             "/absolute/path/to/encoding-music-mcp",
             "run",
+            "--extra",
+            "score-embeddings",
+            "--locked",
             "encoding-music-mcp"
           ]
         }
@@ -121,9 +124,45 @@ Consult your MCP client's documentation for specific configuration instructions.
 
 ## Semantic retrieval environment
 
-The two CLaMP retrieval tools require an already prepared embedding database and
-offline runtime. Add these variables to the server process (for Claude Desktop,
-use an `env` object beside `command` and `args`):
+For a local clone on Windows x64 or Linux x86_64, run once from its root:
+
+```bash
+uv run --extra score-embeddings --locked encoding-music-embeddings bootstrap
+```
+
+CPU is the default. Add `--profile cu128` for a compatible NVIDIA CUDA 12.8 GPU.
+The [pipeline guide](clamp3-pipeline.md) covers prerequisites and troubleshooting.
+Use the local-clone launcher above, which includes `--extra score-embeddings --locked`.
+Both retrieval tools discover `.venv-clamp` and `.clamp3-cache` relative to the
+loaded source checkout, independently of Claude's working directory. They use the
+bundled embedding database by default. Restart Claude after setup or configuration changes.
+
+For example, after bootstrap on Windows:
+
+```json
+{
+  "mcpServers": {
+    "encoding-music-mcp": {
+      "command": "C:\\Users\\warda\\.local\\bin\\uv.exe",
+      "args": [
+        "--quiet",
+        "--directory",
+        "D:\\Work\\mcp_test\\encoding-music-mcp",
+        "run",
+        "--extra",
+        "score-embeddings",
+        "--locked",
+        "encoding-music-mcp"
+      ]
+    }
+  }
+}
+```
+
+Adjust the executable and checkout paths for your machine.
+
+For an externally provisioned runtime or an installed package, an `env` object
+beside `command` and `args` overrides discovery:
 
 ```json
 "env": {
@@ -134,9 +173,13 @@ use an `env` object beside `command` and `args`):
 }
 ```
 
-The cache and timeout entries are optional. These settings enable both
-`search_songs_by_semantic_axis` and `search_songs_by_prototype`; they never make
-the MCP server download model assets or generate corpus embeddings.
+Every setting is optional for a bootstrapped checkout. Invalid interpreter overrides
+raise an error instead of silently using the local environment. An explicit external
+interpreter uses the repository cache if present; otherwise it retains the platform
+user-cache default. Set the cache override too when using a different prepared cache.
+These settings enable both `search_songs_by_semantic_axis` and
+`search_songs_by_prototype`; imports and queries never install packages, download
+model assets, or generate corpus embeddings.
 
 ## Remote HTTP endpoint
 
@@ -156,7 +199,7 @@ simple browser or uptime check.
 You can also run the server directly without an MCP client (useful for testing):
 
 ```bash
-uv run encoding-music-mcp
+uv run --extra score-embeddings --locked encoding-music-mcp
 ```
 
 This starts the server and listens for MCP connections via stdio.

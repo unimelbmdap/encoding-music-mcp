@@ -237,6 +237,77 @@ def test_worker_receive_enforces_timeout_and_terminates(monkeypatch):
     assert closed == [True]
 
 
+def test_worker_releases_checkpoint_before_device_transfer_and_warmup(monkeypatch):
+    import weakref
+    from types import SimpleNamespace
+    from unittest.mock import Mock
+
+    tensors = []
+    stages = []
+
+    def load_checkpoint(*args, **kwargs):
+        tensor = np.ones(3, dtype=np.float32)
+        tensors.append(weakref.ref(tensor))
+        return {"model": {"weight": tensor}}
+
+    def load_state(state, *, strict):
+        assert strict is True
+        assert tensors[0]() is state["weight"]
+        stages.append("loaded")
+
+    model = Mock()
+    # A Mock would retain the checkpoint in its recorded call arguments.
+    model.load_state_dict = load_state
+
+    def transfer(device):
+        assert tensors[0]() is None, "checkpoint still retained during transfer"
+        stages.append("transferred")
+        return model
+
+    def warmup(self, texts):
+        assert tensors[0]() is None, "checkpoint still retained during warm-up"
+        stages.append("warmed")
+
+    model.to.side_effect = transfer
+    torch = Mock()
+    torch.cuda.is_available.return_value = False
+    torch.load.side_effect = load_checkpoint
+    monkeypatch.setitem(sys.modules, "torch", torch)
+    monkeypatch.setitem(sys.modules, "transformers", Mock())
+    monkeypatch.setitem(
+        sys.modules, "utils", SimpleNamespace(CLaMP3Model=Mock(return_value=model))
+    )
+    monkeypatch.setattr(
+        clamp_text_worker,
+        "_load_config",
+        lambda _: SimpleNamespace(
+            MAX_TEXT_LENGTH=128,
+            TEXT_MODEL_NAME="test-model",
+            AUDIO_HIDDEN_SIZE=768,
+            AUDIO_NUM_LAYERS=12,
+            MAX_AUDIO_LENGTH=128,
+            M3_HIDDEN_SIZE=768,
+            PATCH_NUM_LAYERS=12,
+            PATCH_LENGTH=512,
+            CLAMP3_LOAD_M3=False,
+        ),
+    )
+    monkeypatch.setattr(clamp_text_worker.TextRuntime, "encode", warmup)
+    # Runtime initialization prepends the external checkout to the import path.
+    monkeypatch.setattr(sys, "path", list(sys.path))
+
+    clamp_text_worker.TextRuntime(
+        {
+            "checkout_dir": "test-checkout",
+            "weight_path": "test-checkpoint",
+            "expected_dimension": 768,
+        }
+    )
+
+    assert stages == ["loaded", "transferred", "warmed"]
+    model.eval.assert_called_once()
+
+
 def test_setup_is_idempotent_and_records_pinned_symbolic_runtime(tmp_path: Path):
     payload = b"test c2 weights"
     source_weight = tmp_path / "source-weight.pth"
@@ -532,8 +603,8 @@ def test_embed_texts_preserves_order_and_uses_safe_offline_command(tmp_path: Pat
     command, cwd, environment, timeout = calls[0]
     assert command[:2] == [str(config.python_executable), str(extract)]
     assert command[-1] == "--get_global"
-    assert command[2].endswith("/input")
-    assert command[3].endswith("/output")
+    assert Path(command[2]).name == "input"
+    assert Path(command[3]).name == "output"
     assert "joy" not in command and "sad" not in command
     assert cwd == extract.parent
     assert timeout == 17.0

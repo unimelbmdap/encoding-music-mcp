@@ -21,6 +21,23 @@ from .resources import registry as _resources_registry  # noqa: E402, F401
 from .prompts import registry as _prompts_registry  # noqa: E402, F401
 
 
+def _prewarm_clamp_worker_async() -> None:
+    """Pre-warm the CLaMP worker in a background thread if the runtime is configured."""
+    import threading
+
+    def _warm() -> None:
+        try:
+            from .tools.semantic_axis_retrieval import config_from_environment
+            from .score_embeddings.clamp_extractor import _PERSISTENT_TEXT_ENCODER
+
+            cfg = config_from_environment()
+            _PERSISTENT_TEXT_ENCODER.encode(("warmup", "contrast"), cfg.clamp)
+        except Exception:
+            pass
+
+    threading.Thread(target=_warm, name="clamp-prewarm", daemon=True).start()
+
+
 def main():
     """Entry point for the MCP server.
 
@@ -29,6 +46,7 @@ def main():
     - "http": Remote HTTP server for deployment behind reverse proxy
     """
     transport = os.environ.get("MCP_TRANSPORT", "stdio")
+    _prewarm_clamp_worker_async()
 
     try:
         if transport == "http":

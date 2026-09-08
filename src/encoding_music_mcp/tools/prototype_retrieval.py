@@ -27,15 +27,18 @@ from ..score_embeddings import (
     embed_clamp3_texts,
 )
 from ..score_embeddings.clamp_extractor import CommandRunner
+from ..score_embeddings.runtime_config import (
+    CLAMP_PYTHON_ENV as CLAMP_PYTHON_ENV,
+    CLAMP_CACHE_ENV as CLAMP_CACHE_ENV,
+    CLAMP_TIMEOUT_ENV as CLAMP_TIMEOUT_ENV,
+    RuntimeConfigurationError,
+    resolve_clamp_runtime,
+)
 
 DATABASE_ENV = "ENCODING_MUSIC_EMBEDDINGS_DATABASE"
 STATIC_DATABASE_PATH = (
     Path(__file__).resolve().parent.parent / "resources" / "score-embeddings.sqlite"
 )
-CLAMP_PYTHON_ENV = "ENCODING_MUSIC_CLAMP_PYTHON"
-CLAMP_CACHE_ENV = "ENCODING_MUSIC_CLAMP_CACHE_DIR"
-CLAMP_TIMEOUT_ENV = "ENCODING_MUSIC_CLAMP_TIMEOUT_SECONDS"
-DEFAULT_TIMEOUT_SECONDS = 3600.0
 MIN_PROMPTS = 3
 MAX_PROMPTS = 5
 MAX_TOP_K = 100
@@ -195,16 +198,6 @@ def close_prototype_retrieval_resources() -> None:
     _REPOSITORY_POOL.close()
 
 
-def _required_path(environment: Mapping[str, str], name: str) -> Path:
-    value = environment.get(name, "").strip()
-    if not value:
-        raise PrototypeRetrievalError(
-            f"Missing required environment variable {name}; configure it before "
-            "calling search_songs_by_prototype"
-        )
-    return Path(value).expanduser().absolute()
-
-
 def _resolve_database_path(environment: Mapping[str, str]) -> Path:
     raw_path = environment.get(DATABASE_ENV, "").strip()
     if raw_path:
@@ -215,7 +208,10 @@ def _resolve_database_path(environment: Mapping[str, str]) -> Path:
                 f"(from {DATABASE_ENV})"
             )
         return path
-    if not STATIC_DATABASE_PATH.is_file() and STATIC_DATABASE_PATH.with_suffix(".sqlite3").is_file():
+    if (
+        not STATIC_DATABASE_PATH.is_file()
+        and STATIC_DATABASE_PATH.with_suffix(".sqlite3").is_file()
+    ):
         return STATIC_DATABASE_PATH.with_suffix(".sqlite3")
     if not STATIC_DATABASE_PATH.is_file():
         raise PrototypeRetrievalError(
@@ -230,36 +226,11 @@ def config_from_environment(
     """Build query configuration from narrowly scoped environment variables."""
     values = os.environ if environment is None else environment
     database_path = _resolve_database_path(values)
-    python_executable = _required_path(values, CLAMP_PYTHON_ENV)
-    if not python_executable.is_file():
-        raise PrototypeRetrievalError(
-            f"Configured CLaMP interpreter does not exist: {python_executable} "
-            f"(from {CLAMP_PYTHON_ENV})"
-        )
-    timeout_text = values.get(CLAMP_TIMEOUT_ENV, str(DEFAULT_TIMEOUT_SECONDS)).strip()
     try:
-        timeout_seconds = float(timeout_text)
-    except ValueError as exc:
-        raise PrototypeRetrievalError(
-            f"{CLAMP_TIMEOUT_ENV} must be a positive finite number; got "
-            f"{timeout_text!r}"
-        ) from exc
-    if not math.isfinite(timeout_seconds) or timeout_seconds <= 0:
-        raise PrototypeRetrievalError(
-            f"{CLAMP_TIMEOUT_ENV} must be a positive finite number; got "
-            f"{timeout_text!r}"
-        )
-    cache_text = values.get(CLAMP_CACHE_ENV, "").strip()
-    options: dict[str, Any] = {
-        "python_executable": python_executable,
-        "timeout_seconds": timeout_seconds,
-    }
-    if cache_text:
-        options["cache_dir"] = Path(cache_text)
-    return PrototypeSearchConfig(
-        database_path=database_path,
-        clamp=ClampRuntimeConfig(**options),
-    )
+        clamp = resolve_clamp_runtime(values)
+    except RuntimeConfigurationError as exc:
+        raise PrototypeRetrievalError(str(exc)) from exc
+    return PrototypeSearchConfig(database_path=database_path, clamp=clamp)
 
 
 def _validate_request(
@@ -475,21 +446,23 @@ def search_songs_by_prototype(
             config=config_from_environment(),
             top_k=100000,
         )
-        
+
         from .helpers import calculate_z_scores
-        
+
         raw_scores = [match.score for match in result.results]
         z_scores = calculate_z_scores(raw_scores)
-        
+
         # Combine matches with their z-scores
         scored_matches = list(zip(result.results, z_scores))
-        
+
         # Sort by z-score descending, tie-breaking on embedding_id
         scored_matches.sort(key=lambda x: (x[1], -x[0].embedding_id), reverse=True)
-        
+
         top_matches = scored_matches[:top_k]
         return {
-            match.song_title if match.song_title is not None else match.score_id: z_score
+            match.song_title
+            if match.song_title is not None
+            else match.score_id: z_score
             for match, z_score in top_matches
         }
 

@@ -145,15 +145,22 @@ prepared offline runtime; a query never downloads assets or runs setup.
 
 ## Configuration
 
-The MCP server process requires:
+For a local source checkout, prepare the runtime once:
+
+```bash
+uv run --extra score-embeddings --locked encoding-music-embeddings bootstrap
+```
+
+The tool discovers `.venv-clamp`, `.clamp3-cache`, and the bundled database without
+configuration. Optional environment overrides are:
 
 - `ENCODING_MUSIC_EMBEDDINGS_DATABASE`
 - `ENCODING_MUSIC_CLAMP_PYTHON`
-
-Optional overrides are:
-
 - `ENCODING_MUSIC_CLAMP_CACHE_DIR`
 - `ENCODING_MUSIC_CLAMP_TIMEOUT_SECONDS`
+
+An external runtime or installed package requires an explicit interpreter path.
+See [Configuration](../getting-started/configuration.md) for precedence and the Claude launcher.
 
 The database, CLaMP runtime, model assets, and score embeddings must be prepared
 before retrieval. The tool does not download assets, generate score embeddings,
@@ -161,7 +168,7 @@ or add score data to the database.
 
 ## Measuring cold and warm timing
 
-With the environment variables above pointing to a prepared offline runtime,
+After bootstrap, or with overrides pointing to a prepared offline runtime,
 measure one cold search followed by warm searches with:
 
 ```bash

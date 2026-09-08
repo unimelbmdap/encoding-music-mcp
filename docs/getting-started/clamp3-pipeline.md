@@ -4,21 +4,67 @@ The optional score-embedding workflow processes complete symbolic scores. It sta
 
 Batch generation remains separate from the MCP server and does not segment scores, produce MIDI, or run inside the project's Docker deployment. A query-only MCP tool can search a prepared local database using matched prompt ensembles for an ordered semantic contrast.
 
-## Prerequisites
+## Clone → setup → run
 
-- Python 3.12 or newer and uv for this project
-- The optional `score-embeddings` dependency set
-- Git and network access during the explicit setup operation
-- A separately provisioned Python 3.10 CLaMP environment with a compatible PyTorch installation
-- Approximately 3 GB or more of cache space for the checkout, symbolic C2 checkpoint, and transitive model assets
-
-Install the project-side dependencies:
+For a source checkout on **Windows x64 or Linux x86_64**, install uv and Git,
+then run these commands from the repository root:
 
 ```bash
-uv sync --extra score-embeddings
+uv run --extra score-embeddings --locked encoding-music-embeddings bootstrap
+uv run --extra score-embeddings --locked encoding-music-mcp
 ```
 
-CLaMP's PyTorch build is hardware-specific. Provision its Python 3.10 environment using the [upstream CLaMP 3 instructions](https://github.com/sanderwood/clamp3), then pass that environment's Python executable to this pipeline. The pipeline verifies the environment but does not install PyTorch.
+Bootstrap creates `.venv-clamp` with Python **3.10.16**, synchronizes its separate
+committed dependency lock, and calls the existing pinned model setup into
+`.clamp3-cache`. The MCP server retains its own Python 3.12+ environment. The
+bundled embedding database is ready for retrieval; bootstrap does not regenerate it.
+
+Choose exactly one profile:
+
+| Profile | Command suffix | Runtime |
+| --- | --- | --- |
+| CPU (default) | `--profile cpu` | PyTorch 2.7.1 CPU wheels; no GPU required |
+| NVIDIA GPU | `--profile cu128` | PyTorch 2.7.1 CUDA 12.8 wheels; compatible NVIDIA GPU and driver required |
+
+Both profiles pin torchvision 0.22.1, torchaudio 2.7.1, upstream CLaMP dependencies,
+and their transitive dependencies in
+[`clamp_runtime/uv.lock`](../../src/encoding_music_mcp/score_embeddings/clamp_runtime/uv.lock).
+The [PyTorch wheel profiles](https://pytorch.org/get-started/previous-versions/#v271)
+and [CLaMP requirements](https://github.com/sanderwood/clamp3/blob/9016d2b0c8d12d1aa79c2e0ab201e6822bdc83a8/requirements.txt)
+are the sources for these selections. CUDA setup executes a small tensor operation
+before model downloads so an incompatible driver or unavailable device fails early.
+
+Initial setup needs network access, several GB of free disk space for Python,
+dependencies, model weights and download caches, and sufficient RAM to load the model.
+The C2 checkpoint alone is about 2.52 GB. CPU inference can be slow. Use
+`--timeout SECONDS` to increase the default 3600-second limit per setup operation.
+
+Rerun the same bootstrap command after a failed setup or a dependency-lock update;
+it reuses the environment and valid downloads. To change profiles, rerun with the
+new profile; uv synchronizes the environment to that profile's locked packages.
+Restart Claude after bootstrap, especially when changing profiles. Virtual
+environments are local machine artifacts: bootstrap each clone on its target OS
+rather than copying `.venv-clamp` between machines.
+
+Both retrieval tools use explicit environment overrides first, then the local
+runtime/cache beside the source checkout. No per-machine CLaMP paths are needed
+in Claude's config. A missing local runtime or incomplete local cache produces the
+bootstrap command in its error. See [Configuration](configuration.md) for the full
+Claude launcher, including `--extra score-embeddings --locked`.
+
+Bootstrap is currently limited to the two platforms above. Other platforms and
+installed wheels can still use a separately provisioned CLaMP environment as below.
+
+## External-runtime prerequisites
+
+- Python 3.12 or newer and uv for the MCP project
+- The optional `score-embeddings` dependency set (`uv sync --extra score-embeddings --locked`)
+- Git and network access during explicit setup
+- A separately provisioned Python 3.10 CLaMP environment with compatible PyTorch
+
+Provision that environment using the [upstream CLaMP 3 instructions](https://github.com/sanderwood/clamp3),
+then pass its interpreter to `setup`. This lower-level command verifies the environment
+and prepares assets but does not install PyTorch; `bootstrap` performs both stages.
 
 ## Pinned model setup
 
@@ -105,7 +151,8 @@ The view joins the production provenance table to the `sqlite-vec` index; it is 
 
 ## Semantic retrieval through Claude
 
-Configure the MCP server process after the database and pinned CLaMP assets exist:
+Bootstrapped source checkouts need no environment variables. To override their defaults
+or use an external runtime, configure the server process after preparing the database and assets:
 
 ```bash
 export ENCODING_MUSIC_EMBEDDINGS_DATABASE=/absolute/path/score-embeddings.sqlite3

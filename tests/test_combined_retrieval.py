@@ -140,7 +140,9 @@ def test_weighted_combination_mocked(tmp_path):
     semantic_axis_retrieval.close_semantic_axis_retrieval_resources()
 
 def test_real_embeddings_combination(tmp_path):
-    db_path = Path("src/encoding_music_mcp/resources/score-embeddings.sqlite3").resolve()
+    db_path = Path("src/encoding_music_mcp/resources/score-embeddings.sqlite").resolve()
+    if not db_path.is_file():
+        db_path = Path("src/encoding_music_mcp/resources/score-embeddings.sqlite3").resolve()
     if not db_path.is_file():
         db_path = Path("src/encoding_music_mcp/score_embeddings/colab-verification/score-embeddings.sqlite3").resolve()
     

@@ -131,7 +131,7 @@ We recommend:
 ### Running the Server Locally
 
 ```bash
-uv run encoding-music-mcp
+uv run --extra score-embeddings --locked encoding-music-mcp
 ```
 
 ## Questions?

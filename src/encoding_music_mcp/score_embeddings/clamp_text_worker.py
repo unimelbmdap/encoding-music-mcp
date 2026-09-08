@@ -57,6 +57,9 @@ class TextRuntime:
         clamp_utils = importlib.import_module("utils")
         self.max_length = int(config.MAX_TEXT_LENGTH)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        if self.device.type == "cpu":
+            import os
+            torch.set_num_threads(min(8, os.cpu_count() or 4))
 
         started = time.perf_counter()
         self.tokenizer = AutoTokenizer.from_pretrained(
@@ -93,6 +96,10 @@ class TextRuntime:
         if not isinstance(state, dict):
             raise RuntimeError("CLaMP checkpoint does not contain a model state dictionary")
         self.model.load_state_dict(state, strict=True)
+        # load_state_dict copies the tensors into the model. Release both
+        # references to the multi-GB checkpoint before device transfer and
+        # warm-up, otherwise startup holds two complete models in memory.
+        del state, checkpoint
         self.model.to(self.device).eval()
         checkpoint_loaded = time.perf_counter()
 

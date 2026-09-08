@@ -25,3 +25,14 @@ The hardware-specific CLaMP/PyTorch environment remains separate from the Python
 ## Alternatives considered
 
 Considered installing CLaMP into the MCP environment; rejected because its documented Python and PyTorch stack is heavyweight and independently versioned. Considered first-use downloads; rejected because extraction must be deterministic and offline-capable. Considered vendoring CLaMP and its weights; rejected because of size, provenance, and upgrade burden.
+
+
+## Repository-local bootstrap extension (2026-09-06)
+
+The explicit `encoding-music-embeddings bootstrap` command now provisions the separate
+Python 3.10.16 environment in `.venv-clamp` using a committed runtime lock and a CPU
+or CUDA 12.8 profile, then invokes the existing setup into `.clamp3-cache`. This
+extends setup-time provisioning without changing the separate-runtime decision.
+The lower-level `setup --clamp-python` interface remains supported. Query-time
+resolution honors environment overrides, then discovers repository-local artifacts;
+imports and queries still perform no installation or downloads.

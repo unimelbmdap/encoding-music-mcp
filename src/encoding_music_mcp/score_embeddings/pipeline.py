@@ -534,6 +534,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--log-level", default="INFO")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
+    bootstrap_parser = subparsers.add_parser(
+        "bootstrap",
+        help="Install the locked local CLaMP runtime and prepare model assets",
+    )
+    bootstrap_parser.add_argument("--profile", choices=("cpu", "cu128"), default="cpu")
+    bootstrap_parser.add_argument("--timeout", type=float, default=3600.0)
+
     setup_parser = subparsers.add_parser("setup", help="Prepare pinned CLaMP assets")
     setup_parser.add_argument("--clamp-python", required=True, type=Path)
     setup_parser.add_argument("--cache-dir", type=Path)
@@ -583,8 +590,15 @@ def cli(argv: Sequence[str] | None = None) -> int:
         parser.error(f"invalid log level: {args.log_level}")
     logging.basicConfig(level=level, format="%(levelname)s %(name)s: %(message)s")
     try:
-        if args.command == "setup":
-            result = setup_clamp3(_runtime_from_args(args))
+        if args.command in {"bootstrap", "setup"}:
+            if args.command == "bootstrap":
+                from .bootstrap import bootstrap_clamp3
+
+                result = bootstrap_clamp3(
+                    profile=args.profile, timeout_seconds=args.timeout
+                )
+            else:
+                result = setup_clamp3(_runtime_from_args(args))
             print(
                 json.dumps(
                     {
