@@ -107,8 +107,11 @@ uv run --extra score-embeddings --locked encoding-music-embeddings bootstrap
 ```
 
 This prepares a locked CPU runtime in `.venv-clamp` and verified model assets in
-`.clamp3-cache`. Windows x64 and Linux x86_64 are supported. For a compatible
-NVIDIA GPU, add `--profile cu128`. Setup requires Git, network access, and several
+`.clamp3-cache`. Windows x64, Linux x86_64, and macOS on Apple Silicon are supported.
+On Mac, use a native arm64 terminal and uv/Python installation (not Rosetta);
+CLaMP runs on the CPU. Intel Macs are not supported by this pinned runtime.
+For a compatible NVIDIA GPU on Windows or Linux, add `--profile cu128`.
+Setup requires Git, network access, and several
 GB of disk space. Both retrieval tools then find these paths automatically;
 no CLaMP environment variables are needed. See the [setup guide](docs/getting-started/clamp3-pipeline.md)
 for profiles, requirements, and external-runtime overrides.

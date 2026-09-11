@@ -19,8 +19,19 @@ def host(tmp_path, monkeypatch):
     return tmp_path
 
 
-@pytest.mark.parametrize("profile", ["cpu", "cu128"])
-def test_bootstrap_is_locked_isolated_and_repeatable(host, monkeypatch, profile):
+@pytest.mark.parametrize(
+    "system,machine,profile",
+    [
+        ("linux", "x86_64", "cpu"),
+        ("linux", "x86_64", "cu128"),
+        ("darwin", "arm64", "cpu"),
+    ],
+)
+def test_bootstrap_is_locked_isolated_and_repeatable(
+    host, monkeypatch, system, machine, profile
+):
+    monkeypatch.setattr(bootstrap.sys, "platform", system)
+    monkeypatch.setattr(bootstrap.platform, "machine", lambda: machine)
     commands = []
     configs = []
     monkeypatch.setenv("UV_PROJECT_ENVIRONMENT", "/wrong/environment")
@@ -52,6 +63,30 @@ def test_bootstrap_is_locked_isolated_and_repeatable(host, monkeypatch, profile)
     probe = commands[1][0]
     assert probe[0] == str(configs[0].python_executable)
     assert ("torch.cuda.synchronize()" in probe[-1]) == (profile == "cu128")
+    if profile == "cpu":
+        assert "torch.ones(1, device='cpu')" in probe[-1]
+
+
+@pytest.mark.parametrize(
+    "machine,profile,message",
+    [
+        ("arm64", "cu128", "rerun bootstrap --profile cpu"),
+        ("x86_64", "cpu", "native arm64 Python"),
+    ],
+)
+def test_unsupported_mac_configuration_fails_before_install(
+    host, monkeypatch, machine, profile, message
+):
+    monkeypatch.setattr(bootstrap.sys, "platform", "darwin")
+    monkeypatch.setattr(bootstrap.platform, "machine", lambda: machine)
+    monkeypatch.setattr(
+        bootstrap.subprocess, "run", lambda *a, **k: pytest.fail("Installed packages")
+    )
+    monkeypatch.setattr(
+        bootstrap, "setup_clamp3", lambda _: pytest.fail("Downloaded models")
+    )
+    with pytest.raises(ClampSetupError, match=message):
+        bootstrap.bootstrap_clamp3(profile=profile)
 
 
 @pytest.mark.parametrize("failed_step", [1, 2])

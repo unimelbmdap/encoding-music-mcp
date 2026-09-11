@@ -21,20 +21,26 @@ dependencies = [
 
 [project.optional-dependencies]
 cpu = ["torch==2.7.1", "torchvision==0.22.1", "torchaudio==2.7.1"]
-cu128 = ["torch==2.7.1", "torchvision==0.22.1", "torchaudio==2.7.1"]
+cu128 = [
+    "torch==2.7.1; sys_platform != 'darwin'",
+    "torchvision==0.22.1; sys_platform != 'darwin'",
+    "torchaudio==2.7.1; sys_platform != 'darwin'",
+]
 
 [tool.uv]
 package = false
 environments = [
     "sys_platform == 'win32' and (platform_machine == 'AMD64' or platform_machine == 'x86_64')",
     "sys_platform == 'linux' and platform_machine == 'x86_64'",
+    "sys_platform == 'darwin' and platform_machine == 'arm64'",
 ]
 conflicts = [[{ extra = "cpu" }, { extra = "cu128" }]]
 
 [tool.uv.sources]
-torch = [{ index = "pytorch-cpu", extra = "cpu" }, { index = "pytorch-cu128", extra = "cu128" }]
-torchvision = [{ index = "pytorch-cpu", extra = "cpu" }, { index = "pytorch-cu128", extra = "cu128" }]
-torchaudio = [{ index = "pytorch-cpu", extra = "cpu" }, { index = "pytorch-cu128", extra = "cu128" }]
+# macOS uses the native Apple Silicon wheels from PyPI.
+torch = [{ index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" }, { index = "pytorch-cu128", extra = "cu128", marker = "sys_platform != 'darwin'" }]
+torchvision = [{ index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" }, { index = "pytorch-cu128", extra = "cu128", marker = "sys_platform != 'darwin'" }]
+torchaudio = [{ index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" }, { index = "pytorch-cu128", extra = "cu128", marker = "sys_platform != 'darwin'" }]
 
 [[tool.uv.index]]
 name = "pytorch-cpu"

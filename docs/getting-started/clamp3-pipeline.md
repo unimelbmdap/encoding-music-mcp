@@ -6,7 +6,7 @@ Batch generation remains separate from the MCP server and does not segment score
 
 ## Clone → setup → run
 
-For a source checkout on **Windows x64 or Linux x86_64**, install uv and Git,
+For a source checkout on **Windows x64, Linux x86_64, or macOS on Apple Silicon**, install uv and Git,
 then run these commands from the repository root:
 
 ```bash
@@ -23,8 +23,14 @@ Choose exactly one profile:
 
 | Profile | Command suffix | Runtime |
 | --- | --- | --- |
-| CPU (default) | `--profile cpu` | PyTorch 2.7.1 CPU wheels; no GPU required |
-| NVIDIA GPU | `--profile cu128` | PyTorch 2.7.1 CUDA 12.8 wheels; compatible NVIDIA GPU and driver required |
+| CPU (default) | `--profile cpu` | PyTorch 2.7.1; Windows/Linux CPU wheels or native macOS arm64 wheels; no GPU required |
+| NVIDIA GPU | `--profile cu128` | Windows/Linux only; PyTorch 2.7.1 CUDA 12.8 wheels; compatible NVIDIA GPU and driver required |
+
+On Apple Silicon, use a native arm64 terminal and uv/Python installation, not
+Rosetta. The same bootstrap command selects the macOS PyTorch wheels from PyPI
+and runs CLaMP on the CPU; Apple GPU (MPS) acceleration is not enabled.
+Intel Macs are not supported by the pinned PyTorch 2.7.1 runtime.
+Bootstrap rejects CUDA on Mac before installing packages or downloading models.
 
 Both profiles pin torchvision 0.22.1, torchaudio 2.7.1, upstream CLaMP dependencies,
 and their transitive dependencies in
@@ -52,8 +58,12 @@ in Claude's config. A missing local runtime or incomplete local cache produces t
 bootstrap command in its error. See [Configuration](configuration.md) for the full
 Claude launcher, including `--extra score-embeddings --locked`.
 
-Bootstrap is currently limited to the two platforms above. Other platforms and
+Bootstrap is limited to the platforms above. Other platforms and
 installed wheels can still use a separately provisioned CLaMP environment as below.
+
+The Apple Silicon bootstrap path is covered by automated platform tests and
+dependency-resolution checks. Full model setup and retrieval still need validation
+on a physical Mac; they have not been run on macOS in this development environment.
 
 ## External-runtime prerequisites
 

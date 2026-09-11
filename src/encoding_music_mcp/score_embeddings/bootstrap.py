@@ -47,12 +47,23 @@ def bootstrap_clamp3(
         raise ClampSetupError(f"Unsupported profile {profile!r}; choose {PROFILES}")
     if not math.isfinite(timeout_seconds) or timeout_seconds <= 0:
         raise ClampSetupError("Bootstrap timeout must be a positive finite number")
-    if sys.platform not in {"win32", "linux"} or platform.machine().lower() not in {
-        "amd64",
-        "x86_64",
-    }:
+    machine = platform.machine().lower()
+    apple_silicon = sys.platform == "darwin" and machine == "arm64"
+    if sys.platform == "darwin" and not apple_silicon:
         raise ClampSetupError(
-            "Bootstrap profiles support Windows x64 and Linux x86_64. "
+            "Mac bootstrap requires Apple Silicon and a native arm64 Python. "
+            "On Apple Silicon, run uv from a native terminal rather than Rosetta. "
+            "Intel Macs are not supported by the pinned PyTorch 2.7.1 runtime."
+        )
+    if apple_silicon and profile != "cpu":
+        raise ClampSetupError(
+            "CUDA is not available on macOS; rerun bootstrap --profile cpu."
+        )
+    if not apple_silicon and not (
+        sys.platform in {"win32", "linux"} and machine in {"amd64", "x86_64"}
+    ):
+        raise ClampSetupError(
+            "Bootstrap supports Windows x64, Linux x86_64, and macOS Apple Silicon (CPU). "
             "On other platforms provision CLaMP separately and use setup --clamp-python."
         )
     root = repository_root()
@@ -100,7 +111,8 @@ def bootstrap_clamp3(
         timeout=timeout_seconds,
     )
     # Fail before downloading multi-GB model assets if the selected GPU profile
-    # cannot actually execute on this host. A CPU wheel must stay CPU-only.
+    # cannot actually execute on this host. The CPU profile must have no CUDA
+    # runtime; macOS wheels can also include MPS, which CLaMP does not select.
     probe = (
         "import sys, torch; "
         f"assert sys.version_info[:3] == {tuple(map(int, PYTHON_VERSION.split('.')))!r}; "
@@ -115,7 +127,8 @@ def bootstrap_clamp3(
         )
     else:
         probe += (
-            "assert torch.version.cuda is None, 'Expected a CPU-only PyTorch wheel'"
+            "assert torch.version.cuda is None, 'Expected a PyTorch wheel without CUDA'; "
+            "assert torch.ones(1, device='cpu').add_(1).item() == 2"
         )
     _run([str(python), "-c", probe], root=root, environment=environment, timeout=60.0)
     print("Preparing and verifying pinned CLaMP model assets", file=sys.stderr)

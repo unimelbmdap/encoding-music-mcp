@@ -124,13 +124,16 @@ Consult your MCP client's documentation for specific configuration instructions.
 
 ## Semantic retrieval environment
 
-For a local clone on Windows x64 or Linux x86_64, run once from its root:
+For a local clone on Windows x64, Linux x86_64, or macOS on Apple Silicon,
+run once from its root:
 
 ```bash
 uv run --extra score-embeddings --locked encoding-music-embeddings bootstrap
 ```
 
-CPU is the default. Add `--profile cu128` for a compatible NVIDIA CUDA 12.8 GPU.
+CPU is the default and is the supported profile on Mac. Use a native arm64
+terminal and uv/Python installation on Apple Silicon, not Rosetta.
+Add `--profile cu128` for a compatible NVIDIA CUDA 12.8 GPU on Windows or Linux.
 The [pipeline guide](clamp3-pipeline.md) covers prerequisites and troubleshooting.
 Use the local-clone launcher above, which includes `--extra score-embeddings --locked`.
 Both retrieval tools discover `.venv-clamp` and `.clamp3-cache` relative to the
