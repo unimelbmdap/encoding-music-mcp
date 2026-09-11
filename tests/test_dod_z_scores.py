@@ -2,7 +2,7 @@ from pathlib import Path
 import numpy as np
 
 from encoding_music_mcp.tools import prototype_retrieval as retrieval
-from encoding_music_mcp.score_embeddings import (
+from encoding_music_mcp.tools.score_embeddings import (
     CatalogSimilarityResult,
     CountedCatalogSimilarityResult,
     TextEmbeddingBatch,

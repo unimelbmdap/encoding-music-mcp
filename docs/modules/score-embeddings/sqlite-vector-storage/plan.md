@@ -8,7 +8,7 @@ Persist raw and normalized score embeddings with reproducibility evidence and ca
 
 | File | Purpose |
 |---|---|
-| `src/encoding_music_mcp/score_embeddings/storage.py` | Schema migration, transactional repository, upsert, lookup, and similarity search |
+| `src/encoding_music_mcp/tools/score_embeddings/storage.py` | Schema migration, transactional repository, upsert, lookup, and similarity search |
 | `tests/score_embeddings/test_storage.py` | Real SQLite and sqlite-vec persistence coverage |
 
 ## Schema

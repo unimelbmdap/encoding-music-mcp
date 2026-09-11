@@ -5,9 +5,9 @@ from types import SimpleNamespace
 
 import pytest
 
-from encoding_music_mcp.score_embeddings import bootstrap
-from encoding_music_mcp.score_embeddings.clamp_extractor import ClampSetupError
-from encoding_music_mcp.score_embeddings.pipeline import cli
+from encoding_music_mcp.tools.score_embeddings import bootstrap
+from encoding_music_mcp.tools.score_embeddings.clamp_extractor import ClampSetupError
+from encoding_music_mcp.tools.score_embeddings.pipeline import cli
 
 
 @pytest.fixture

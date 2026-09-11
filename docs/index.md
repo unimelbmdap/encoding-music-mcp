@@ -41,7 +41,6 @@ This MCP server provides a comprehensive suite of tools for analyzing encoded mu
 ## Project Design
 
 - [Architecture](/docs/architecture.md) — Runtime and software architecture
-- [UML Diagrams](/docs/uml.md) — Formal Component, Class, Sequence, and State diagrams
 - [Problem Space](/docs/design/problem-space.md) — What the project solves and why
 - [Decision Log](/docs/adr/index.md) — Architectural Decision Records (6 accepted, 2 superseded)
 

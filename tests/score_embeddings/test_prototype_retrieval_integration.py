@@ -12,7 +12,7 @@ from unittest.mock import patch
 import numpy as np
 import pytest
 
-from encoding_music_mcp.score_embeddings import (
+from encoding_music_mcp.tools.score_embeddings import (
     ClampModelIdentity,
     ClampRuntimeConfig,
     EmbeddingRecord,
@@ -20,7 +20,7 @@ from encoding_music_mcp.score_embeddings import (
     TextEmbeddingBatch,
     embed_clamp3_texts,
 )
-from encoding_music_mcp.score_embeddings.clamp_extractor import (
+from encoding_music_mcp.tools.score_embeddings.clamp_extractor import (
     CLAMP_C2_WEIGHT_SHA256,
     CLAMP_COMMIT,
     CLAMP_EXPECTED_DIMENSION,

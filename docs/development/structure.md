@@ -21,6 +21,12 @@ encoding-music-mcp/
 |       |   |-- notation.py                 # Notation display (Verovio)
 |       |   |-- play_excerpt.py             # Audio playback
 |       |   |-- semantic_axis_retrieval.py  # Matched-prompt CLaMP catalog search
+|       |   |-- score_embeddings/           # Whole-score embedding and retrieval support
+|       |   |   |-- __init__.py
+|       |   |   |-- music_processing.py     # Standardize, export XML, validate
+|       |   |   |-- clamp_extractor.py      # CLaMP setup and subprocess adapter
+|       |   |   |-- storage.py              # SQLite and sqlite-vec repository
+|       |   |   `-- pipeline.py             # Python orchestration and CLI entry
 |       |   `-- visualisation/
 |       |       |-- __init__.py
 |       |       |-- melodic_ngram_heatmap.py
@@ -37,12 +43,6 @@ encoding-music-mcp/
 |       |   |-- __init__.py
 |       |   |-- registry.py                 # Prompt registration
 |       |   |-- comprehensive_analysis.py
-|       |-- score_embeddings/               # Standalone whole-score embeddings
-|       |   |-- __init__.py
-|       |   |-- music_processing.py         # Standardize, export XML, validate
-|       |   |-- clamp_extractor.py          # CLaMP setup and subprocess adapter
-|       |   |-- storage.py                  # SQLite and sqlite-vec repository
-|       |   `-- pipeline.py                 # Python orchestration and CLI entry
 |       `-- templates/
 |           `-- incipit_verovio_app.html
 |-- tests/
@@ -187,7 +187,7 @@ For visualisation tools, use the matching nested locations:
 - Interval tool docs live in `docs/tools/intervals/`
 - Visualisation tool docs live in `docs/tools/visualisation/`
 
-### Score Embeddings (`src/encoding_music_mcp/score_embeddings/`)
+### Score Embeddings (`src/encoding_music_mcp/tools/score_embeddings/`)
 
 - `music_processing.py`: Non-mutating whole-score standardization, `.xml` MusicXML export, event extraction, and round-trip validation
 - `clamp_extractor.py`: Explicit pinned CLaMP setup checks and offline subprocess execution
@@ -262,7 +262,7 @@ Documentation site configuration using the Material theme.
 Uses `uv_build` backend with src-layout:
 
 - Package installed as `encoding-music-mcp`
-- Entry points: `encoding_music_mcp.server:main` and `encoding_music_mcp.score_embeddings.pipeline:main`
+- Entry points: `encoding_music_mcp.server:main` and `encoding_music_mcp.tools.score_embeddings.pipeline:main`
 - Editable installs supported
 
 ## Related Documentation

@@ -1,8 +1,8 @@
 """Tests for server transport configuration."""
 
 from src.encoding_music_mcp import server
-from src.encoding_music_mcp import score_embeddings
-from src.encoding_music_mcp.score_embeddings import clamp_extractor
+from src.encoding_music_mcp.tools import score_embeddings
+from src.encoding_music_mcp.tools.score_embeddings import clamp_extractor
 from src.encoding_music_mcp.tools import semantic_axis_retrieval
 from src.encoding_music_mcp.tools import prototype_retrieval
 

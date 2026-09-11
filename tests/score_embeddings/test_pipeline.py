@@ -13,20 +13,20 @@ import numpy as np
 import pytest
 from music21 import converter, stream
 
-from encoding_music_mcp.score_embeddings.clamp_extractor import (
+from encoding_music_mcp.tools.score_embeddings.clamp_extractor import (
     ClampExecutionError,
     ClampRuntimeConfig,
 )
-from encoding_music_mcp.score_embeddings.music_processing import (
+from encoding_music_mcp.tools.score_embeddings.music_processing import (
     ConversionReport,
     ConversionStatus,
     ScoreConversionResult,
 )
-from encoding_music_mcp.score_embeddings.mei_metadata import (
+from encoding_music_mcp.tools.score_embeddings.mei_metadata import (
     ScoreCatalogMetadata,
     extract_mei_catalog_metadata,
 )
-from encoding_music_mcp.score_embeddings.pipeline import (
+from encoding_music_mcp.tools.score_embeddings.pipeline import (
     PipelineConfig,
     PipelineError,
     classify_mei_aggregate,
@@ -34,7 +34,7 @@ from encoding_music_mcp.score_embeddings.pipeline import (
     discover_mei_inputs,
     run_pipeline,
 )
-from encoding_music_mcp.score_embeddings.storage import EmbeddingRepository
+from encoding_music_mcp.tools.score_embeddings.storage import EmbeddingRepository
 
 
 def _completed(args) -> subprocess.CompletedProcess[str]:
@@ -219,7 +219,7 @@ def test_explicit_aggregate_wins_over_directory_and_lists_references(
         assert "movement-2.mei" in message
 
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.converter.parse",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.converter.parse",
         lambda _: pytest.fail("recognized aggregates must fail before music21"),
     )
     with pytest.raises(PipelineError, match="movement-1.mei"):
@@ -308,11 +308,11 @@ def test_pipeline_stores_ordered_results_writes_manifest_and_obeys_cleanup(
     for name in ("b.mei", "a.mei"):
         _write_mei(tmp_path / name, title=f"Title {name[0].upper()}")
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.converter.parse",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.converter.parse",
         lambda _: stream.Score(),
     )
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.process_score_to_xml",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.process_score_to_xml",
         lambda score, score_id, output_dir, **kwargs: _conversion(score_id, output_dir),
     )
     workspaces: list[Path] = []
@@ -360,11 +360,11 @@ def test_pipeline_reports_skipped_aggregate_without_a_score_result_or_failure(
     source = tmp_path / "score.mei"
     _write_mei(source)
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.converter.parse",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.converter.parse",
         lambda _: stream.Score(),
     )
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.process_score_to_xml",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.process_score_to_xml",
         lambda score, score_id, output_dir, **kwargs: _conversion(score_id, output_dir),
     )
     caplog.set_level(logging.INFO)
@@ -414,7 +414,7 @@ def test_malformed_and_nonaggregate_no_score_inputs_remain_diagnostic(
         raise RuntimeError("ordinary no-score parse failure")
 
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.converter.parse",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.converter.parse",
         fail_parse,
     )
 
@@ -446,7 +446,7 @@ def test_cli_success_is_based_on_score_results_not_skipped_inputs(
     capsys: pytest.CaptureFixture[str],
 ):
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.run_pipeline",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.run_pipeline",
         lambda config: SimpleNamespace(
             run_id="run-id",
             manifest_path=tmp_path / "manifest.json",
@@ -474,7 +474,7 @@ def test_cli_partial_run_returns_failure_status(
     capsys: pytest.CaptureFixture[str],
 ):
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.run_pipeline",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.run_pipeline",
         lambda config: SimpleNamespace(
             run_id="partial-run",
             manifest_path=tmp_path / "manifest.json",
@@ -506,11 +506,11 @@ def test_failed_validation_never_invokes_clamp_or_creates_database(
     source = tmp_path / "failed.mei"
     _write_mei(source)
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.converter.parse",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.converter.parse",
         lambda _: stream.Score(),
     )
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.process_score_to_xml",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.process_score_to_xml",
         lambda score, score_id, output_dir, **kwargs: _conversion(
             score_id, output_dir, ConversionStatus.FAIL
         ),
@@ -539,7 +539,7 @@ def test_mixed_batch_exposes_only_accepted_xml_and_persists_its_embedding(
     for name in ("accepted.mei", "rejected.mei"):
         _write_mei(tmp_path / name)
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.converter.parse",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.converter.parse",
         lambda _: stream.Score(),
     )
 
@@ -550,7 +550,7 @@ def test_mixed_batch_exposes_only_accepted_xml_and_persists_its_embedding(
         return _conversion(score_id, output_dir, status)
 
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.process_score_to_xml",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.process_score_to_xml",
         convert,
     )
     clamp_inputs: list[tuple[str, ...]] = []
@@ -622,11 +622,11 @@ def test_partial_clamp_output_persists_present_and_reports_missing_score(
     for name in ("first.mei", "second.mei"):
         _write_mei(tmp_path / name)
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.converter.parse",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.converter.parse",
         lambda _: stream.Score(),
     )
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.process_score_to_xml",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.process_score_to_xml",
         lambda score, score_id, output_dir, **kwargs: _conversion(score_id, output_dir),
     )
 
@@ -672,11 +672,11 @@ def test_zero_clamp_outputs_remain_fatal_and_create_no_database(
     source = tmp_path / "score.mei"
     _write_mei(source)
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.converter.parse",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.converter.parse",
         lambda _: stream.Score(),
     )
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.process_score_to_xml",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.process_score_to_xml",
         lambda score, score_id, output_dir, **kwargs: _conversion(score_id, output_dir),
     )
 
@@ -706,11 +706,11 @@ def test_subprocess_failure_is_propagated_with_manifest_and_cleanup(
     source = tmp_path / "score.mei"
     _write_mei(source)
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.converter.parse",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.converter.parse",
         lambda _: stream.Score(),
     )
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.process_score_to_xml",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.process_score_to_xml",
         lambda score, score_id, output_dir, **kwargs: _conversion(score_id, output_dir),
     )
     workspaces: list[Path] = []
@@ -744,7 +744,7 @@ def test_cli_setup_reports_json_and_returns_success(
     capsys: pytest.CaptureFixture[str],
 ):
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.setup_clamp3",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.setup_clamp3",
         lambda config: SimpleNamespace(
             checkout_dir=tmp_path / "cache" / "source",
             offline_ready=True,
@@ -781,7 +781,7 @@ def test_cli_similarity_json_includes_catalog_metadata(
         distance=0.125,
     )
     monkeypatch.setattr(
-        "encoding_music_mcp.score_embeddings.pipeline.query_similar",
+        "encoding_music_mcp.tools.score_embeddings.pipeline.query_similar",
         lambda *args, **kwargs: [result],
     )
 

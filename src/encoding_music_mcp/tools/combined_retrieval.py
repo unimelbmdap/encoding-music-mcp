@@ -4,7 +4,7 @@ from typing import Any, Optional
 import numpy as np
 from pydantic import BaseModel, Field
 
-from ..score_embeddings import (
+from .score_embeddings import (
     ComposedQuery,
     EmbeddingRepository,
     PrototypeVector,
@@ -204,4 +204,3 @@ def search_songs_by_combined_criteria(
 
     LOGGER.debug("Combined retrieval returned %d matches", len(search_results))
     return [r.to_dict() for r in search_results]
-

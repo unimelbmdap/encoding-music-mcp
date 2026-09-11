@@ -34,7 +34,7 @@ Bootstrap rejects CUDA on Mac before installing packages or downloading models.
 
 Both profiles pin torchvision 0.22.1, torchaudio 2.7.1, upstream CLaMP dependencies,
 and their transitive dependencies in
-[`clamp_runtime/uv.lock`](../../src/encoding_music_mcp/score_embeddings/clamp_runtime/uv.lock).
+[`clamp_runtime/uv.lock`](../../src/encoding_music_mcp/tools/score_embeddings/clamp_runtime/uv.lock).
 The [PyTorch wheel profiles](https://pytorch.org/get-started/previous-versions/#v271)
 and [CLaMP requirements](https://github.com/sanderwood/clamp3/blob/9016d2b0c8d12d1aa79c2e0ab201e6822bdc83a8/requirements.txt)
 are the sources for these selections. CUDA setup executes a small tensor operation
@@ -240,7 +240,7 @@ To verify that the local database is compatible with the project repository API:
 
 ```bash
 uv run --extra score-embeddings python -c \
-  'from encoding_music_mcp.score_embeddings.storage import EmbeddingRepository; import sys; r = EmbeddingRepository(sys.argv[1]); r.open(); print(r.connection.execute("SELECT COUNT(*) FROM score_embeddings").fetchone()[0]); r.close()' \
+  'from encoding_music_mcp.tools.score_embeddings.storage import EmbeddingRepository; import sys; r = EmbeddingRepository(sys.argv[1]); r.open(); print(r.connection.execute("SELECT COUNT(*) FROM score_embeddings").fetchone()[0]); r.close()' \
   score-embeddings.sqlite3
 ```
 

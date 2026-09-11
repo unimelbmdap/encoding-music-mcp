@@ -8,8 +8,8 @@ Tie whole-score XML validation, MEI catalog metadata extraction, offline CLaMP e
 
 | File | Purpose |
 |---|---|
-| `src/encoding_music_mcp/score_embeddings/pipeline.py` | Input discovery, orchestration, manifests, logging, argument parsing, and exit codes |
-| `src/encoding_music_mcp/score_embeddings/__init__.py` | Stable public Python exports |
+| `src/encoding_music_mcp/tools/score_embeddings/pipeline.py` | Input discovery, orchestration, manifests, logging, argument parsing, and exit codes |
+| `src/encoding_music_mcp/tools/score_embeddings/__init__.py` | Stable public Python exports |
 | `tests/score_embeddings/test_pipeline.py` | Orchestration and CLI coverage |
 | `tests/score_embeddings/test_integration.py` | Module-boundary workflow using real music21/SQLite and fake CLaMP scripts |
 
@@ -26,6 +26,13 @@ Inputs, output directory, database, cache, CLaMP interpreter, tolerance, timeout
 ## Integration points
 
 Orchestrates all earlier module features without importing or registering with FastMCP.
+
+The Python package is `encoding_music_mcp.tools.score_embeddings`; the
+`encoding-music-embeddings` command remains unchanged. Checkout discovery must
+resolve the repository root from this nested package and reject installed-wheel
+locations. The separate runtime lock and worker script remain sibling resources
+included in the wheel. Package relocation preserves existing artifacts and does
+not change generated output paths or database tables.
 
 ## Validation boundary
 

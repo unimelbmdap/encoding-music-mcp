@@ -8,7 +8,7 @@ Standardize complete music21 scores without mutating caller-owned streams, expor
 
 | File | Purpose |
 |---|---|
-| `src/encoding_music_mcp/score_embeddings/music_processing.py` | Typed configuration, events, conversion reports, standardization, XML export, and validation |
+| `src/encoding_music_mcp/tools/score_embeddings/music_processing.py` | Typed configuration, events, conversion reports, standardization, XML export, and validation |
 | `tests/score_embeddings/test_music_processing.py` | Unit and real MusicXML round-trip coverage |
 
 ## API surface

@@ -84,7 +84,7 @@ def test_wheel_contains_pipeline_and_bundled_mei_resources():
     source = _sources(_notebook(), cell_type="code")
 
     assert "zipfile.ZipFile(PROJECT_WHEEL)" in source
-    assert '"encoding_music_mcp/score_embeddings/pipeline.py"' in source
+    assert '"encoding_music_mcp/tools/score_embeddings/pipeline.py"' in source
     assert 'name.startswith("encoding_music_mcp/resources/mei_files/")' in source
     assert 'name.endswith(".mei")' in source
     assert "BUNDLED_MEI_DIRECTORY" in source

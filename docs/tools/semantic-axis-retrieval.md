@@ -175,7 +175,7 @@ measure one cold search followed by warm searches with:
 
 ```bash
 uv run --extra score-embeddings \
-  python -m encoding_music_mcp.score_embeddings.semantic_axis_timing \
+  python -m encoding_music_mcp.tools.score_embeddings.semantic_axis_timing \
   --positive "Music expressing a joyful and optimistic mood." \
   --positive "Happy energetic music with a cheerful character." \
   --positive "Happy calm music with a warm contented character." \

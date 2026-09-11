@@ -18,7 +18,7 @@ from typing import Any, TypedDict
 
 import numpy as np
 
-from ..score_embeddings import (
+from .score_embeddings import (
     CatalogSimilarityResult,
     ClampModelIdentity,
     ClampRuntimeConfig,
@@ -26,8 +26,8 @@ from ..score_embeddings import (
     TextEmbeddingBatch,
     embed_clamp3_texts,
 )
-from ..score_embeddings.clamp_extractor import CommandRunner
-from ..score_embeddings.runtime_config import (
+from .score_embeddings.clamp_extractor import CommandRunner
+from .score_embeddings.runtime_config import (
     CLAMP_PYTHON_ENV as CLAMP_PYTHON_ENV,
     CLAMP_CACHE_ENV as CLAMP_CACHE_ENV,
     CLAMP_TIMEOUT_ENV as CLAMP_TIMEOUT_ENV,

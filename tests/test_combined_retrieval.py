@@ -8,7 +8,7 @@ import sqlite3
 from encoding_music_mcp.tools.combined_retrieval import (
     search_songs_by_combined_criteria, PrototypeQuery, SemanticAxisQuery
 )
-from encoding_music_mcp.score_embeddings import (
+from encoding_music_mcp.tools.score_embeddings import (
     ClampModelIdentity, EmbeddingRecord, EmbeddingRepository, TextEmbeddingBatch
 )
 from encoding_music_mcp.tools import prototype_retrieval, semantic_axis_retrieval
@@ -106,7 +106,7 @@ def test_weighted_combination_mocked(tmp_path):
         return original_run_axis(*a, **k)
 
     from encoding_music_mcp.tools.prototype_retrieval import PrototypeSearchConfig
-    from encoding_music_mcp.score_embeddings import ClampRuntimeConfig
+    from encoding_music_mcp.tools.score_embeddings import ClampRuntimeConfig
     def mock_config():
         return PrototypeSearchConfig(
             database_path=db_path,
@@ -143,7 +143,7 @@ def test_real_embeddings_combination(tmp_path):
     if not db_path.is_file():
         db_path = Path("src/encoding_music_mcp/resources/score-embeddings.sqlite3").resolve()
     if not db_path.is_file():
-        db_path = Path("src/encoding_music_mcp/score_embeddings/colab-verification/score-embeddings.sqlite3").resolve()
+        db_path = Path("src/encoding_music_mcp/tools/score_embeddings/colab-verification/score-embeddings.sqlite3").resolve()
     
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()

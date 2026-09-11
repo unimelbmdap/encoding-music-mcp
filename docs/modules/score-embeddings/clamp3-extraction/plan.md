@@ -8,7 +8,7 @@ Acquire and verify the ADR-0001 external runtime explicitly, execute symbolic ex
 
 | File | Purpose |
 |---|---|
-| `src/encoding_music_mcp/score_embeddings/clamp_extractor.py` | Setup, cache manifest, subprocess adapter, extraction, and normalization |
+| `src/encoding_music_mcp/tools/score_embeddings/clamp_extractor.py` | Setup, cache manifest, subprocess adapter, extraction, and normalization |
 | `tests/score_embeddings/test_clamp_extractor.py` | Mocked setup/subprocess and NumPy validation coverage |
 
 ## API surface

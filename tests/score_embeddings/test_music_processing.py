@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 from music21 import chord, dynamics, instrument, note, stream, tempo, tie
 
-from encoding_music_mcp.score_embeddings.music_processing import (
+from encoding_music_mcp.tools.score_embeddings.music_processing import (
     ConversionStatus,
     NoteEvent,
     StandardizationConfig,

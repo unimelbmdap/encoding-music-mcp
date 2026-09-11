@@ -11,7 +11,7 @@ import numpy as np
 import pytest
 from fastmcp import Client
 
-from encoding_music_mcp.score_embeddings import (
+from encoding_music_mcp.tools.score_embeddings import (
     CatalogSimilarityResult,
     ClampModelIdentity,
     ClampRuntimeConfig,

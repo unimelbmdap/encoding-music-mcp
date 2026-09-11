@@ -7,8 +7,8 @@ import os
 
 import pytest
 
-from encoding_music_mcp.score_embeddings import clamp_extractor
-from encoding_music_mcp.score_embeddings.semantic_axis_timing import (
+from encoding_music_mcp.tools.score_embeddings import clamp_extractor
+from encoding_music_mcp.tools.score_embeddings.semantic_axis_timing import (
     measure_semantic_axis_retrieval,
 )
 from encoding_music_mcp.tools import semantic_axis_retrieval

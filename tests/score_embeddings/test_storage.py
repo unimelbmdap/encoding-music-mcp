@@ -9,8 +9,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from encoding_music_mcp.score_embeddings.clamp_extractor import ClampModelIdentity
-from encoding_music_mcp.score_embeddings.storage import (
+from encoding_music_mcp.tools.score_embeddings.clamp_extractor import ClampModelIdentity
+from encoding_music_mcp.tools.score_embeddings.storage import (
     EmbeddingDimensionError,
     EmbeddingRecord,
     EmbeddingRepository,

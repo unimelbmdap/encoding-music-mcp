@@ -13,9 +13,6 @@ The CLaMP boundary follows ADR-0001, vector persistence follows ADR-0003, matche
 
 ## Runtime topology
 
-> [!TIP]
-> For formal UML specifications (Class Diagrams, Sequence Diagrams, Component Architecture, and Pipeline State Diagrams), see **[docs/uml.md](uml.md)**.
-
 ```text
 MCP clients
     |
@@ -240,6 +237,10 @@ A score never reaches CLaMP or SQLite without passing XML validation. A database
 ## Software architecture
 
 ### score-embeddings
+
+**Package:** `src/encoding_music_mcp/tools/score_embeddings/`. This location groups
+the code with its consuming tools; batch generation remains a standalone CLI and
+is not registered as an MCP tool.
 
 **Purpose:** Convert complete symbolic scores into validated XML representations and reproducible CLaMP 3 embeddings, retain catalog metadata, encode compatible CLaMP text queries, store vectors for retrieval, and host the unified vector retrieval domain model.
 

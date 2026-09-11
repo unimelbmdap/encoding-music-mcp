@@ -9,14 +9,14 @@ from pathlib import Path
 
 import pytest
 
-from encoding_music_mcp.score_embeddings.clamp_extractor import ClampRuntimeConfig
-from encoding_music_mcp.score_embeddings.pipeline import (
+from encoding_music_mcp.tools.score_embeddings.clamp_extractor import ClampRuntimeConfig
+from encoding_music_mcp.tools.score_embeddings.pipeline import (
     PipelineConfig,
     PipelineError,
     query_similar,
     run_pipeline,
 )
-from encoding_music_mcp.score_embeddings.storage import EmbeddingRepository
+from encoding_music_mcp.tools.score_embeddings.storage import EmbeddingRepository
 
 PROJECT_ROOT = Path(__file__).parents[2]
 MEI_DIR = PROJECT_ROOT / "src" / "encoding_music_mcp" / "resources" / "mei_files"

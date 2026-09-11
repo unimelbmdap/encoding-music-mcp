@@ -1,120 +1,43 @@
-# encoding-music-mcp
+# Encoding Music MCP retrieval setup
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
-[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Documentation](https://img.shields.io/badge/docs-mkdocs-blue)](https://unimelbmdap.github.io/encoding-music-mcp/)
-[![MCP](https://img.shields.io/badge/MCP-Server-green)](https://modelcontextprotocol.io)
-[![MEI](https://img.shields.io/badge/MEI-Music%20Encoding%20Initiative-purple)](https://music-encoding.org/)
+This repository includes a prepared song-embedding database. After setup, Claude
+can search it with semantic-axis, prototype, and combined retrieval tools. You do
+not need to create embeddings or build a database.
 
-MCP server for analyzing MEI (Music Encoding Initiative) files. Provides tools to extract metadata, analyze musical structure, and understand encoded scores. The distribution also contains an optional standalone workflow that converts complete scores to validated MusicXML, extracts CLaMP 3 embeddings, and stores them in SQLite.
+## Requirements
 
-## Features
+- Git
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
+- Several GB of free disk space for the CLaMP model and Python packages
 
-- **46 Built-in MEI Files**: Bach Inventions, Bartók Mikrokosmos, Morley Canzonets - ready to analyze
-- **MEI Metadata Extraction**: Extract title, composer, editors, analysts, publication dates, and copyright information
-- **Key Analysis**: Detect musical keys with confidence scores using music21
-- **Interval Analysis**: Extract notes, melodic intervals, harmonic intervals, and melodic n-grams using CRIM Intervals
-- **Notation Display**: Render sheet music as SVG with interactive pagination using Verovio (requires [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps))
-- **Score Embeddings**: Optional standalone CLaMP 3 pipeline for complete-score embeddings and local SQLite vector retrieval
-- **Simple & Efficient**: Tools read directly from disk - no token waste
+Supported systems:
 
-## Documentation
+- Windows x64
+- Linux x86_64
+- Apple Silicon Mac (M1 or newer), using a native terminal rather than Rosetta
 
-📚 **[Read the full documentation](https://unimelbmdap.github.io/encoding-music-mcp/)** for:
+Intel Macs are not supported by the pinned CLaMP runtime.
 
-- Detailed tool reference
-- Quick start guides
-- CLaMP 3 pipeline setup and architecture
-- MEI file collection details
-- Development guides
-- API reference
-
-## Installation
-
-**Prerequisites**: This project requires [uv](https://docs.astral.sh/uv/getting-started/installation/) to be installed.
-
-### Option 1: Quick Start (using uvx)
-
-No cloning required! Add this to your MCP client configuration:
-
-```json
-{
-  "mcpServers": {
-    "encoding-music-mcp": {
-      "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/unimelbmdap/encoding-music-mcp.git",
-        "encoding-music-mcp"
-      ]
-    }
-  }
-}
-```
-
-### Option 2: Local Development
-
-Clone the repository and install dependencies:
+## 1. Clone and set up retrieval
 
 ```bash
 git clone https://github.com/unimelbmdap/encoding-music-mcp.git
 cd encoding-music-mcp
-uv sync
-```
-
-Install the optional local vector-storage dependency for score-embedding development:
-
-```bash
-uv sync --extra score-embeddings
-```
-
-The CLaMP model runtime remains a separate Python 3.10 environment. See the [CLaMP 3 pipeline setup guide](docs/getting-started/clamp3-pipeline.md) for the pinned source, model, cache, and offline-execution policy.
-
-## Usage
-
-### With Claude Desktop
-
-1. **Open your Claude Desktop configuration file:**
-   - In Claude Desktop, open **Settings > Developer**
-   - Under **Local MCP servers**, click **Edit Config**
-
-2. **Add configuration (choose one method):**
-
-**Method A: Using uvx (no clone needed)**
-```json
-{
-  "mcpServers": {
-    "encoding-music-mcp": {
-      "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/unimelbmdap/encoding-music-mcp.git",
-        "encoding-music-mcp"
-      ]
-    }
-  }
-}
-```
-
-**Method B: Using local clone**
-
-For semantic search, run this once from the clone before starting Claude:
-
-```bash
 uv run --extra score-embeddings --locked encoding-music-embeddings bootstrap
 ```
 
-This prepares a locked CPU runtime in `.venv-clamp` and verified model assets in
-`.clamp3-cache`. Windows x64, Linux x86_64, and macOS on Apple Silicon are supported.
-On Mac, use a native arm64 terminal and uv/Python installation (not Rosetta);
-CLaMP runs on the CPU. Intel Macs are not supported by this pinned runtime.
-For a compatible NVIDIA GPU on Windows or Linux, add `--profile cu128`.
-Setup requires Git, network access, and several
-GB of disk space. Both retrieval tools then find these paths automatically;
-no CLaMP environment variables are needed. See the [setup guide](docs/getting-started/clamp3-pipeline.md)
-for profiles, requirements, and external-runtime overrides.
+The command creates the local CLaMP environment and downloads the model files.
+The included database is used automatically from:
+
+```text
+src/encoding_music_mcp/resources/score-embeddings.sqlite
+```
+
+No CLaMP environment variables or database path are required.
+
+## 2. Add the server to Claude Desktop
+
+Open **Claude Desktop → Settings → Developer → Edit Config** and add:
 
 ```json
 {
@@ -134,241 +57,35 @@ for profiles, requirements, and external-runtime overrides.
   }
 }
 ```
-> [!NOTE]
-> Replace `/absolute/path/to/encoding-music-mcp` with the full path to your cloned repository.
->
-> On Windows, an absolute path is formatted using `\\` in place of `/`.
-> 
-> For example: `C:\\absolute\\path\\to\\encoding-music-mcp`
 
-3. **Restart Claude Desktop**
+Replace `/absolute/path/to/encoding-music-mcp` with the cloned repository path.
+On Windows, escape backslashes, for example:
 
-4. **Try it out:**
-   - "What MEI files are available?" → Lists all 46 built-in files
-   - "Tell me about Bach_BWV_0772.mei" → Extracts metadata
-   - "What key is Bach_BWV_0772.mei in?" → Analyzes key with confidence score
-   - "Get the melodic intervals for Bach_BWV_0772.mei" → Extracts melodic intervals
-   - "Find melodic 4-grams in Bach_BWV_0772.mei" → Extracts melodic n-grams
-   - "Show me the notation for Bach_BWV_0772.mei" → Displays rendered sheet music
-
-### Standalone
-
-Run the server directly:
-
-```bash
-uv run --extra score-embeddings --locked encoding-music-mcp
-```
-
-Run the separate score-embedding entry point with:
-
-```bash
-uv run encoding-music-embeddings --help
-```
-
-Batch generation is intentionally isolated from the MCP server. A prepared database can be searched through the query-only `search_songs_by_semantic_axis` and `search_songs_by_prototype` MCP tools. See the [pipeline guide](docs/getting-started/clamp3-pipeline.md) for setup, extraction, database access, configuration, and similarity queries.
-
-## Available Tools
-
-### `list_available_mei_files`
-
-Discover all built-in MEI files.
-
-**Returns**: Dictionary with:
-- `bach_inventions`: List of Bach files
-- `bartok_mikrokosmos`: List of Bartók files
-- `morley_canzonets`: List of Morley files
-- `all_files`: Complete list of all filenames
-
-### `get_mei_metadata`
-
-Extract detailed metadata from a built-in MEI file.
-
-**Parameters**:
-- `filename` (string, required): Name of the MEI file (e.g., "Bach_BWV_0772.mei")
-
-**Returns**: Dictionary with metadata including:
-- Title and work title
-- Composer
-- MEI editors
-- XML editors
-- Analysts
-- Publication date
-- Copyright/availability information
-- Application used to create the file
-
-**Example output**:
 ```json
-{
-  "title": "Invention No. 1 in C major",
-  "composer": "Bach, Johann Sebastian",
-  "mei_editors": ["Freedman, Richard"],
-  "xml_editors": ["Schölkopf, Tobias"],
-  "analysts": ["Student, This"],
-  "publication_date": "2024-11-19"
-}
+"C:\\Users\\your-name\\encoding-music-mcp"
 ```
 
-### `search_songs_by_semantic_axis`
+Restart Claude Desktop after saving the configuration.
 
-Search a prepared whole-song embedding catalog along a broad semantic contrast such as joyful–sorrowful, energetic–subdued, or bright–dark. Claude supplies two positionally matched ensembles of 3–5 caption-like prompts. The server normalizes every prompt embedding, averages and normalizes each pole, computes the normalized positive-minus-negative axis, and returns ranked title, artist, work-date, model, and aggregation metadata without exposing vectors.
+## 3. Search the included database
 
-See [Semantic Axis Retrieval](docs/tools/semantic-axis-retrieval.md) for the prompt contract and required server environment variables.
+Ask Claude requests such as:
 
-### `search_songs_by_prototype`
+- “Find songs that sound joyful rather than sorrowful.”
+- “Find songs with a pastoral character.”
+- “Find tense modernist music combined with a peaceful character.”
 
-Search a prepared whole-song embedding catalog for one independent concept such
-as jazz, piano-led, pastoral, or lo-fi production. Claude supplies 3–5 equivalent
-caption-like prompts. The server ranks exact-model rows by their arithmetic mean
-cosine similarity, returning title-first catalog metadata and no vectors.
+Claude can use:
 
-See [Dynamic Prototype Retrieval](docs/tools/prototype-retrieval.md) for prompt
-guidance, scoring, eligibility counts, timing, and configuration.
+- `search_songs_by_semantic_axis` for a contrast such as joyful–sorrowful
+- `search_songs_by_prototype` for one concept such as pastoral
+- `search_songs_by_combined_criteria` to combine several criteria
 
-### `analyze_key`
+The first search loads the CLaMP model and may take longer. Later searches reuse
+the loaded model.
 
-Analyze the musical key of a piece using music21's key detection algorithm.
+For detailed retrieval behavior and troubleshooting, see:
 
-**Parameters**:
-- `filename` (string, required): Name of the MEI file (e.g., "Bach_BWV_0772.mei")
-
-**Returns**: Dictionary with:
-- `Key Name`: The detected key (e.g., "C major", "a minor")
-- `Confidence Factor`: Correlation coefficient between 0.0 and 1.0
-
-**Example output**:
-```json
-{
-  "Key Name": "C major",
-  "Confidence Factor": 0.9451
-}
-```
-
-### `get_notes`
-
-Extract all notes from an MEI file using CRIM Intervals.
-
-**Parameters**:
-- `filename` (string, required): Name of the MEI file (e.g., "Bach_BWV_0772.mei")
-
-**Returns**: Dictionary with:
-- `filename`: The input filename
-- `notes`: String representation of the notes dataframe with pitch and octave information
-
-Columns represent individual staves or voice parts. Rows represent measure and beat information as floats.
-
-### `get_melodic_intervals`
-
-Extract melodic intervals from an MEI file using CRIM Intervals.
-
-**Parameters**:
-- `filename` (string, required): Name of the MEI file (e.g., "Bach_BWV_0772.mei")
-
-**Returns**: Dictionary with:
-- `filename`: The input filename
-- `melodic_intervals`: String representation of the melodic intervals dataframe
-
-Columns represent individual staves or voice parts. Rows represent measure and beat information as floats.
-
-### `get_harmonic_intervals`
-
-Extract harmonic intervals from an MEI file using CRIM Intervals.
-
-**Parameters**:
-- `filename` (string, required): Name of the MEI file (e.g., "Bach_BWV_0772.mei")
-
-**Returns**: Dictionary with:
-- `filename`: The input filename
-- `harmonic_intervals`: String representation of the harmonic intervals dataframe
-
-Columns represent pairs of voice parts. Rows represent measure and beat information as floats.
-
-### `get_melodic_ngrams`
-
-Extract melodic n-grams from an MEI file using CRIM Intervals.
-
-**Parameters**:
-- `filename` (string, required): Name of the MEI file (e.g., "Bach_BWV_0772.mei")
-- `n` (integer, optional): Length of the n-grams (default: 4)
-
-**Returns**: Dictionary with:
-- `filename`: The input filename
-- `n`: The n-gram length used
-- `melodic_ngrams`: String representation of melodic n-grams dataframe
-
-N-grams are tuples of intervals converted to strings with underscore separators (e.g., "2_-2_3_-1").
-
-### `show_notation`
-
-Display musical notation for an MEI file as rendered SVG. Requires the [MCP Apps extension](https://modelcontextprotocol.io/docs/extensions/apps) for inline display.
-
-**Parameters**:
-- `filename` (string, required): Name of the MEI file (e.g., "Bach_BWV_0772.mei")
-- `start_measure` (integer, optional): First measure to display (defaults to full piece)
-- `end_measure` (integer, optional): Last measure to display (defaults to start_measure if only start given)
-- `page` (integer, optional): Page number to display (default: 1)
-
-**Returns**: SVG notation rendered by Verovio, displayed in an interactive viewer with pagination controls.
-
-## Built-in Files
-
-The server includes 46 MEI files:
-- **15 Bach Two-Part Inventions** (BWV 772-786)
-- **19 Bartók Mikrokosmos pieces**
-- **12 Morley Canzonets** from 1595
-
-Use `list_available_mei_files()` to discover all available files.
-
-## Development
-
-The project uses uv for dependency management:
-
-```bash
-# Install dependencies
-uv sync
-
-# Run the server
-uv run --extra score-embeddings --locked encoding-music-mcp
-
-# Format code
-uv run ruff format .
-
-# Run tests
-uv run pytest
-
-# Run tests with verbose output
-uv run pytest -v
-
-# Serve documentation locally
-uv run mkdocs serve
-
-# Build documentation
-uv run mkdocs build
-```
-
-### Testing
-
-The project includes comprehensive tests for all tools. See [tests/README.md](tests/README.md) for detailed testing documentation.
-
-### Documentation
-
-Documentation is built with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/):
-
-```bash
-# Serve locally at http://localhost:8000
-uv run mkdocs serve
-
-# Build static site
-uv run mkdocs build
-```
-
-## Coming Soon
-
-Additional tools planned:
-- Time signature detection
-- Pitch histograms and frequency analysis
-- Lyrics extraction
-- Pattern matching and similarity detection
-
-## License
-
-MIT
+- [Semantic-axis retrieval](docs/tools/semantic-axis-retrieval.md)
+- [Prototype retrieval](docs/tools/prototype-retrieval.md)
+- [CLaMP setup](docs/getting-started/clamp3-pipeline.md)

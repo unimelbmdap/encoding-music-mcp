@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from encoding_music_mcp.score_embeddings import (
+from encoding_music_mcp.tools.score_embeddings import (
     ClampModelIdentity,
     ComposedQuery,
     EmbeddingRecord,
@@ -314,7 +314,7 @@ def test_search_songs_by_combined_criteria_rich_list(tmp_path: Path) -> None:
     import os
     import sys
     from encoding_music_mcp.tools.prototype_retrieval import PrototypeSearchConfig
-    from encoding_music_mcp.score_embeddings import ClampRuntimeConfig
+    from encoding_music_mcp.tools.score_embeddings import ClampRuntimeConfig
 
     def mock_config():
         return PrototypeSearchConfig(

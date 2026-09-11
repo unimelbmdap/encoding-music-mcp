@@ -16,10 +16,10 @@ It does not alter existing SQLite database schemas or migrations, MusicXML extra
 
 | File | Purpose |
 |---|---|
-| `src/encoding_music_mcp/score_embeddings/storage.py` | `QueryVector` class, vector search extension, vectorized baseline statistics evaluation |
-| `src/encoding_music_mcp/score_embeddings/clamp_extractor.py` | `TextEncoder` class wrapping resident worker for single-batch prompt encoding |
-| `src/encoding_music_mcp/score_embeddings/retrieval.py` | `PrototypeVector`, `SemanticAxisVector`, `WeightedQuery`, `ComposedQuery`, `SearchResult`, `RetrievalService` |
-| `src/encoding_music_mcp/score_embeddings/__init__.py` | Export unified domain classes |
+| `src/encoding_music_mcp/tools/score_embeddings/storage.py` | `QueryVector` class, vector search extension, vectorized baseline statistics evaluation |
+| `src/encoding_music_mcp/tools/score_embeddings/clamp_extractor.py` | `TextEncoder` class wrapping resident worker for single-batch prompt encoding |
+| `src/encoding_music_mcp/tools/score_embeddings/retrieval.py` | `PrototypeVector`, `SemanticAxisVector`, `WeightedQuery`, `ComposedQuery`, `SearchResult`, `RetrievalService` |
+| `src/encoding_music_mcp/tools/score_embeddings/__init__.py` | Export unified domain classes |
 | `src/encoding_music_mcp/tools/combined_retrieval.py` | Reconcile `search_songs_by_combined_criteria` to delegate to `RetrievalService` and return rich list results |
 | `tests/score_embeddings/test_unified_vector_domain.py` | Unit and mathematical verification of weighted vector composition, baseline stats, and z-index recovery |
 | `tests/test_combined_retrieval.py` | End-to-end multi-criteria combination test suite |

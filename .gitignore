@@ -7,11 +7,19 @@ wheels/
 *.egg-info
 
 # Virtual environments
-.venv
-.venv-clamp/
+.venv*/
+
+# Local AI and Bower configuration
+/.agents/
+/.claude/
+/.codex/
+/.github/
+/_bower/
+/AGENTS.md
 
 # Testing
 .pytest_cache/
+.ruff_cache/
 htmlcov/
 .coverage
 
@@ -20,6 +28,8 @@ site/
 
 notebooks/*
 !notebooks/score_embeddings_colab.ipynb
+/colab-upload/
+/patch_colab.py
 
 output/
 
@@ -29,6 +39,9 @@ output/
 tmp/score-embeddings/
 score-embeddings.sqlite3
 *.clamp3-download
+/src/encoding_music_mcp/tools/score_embeddings/colab-verification/
+/src/encoding_music_mcp/tools/score_embeddings/score_embeddings/
+/src/encoding_music_mcp/tools/score_embeddings/*.tar.gz
 
 .DS_Store
 

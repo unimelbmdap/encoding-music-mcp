@@ -13,7 +13,7 @@ The feature serves independent concepts such as genre or style, instrumentation,
 | `src/encoding_music_mcp/tools/prototype_retrieval.py` | Typed validation, prompt normalization, ADR-0006 prototype construction, mean-cosine score recovery, timing logs, response projection, actionable errors, and query-resource lifecycle |
 | `src/encoding_music_mcp/tools/registry.py` | Query-only FastMCP tool registration |
 | `src/encoding_music_mcp/server.py` | Shutdown cleanup for prototype-retrieval resources |
-| `src/encoding_music_mcp/score_embeddings/storage.py` | Exact-model eligible/excluded counts alongside vector-free catalog KNN |
+| `src/encoding_music_mcp/tools/score_embeddings/storage.py` | Exact-model eligible/excluded counts alongside vector-free catalog KNN |
 | `tests/test_prototype_retrieval.py` | Unit and MCP contract coverage for validation, scoring, response shape, errors, registration, and lifecycle |
 | `tests/score_embeddings/test_prototype_retrieval_integration.py` | Offline boundary test using fake aligned CLaMP output and real SQLite/`sqlite-vec` retrieval |
 | `tests/score_embeddings/test_prototype_retrieval_timing.py` | FastMCP Client timing coverage, including an opt-in prepared-runtime cold/warm run |

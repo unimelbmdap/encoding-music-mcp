@@ -17,7 +17,7 @@ dependencies = [
 
 [project.scripts]
 encoding-music-mcp = "encoding_music_mcp.server:main"
-encoding-music-embeddings = "encoding_music_mcp.score_embeddings.pipeline:main"
+encoding-music-embeddings = "encoding_music_mcp.tools.score_embeddings.pipeline:main"
 
 [project.optional-dependencies]
 score-embeddings = [

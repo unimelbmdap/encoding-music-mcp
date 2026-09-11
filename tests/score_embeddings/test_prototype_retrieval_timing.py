@@ -13,7 +13,7 @@ from typing import Any
 import pytest
 from fastmcp import Client
 
-from encoding_music_mcp.score_embeddings import clamp_extractor
+from encoding_music_mcp.tools.score_embeddings import clamp_extractor
 from encoding_music_mcp.server import mcp
 from encoding_music_mcp.tools import prototype_retrieval
 

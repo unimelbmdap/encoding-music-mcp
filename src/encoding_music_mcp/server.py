@@ -28,7 +28,7 @@ def _prewarm_clamp_worker_async() -> None:
     def _warm() -> None:
         try:
             from .tools.semantic_axis_retrieval import config_from_environment
-            from .score_embeddings.clamp_extractor import _PERSISTENT_TEXT_ENCODER
+            from .tools.score_embeddings.clamp_extractor import _PERSISTENT_TEXT_ENCODER
 
             cfg = config_from_environment()
             _PERSISTENT_TEXT_ENCODER.encode(("warmup", "contrast"), cfg.clamp)
@@ -70,7 +70,7 @@ def main():
         else:
             mcp.run()
     finally:
-        from .score_embeddings import close_persistent_clamp_text_encoder
+        from .tools.score_embeddings import close_persistent_clamp_text_encoder
         from .tools.semantic_axis_retrieval import (
             close_semantic_axis_retrieval_resources,
         )

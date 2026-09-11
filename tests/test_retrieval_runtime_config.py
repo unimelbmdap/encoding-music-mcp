@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from encoding_music_mcp.score_embeddings import runtime_config as runtime
+from encoding_music_mcp.tools.score_embeddings import runtime_config as runtime
 from encoding_music_mcp.tools import prototype_retrieval, semantic_axis_retrieval
 
 
@@ -93,7 +93,7 @@ def test_invalid_timeout_rejected_by_both_tools(tool, checkout, timeout):
 
 
 def test_source_root_discovery_does_not_use_cwd(tmp_path, monkeypatch):
-    expected = Path(runtime.__file__).resolve().parents[3]
+    expected = Path(runtime.__file__).resolve().parents[4]
     monkeypatch.chdir(tmp_path)
     assert runtime.repository_root() == expected
 
