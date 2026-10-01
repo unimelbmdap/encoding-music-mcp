@@ -9,7 +9,7 @@ from fastmcp.server.sessions import SessionId, SessionProvider
 
 # Create MCP server
 mcp = FastMCP("encoding-music-mcp")
-mcp.add_middleware(ConversationReportMiddleware)
+mcp.add_middleware(ConversationReportMiddleware())
 mcp.add_provider(SessionProvider())
 
 

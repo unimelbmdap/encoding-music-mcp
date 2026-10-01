@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from crim_intervals.main_objs import importScore
-from fastmcp.tools.tool import ToolResult
+from fastmcp.tools import ToolResult
 from mcp.types import TextContent
 
 from ..helpers import get_mei_filepath

@@ -8,7 +8,7 @@ from typing import Any
 import pandas as pd
 from crim_intervals.corpus_tools import corpus_sonority_ngrams
 from crim_intervals.main_objs import CorpusBase
-from fastmcp.tools.tool import ToolResult
+from fastmcp.tools import ToolResult
 from mcp.types import TextContent
 
 from ..helpers import get_mei_filepath

@@ -7,7 +7,7 @@ import io
 import re
 from typing import Any
 
-from fastmcp.tools.tool import ToolResult
+from fastmcp.tools import ToolResult
 from mcp.types import TextContent
 
 from ..intervals import get_notes

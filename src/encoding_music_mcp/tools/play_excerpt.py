@@ -15,7 +15,7 @@ from typing import Any
 
 from fastmcp import Context
 from fastmcp.server.elicitation import CancelledElicitation, DeclinedElicitation
-from fastmcp.tools.tool import ToolResult
+from fastmcp.tools import ToolResult
 from music21 import converter, tempo
 from mcp.types import TextContent
 

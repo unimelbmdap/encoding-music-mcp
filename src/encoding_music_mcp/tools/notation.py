@@ -10,7 +10,7 @@ from mcp.types import TextContent
 
 from fastmcp import Context
 from fastmcp.server.elicitation import CancelledElicitation, DeclinedElicitation
-from fastmcp.tools.tool import ToolResult
+from fastmcp.tools import ToolResult
 
 from .helpers import get_mei_collections, get_mei_filepath, register_uploaded_mei_from_path
 

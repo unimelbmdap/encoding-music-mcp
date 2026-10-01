@@ -34,7 +34,7 @@ def test_tool_schemas_survive_mcp_protocol_listing():
 
     assert missing_schemas == set()
     assert metadata_schema["required"] == ["filename"]
-    assert metadata_schema["properties"]["filename"] == {"type": "string"}
+    assert metadata_schema["properties"]["filename"]["type"] == "string"
 
 
 @pytest.mark.parametrize(
