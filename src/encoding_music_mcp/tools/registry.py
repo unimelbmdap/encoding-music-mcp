@@ -38,6 +38,7 @@ from .visualisation.voice_ranges import plot_voice_ranges
 from .visualisation.weighted_note_distribution import plot_weighted_note_distribution
 from .visualisation.melodic_ngram_heatmap import plot_melodic_ngram_heatmap
 from .visualisation.sonority_ngram_progress import plot_sonority_ngram_progress
+from .download_report import get_conversation_report
 
 # Register all tools here
 # To add a new tool: import it, then add mcp.tool()(your_tool) below
@@ -83,3 +84,4 @@ mcp.tool(
     app=AppConfig(resource_uri="ui://play_excerpt/v2.html"),
     output_schema=PLAY_EXCERPT_OUTPUT_SCHEMA,
 )(play_excerpt)
+mcp.tool()(get_conversation_report)

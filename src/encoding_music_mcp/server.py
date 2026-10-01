@@ -4,9 +4,13 @@ import os
 
 from fastmcp import FastMCP
 from starlette.responses import JSONResponse
+from .middleware import ConversationReportMiddleware
+from fastmcp.server.sessions import SessionId, SessionProvider
 
 # Create MCP server
 mcp = FastMCP("encoding-music-mcp")
+mcp.add_middleware(ConversationReportMiddleware)
+mcp.add_provider(SessionProvider())
 
 
 @mcp.custom_route("/health", methods=["GET"])
