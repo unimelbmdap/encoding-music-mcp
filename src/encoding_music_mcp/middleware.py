@@ -45,7 +45,9 @@ class ConversationReportMiddleware(Middleware):
             existing_history.append(event)
             await session.set("conversation_report", existing_history)
 
-    async def report_as_jsonl(self, session: Session) -> str:
+    @staticmethod
+    async def report_as_jsonl(session_id: str) -> str:
+        session = await get_session(session_id)
         history = await session.get("conversation_report", default=[])
 
         return "\n".join(
