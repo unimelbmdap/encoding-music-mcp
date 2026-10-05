@@ -56,5 +56,6 @@ def expose_session_id(
         wrapper = sync_wrapper
 
     # FastMCP inspects this signature when generating the tool schema.
-    wrapper.__signature__ = exposed_signature  
+    wrapper.__signature__ = exposed_signature
+    wrapper.__annotations__ = {**wrapper.__annotations__, "session_id": SessionId} # give sessionID param type annotation for schema generation
     return wrapper
