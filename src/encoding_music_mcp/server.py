@@ -5,7 +5,7 @@ import os
 from fastmcp import FastMCP
 from starlette.responses import JSONResponse
 from .middleware import ConversationReportMiddleware
-from fastmcp.server.sessions import SessionId, SessionProvider
+from fastmcp.server.sessions import  SessionProvider
 
 # Create MCP server
 mcp = FastMCP("encoding-music-mcp")

@@ -4,6 +4,9 @@ from fastmcp.server.dependencies import get_session
 import json
 from typing import Any
 
+EXCLUDED_TOOLS = {
+    "get_conversation_report",
+}
 
 class ConversationReportMiddleware(Middleware):
     """Middleware to log conversation reports for each request."""
@@ -18,7 +21,7 @@ class ConversationReportMiddleware(Middleware):
 
 
         # If client not providing session_id, skip logging to session
-        if session_id is None:
+        if session_id is None or tool_name in EXCLUDED_TOOLS:
             return result
         session = await get_session(session_id)
         
