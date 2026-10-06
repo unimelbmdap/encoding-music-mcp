@@ -7,6 +7,16 @@ from typing import Any
 EXCLUDED_TOOLS = {
     "get_conversation_report",
 }
+"""
+# Only log param
+VISUALISATION_TOOLS = { 
+    "plot_melodic_ngram_heatmap",
+    "plot_sonority_ngram_progress",
+    "plot_voice_ranges",
+    "plot_weighted_note_distribution",
+    }
+"""
+
 
 class ConversationReportMiddleware(Middleware):
     """Middleware to log conversation reports for each request."""
@@ -35,10 +45,10 @@ class ConversationReportMiddleware(Middleware):
                     for key, value in args.items()
                     if key != "session_id"
                 },
-                "result": result
+                #"result": result
             }
         )
-        return result
+        return result   
 
     async def log_to_session(self, session: Session, event: dict):
         """Log the conversation report to the user session."""

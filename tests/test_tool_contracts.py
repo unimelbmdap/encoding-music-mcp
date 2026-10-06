@@ -33,7 +33,7 @@ def test_tool_schemas_survive_mcp_protocol_listing():
     metadata_schema = tools["get_mei_metadata"].inputSchema
 
     assert missing_schemas == set()
-    assert metadata_schema["required"] == ["filename"]
+    assert metadata_schema["required"] == ["filename", "session_id"]
     assert metadata_schema["properties"]["filename"]["type"] == "string"
 
 
@@ -82,20 +82,26 @@ def test_app_tool_results_conform_to_registered_output_schemas(
     tool_name: str,
     arguments: dict[str, object],
     expected_key: str,
+    mcp_session_id: str,
 ):
     """FastMCP should validate and preserve every app's structured payload."""
-    result = asyncio.run(mcp.call_tool(tool_name, arguments))
+    result = asyncio.run(
+        mcp.call_tool(tool_name, {**arguments, "session_id": mcp_session_id})
+    )
 
     assert result.structured_content is not None
     assert expected_key in result.structured_content
 
 
-def test_metadata_result_survives_registered_tool_boundary():
+def test_metadata_result_survives_registered_tool_boundary(mcp_session_id: str):
     """The metadata tool should be callable using its advertised filename schema."""
     result = asyncio.run(
         mcp.call_tool(
             "get_mei_metadata",
-            {"filename": "Bach_BWV_0772.mei"},
+            {
+                "filename": "Bach_BWV_0772.mei",
+                "session_id": mcp_session_id,
+            },
         )
     )
 

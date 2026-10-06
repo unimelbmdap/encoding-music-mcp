@@ -29,7 +29,12 @@ def fake_mei_file(tmp_path: Path) -> Path:
     return mei_path
 
 
-def test_play_excerpt_full_piece_returns_stream_url(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, fake_mei_file: Path):
+def test_play_excerpt_full_piece_returns_stream_url(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    fake_mei_file: Path,
+    mcp_session_id: str,
+):
     """Full-piece playback should return an audio resource URI and registry entry."""
     output_dir = tmp_path / "audio-cache"
 
@@ -51,7 +56,14 @@ def test_play_excerpt_full_piece_returns_stream_url(monkeypatch: pytest.MonkeyPa
     monkeypatch.setattr(play_excerpt_module, "_convert_wav_to_mp3", fake_convert)
 
     result = asyncio.run(
-        mcp.call_tool("play_excerpt", {"filename": "sample.mei", "bpm": 72})
+        mcp.call_tool(
+            "play_excerpt",
+            {
+                "filename": "sample.mei",
+                "bpm": 72,
+                "session_id": mcp_session_id,
+            },
+        )
     )
     payload = result.structured_content
 
@@ -226,7 +238,11 @@ def test_play_excerpt_raises_after_elicitation_decline(monkeypatch: pytest.Monke
         asyncio.run(play_excerpt_module.play_excerpt(ctx=FakeContext()))
 
 
-def test_load_audio_resource_returns_base64(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+def test_load_audio_resource_returns_base64(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    mcp_session_id: str,
+):
     """Registered audio resources should be loadable as base64 payloads."""
     mp3_path = tmp_path / "sample.mp3"
     mp3_path.write_bytes(b"fake-mp3-bytes")
@@ -242,7 +258,10 @@ def test_load_audio_resource_returns_base64(monkeypatch: pytest.MonkeyPatch, tmp
     result = asyncio.run(
         mcp.call_tool(
             "load_audio_resource",
-            {"resource_uri": "audio://files/token123"},
+            {
+                "resource_uri": "audio://files/token123",
+                "session_id": mcp_session_id,
+            },
         )
     )
     payload = result.structured_content
