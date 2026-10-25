@@ -1,5 +1,4 @@
 from fastmcp.server.middleware import Middleware, MiddlewareContext
-from fastmcp.server.sessions import Session
 from fastmcp.server.dependencies import get_session
 
 from encoding_music_mcp.tools.conversation_report import ConversationReport
