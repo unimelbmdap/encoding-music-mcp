@@ -101,7 +101,9 @@ def test_register_mei_file_from_path_rejects_missing_file(uploaded_filename):
         asyncio.run(register_mei_file_from_path("missing-file.mei", uploaded_filename))
 
 
-def test_register_mei_file_from_path_rejects_invalid_content(tmp_path, uploaded_filename):
+def test_register_mei_file_from_path_rejects_invalid_content(
+    tmp_path, uploaded_filename
+):
     """Only well-formed MEI XML files should be registered."""
     invalid_xml = tmp_path / "invalid.mei"
     invalid_xml.write_text("not xml", encoding="utf-8")

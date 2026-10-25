@@ -215,7 +215,9 @@ def _build_score_groups(
                             totals[pitch_class] += float(dur_ppq)
                             note_counts[group_label] += 1
 
-    if not group_totals or all(sum(values.values()) == 0 for values in group_totals.values()):
+    if not group_totals or all(
+        sum(values.values()) == 0 for values in group_totals.values()
+    ):
         raise ValueError(f"No sounding notes found in MEI file: {filename}")
 
     metadata_payload = {

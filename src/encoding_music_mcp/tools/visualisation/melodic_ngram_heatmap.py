@@ -85,7 +85,9 @@ def _build_score_payload(
     part_events = _build_part_note_events(piece)
 
     rows: list[dict[str, Any]] = []
-    for staff in sorted(part_events.keys(), key=lambda value: int(value) if value.isdigit() else value):
+    for staff in sorted(
+        part_events.keys(), key=lambda value: int(value) if value.isdigit() else value
+    ):
         events = part_events[staff]
         end_q = max(
             (float(event["offset"]) + float(event["duration"]) for event in events),
@@ -146,9 +148,9 @@ def _build_heatmap_payload(
     for score in score_payloads:
         for record in score["pattern_counts"]:
             pattern_string = record["pattern_string"]
-            count_by_pattern[pattern_string] = (
-                count_by_pattern.get(pattern_string, 0) + int(record["count"])
-            )
+            count_by_pattern[pattern_string] = count_by_pattern.get(
+                pattern_string, 0
+            ) + int(record["count"])
             pattern_values.setdefault(pattern_string, record["pattern"])
 
     top_patterns = sorted(
@@ -170,7 +172,8 @@ def _build_heatmap_payload(
         score_matches = [
             match
             for match in score["matches"]
-            if match["pattern_string"] in selected_patterns and float(match["duration"]) > 0
+            if match["pattern_string"] in selected_patterns
+            and float(match["duration"]) > 0
         ]
         for match in score_matches:
             pattern_string = match["pattern_string"]

@@ -5,7 +5,7 @@ import os
 from fastmcp import FastMCP
 from starlette.responses import JSONResponse
 from .middleware import ConversationReportMiddleware
-from fastmcp.server.sessions import  SessionProvider
+from fastmcp.server.sessions import SessionProvider
 
 # Create MCP server
 mcp = FastMCP("encoding-music-mcp")
@@ -17,6 +17,7 @@ mcp.add_provider(SessionProvider())
 async def health_check(request):
     """Health check endpoint for container orchestration."""
     return JSONResponse({"status": "healthy"})
+
 
 # Import tools, resources, and prompts to trigger registration
 from .tools import registry as _tools_registry  # noqa: E402, F401
@@ -39,9 +40,7 @@ def main():
         # Caddy is the only published service in the Docker deployment. Trust
         # its forwarded scheme so redirects and generated URLs remain HTTPS,
         # and keep upstream connections alive slightly longer than Caddy does.
-        forwarded_allow_ips = os.environ.get(
-            "MCP_FORWARDED_ALLOW_IPS", "127.0.0.1"
-        )
+        forwarded_allow_ips = os.environ.get("MCP_FORWARDED_ALLOW_IPS", "127.0.0.1")
         keep_alive = int(os.environ.get("MCP_HTTP_KEEP_ALIVE", "35"))
         mcp.run(
             transport="http",

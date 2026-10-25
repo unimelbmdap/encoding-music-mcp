@@ -140,4 +140,3 @@ def plot_voice_ranges(filename: str) -> ToolResult:
         content=[TextContent(type="text", text=description)],
         structured_content=structured,
     )
-

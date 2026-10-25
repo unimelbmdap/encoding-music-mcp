@@ -66,6 +66,7 @@ nav:
           - Melodic N-gram Heatmap: tools/visualisation/melodic-ngram-heatmap.md
           - Sonority N-gram Progress: tools/visualisation/sonority-ngram-progress.md
       - Play Excerpt: tools/play-excerpt.md
+      - Conversation Report: tools/conversation-report.md
       - Intervals:
           - Overview: tools/intervals/index.md
           - Notes: tools/intervals/notes.md

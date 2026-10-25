@@ -1,3 +1,4 @@
+"""Expose session_id in the MCP schema without passing it to the function."""
 import inspect
 from functools import wraps
 from typing import Any, Callable
@@ -5,19 +6,18 @@ from typing import Any, Callable
 from fastmcp.server.sessions import SessionId
 
 
-
 def expose_session_id(
-        function: Callable[..., Any],
-        )  -> Callable[..., Any]:
+    function: Callable[..., Any],
+) -> Callable[..., Any]:
     """Expose session_id in the MCP schema without passing it to the function."""
 
-    signature = inspect.signature(function) #params + return type
+    signature = inspect.signature(function)  # params + return type
 
     # Check if the function already has a session_id parameter
     if "session_id" in signature.parameters:
         raise TypeError(f"{function.__name__} already defines session_id")
 
-    #define a new parameter for session_id to be added to the function's signature
+    # define a new parameter for session_id to be added to the function's signature
     session_parameter = inspect.Parameter(
         name="session_id",
         kind=inspect.Parameter.KEYWORD_ONLY,
@@ -38,16 +38,17 @@ def expose_session_id(
     exposed_signature = signature.replace(parameters=parameters)
 
     # Create a wrapper function that removes session_id from kwargs before calling the original function
-    if inspect.iscoroutinefunction(function): 
+    if inspect.iscoroutinefunction(function):
 
-        @wraps(function) #copies metadata from original function to wrapper
+        @wraps(function)  # copies metadata from original function to wrapper
         async def async_wrapper(*args: Any, **kwargs: Any) -> Any:
-            #remove session_id from kwargs before calling the original function
+            # remove session_id from kwargs before calling the original function
             kwargs.pop("session_id", None)
             return await function(*args, **kwargs)
 
         wrapper = async_wrapper
     else:
+
         @wraps(function)
         def sync_wrapper(*args: Any, **kwargs: Any) -> Any:
             kwargs.pop("session_id", None)
@@ -57,5 +58,8 @@ def expose_session_id(
 
     # FastMCP inspects this signature when generating the tool schema.
     wrapper.__signature__ = exposed_signature
-    wrapper.__annotations__ = {**wrapper.__annotations__, "session_id": SessionId} # give sessionID param type annotation for schema generation
+    wrapper.__annotations__ = {
+        **wrapper.__annotations__,
+        "session_id": SessionId,
+    }  # give sessionID param type annotation for schema generation
     return wrapper

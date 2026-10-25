@@ -12,7 +12,9 @@ from src.encoding_music_mcp.server import mcp
 from src.encoding_music_mcp.tools import play_excerpt as play_excerpt_module
 
 
-def _write_test_wav(path: Path, duration_sec: float = 1.0, framerate: int = 8000) -> None:
+def _write_test_wav(
+    path: Path, duration_sec: float = 1.0, framerate: int = 8000
+) -> None:
     """Create a tiny silent WAV file for tests."""
     frame_count = int(duration_sec * framerate)
     with wave.open(str(path), "wb") as wav_file:
@@ -39,7 +41,9 @@ def test_play_excerpt_full_piece_returns_stream_url(
     output_dir = tmp_path / "audio-cache"
 
     monkeypatch.setattr(play_excerpt_module, "_AUDIO_CACHE_DIR", output_dir)
-    monkeypatch.setattr(play_excerpt_module, "get_mei_filepath", lambda filename: fake_mei_file)
+    monkeypatch.setattr(
+        play_excerpt_module, "get_mei_filepath", lambda filename: fake_mei_file
+    )
     monkeypatch.setattr(
         play_excerpt_module,
         "_render_mei_to_midi_b64",
@@ -52,7 +56,9 @@ def test_play_excerpt_full_piece_returns_stream_url(
     def fake_convert(input_wav: Path, output_mp3: Path) -> None:
         output_mp3.write_bytes(b"fake-mp3")
 
-    monkeypatch.setattr(play_excerpt_module, "_render_midi_b64_to_wav_file", fake_render)
+    monkeypatch.setattr(
+        play_excerpt_module, "_render_midi_b64_to_wav_file", fake_render
+    )
     monkeypatch.setattr(play_excerpt_module, "_convert_wav_to_mp3", fake_convert)
 
     result = asyncio.run(
@@ -81,12 +87,16 @@ def test_play_excerpt_full_piece_returns_stream_url(
     assert audio_entry["mime_type"] == "audio/mpeg"
 
 
-def test_play_excerpt_range_trims_audio(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, fake_mei_file: Path):
+def test_play_excerpt_range_trims_audio(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, fake_mei_file: Path
+):
     """Ranged playback should trim before MP3 conversion."""
     output_dir = tmp_path / "audio-cache"
 
     monkeypatch.setattr(play_excerpt_module, "_AUDIO_CACHE_DIR", output_dir)
-    monkeypatch.setattr(play_excerpt_module, "get_mei_filepath", lambda filename: fake_mei_file)
+    monkeypatch.setattr(
+        play_excerpt_module, "get_mei_filepath", lambda filename: fake_mei_file
+    )
     monkeypatch.setattr(
         play_excerpt_module,
         "_render_mei_to_midi_b64",
@@ -98,14 +108,18 @@ def test_play_excerpt_range_trims_audio(monkeypatch: pytest.MonkeyPatch, tmp_pat
     def fake_render(midi_b64: str, wav_path: Path) -> None:
         _write_test_wav(wav_path, duration_sec=4.0)
 
-    def fake_trim(input_wav: Path, output_wav: Path, start_sec: float, end_sec: float) -> None:
+    def fake_trim(
+        input_wav: Path, output_wav: Path, start_sec: float, end_sec: float
+    ) -> None:
         trim_calls.append((start_sec, end_sec))
         _write_test_wav(output_wav, duration_sec=end_sec - start_sec)
 
     def fake_convert(input_wav: Path, output_mp3: Path) -> None:
         output_mp3.write_bytes(b"fake-mp3")
 
-    monkeypatch.setattr(play_excerpt_module, "_render_midi_b64_to_wav_file", fake_render)
+    monkeypatch.setattr(
+        play_excerpt_module, "_render_midi_b64_to_wav_file", fake_render
+    )
     monkeypatch.setattr(play_excerpt_module, "_trim_wav_file", fake_trim)
     monkeypatch.setattr(play_excerpt_module, "_convert_wav_to_mp3", fake_convert)
 
@@ -147,22 +161,14 @@ def test_play_excerpt_reuses_completed_audio_cache(
         calls["convert"] += 1
         output_mp3.write_bytes(b"fake-mp3")
 
-    monkeypatch.setattr(
-        play_excerpt_module, "_render_mei_to_midi_b64", fake_midi
-    )
+    monkeypatch.setattr(play_excerpt_module, "_render_mei_to_midi_b64", fake_midi)
     monkeypatch.setattr(
         play_excerpt_module, "_render_midi_b64_to_wav_file", fake_render
     )
-    monkeypatch.setattr(
-        play_excerpt_module, "_convert_wav_to_mp3", fake_convert
-    )
+    monkeypatch.setattr(play_excerpt_module, "_convert_wav_to_mp3", fake_convert)
 
-    first = asyncio.run(
-        play_excerpt_module.play_excerpt("sample.mei", bpm=72)
-    )
-    second = asyncio.run(
-        play_excerpt_module.play_excerpt("sample.mei", bpm=72)
-    )
+    first = asyncio.run(play_excerpt_module.play_excerpt("sample.mei", bpm=72))
+    second = asyncio.run(play_excerpt_module.play_excerpt("sample.mei", bpm=72))
 
     assert calls == {"midi": 1, "synth": 1, "convert": 1}
     assert first.structured_content["duration_sec"] == pytest.approx(1.25)
@@ -172,7 +178,9 @@ def test_play_excerpt_reuses_completed_audio_cache(
 def test_play_excerpt_rejects_invalid_range():
     """Invalid ranges should be rejected before any rendering starts."""
     with pytest.raises(ValueError, match="end_q must be greater than start_q"):
-        asyncio.run(play_excerpt_module.play_excerpt("anything.mei", start_q=3.0, end_q=3.0))
+        asyncio.run(
+            play_excerpt_module.play_excerpt("anything.mei", start_q=3.0, end_q=3.0)
+        )
 
 
 def test_play_excerpt_rejects_negative_start():
@@ -182,13 +190,17 @@ def test_play_excerpt_rejects_negative_start():
 
 
 def test_play_excerpt_elicits_filename_when_missing(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, fake_mei_file: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    fake_mei_file: Path,
 ):
     """Missing filenames should be requested from the user before playback proceeds."""
     output_dir = tmp_path / "audio-cache"
 
     monkeypatch.setattr(play_excerpt_module, "_AUDIO_CACHE_DIR", output_dir)
-    monkeypatch.setattr(play_excerpt_module, "get_mei_filepath", lambda filename: fake_mei_file)
+    monkeypatch.setattr(
+        play_excerpt_module, "get_mei_filepath", lambda filename: fake_mei_file
+    )
     monkeypatch.setattr(
         play_excerpt_module,
         "get_mei_collections",
@@ -207,12 +219,16 @@ def test_play_excerpt_elicits_filename_when_missing(
         output_mp3.write_bytes(b"fake-mp3")
 
     class FakeContext:
-        async def elicit(self, message: str, response_type: object) -> AcceptedElicitation[str]:
+        async def elicit(
+            self, message: str, response_type: object
+        ) -> AcceptedElicitation[str]:
             assert message == "Which music score would you like me to play?"
             assert response_type == ["sample.mei", "other.mei"]
             return AcceptedElicitation(data="sample.mei")
 
-    monkeypatch.setattr(play_excerpt_module, "_render_midi_b64_to_wav_file", fake_render)
+    monkeypatch.setattr(
+        play_excerpt_module, "_render_midi_b64_to_wav_file", fake_render
+    )
     monkeypatch.setattr(play_excerpt_module, "_convert_wav_to_mp3", fake_convert)
 
     result = asyncio.run(play_excerpt_module.play_excerpt(ctx=FakeContext()))
@@ -231,7 +247,9 @@ def test_play_excerpt_raises_after_elicitation_decline(monkeypatch: pytest.Monke
     )
 
     class FakeContext:
-        async def elicit(self, message: str, response_type: object) -> DeclinedElicitation:
+        async def elicit(
+            self, message: str, response_type: object
+        ) -> DeclinedElicitation:
             return DeclinedElicitation()
 
     with pytest.raises(ValueError, match="filename is required to play an excerpt"):
@@ -247,13 +265,17 @@ def test_load_audio_resource_returns_base64(
     mp3_path = tmp_path / "sample.mp3"
     mp3_path.write_bytes(b"fake-mp3-bytes")
 
-    monkeypatch.setattr(play_excerpt_module, "_AUDIO_REGISTRY", {
-        "token123": {
-            "path": mp3_path,
-            "mime_type": "audio/mpeg",
-            "duration_sec": 1.0,
-        }
-    })
+    monkeypatch.setattr(
+        play_excerpt_module,
+        "_AUDIO_REGISTRY",
+        {
+            "token123": {
+                "path": mp3_path,
+                "mime_type": "audio/mpeg",
+                "duration_sec": 1.0,
+            }
+        },
+    )
 
     result = asyncio.run(
         mcp.call_tool(
@@ -276,7 +298,9 @@ def test_normalize_zero_velocities_rewrites_silent_notes():
     """Zero-velocity note and chord events should be made audible for playback."""
     mei = '<note vel="0"/><chord dur="4" vel="0"/><note vel="42"/>'
 
-    normalized = play_excerpt_module._normalize_zero_velocities(mei, default_velocity=64)
+    normalized = play_excerpt_module._normalize_zero_velocities(
+        mei, default_velocity=64
+    )
 
     assert '<note vel="64"/>' in normalized
     assert '<chord dur="4" vel="64"/>' in normalized
@@ -306,7 +330,30 @@ def test_expand_mei_repeats_for_playback_keeps_first_and_second_endings():
     measure_numbers = [measure.get("n") for measure in measures]
 
     assert measure_numbers[30:] == [
-        "31", "32", "33", "34", "35", "36", "37", "38", "39",
-        "40", "41", "42", "43", "44", "45", "46",
-        "31", "32", "33", "34", "35", "36", "37", "38", "39", "47",
+        "31",
+        "32",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "39",
+        "40",
+        "41",
+        "42",
+        "43",
+        "44",
+        "45",
+        "46",
+        "31",
+        "32",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "39",
+        "47",
     ]

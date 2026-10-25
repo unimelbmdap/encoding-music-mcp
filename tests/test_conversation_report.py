@@ -115,10 +115,7 @@ def test_report_as_jsonl_serializes_events_in_order(monkeypatch):
 
 def test_get_conversation_report_returns_named_jsonl_attachment(monkeypatch):
     """The export should contain a user-facing message and JSONL resource."""
-    jsonl = (
-        '{"type":"conversation_report","version":"1",'
-        '"session_id":"session-123"}'
-    )
+    jsonl = '{"type":"conversation_report","version":"1","session_id":"session-123"}'
 
     async def fake_report_as_jsonl(cls, session_id: str) -> str:
         assert session_id == "session-123"
@@ -130,9 +127,7 @@ def test_get_conversation_report_returns_named_jsonl_attachment(monkeypatch):
         classmethod(fake_report_as_jsonl),
     )
 
-    result = asyncio.run(
-        ConversationReport.get_conversation_report("session-123")
-    )
+    result = asyncio.run(ConversationReport.get_conversation_report("session-123"))
 
     assert result.structured_content == {
         "filename": "conversation-report.jsonl",

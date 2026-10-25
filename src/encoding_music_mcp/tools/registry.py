@@ -39,7 +39,7 @@ from .visualisation.weighted_note_distribution import plot_weighted_note_distrib
 from .visualisation.melodic_ngram_heatmap import plot_melodic_ngram_heatmap
 from .visualisation.sonority_ngram_progress import plot_sonority_ngram_progress
 from .conversation_report import ConversationReport
-from .decoroators import expose_session_id
+from .decorators import expose_session_id
 
 # Register all tools here
 # To add a new tool: import it, then add mcp.tool()(your_tool) below

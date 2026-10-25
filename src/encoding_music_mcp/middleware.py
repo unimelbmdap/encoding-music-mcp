@@ -1,5 +1,5 @@
 from fastmcp.server.middleware import Middleware, MiddlewareContext
-from fastmcp.server.sessions import  Session
+from fastmcp.server.sessions import Session
 from fastmcp.server.dependencies import get_session
 
 from encoding_music_mcp.tools.conversation_report import ConversationReport
@@ -17,6 +17,7 @@ VISUALISATION_TOOLS = {
     }
 """
 
+
 class ConversationReportMiddleware(Middleware):
     """Middleware to log conversation reports for each request."""
 
@@ -31,7 +32,7 @@ class ConversationReportMiddleware(Middleware):
         if session_id is None or tool_name in EXCLUDED_TOOLS:
             return result
         session = await get_session(session_id)
-        
+
         # Otherwise, log the tool call to the session's conversation report
         if not result.is_error:
             await ConversationReport.record_tool(
@@ -43,7 +44,7 @@ class ConversationReportMiddleware(Middleware):
                         for key, value in args.items()
                         if key != "session_id"
                     },
-                    #"result": result
-                }
+                    # "result": result
+                },
             )
             return result

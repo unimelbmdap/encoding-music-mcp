@@ -22,7 +22,9 @@ from mcp.types import TextContent
 from .helpers import get_mei_collections, get_mei_filepath
 
 # A SoundFont is needed by FluidSynth to turn MIDI into actual audio.
-_SOUNDFONT_PATH = Path(__file__).resolve().parent.parent / "resources" / "GeneralUser-GS.sf2"
+_SOUNDFONT_PATH = (
+    Path(__file__).resolve().parent.parent / "resources" / "GeneralUser-GS.sf2"
+)
 _AUDIO_CACHE_DIR = Path(tempfile.gettempdir()) / "encoding_music_mcp_audio"
 _AUDIO_CACHE_VERSION = "v3"
 
@@ -138,7 +140,9 @@ def _expand_region_element(element: ET.Element, pass_number: int) -> list[ET.Ele
 
 def _contains_numbered_endings(region: list[ET.Element]) -> bool:
     """Return True when a repeat region contains numbered ending wrappers."""
-    return any(_is_mei_ending(element) and _parse_ending_passes(element) for element in region)
+    return any(
+        _is_mei_ending(element) and _parse_ending_passes(element) for element in region
+    )
 
 
 def _expand_region_with_numbered_endings(region: list[ET.Element]) -> list[ET.Element]:
@@ -181,7 +185,11 @@ def _expand_section_repeats(section: ET.Element) -> None:
     while index < len(children):
         child = children[index]
 
-        if not (_is_mei_measure(child) and child.get("left") and "rptstart" in child.get("left", "")):
+        if not (
+            _is_mei_measure(child)
+            and child.get("left")
+            and "rptstart" in child.get("left", "")
+        ):
             if _is_mei_measure(child):
                 flattened.append(_strip_repeat_markers(child))
             index += 1
@@ -191,10 +199,14 @@ def _expand_section_repeats(section: ET.Element) -> None:
         repeat_found = False
         while region_end < len(children):
             region_child = children[region_end]
-            if _is_mei_measure(region_child) and "rptend" in region_child.get("right", ""):
+            if _is_mei_measure(region_child) and "rptend" in region_child.get(
+                "right", ""
+            ):
                 repeat_found = True
                 region_end += 1
-                while region_end < len(children) and _is_mei_ending(children[region_end]):
+                while region_end < len(children) and _is_mei_ending(
+                    children[region_end]
+                ):
                     region_end += 1
                 break
             region_end += 1
@@ -224,7 +236,9 @@ def _expand_mei_repeats_for_playback(mei_text: str) -> str:
     root = ET.fromstring(mei_text)
     for section in root.findall(f".//{_MEI_TAG}section"):
         _expand_section_repeats(section)
-    return '<?xml version="1.0" encoding="UTF-8"?>\n' + ET.tostring(root, encoding="unicode")
+    return '<?xml version="1.0" encoding="UTF-8"?>\n' + ET.tostring(
+        root, encoding="unicode"
+    )
 
 
 def _render_mei_to_midi_b64(filepath: Path, mei_text: str, bpm: int) -> str:
@@ -299,10 +313,14 @@ def _render_midi_b64_to_wav_file(midi_b64: str, wav_path: Path) -> None:
             str(fluidsynth_exe),
             "-q",
             "-ni",
-            "-o", "audio.driver=file",
-            "-T", "wav",
-            "-F", str(wav_path),
-            "-r", "44100",
+            "-o",
+            "audio.driver=file",
+            "-T",
+            "wav",
+            "-F",
+            str(wav_path),
+            "-r",
+            "44100",
             str(_SOUNDFONT_PATH),
             str(midi_path),
         ]
@@ -328,7 +346,9 @@ def _render_midi_b64_to_wav_file(midi_b64: str, wav_path: Path) -> None:
             raise RuntimeError("FluidSynth did not produce a WAV file.")
 
 
-def _trim_wav_file(input_wav: Path, output_wav: Path, start_sec: float, end_sec: float) -> None:
+def _trim_wav_file(
+    input_wav: Path, output_wav: Path, start_sec: float, end_sec: float
+) -> None:
     """Trim a time interval from one WAV file into another WAV file."""
     if end_sec <= start_sec:
         raise ValueError("end_sec must be greater than start_sec")
@@ -419,9 +439,7 @@ def _build_audio_cache_key(
     if filepath is not None:
         try:
             stat = filepath.stat()
-            file_signature = (
-                f"|{filepath.resolve()}|{stat.st_mtime_ns}|{stat.st_size}"
-            )
+            file_signature = f"|{filepath.resolve()}|{stat.st_mtime_ns}|{stat.st_size}"
         except OSError:
             file_signature = f"|{filepath.resolve()}|missing"
     payload = (
@@ -457,9 +475,7 @@ def _prepare_audio_payload(
 ) -> dict[str, Any]:
     """Prepare or reuse rendered audio without blocking the asyncio event loop."""
     _AUDIO_CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    cache_key = _build_audio_cache_key(
-        filename, start_q, end_q, bpm, filepath=filepath
-    )
+    cache_key = _build_audio_cache_key(filename, start_q, end_q, bpm, filepath=filepath)
     output_mp3_path = _AUDIO_CACHE_DIR / f"{cache_key}.mp3"
     duration_path = _AUDIO_CACHE_DIR / f"{cache_key}.duration"
     render_lock = _get_audio_render_lock(cache_key)
@@ -478,29 +494,21 @@ def _prepare_audio_payload(
                         mei_text = filepath.read_text(encoding="utf-8")
                         mei_text = _inject_or_replace_tempo(mei_text, bpm)
                         mei_text = _normalize_zero_velocities(mei_text)
-                        midi_b64 = _render_mei_to_midi_b64(
-                            filepath, mei_text, bpm
-                        )
+                        midi_b64 = _render_mei_to_midi_b64(filepath, mei_text, bpm)
 
                         with tempfile.TemporaryDirectory() as tmpdir:
                             tmpdir_path = Path(tmpdir)
                             full_wav_path = tmpdir_path / "full.wav"
                             working_wav_path = tmpdir_path / "working.wav"
 
-                            _render_midi_b64_to_wav_file(
-                                midi_b64, full_wav_path
-                            )
+                            _render_midi_b64_to_wav_file(midi_b64, full_wav_path)
 
                             if end_q is None and start_q == 0:
-                                shutil.copyfile(
-                                    full_wav_path, working_wav_path
-                                )
+                                shutil.copyfile(full_wav_path, working_wav_path)
                             else:
                                 start_sec = start_q * 60.0 / bpm
                                 if end_q is None:
-                                    end_sec = _get_wav_duration_sec(
-                                        full_wav_path
-                                    )
+                                    end_sec = _get_wav_duration_sec(full_wav_path)
                                 else:
                                     # Keep the release of the final note.
                                     end_sec = (end_q + 0.25) * 60.0 / bpm
@@ -511,12 +519,8 @@ def _prepare_audio_payload(
                                     end_sec,
                                 )
 
-                            _convert_wav_to_mp3(
-                                working_wav_path, output_mp3_path
-                            )
-                            duration_sec = _get_wav_duration_sec(
-                                working_wav_path
-                            )
+                            _convert_wav_to_mp3(working_wav_path, output_mp3_path)
+                            duration_sec = _get_wav_duration_sec(working_wav_path)
 
                         duration_path.write_text(
                             f"{duration_sec:.9f}", encoding="utf-8"
@@ -526,9 +530,7 @@ def _prepare_audio_payload(
             if _AUDIO_RENDER_LOCKS.get(cache_key) is render_lock:
                 _AUDIO_RENDER_LOCKS.pop(cache_key, None)
 
-    audio_token = _register_audio_file(
-        output_mp3_path, "audio/mpeg", duration_sec
-    )
+    audio_token = _register_audio_file(output_mp3_path, "audio/mpeg", duration_sec)
     return {
         "filename": filename,
         "audio_resource_uri": f"audio://files/{audio_token}",
@@ -571,7 +573,7 @@ def _parse_audio_resource_uri(resource_uri: str) -> str:
     prefix = "audio://files/"
     if not resource_uri.startswith(prefix):
         raise ValueError(f"Invalid audio resource URI: {resource_uri}")
-    return resource_uri[len(prefix):]
+    return resource_uri[len(prefix) :]
 
 
 async def play_excerpt(
@@ -664,9 +666,9 @@ async def play_excerpt(
 def load_audio_resource(resource_uri: str) -> ToolResult:
     """Load a prepared audio MCP resource for use inside the playback widget.
 
-    This helper acts as a bridge between the app and the server-side audio 
-    registry. It accepts an ``audio://files/{token}`` resource URI, resolves 
-    the token to a previously prepared MP3 file, reads the file bytes, and 
+    This helper acts as a bridge between the app and the server-side audio
+    registry. It accepts an ``audio://files/{token}`` resource URI, resolves
+    the token to a previously prepared MP3 file, reads the file bytes, and
     returns them as base64 along with MIME metadata.
 
     Parameters:
@@ -691,7 +693,9 @@ def load_audio_resource(resource_uri: str) -> ToolResult:
 
     audio_path = audio_entry["path"]
     if not audio_path.exists():
-        raise FileNotFoundError(f"Audio file no longer exists for resource: {resource_uri}")
+        raise FileNotFoundError(
+            f"Audio file no longer exists for resource: {resource_uri}"
+        )
 
     payload = {
         "resource_uri": resource_uri,

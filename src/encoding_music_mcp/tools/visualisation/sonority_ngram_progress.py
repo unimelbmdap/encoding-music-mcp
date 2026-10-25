@@ -33,7 +33,9 @@ _SCORE_COLOURS = [
 def _normalise_module_pattern(pattern: Any) -> tuple[list[str], str]:
     """Preserve CRIM module n-gram items while making a stable row key."""
     if isinstance(pattern, str) and "," in pattern:
-        pattern_values = [value.strip() for value in pattern.split(",") if value.strip()]
+        pattern_values = [
+            value.strip() for value in pattern.split(",") if value.strip()
+        ]
         return pattern_values, "_".join(pattern_values)
     return _normalise_pattern(pattern)
 
@@ -156,7 +158,9 @@ def _load_unfiltered_sonority_ngrams_for_score(
     sonorities = sonorities[sonorities["Sonority"] != ""]
     low_line = pd.DataFrame(piece.lowLine())
     low_melodic = piece.melodic(end=False, df=low_line)
-    combined = pd.merge(sonorities, low_melodic, left_index=True, right_index=True, how="left")
+    combined = pd.merge(
+        sonorities, low_melodic, left_index=True, right_index=True, how="left"
+    )
     combined["Low Line"] = combined["Low Line"].fillna("Held")
     combined["Low_Sonority"] = combined["Low Line"] + "_" + combined["Sonority"]
 
@@ -193,7 +197,10 @@ def _build_score_payload(
     ]
     if score_rows.empty:
         score_rows = corpus_ngrams[
-            corpus_ngrams["Title"].fillna("").astype(str).str.contains(
+            corpus_ngrams["Title"]
+            .fillna("")
+            .astype(str)
+            .str.contains(
                 str(title),
                 regex=False,
             )
@@ -252,7 +259,9 @@ def _build_score_payload(
         "composer": metadata.get("composer"),
         "label": _score_label(filename, metadata),
         "color": color,
-        "end_q": max((occurrence["start_q"] for occurrence in occurrences), default=0.0),
+        "end_q": max(
+            (occurrence["start_q"] for occurrence in occurrences), default=0.0
+        ),
         "patterns": patterns,
         "occurrences": occurrences,
     }
@@ -357,9 +366,7 @@ def _build_progress_payload(
         "compound": compound,
         "sort": sort,
         "minimum_beat_strength": minimum_beat_strength,
-        "beat_strength_filter_applied": sonority_result[
-            "beat_strength_filter_applied"
-        ],
+        "beat_strength_filter_applied": sonority_result["beat_strength_filter_applied"],
         "beat_strength_fallback_filenames": sonority_result[
             "beat_strength_fallback_filenames"
         ],
