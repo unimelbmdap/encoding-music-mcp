@@ -1,4 +1,5 @@
 """Generates an ordered record of tool calls over a chat."""
+
 import asyncio
 import json
 from typing import Any

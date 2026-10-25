@@ -1,4 +1,5 @@
 """Expose session_id in the MCP schema without passing it to the function."""
+
 import inspect
 from functools import wraps
 from typing import Any, Callable
