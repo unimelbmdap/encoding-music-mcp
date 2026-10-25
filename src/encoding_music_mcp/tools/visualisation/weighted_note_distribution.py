@@ -5,7 +5,7 @@ from __future__ import annotations
 import xml.etree.ElementTree as ET
 from typing import Any
 
-from fastmcp.tools.tool import ToolResult
+from fastmcp.tools import ToolResult
 from mcp.types import TextContent
 
 from ..helpers import get_mei_filepath
@@ -215,7 +215,9 @@ def _build_score_groups(
                             totals[pitch_class] += float(dur_ppq)
                             note_counts[group_label] += 1
 
-    if not group_totals or all(sum(values.values()) == 0 for values in group_totals.values()):
+    if not group_totals or all(
+        sum(values.values()) == 0 for values in group_totals.values()
+    ):
         raise ValueError(f"No sounding notes found in MEI file: {filename}")
 
     metadata_payload = {

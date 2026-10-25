@@ -113,7 +113,9 @@ def test_plot_weighted_note_distribution_accidentals_are_counted():
     assert structured is not None
 
     trace = structured["traces"][0]
-    value_by_pitch_class = dict(zip(structured["categories"], trace["values"], strict=True))
+    value_by_pitch_class = dict(
+        zip(structured["categories"], trace["values"], strict=True)
+    )
 
     assert value_by_pitch_class["F#"] > 0
     assert value_by_pitch_class["B-"] > 0

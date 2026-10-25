@@ -60,6 +60,12 @@ encoding-music-mcp provides a suite of tools for analyzing MEI files. Tools work
 | [`play_excerpt`](play-excerpt.md) | Render a score or excerpt to streamed audio playback | [Documentation](play-excerpt.md) |
 | [`load_audio_resource`](play-excerpt.md#load_audio_resource) | Load prepared audio bytes for the playback widget | [Documentation](play-excerpt.md#load_audio_resource) |
 
+### Conversation Report Tools
+
+| Tool | Purpose | Learn More |
+|------|---------|------------|
+| [`get_conversation_report`](conversation-report.md) | Export the successful tool calls recorded for a session as JSONL | [Documentation](conversation-report.md) |
+
 ## Tool Categories
 
 ### Discovery
@@ -108,6 +114,10 @@ Tools for viewing derived visual summaries:
 Tools for listening to rendered score audio:
 
 - **[play_excerpt](play-excerpt.md)**: Render an MEI score or excerpt as audio in an inline player
+
+### Conversation Reports
+
+- **[get_conversation_report](conversation-report.md)**: Export a session's recorded tool calls as a JSONL report
 
 ## Tool Design Philosophy
 

@@ -5,7 +5,7 @@ description = "MCP server for analysis of MEI (Music Encoding Initiative) files"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "fastmcp>=3.2.0",
+    "fastmcp>=4,<5",
     "crim-intervals @ git+https://github.com/HCDigitalScholarship/intervals.git",
     "mcp[cli]>=1.25.0",
     "music21>=8.3.0",
@@ -26,3 +26,8 @@ dev = [
 [build-system]
 requires = ["uv_build>=0.9.6,<0.10.0"]
 build-backend = "uv_build"
+
+[tool.uv]
+override-dependencies = [
+    "idna>=3.18,<4",
+]

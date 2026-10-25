@@ -145,7 +145,10 @@ def test_show_notation_measure_range_fewer_pages():
         show_notation("Bach_BWV_0772.mei", start_measure=19, end_measure=22)
     )
 
-    assert subset.structured_content["total_pages"] < full.structured_content["total_pages"]
+    assert (
+        subset.structured_content["total_pages"]
+        < full.structured_content["total_pages"]
+    )
 
 
 def test_show_notation_single_measure():
@@ -184,7 +187,9 @@ def test_show_notation_page_navigation():
     if total > 1:
         result_p2 = asyncio.run(show_notation("Bach_BWV_0772.mei", page=2))
         assert result_p2.structured_content["page"] == 2
-        assert result_p2.structured_content["svg"] != result_p1.structured_content["svg"]
+        assert (
+            result_p2.structured_content["svg"] != result_p1.structured_content["svg"]
+        )
 
 
 def test_show_notation_page_clamping():

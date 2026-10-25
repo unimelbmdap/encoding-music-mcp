@@ -49,7 +49,10 @@ def test_plot_sonority_ngram_progress_occurrence_shape():
 def test_plot_sonority_ngram_progress_multiple_scores():
     """Multiple-score view should keep first-introduced rows by score group."""
     result = plot_sonority_ngram_progress(
-        filenames=["Bartok_Mikrokosmos_022.mei", "Morley_1595_01_Go_ye_my_canzonettes.mei"],
+        filenames=[
+            "Bartok_Mikrokosmos_022.mei",
+            "Morley_1595_01_Go_ye_my_canzonettes.mei",
+        ],
         n=4,
     )
     structured = result.structured_content
@@ -63,9 +66,9 @@ def test_plot_sonority_ngram_progress_multiple_scores():
     assert len(structured["rows"]) > 0
     assert len(structured["occurrences"]) > 0
     assert {row["score_index"] for row in structured["rows"]}.issubset({0, 1})
-    assert {occurrence["score_index"] for occurrence in structured["occurrences"]}.issubset(
-        {0, 1}
-    )
+    assert {
+        occurrence["score_index"] for occurrence in structured["occurrences"]
+    }.issubset({0, 1})
     assert structured["scores"][0]["color"] != structured["scores"][1]["color"]
 
 
