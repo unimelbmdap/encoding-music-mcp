@@ -26,18 +26,33 @@ def render_upload_page(*, session_mode: bool = False) -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Replay a conversation report</title>
   <style>
-    body {{ max-width: 48rem; margin: 3rem auto; padding: 0 1rem; font: 1rem/1.5 sans-serif; }}
+    body {{ max-width: 72rem; margin: 3rem auto; padding: 0 1rem; font: 1rem/1.5 sans-serif; }}
     main {{ display: grid; gap: 1rem; }}
     label, button {{ font: inherit; }}
     button {{ width: fit-content; padding: .5rem .8rem; }}
-    .replay-results {{ display: grid; gap: 1rem; }}
+    .replay-results {{ display: grid; grid-template-columns: 14rem minmax(0, 1fr); gap: 1rem; align-items: start; }}
+    [hidden] {{ display: none !important; }}
+    .tool-index {{ position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow: auto; overflow-wrap: anywhere; }}
+    .tool-index ol {{ margin: .5rem 0; padding-left: 2rem; }}
+    .tool-index a {{ display: block; padding: .25rem; color: inherit; }}
+    .tool-calls {{ display: grid; gap: 1rem; min-width: 0; }}
+    .tool-call {{ scroll-margin-top: 1rem; }}
+    .tool-call:target {{ outline: 2px solid #476b9b; }}
+    @media (max-width: 48rem) {{
+      .replay-results {{ grid-template-columns: 1fr; }}
+      .tool-index {{ position: static; max-height: 12rem; }}
+    }}
     .tool-call {{ border: 1px solid #c8cdd3; border-radius: .4rem; overflow: hidden; }}
     .tool-call header {{ padding: 1rem; background: #f3f5f7; }}
-    .tool-call h2 {{ margin: 0 0 .75rem; font-size: 1.1rem; }}
+    .tool-call h2 {{ margin: 0; font-size: 1.1rem; }}
+    .tool-call h2:has([aria-expanded="true"]) {{ margin-bottom: .75rem; }}
     .tool-arguments, .tool-response {{ padding: 1rem; }}
     .tool-arguments {{ padding: 0; }}
     .tool-response {{ border-top: 1px solid #c8cdd3; }}
     .tool-call h3 {{ margin: 0 0 .5rem; font-size: 1rem; }}
+    .collapse-toggle {{ padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }}
+    .collapse-toggle::before {{ content: "▾"; display: inline-block; width: 1.2em; }}
+    .collapse-toggle[aria-expanded="false"]::before {{ content: "▸"; }}
     .tool-app-frame {{ width: 100%; min-height: 28rem; border: 0; background: white; }}
     .app-fallback-note {{ margin: 0 0 .75rem; }}
     pre {{ overflow: auto; margin: 0; white-space: pre-wrap; }}
@@ -180,12 +195,29 @@ def render_upload_page(*, session_mode: bool = False) -> str:
       return pre;
     }}
 
+    function makeCollapsible(heading, ...contents) {{
+      const toggle = document.createElement("button");
+      toggle.type = "button";
+      toggle.className = "collapse-toggle";
+      toggle.textContent = heading.textContent;
+      toggle.setAttribute("aria-expanded", "false");
+      contents.forEach(content => {{ content.hidden = true; }});
+      toggle.addEventListener("click", () => {{
+        const collapsed = toggle.getAttribute("aria-expanded") === "true";
+        toggle.setAttribute("aria-expanded", String(!collapsed));
+        contents.forEach(content => {{ content.hidden = collapsed; }});
+      }});
+      heading.replaceChildren(toggle);
+    }}
+
     function labelledValue(className, label, value) {{
       const container = document.createElement("div");
       container.className = className;
       const heading = document.createElement("h3");
       heading.textContent = label;
-      container.append(heading, valueBlock(value));
+      const content = valueBlock(value);
+      container.append(heading, content);
+      makeCollapsible(heading, content);
       return container;
     }}
 
@@ -197,20 +229,16 @@ def render_upload_page(*, session_mode: bool = False) -> str:
         note.textContent = message;
         response.append(note);
       }}
-      const heading = document.createElement("h3");
-      heading.textContent = `Response (${{call.status}})`;
-      response.append(heading, valueBlock(call.output));
+      response.append(valueBlock(call.output));
     }}
 
     async function renderAppResponse(response, call) {{
-      const heading = document.createElement("h3");
-      heading.textContent = `Response (${{call.status}})`;
       const frame = document.createElement("iframe");
       frame.className = "tool-app-frame";
       frame.title = `${{call.tool_name}} replay app`;
       frame.setAttribute("sandbox", "allow-scripts");
       frame.referrerPolicy = "no-referrer";
-      response.append(heading, frame);
+      response.append(frame);
 
       let bridge;
       let ready = false;
@@ -293,27 +321,53 @@ def render_upload_page(*, session_mode: bool = False) -> str:
 
     function renderResults(result) {{
       output.replaceChildren();
-      for (const call of result.calls || []) {{
+      const index = document.createElement("nav");
+      index.className = "tool-index";
+      index.setAttribute("aria-label", "Tool call index");
+      const indexTitle = document.createElement("strong");
+      indexTitle.textContent = "Tool calls";
+      const indexList = document.createElement("ol");
+      index.append(indexTitle, indexList);
+      const calls = document.createElement("div");
+      calls.className = "tool-calls";
+      output.append(index, calls);
+      for (const [position, call] of (result.calls || []).entries()) {{
         const toolCall = document.createElement("section");
         toolCall.className = "tool-call";
+        toolCall.id = `tool-call-${{position + 1}}`;
+        const item = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = `#${{toolCall.id}}`;
+        link.textContent = call.tool_name;
+        link.addEventListener("click", () => {{
+          const toggle = toolCall.querySelector("h2 button");
+          if (toggle.getAttribute("aria-expanded") === "false") toggle.click();
+          toggle.focus({{ preventScroll: true }});
+        }});
+        item.append(link);
+        indexList.append(item);
 
         const header = document.createElement("header");
         const name = document.createElement("h2");
-        name.textContent = call.tool_name;
-        header.append(
-          name,
-          labelledValue("tool-arguments", "Arguments", call.arguments)
-        );
+        name.textContent = `${{position + 1}}. ${{call.tool_name}}`;
+        const args = labelledValue("tool-arguments", "Arguments", call.arguments);
+        header.append(name, args);
 
         const response = document.createElement("div");
         response.className = "tool-response";
+        const responseHeading = document.createElement("h3");
+        responseHeading.textContent = `Response (${{call.status}})`;
+        const responseContent = document.createElement("div");
+        response.append(responseHeading, responseContent);
+        makeCollapsible(responseHeading, responseContent);
+        makeCollapsible(name, args, response);
         if (call.app && call.status === "success") {{
-          renderAppResponse(response, call);
+          renderAppResponse(responseContent, call);
         }} else {{
-          showJsonFallback(response, call, call.message || "");
+          showJsonFallback(responseContent, call, call.message || "");
         }}
         toolCall.append(header, response);
-        output.append(toolCall);
+        calls.append(toolCall);
       }}
       output.hidden = false;
     }}
