@@ -23,7 +23,8 @@ This project uses the default in-memory store, so session state remains availabl
 
 `get_conversation_report` exports the report and includes the generic browser
 upload URL. The separate `replay_report` tool accepts an active `session_id`
-and returns a session-specific URL that loads the report server-side.
+and returns a session-specific URL that loads the report server-side. See
+[Replay Report (Beta)](report-replay.md) for its contract and usage.
 
 ## Parameters
 
