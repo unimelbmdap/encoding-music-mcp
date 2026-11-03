@@ -602,8 +602,8 @@ conversation report.
 **Returns**:
 
 A `ToolResult` containing a short status message, an embedded
-`conversation-report.jsonl` resource, and structured filename and MIME-type
-metadata.
+`conversation-report.jsonl` resource, and structured filename, MIME-type, and
+browser upload URL metadata.
 
 [Full Documentation ->](tools/conversation-report.md)
 

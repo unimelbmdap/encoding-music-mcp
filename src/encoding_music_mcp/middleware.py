@@ -6,6 +6,7 @@ from encoding_music_mcp.tools.conversation_report import ConversationReport
 
 EXCLUDED_TOOLS = {
     "get_conversation_report",
+    "replay_report",
 }
 """
 VISUALISATION_TOOLS = { 

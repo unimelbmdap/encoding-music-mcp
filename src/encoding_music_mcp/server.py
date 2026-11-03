@@ -6,6 +6,7 @@ from fastmcp import FastMCP
 from starlette.responses import JSONResponse
 from .middleware import ConversationReportMiddleware
 from fastmcp.server.sessions import SessionProvider
+from .tools.reports.routes import register_report_routes
 
 # Create MCP server
 mcp = FastMCP("encoding-music-mcp")
@@ -17,6 +18,9 @@ mcp.add_provider(SessionProvider())
 async def health_check(request):
     """Health check endpoint for container orchestration."""
     return JSONResponse({"status": "healthy"})
+
+
+register_report_routes(mcp)
 
 
 # Import tools, resources, and prompts to trigger registration

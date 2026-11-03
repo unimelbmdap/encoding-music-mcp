@@ -12,14 +12,12 @@ from mcp.types import (
 from fastmcp.tools import ToolResult
 from fastmcp.server.dependencies import get_session
 
+from encoding_music_mcp.tools.reports.settings import base_url, REPORT_VERSION
 
-# TODO: Tool reconstructor as HTML page
-# TODO: fastAPI endpoint for downloading HTML and JSONL from URL
 class ConversationReport:
-    _VERSION = "1"
+    _VERSION = REPORT_VERSION
     _REPORT_LOCK = asyncio.Lock()  # prevents lost update problem
     _HISTORY_KEY = "conversation_report"
-
     @classmethod
     async def get_conversation_report(cls, session_id: SessionId) -> ToolResult:
         """Return the conversation report as an attached JSONL file.
@@ -35,8 +33,8 @@ class ConversationReport:
         display the report inline.
         """
 
+        upload_replay_url = base_url()
         jsonl = await cls().report_as_jsonl(session_id)
-
         attachment = EmbeddedResource(
             type="resource",
             resource=TextResourceContents(
@@ -50,13 +48,17 @@ class ConversationReport:
             content=[
                 TextContent(
                     type="text",
-                    text="The conversation report is attached.",
+                    text=(
+                        "The conversation report is attached. "
+                        f"Upload it for replay at {upload_replay_url}"
+                    ),
                 ),
                 attachment,
             ],
             structured_content={
                 "filename": "conversation-report.jsonl",
                 "mime_type": "application/jsonl",
+                "replay_url": upload_replay_url,
             },
         )
 

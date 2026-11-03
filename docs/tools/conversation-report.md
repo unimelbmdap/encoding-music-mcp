@@ -21,7 +21,9 @@ This project uses the default in-memory store, so session state remains availabl
 - end_session deletes it, or
 - the server process stops or restarts.
 
-Replay of tool calls from report is a planned feature. 
+`get_conversation_report` exports the report and includes the generic browser
+upload URL. The separate `replay_report` tool accepts an active `session_id`
+and returns a session-specific URL that loads the report server-side.
 
 ## Parameters
 
@@ -33,16 +35,18 @@ Replay of tool calls from report is a planned feature.
 
 The tool returns a `ToolResult` containing:
 
-- **Text content**: `The conversation report is attached.`
+- **Text content**: confirms the attachment
 - **Embedded resource**: The report text at `file:///conversation-report.jsonl`
-- **Structured content**: The output filename and MIME type
+- **Structured content**: The output filename, MIME type, and replay upload URL
 
 ```json
 {
   "filename": "conversation-report.jsonl",
-  "mime_type": "application/jsonl"
+  "mime_type": "application/jsonl",
+  "replay_url": "/reports/replay/"
 }
 ```
+
 ## Report Format
 
 Each line is an independent JSON object. The first line contains report
@@ -60,9 +64,9 @@ Later lines describe successful tool calls in the order they completed:
 ```
 
 The `session_id` argument used internally for recording is omitted from each
-tool-call record.
-
-The version identifies replay compatibility. Tool calls captured under a given version should reproduce the same outputs when replayed against functions with that version, provided the inputs and execution environment have not changed. Increment the version whenever a tool’s interface or behavior changes in a way that could affect replay results.
+tool-call record. The version identifies replay compatibility. Calls are
+re-executed against the current tools, so replayed output may differ if tool
+behavior, MEI data, or the execution environment changes.
 
 ## Example Usage
 
@@ -73,9 +77,17 @@ after using a few tools, try asking in the same conversation:
 
 ## Typical Workflow
 
+Export workflow:
+
 1. Run one or more analysis, notation, visualisation, or playback tools.
 2. Ask the client to export or download the conversation report.
 3. Save the returned `conversation-report.jsonl` file.
+
+Session replay workflow:
+
+1. Call `replay_report` with the active `session_id`.
+2. Receive a session-specific URL from the tool.
+3. Open that URL and start the replay from the server-side session report.
 
 
 ## Privacy and Security
@@ -86,8 +98,9 @@ This server does not currently authenticate users. A session ID therefore acts a
 ## Limitations
 
 - Only successful calls with a session ID are recorded.
-- Tool results are not included in the current report format.
+- Original tool results are not included in the JSONL report. Replay runs the
+  calls again and returns newly generated values; results may differ from the
+  original session.
 - No authentication of user before returning tool report.
 - Limited control over return formatting: Claude does not consistently provide JSONL output as a downloadable file. Instead, users must either open the tool-call payload manually or explicitly ask Claude to create a downloadable file.
 - Forces every tool call to include session ID
-
