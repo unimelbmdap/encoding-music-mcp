@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from crim_intervals.main_objs import importScore
 from fastmcp.tools import ToolResult
 from mcp.types import TextContent
 
@@ -13,6 +12,7 @@ from ..intervals import (
     _build_note_id_matches,
     _build_part_note_events,
     _count_patterns,
+    _load_crim_score,
     _load_melodic_ngram_dataframe,
 )
 from ..metadata import get_mei_metadata
@@ -79,9 +79,7 @@ def _build_score_payload(
         combine_unisons=combine_unisons,
         compound=compound,
     )
-    piece = importScore(str(filepath))
-    if piece is None:
-        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+    piece = _load_crim_score(filepath)
     part_events = _build_part_note_events(piece)
 
     rows: list[dict[str, Any]] = []

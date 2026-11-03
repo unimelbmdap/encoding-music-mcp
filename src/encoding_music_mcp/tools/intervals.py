@@ -3,8 +3,6 @@
 from pathlib import Path
 from typing import Any
 
-from crim_intervals.main_objs import importScore
-
 from .helpers import get_mei_filepath
 
 __all__ = [
@@ -18,6 +16,16 @@ __all__ = [
     "get_first_occur_melodic_ngrams",
     "get_cadences",
 ]
+
+
+def _load_crim_score(filepath: Path) -> Any:
+    """Load a score without importing CRIM during MCP server bootstrap."""
+    from crim_intervals.main_objs import importScore
+
+    piece = importScore(str(filepath))
+    if piece is None:
+        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+    return piece
 
 
 def _note_ids_from_m21_obj(obj: Any) -> list[str]:
@@ -234,9 +242,7 @@ def _build_note_id_matches(
     filepath: Path, mel_ngrams: Any, n: int
 ) -> list[dict[str, Any]]:
     """Build structured note-id spans for each melodic n-gram match."""
-    piece = importScore(str(filepath))
-    if piece is None:
-        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+    piece = _load_crim_score(filepath)
 
     matches: list[dict[str, Any]] = []
 
@@ -336,9 +342,7 @@ def _load_melodic_ngram_dataframe(
     compound: bool = False,
 ) -> Any:
     """Load and normalise a melodic n-gram dataframe."""
-    piece = importScore(str(filepath))
-    if piece is None:
-        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+    piece = _load_crim_score(filepath)
 
     if combine_unisons is None:
         mel = piece.melodic(kind=kind, end=False)
@@ -423,9 +427,7 @@ def _count_patterns(mel_ngrams: Any) -> list[dict[str, Any]]:
 
 def _load_piece_with_details(filepath: Path) -> tuple[Any, Any]:
     """Load a score and its detailed note dataframe."""
-    piece = importScore(str(filepath))
-    if piece is None:
-        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+    piece = _load_crim_score(filepath)
     nr = piece.notes()
     nr = piece.numberParts(nr)
     nr = piece.detailIndex(nr)
@@ -673,9 +675,7 @@ def resolve_note_ids_for_highlight(
             - note_ids: MEI ``xml:id`` values for notes matched by the span.
     """
     filepath = get_mei_filepath(filename)
-    piece = importScore(str(filepath))
-    if piece is None:
-        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+    piece = _load_crim_score(filepath)
 
     return {
         "filename": filename,
@@ -865,9 +865,7 @@ def get_cadences(filename: str) -> dict[str, Any]:
         - filename: The input filename
     """
     filepath = get_mei_filepath(filename)
-    piece = importScore(str(filepath))
-    if piece is None:
-        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+    piece = _load_crim_score(filepath)
 
     try:
         cads = piece.cadences()
