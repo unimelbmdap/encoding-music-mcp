@@ -27,6 +27,7 @@ Complete reference for all encoding-music-mcp tools.
 | `plot_sonority_ngram_progress` | `filename: str | None = None, filenames: list[str] | None = None, n: int = 4, compound: bool = True, sort: bool = False, minimum_beat_strength: float = 0.0` | Sonority n-gram progress payload | [Docs](tools/visualisation/sonority-ngram-progress.md) |
 | `play_excerpt` | `filename: str | None = None, start_q: float = 0.0, end_q: float = None, bpm: int = 60` | Audio player payload | [Docs](tools/play-excerpt.md) |
 | `load_audio_resource` | `resource_uri: str` | Base64 audio payload | [Docs](tools/play-excerpt.md#load_audio_resource) |
+| `get_conversation_report` | `session_id: str` | Attached JSONL conversation report | [Docs](tools/conversation-report.md) |
 
 ## Discovery Tools
 
@@ -586,6 +587,25 @@ Load the base64-encoded MP3 bytes for an `audio://` resource prepared by
 ```
 
 [Full Documentation ->](tools/play-excerpt.md#load_audio_resource)
+
+## Conversation Report Tools
+
+### get_conversation_report(session_id)
+
+Export the successful tool calls recorded for an analysis session as a JSONL
+conversation report.
+
+**Parameters**:
+
+- `session_id` (`str`): ID of the session whose report should be exported
+
+**Returns**:
+
+A `ToolResult` containing a short status message, an embedded
+`conversation-report.jsonl` resource, and structured filename and MIME-type
+metadata.
+
+[Full Documentation ->](tools/conversation-report.md)
 
 ## Common Patterns
 

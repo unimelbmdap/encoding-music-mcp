@@ -22,9 +22,7 @@ _weighted_note_distribution_html_path = (
     _templates_dir / "weighted_note_distribution_app.html"
 )
 _melodic_ngram_heatmap_html_path = _templates_dir / "melodic_ngram_heatmap_app.html"
-_sonority_ngram_progress_html_path = (
-    _templates_dir / "sonority_ngram_progress_app.html"
-)
+_sonority_ngram_progress_html_path = _templates_dir / "sonority_ngram_progress_app.html"
 _play_excerpt_html_path = _templates_dir / "play_excerpt_app.html"
 
 

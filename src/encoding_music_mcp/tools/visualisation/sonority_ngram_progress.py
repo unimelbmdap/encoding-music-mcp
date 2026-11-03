@@ -6,9 +6,7 @@ import warnings
 from typing import Any
 
 import pandas as pd
-from crim_intervals.corpus_tools import corpus_sonority_ngrams
-from crim_intervals.main_objs import CorpusBase
-from fastmcp.tools.tool import ToolResult
+from fastmcp.tools import ToolResult
 from mcp.types import TextContent
 
 from ..helpers import get_mei_filepath
@@ -30,10 +28,19 @@ _SCORE_COLOURS = [
 ]
 
 
+def _load_crim_corpus(paths: list[str]) -> Any:
+    """Load a corpus without importing CRIM during MCP server bootstrap."""
+    from crim_intervals.main_objs import CorpusBase
+
+    return CorpusBase(paths)
+
+
 def _normalise_module_pattern(pattern: Any) -> tuple[list[str], str]:
     """Preserve CRIM module n-gram items while making a stable row key."""
     if isinstance(pattern, str) and "," in pattern:
-        pattern_values = [value.strip() for value in pattern.split(",") if value.strip()]
+        pattern_values = [
+            value.strip() for value in pattern.split(",") if value.strip()
+        ]
         return pattern_values, "_".join(pattern_values)
     return _normalise_pattern(pattern)
 
@@ -46,12 +53,14 @@ def _load_corpus_sonority_ngrams(
     minimum_beat_strength: float,
 ) -> dict[str, Any]:
     """Load CRIM's corpus-level sonority n-gram dataframe."""
+    from crim_intervals.corpus_tools import corpus_sonority_ngrams
+
     filepaths = [get_mei_filepath(filename) for filename in filenames]
     for filename, path in zip(filenames, filepaths, strict=True):
         if not path.exists():
             raise FileNotFoundError(f"MEI file not found: {filename}")
     paths = [str(path) for path in filepaths]
-    corpus = CorpusBase(paths)
+    corpus = _load_crim_corpus(paths)
     with warnings.catch_warnings():
         warnings.filterwarnings(
             "ignore",
@@ -130,7 +139,7 @@ def _filter_rows_for_title(rows: Any, title: str) -> Any:
 
 def _beat_strength_fallback_state(path: str, compound: bool, sort: bool) -> str:
     """Report whether unfiltered sonority fallback is appropriate for a score."""
-    piece = CorpusBase([path]).scores[0]
+    piece = _load_crim_corpus([path]).scores[0]
     sonorities = piece.sonorities(compound=compound, sort=sort)
     sonorities = sonorities[sonorities["Sonority"] != ""]
     if sonorities.empty:
@@ -151,12 +160,14 @@ def _load_unfiltered_sonority_ngrams_for_score(
 ) -> Any:
     """Recompute sonority n-grams without CRIM's beat-strength filter."""
     metadata = get_mei_metadata(filename)
-    piece = CorpusBase([path]).scores[0]
+    piece = _load_crim_corpus([path]).scores[0]
     sonorities = piece.sonorities(compound=compound, sort=sort)
     sonorities = sonorities[sonorities["Sonority"] != ""]
     low_line = pd.DataFrame(piece.lowLine())
     low_melodic = piece.melodic(end=False, df=low_line)
-    combined = pd.merge(sonorities, low_melodic, left_index=True, right_index=True, how="left")
+    combined = pd.merge(
+        sonorities, low_melodic, left_index=True, right_index=True, how="left"
+    )
     combined["Low Line"] = combined["Low Line"].fillna("Held")
     combined["Low_Sonority"] = combined["Low Line"] + "_" + combined["Sonority"]
 
@@ -193,7 +204,10 @@ def _build_score_payload(
     ]
     if score_rows.empty:
         score_rows = corpus_ngrams[
-            corpus_ngrams["Title"].fillna("").astype(str).str.contains(
+            corpus_ngrams["Title"]
+            .fillna("")
+            .astype(str)
+            .str.contains(
                 str(title),
                 regex=False,
             )
@@ -252,7 +266,9 @@ def _build_score_payload(
         "composer": metadata.get("composer"),
         "label": _score_label(filename, metadata),
         "color": color,
-        "end_q": max((occurrence["start_q"] for occurrence in occurrences), default=0.0),
+        "end_q": max(
+            (occurrence["start_q"] for occurrence in occurrences), default=0.0
+        ),
         "patterns": patterns,
         "occurrences": occurrences,
     }
@@ -357,9 +373,7 @@ def _build_progress_payload(
         "compound": compound,
         "sort": sort,
         "minimum_beat_strength": minimum_beat_strength,
-        "beat_strength_filter_applied": sonority_result[
-            "beat_strength_filter_applied"
-        ],
+        "beat_strength_filter_applied": sonority_result["beat_strength_filter_applied"],
         "beat_strength_fallback_filenames": sonority_result[
             "beat_strength_fallback_filenames"
         ],

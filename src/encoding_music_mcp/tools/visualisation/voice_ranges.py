@@ -7,7 +7,7 @@ import io
 import re
 from typing import Any
 
-from fastmcp.tools.tool import ToolResult
+from fastmcp.tools import ToolResult
 from mcp.types import TextContent
 
 from ..intervals import get_notes
@@ -140,4 +140,3 @@ def plot_voice_ranges(filename: str) -> ToolResult:
         content=[TextContent(type="text", text=description)],
         structured_content=structured,
     )
-

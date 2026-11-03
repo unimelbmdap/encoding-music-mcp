@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from crim_intervals.main_objs import importScore
-from fastmcp.tools.tool import ToolResult
+from fastmcp.tools import ToolResult
 from mcp.types import TextContent
 
 from ..helpers import get_mei_filepath
@@ -13,6 +12,7 @@ from ..intervals import (
     _build_note_id_matches,
     _build_part_note_events,
     _count_patterns,
+    _load_crim_score,
     _load_melodic_ngram_dataframe,
 )
 from ..metadata import get_mei_metadata
@@ -79,13 +79,13 @@ def _build_score_payload(
         combine_unisons=combine_unisons,
         compound=compound,
     )
-    piece = importScore(str(filepath))
-    if piece is None:
-        raise FileNotFoundError(f"Could not load MEI file: {filepath}")
+    piece = _load_crim_score(filepath)
     part_events = _build_part_note_events(piece)
 
     rows: list[dict[str, Any]] = []
-    for staff in sorted(part_events.keys(), key=lambda value: int(value) if value.isdigit() else value):
+    for staff in sorted(
+        part_events.keys(), key=lambda value: int(value) if value.isdigit() else value
+    ):
         events = part_events[staff]
         end_q = max(
             (float(event["offset"]) + float(event["duration"]) for event in events),
@@ -146,9 +146,9 @@ def _build_heatmap_payload(
     for score in score_payloads:
         for record in score["pattern_counts"]:
             pattern_string = record["pattern_string"]
-            count_by_pattern[pattern_string] = (
-                count_by_pattern.get(pattern_string, 0) + int(record["count"])
-            )
+            count_by_pattern[pattern_string] = count_by_pattern.get(
+                pattern_string, 0
+            ) + int(record["count"])
             pattern_values.setdefault(pattern_string, record["pattern"])
 
     top_patterns = sorted(
@@ -170,7 +170,8 @@ def _build_heatmap_payload(
         score_matches = [
             match
             for match in score["matches"]
-            if match["pattern_string"] in selected_patterns and float(match["duration"]) > 0
+            if match["pattern_string"] in selected_patterns
+            and float(match["duration"]) > 0
         ]
         for match in score_matches:
             pattern_string = match["pattern_string"]

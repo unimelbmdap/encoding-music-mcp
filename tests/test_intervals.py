@@ -412,7 +412,9 @@ def test_get_first_occur_melodic_ngrams_custom_options():
     assert result["kind"] == "q"
     assert result["combine_unisons"] is False
     assert result["compound"] is True
-    assert len(result["patterns"]) > 0, "Custom configuration should still return patterns"
+    assert len(result["patterns"]) > 0, (
+        "Custom configuration should still return patterns"
+    )
 
 
 def test_intervals_invalid_file():
