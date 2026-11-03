@@ -38,7 +38,9 @@ For an exported report, call `replay_report` without a session ID, open the
 returned upload page, and select the `.jsonl` file from
 `get_conversation_report`.
 
-The replay runs saved calls against the current server and returns JSON values.
-It may differ from the original run. See the
+The replay runs saved calls against the current server. Ordinary results are
+shown as JSON, while successful MCP App tools use their interactive iframe.
+If an app cannot load, its JSON response is shown instead. Results may differ
+from the original run. See the
 [beta development notes](../development/report-replay-plan.md) for limits,
 skipped tools, and security details.

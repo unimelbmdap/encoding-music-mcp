@@ -212,7 +212,13 @@ async def show_notation(
     Returns:
         ToolResult with SVG notation for the MCP App viewer
     """
-    should_elicit = ctx is not None and (
+    if filename is not None:
+        filename = filename.strip().strip("'\"")
+
+    can_elicit = ctx is not None and (
+        not hasattr(ctx, "request_context") or ctx.request_context is not None
+    )
+    should_elicit = can_elicit and (
         filename is None or not get_mei_filepath(filename).exists()
     )
     filename = await _resolve_notation_filename(filename, ctx, should_elicit)

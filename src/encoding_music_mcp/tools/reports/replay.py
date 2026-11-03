@@ -5,6 +5,7 @@ import time
 from typing import Any
 
 from .models import ConversationReport, ReplayResult, ReplayedCall
+from .settings import MCP_APP_TOOLS
 
 CALL_TIMEOUT_SECONDS = 120
 TOTAL_TIMEOUT_SECONDS = 600
@@ -94,6 +95,7 @@ async def replay_report(
             tool_properties = getattr(tool, "parameters", {}).get("properties", {})
             if "session_id" in tool_properties:
                 arguments["session_id"] = replay_session_id
+            resource_uri = app_resource_uri(source.tool_name, tool)
 
             try:
                 result = await asyncio.wait_for(
@@ -105,7 +107,11 @@ async def replay_report(
                     timeout=min(call_timeout, remaining),
                 )
                 text_output = _text_output(result)
-                structured_output = _summarize_output(result.structured_content)
+                structured_output = (
+                    _app_output(result.structured_content)
+                    if resource_uri and not result.is_error
+                    else _summarize_output(result.structured_content)
+                )
                 if result.is_error:
                     calls.append(
                         ReplayedCall(
@@ -123,6 +129,7 @@ async def replay_report(
                             status="success",
                             text_output=text_output,
                             structured_output=structured_output,
+                            app_resource_uri=resource_uri,
                         )
                     )
             except asyncio.TimeoutError:
@@ -174,6 +181,23 @@ async def replay_report(
     )
 
 
+def app_resource_uri(tool_name: str, tool: Any) -> str | None:
+    """Return the registered MCP App resource URI for a known app tool."""
+
+    if tool_name not in MCP_APP_TOOLS or tool is None:
+        return None
+    meta = getattr(tool, "meta", None)
+    if not isinstance(meta, dict):
+        return None
+    ui = meta.get("ui")
+    if not isinstance(ui, dict):
+        return None
+    resource_uri = ui.get("resourceUri")
+    if isinstance(resource_uri, str) and resource_uri.startswith("ui://"):
+        return resource_uri
+    return None
+
+
 def _text_output(result: Any) -> list[str]:
     output: list[str] = []
     for item in result.content or []:
@@ -208,6 +232,22 @@ def _summarize_output(value: Any, *, depth: int = 0) -> Any:
     if hasattr(value, "model_dump"):
         return _summarize_output(value.model_dump(mode="json"), depth=depth + 1)
     return _bounded_string(str(value))
+
+
+def _app_output(value: Any) -> Any:
+    """Keep complete JSON-compatible app output for rendering in its iframe."""
+
+    if value is None or isinstance(value, (bool, int, float, str)):
+        return value
+    if isinstance(value, bytes):
+        return f"[binary output omitted: {len(value):,} bytes]"
+    if isinstance(value, list):
+        return [_app_output(item) for item in value]
+    if isinstance(value, dict):
+        return {str(key): _app_output(item) for key, item in value.items()}
+    if hasattr(value, "model_dump"):
+        return _app_output(value.model_dump(mode="json"))
+    return str(value)
 
 
 def _bounded_string(value: str) -> str:

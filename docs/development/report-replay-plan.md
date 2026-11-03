@@ -73,9 +73,16 @@ could recursively create reports:
 - `register_mei_file_from_path`
 - `replay_report`
 
-Replay returns JSON values only. Binary and non-text content is omitted, large
-strings are shortened, and base64 values are replaced with a size summary.
-Visualisation and playback interfaces are not recreated.
+Ordinary replay results return JSON values. Binary and non-text content is
+omitted, large strings are shortened, and base64 values are replaced with a
+size summary. Successful MCP App calls retain their complete structured output
+and render the registered `ui://` resource in a sandboxed iframe. If the app
+cannot load, the page falls back to the JSON response.
+
+The replay page acts as a small MCP Apps host. It reads the resource URI from
+the registered tool metadata, completes the app handshake, and sends the saved
+arguments and new result to the iframe. Interactive calls are restricted to
+notation pagination and playback audio loading.
 
 ## Beta Limits
 
@@ -139,7 +146,8 @@ The main implementation is split across:
 - Session reports are held in memory and disappear when the session ends or
   the server restarts.
 - Uploaded files cannot restore user-registered local MEI files.
-- The browser response does not recreate MCP App interfaces.
+- MCP App resources load their pinned browser SDK from a public CDN.
+- App-initiated calls are limited to the explicit replay allowlist.
 - Per-call internal diagnostic messages are not yet included in the HTTP JSON
   response.
 

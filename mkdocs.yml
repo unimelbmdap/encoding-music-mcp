@@ -67,6 +67,7 @@ nav:
           - Sonority N-gram Progress: tools/visualisation/sonority-ngram-progress.md
       - Play Excerpt: tools/play-excerpt.md
       - Conversation Report: tools/conversation-report.md
+      - Replay Report (Beta): tools/report-replay.md
       - Intervals:
           - Overview: tools/intervals/index.md
           - Notes: tools/intervals/notes.md
