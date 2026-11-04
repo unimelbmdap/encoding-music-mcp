@@ -20,6 +20,8 @@ encoding-music-mcp/
 |       |   |-- intervals.py                # Interval and n-gram analysis
 |       |   |-- notation.py                 # Notation display (Verovio)
 |       |   |-- play_excerpt.py             # Audio playback
+|       |   |-- report_replay.py             # Replay browser URL tool
+|       |   |-- reports/                     # Report parsing, replay, routes, and UI
 |       |   `-- visualisation/
 |       |       |-- __init__.py
 |       |       |-- melodic_ngram_heatmap.py
@@ -63,6 +65,8 @@ encoding-music-mcp/
 |       |-- key-analysis.md
 |       |-- notation.md
 |       |-- play-excerpt.md
+|       |-- conversation-report.md
+|       |-- report-replay.md
 |       |-- intervals/
 |       `-- visualisation/
 |           |-- voice-ranges.md
@@ -235,3 +239,6 @@ Uses `uv_build` backend with src-layout:
 
 - [Contributing Guide](contributing.md)
 - [Testing Guide](testing.md)
+
+For report parsing, replay routes, and browser apps, see the
+[Reports package](../packages/reports.md).

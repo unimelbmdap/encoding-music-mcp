@@ -2,6 +2,9 @@
 
 Complete reference for all encoding-music-mcp tools.
 
+Every tool except `create_session` and `replay_report` requires a `session_id`.
+Call `create_session` to obtain one. `replay_report` accepts it optionally.
+
 ## Tool Catalog
 
 | Tool | Parameters | Returns | Documentation |
@@ -28,6 +31,7 @@ Complete reference for all encoding-music-mcp tools.
 | `play_excerpt` | `filename: str | None = None, start_q: float = 0.0, end_q: float = None, bpm: int = 60` | Audio player payload | [Docs](tools/play-excerpt.md) |
 | `load_audio_resource` | `resource_uri: str` | Base64 audio payload | [Docs](tools/play-excerpt.md#load_audio_resource) |
 | `get_conversation_report` | `session_id: str` | Attached JSONL conversation report | [Docs](tools/conversation-report.md) |
+| `replay_report` | `session_id: str \| None = None` | Browser replay URL | [Docs](tools/report-replay.md) |
 
 ## Discovery Tools
 
@@ -606,6 +610,21 @@ A `ToolResult` containing a short status message, an embedded
 browser upload URL metadata.
 
 [Full Documentation ->](tools/conversation-report.md)
+
+### replay_report(session_id=None)
+
+Return the browser URL for replaying an active session report. If
+`session_id` is omitted, return the JSONL upload page instead. The tool returns
+the URL only; replay starts from the browser page.
+
+**Parameters**:
+
+- `session_id` (`str | None`): Optional active session ID
+
+**Returns**: A complete URL during an HTTP request, or a relative replay path
+when no HTTP request context is available.
+
+[Full Documentation ->](tools/report-replay.md)
 
 ## Common Patterns
 

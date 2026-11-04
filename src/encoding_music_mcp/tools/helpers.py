@@ -135,7 +135,7 @@ def get_mei_filepath(filename: str) -> Path:
     Returns:
         Path object pointing to a registered upload or built-in resource
     """
-    safe_filename = Path(filename).name
+    safe_filename = Path(filename.strip().strip("'\"")).name
     with _UPLOADS_LOCK:
         upload_entry = _UPLOADS.get(safe_filename)
         if upload_entry and Path(upload_entry["path"]).exists():

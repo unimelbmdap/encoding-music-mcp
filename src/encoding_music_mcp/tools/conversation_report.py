@@ -14,10 +14,12 @@ from fastmcp.server.dependencies import get_session
 
 from encoding_music_mcp.tools.reports.settings import base_url, REPORT_VERSION
 
+
 class ConversationReport:
     _VERSION = REPORT_VERSION
     _REPORT_LOCK = asyncio.Lock()  # prevents lost update problem
     _HISTORY_KEY = "conversation_report"
+
     @classmethod
     async def get_conversation_report(cls, session_id: SessionId) -> ToolResult:
         """Return the conversation report as an attached JSONL file.

@@ -6,14 +6,17 @@ from types import SimpleNamespace
 
 import pytest
 from mcp.types import TextContent
+from fastmcp.resources import ResourceContent, ResourceResult
 from starlette.requests import Request
 
 from src.encoding_music_mcp.tools.reports.html import render_upload_page
 from src.encoding_music_mcp.tools.reports.parser import (
-    ReportParseError,
     parse_report_jsonl,
 )
-from src.encoding_music_mcp.tools.reports.replay import replay_report
+from src.encoding_music_mcp.tools.reports.replay import (
+    MAX_OUTPUT_STRING_CHARS,
+    replay_report,
+)
 from src.encoding_music_mcp.tools.reports.routes import register_report_routes
 
 
@@ -53,7 +56,7 @@ def test_parser_preserves_call_order_and_arguments():
     ],
 )
 def test_parser_rejects_invalid_reports_before_replay(source: str, message: str):
-    with pytest.raises(ReportParseError, match=message):
+    with pytest.raises(ValueError, match=message):
         parse_report_jsonl(source)
 
 
@@ -88,6 +91,29 @@ class FakeMCP:
                     "required": ["session_id"],
                 }
             ),
+            "plot_voice_ranges": SimpleNamespace(
+                meta={"ui": {"resourceUri": "ui://voice-ranges/view.html"}},
+                parameters={
+                    "type": "object",
+                    "properties": {
+                        "filename": {"type": "string"},
+                        "session_id": {"type": "string"},
+                    },
+                    "required": ["filename", "session_id"],
+                },
+            ),
+            "show_notation": SimpleNamespace(
+                meta={"ui": {"resourceUri": "ui://notation/view.html"}},
+                parameters={
+                    "type": "object",
+                    "properties": {
+                        "filename": {"type": "string"},
+                        "page": {"type": "integer"},
+                        "session_id": {"type": "string"},
+                    },
+                    "required": ["filename", "session_id"],
+                },
+            ),
         }
 
     async def get_tool(self, name: str):
@@ -111,10 +137,40 @@ class FakeMCP:
             return SimpleNamespace(structured_content={}, content=[], is_error=False)
         if name == "fails":
             raise RuntimeError("known failure")
+        if name == "plot_voice_ranges":
+            return SimpleNamespace(
+                structured_content={
+                    "filename": arguments.get("filename"),
+                    "large_app_value": "x" * (MAX_OUTPUT_STRING_CHARS + 1),
+                },
+                content=[TextContent(type="text", text="voice ranges")],
+                is_error=False,
+            )
+        if name == "show_notation":
+            return SimpleNamespace(
+                structured_content={
+                    "filename": arguments.get("filename"),
+                    "page": arguments.get("page", 1),
+                    "svg": "<svg></svg>",
+                },
+                content=[TextContent(type="text", text="notation")],
+                is_error=False,
+            )
         return SimpleNamespace(
             structured_content={"received": arguments.get("value")},
             content=[TextContent(type="text", text="done")],
             is_error=False,
+        )
+
+    async def read_resource(self, uri: str, *, run_middleware: bool):
+        assert run_middleware is False
+        return ResourceResult(
+            contents=[
+                ResourceContent(
+                    content=f"<!doctype html><title>{uri}</title>",
+                    mime_type="text/html;profile=mcp-app",
+                )
+            ]
         )
 
 
@@ -158,11 +214,41 @@ def test_unknown_tool_is_visible_and_does_not_prevent_later_replay():
     assert "not registered" in result.calls[0].message
 
 
+def test_app_uri_comes_from_tool_metadata_and_app_output_is_not_shortened():
+    fake = FakeMCP()
+    report = parse_report_jsonl(
+        _report(
+            {
+                "tool_name": "plot_voice_ranges",
+                "args": {"filename": "Bach_BWV_0772.mei"},
+            }
+        )
+    )
+
+    result = asyncio.run(replay_report(report, fake))
+
+    call = result.calls[0]
+    assert call.app_resource_uri == "ui://voice-ranges/view.html"
+    assert len(call.structured_output["large_app_value"]) == (
+        MAX_OUTPUT_STRING_CHARS + 1
+    )
+
+
 def test_upload_page_displays_json_values_as_plain_text():
     upload = render_upload_page()
     assert "Replay tools" in upload
     assert 'aria-live="polite"' in upload
     assert "application/json" in upload
+    assert 'class="replay-results"' in upload
+    assert 'toolCall.className = "tool-call"' in upload
+    assert 'labelledValue("tool-arguments", "Arguments", call.arguments)' in upload
+    assert '"tool-response"' in upload
+    assert "output.replaceChildren()" in upload
+    assert 'frame.setAttribute("sandbox", "allow-scripts")' in upload
+    assert "new AppBridge(" in upload
+    assert "bridge.sendToolInput" in upload
+    assert "bridge.sendToolResult" in upload
+    assert "showJsonFallback" in upload
     assert "<svg" not in upload
     assert "visualization" not in upload.lower()
 
@@ -174,10 +260,8 @@ def test_session_replay_page_does_not_embed_the_report():
             self.routes = {}
 
         def custom_route(self, path, methods):
-            assert methods == ["GET", "POST"]
-
             def register(handler):
-                self.routes[path] = handler
+                self.routes[path] = (methods, handler)
                 return handler
 
             return register
@@ -194,7 +278,9 @@ def test_session_replay_page_does_not_embed_the_report():
         }
     )
 
-    response = asyncio.run(registry.routes["/reports/replay/{session_id}"](request))
+    methods, handler = registry.routes["/reports/replay/{session_id}"]
+    assert methods == ["GET", "POST"]
+    response = asyncio.run(handler(request))
     page = response.body.decode()
 
     assert response.media_type == "text/html"
@@ -206,11 +292,13 @@ def test_session_replay_page_does_not_embed_the_report():
 
 def test_replay_endpoint_returns_json_values_not_visualizations():
     class RouteRegistry(FakeMCP):
-        def custom_route(self, _path, methods):
-            assert methods == ["GET", "POST"]
+        def __init__(self):
+            super().__init__()
+            self.routes = {}
 
+        def custom_route(self, path, methods):
             def register(handler):
-                self.handler = handler
+                self.routes[path] = (methods, handler)
                 return handler
 
             return register
@@ -239,11 +327,227 @@ def test_replay_endpoint_returns_json_values_not_visualizations():
         receive,
     )
 
-    response = asyncio.run(registry.handler(request))
+    _methods, handler = registry.routes["/reports/replay"]
+    response = asyncio.run(handler(request))
     payload = json.loads(response.body)
 
     assert response.media_type == "application/json"
     assert payload["calls"][0]["tool_name"] == "first"
+    assert payload["calls"][0]["arguments"] == {"value": 7}
     assert payload["calls"][0]["status"] == "success"
     assert payload["calls"][0]["output"] == {"received": 7}
     assert "visualization_svg" not in payload["calls"][0]
+
+
+def test_replay_endpoint_includes_app_descriptor_and_complete_result():
+    class RouteRegistry(FakeMCP):
+        def __init__(self):
+            super().__init__()
+            self.routes = {}
+
+        def custom_route(self, path, methods):
+            def register(handler):
+                self.routes[path] = (methods, handler)
+                return handler
+
+            return register
+
+    registry = RouteRegistry()
+    register_report_routes(registry)
+    body = _report(
+        {
+            "tool_name": "plot_voice_ranges",
+            "args": {"filename": "Bach_BWV_0772.mei"},
+        }
+    ).encode()
+
+    async def receive():
+        return {"type": "http.request", "body": body, "more_body": False}
+
+    request = Request(
+        {
+            "type": "http",
+            "method": "POST",
+            "path": "/reports/replay",
+            "headers": [],
+        },
+        receive,
+    )
+    _methods, handler = registry.routes["/reports/replay"]
+
+    response = asyncio.run(handler(request))
+    payload = json.loads(response.body)
+    call = payload["calls"][0]
+
+    assert call["app"]["resource_uri"] == "ui://voice-ranges/view.html"
+    assert call["app"]["resource_url"] == ("/reports/replay/apps/plot_voice_ranges")
+    assert call["app"]["result"]["structuredContent"] == call["output"]
+    assert len(call["output"]["large_app_value"]) == MAX_OUTPUT_STRING_CHARS + 1
+
+
+def test_app_resource_route_serves_registered_html_and_rejects_non_app():
+    class RouteRegistry(FakeMCP):
+        def __init__(self):
+            super().__init__()
+            self.routes = {}
+
+        def custom_route(self, path, methods):
+            def register(handler):
+                self.routes[path] = (methods, handler)
+                return handler
+
+            return register
+
+    registry = RouteRegistry()
+    register_report_routes(registry)
+    methods, handler = registry.routes["/reports/replay/apps/{tool_name}"]
+    assert methods == ["GET"]
+
+    app_request = Request(
+        {
+            "type": "http",
+            "method": "GET",
+            "path": "/reports/replay/apps/plot_voice_ranges",
+            "headers": [],
+            "path_params": {"tool_name": "plot_voice_ranges"},
+        }
+    )
+    response = asyncio.run(handler(app_request))
+    assert response.status_code == 200
+    assert response.media_type == "text/html;profile=mcp-app"
+    assert "ui://voice-ranges/view.html" in response.body.decode()
+    assert "Content-Security-Policy" in response.headers
+
+    non_app_request = Request(
+        {
+            "type": "http",
+            "method": "GET",
+            "path": "/reports/replay/apps/first",
+            "headers": [],
+            "path_params": {"tool_name": "first"},
+        }
+    )
+    rejected = asyncio.run(handler(non_app_request))
+    assert rejected.status_code == 404
+
+
+def test_app_call_route_allows_only_scoped_tools_and_injects_fresh_session():
+    class RouteRegistry(FakeMCP):
+        def __init__(self):
+            super().__init__()
+            self.routes = {}
+
+        def custom_route(self, path, methods):
+            def register(handler):
+                self.routes[path] = (methods, handler)
+                return handler
+
+            return register
+
+    async def post(handler, payload):
+        body = json.dumps(payload).encode()
+
+        async def receive():
+            return {"type": "http.request", "body": body, "more_body": False}
+
+        request = Request(
+            {
+                "type": "http",
+                "method": "POST",
+                "path": "/reports/replay/app-call",
+                "headers": [(b"content-type", b"application/json")],
+            },
+            receive,
+        )
+        return await handler(request)
+
+    registry = RouteRegistry()
+    register_report_routes(registry)
+    methods, handler = registry.routes["/reports/replay/app-call"]
+    assert methods == ["POST"]
+
+    allowed = asyncio.run(
+        post(
+            handler,
+            {
+                "source_tool": "show_notation",
+                "tool_name": "show_notation",
+                "arguments": {"filename": "Bach_BWV_0772.mei", "page": 2},
+            },
+        )
+    )
+    assert allowed.status_code == 200
+    payload = json.loads(allowed.body)
+    assert payload["structuredContent"]["page"] == 2
+    notation_args = next(
+        args for name, args, _run in registry.calls if name == "show_notation"
+    )
+    assert notation_args["session_id"] == "fresh-session"
+    assert registry.calls[-1][0] == "end_session"
+
+    forbidden = asyncio.run(
+        post(
+            handler,
+            {
+                "source_tool": "show_notation",
+                "tool_name": "first",
+                "arguments": {"value": 1},
+            },
+        )
+    )
+    assert forbidden.status_code == 403
+
+    injected = asyncio.run(
+        post(
+            handler,
+            {
+                "source_tool": "show_notation",
+                "tool_name": "show_notation",
+                "arguments": {"session_id": "stolen"},
+            },
+        )
+    )
+    assert injected.status_code == 400
+
+
+def test_replay_calls_decorated_tool_with_internal_session_id():
+    from fastmcp import FastMCP
+    from fastmcp.server.middleware import Middleware
+    from fastmcp.server.sessions import SessionProvider
+    from src.encoding_music_mcp.tools.decorators import expose_session_id
+
+    middleware_calls = []
+
+    class TrackCalls(Middleware):
+        async def on_call_tool(self, context, call_next):
+            middleware_calls.append(context.message.arguments)
+            return await call_next(context)
+
+    server = FastMCP("session-schema-test")
+    server.add_middleware(TrackCalls())
+    server.add_provider(SessionProvider())
+
+    async def example(value: int) -> int:
+        return value
+
+    server.tool()(expose_session_id(example))
+
+    async def check():
+        tool = await server.get_tool("example")
+        assert "session_id" in tool.parameters["required"]
+        report = parse_report_jsonl(
+            _report({"tool_name": "example", "args": {"value": 7}})
+        )
+        result = await replay_report(report, server)
+        assert result.status == "success"
+        assert result.calls[0].structured_output == {"result": 7}
+        assert middleware_calls == []
+
+        normal = await server.call_tool(
+            "example",
+            {"value": 1, "session_id": "test-session"},
+        )
+        assert not normal.is_error
+        assert middleware_calls == [{"value": 1, "session_id": "test-session"}]
+
+    asyncio.run(check())

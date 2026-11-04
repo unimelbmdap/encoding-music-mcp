@@ -41,6 +41,7 @@ class ReplayedCall:
     status: ReplayStatus
     text_output: list[str] = field(default_factory=list)
     structured_output: Any = None
+    app_resource_uri: str | None = None
     message: str | None = None
 
 

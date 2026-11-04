@@ -1,0 +1,7 @@
+{"session_id":"a371da12-dad7-4255-b1df-0815282ce0f1","type":"conversation_report","version":"1"}
+{"args":{"combine_unisons":null,"compound":false,"entries":false,"filename":"Bach_BWV_0772.mei","filenames":null,"kind":"d","n":4,"top_n":2},"tool_name":"plot_melodic_ngram_heatmap"}
+{"args":{"compound":true,"filename":"Bach_BWV_0772.mei","filenames":null,"minimum_beat_strength":0,"n":4,"sort":false},"tool_name":"plot_sonority_ngram_progress"}
+{"args":{"filename":"Bach_BWV_0772.mei"},"tool_name":"plot_voice_ranges"}
+{"args":{"filename":"Bach_BWV_0772.mei","filenames":null,"group_by_staff":false,"limit_to_active":true,"pitch_class_order":"fifths"},"tool_name":"plot_weighted_note_distribution"}
+{"args":{"end_measure":null,"filename":"Bach_BWV_0772.mei","page":1,"start_measure":null},"tool_name":"show_notation"}
+{"args":{"end_measure":null,"filename":"Bach_BWV_0772.mei","highlight_note_ids":["nz7y0rb","n1ecjh8t","na90xbl","n67c47"],"page":1,"start_measure":null},"tool_name":"show_notation_highlight"}

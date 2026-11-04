@@ -113,7 +113,7 @@
     </main>
 
     <script type="module">
-        import { App } from "https://unpkg.com/@modelcontextprotocol/ext-apps@0.4.0/app-with-deps";
+        import { App } from "https://unpkg.com/@modelcontextprotocol/ext-apps@1.2.2/app-with-deps";
 
         const statusEl = document.getElementById("status");
         const notationEl = document.getElementById("notation");
@@ -149,28 +149,21 @@
         async function goToPage(newPage) {
             if (!currentState) return;
             setStatus("Loading page...");
-            const args = { filename: currentState.filename, page: newPage };
+            let uri = `notation://pages/${encodeURIComponent(currentState.filename)}/${newPage}`;
             if (currentState.start_measure != null) {
-                args.start_measure = currentState.start_measure;
-                args.end_measure = currentState.end_measure;
+                const query = new URLSearchParams({
+                    start_measure: currentState.start_measure,
+                    end_measure: currentState.end_measure,
+                });
+                uri += `?${query}`;
             }
             try {
-                const result = await app.callServerTool({ name: "show_notation", arguments: args });
-                if (result && result.structuredContent && result.structuredContent.svg) {
-                    render(result.structuredContent);
-                } else if (result && result.content) {
-                    // Try parsing structured content from text content
-                    const text = result.content.find(c => c.type === "text");
-                    if (text) {
-                        try {
-                            const parsed = JSON.parse(text.text);
-                            if (parsed.svg) { render(parsed); return; }
-                        } catch {}
-                    }
-                    setStatus("Unexpected result format", true);
-                } else {
-                    setStatus("No data returned", true);
-                }
+                const result = await app.readServerResource({ uri });
+                const content = result.contents?.find(item => typeof item.text === "string");
+                if (!content) throw new Error("No notation data in page resource");
+                const page = JSON.parse(content.text);
+                if (!page.svg) throw new Error("No SVG in page resource");
+                render({ ...currentState, ...page });
             } catch (err) {
                 setStatus("Error loading page: " + (err.message || err), true);
             }

@@ -1,4 +1,4 @@
-"""Expose session_id in the MCP schema without passing it to the function."""
+"""Expose required session_id in the MCP schema without passing it to the function."""
 
 import inspect
 from functools import wraps
@@ -10,7 +10,7 @@ from fastmcp.server.sessions import SessionId
 def expose_session_id(
     function: Callable[..., Any],
 ) -> Callable[..., Any]:
-    """Expose session_id in the MCP schema without passing it to the function."""
+    """Expose required session_id in the MCP schema without passing it to the function."""
 
     signature = inspect.signature(function)  # params + return type
 

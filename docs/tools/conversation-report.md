@@ -12,8 +12,8 @@ report begins with a metadata record and is followed by one record per
 successful tool call. Calling `get_conversation_report` returns that history as
 an embedded resource named `conversation-report.jsonl`.
 
-The export tool itself is excluded from the report. Failed tool calls and calls
-without a session ID are not recorded.
+The export tool itself is excluded from the report. Failed tool calls are not
+recorded. Other calls require a session ID in their tool schema.
 
 It is intended to be the source of truth for tool usage within a session. The report is human-readable, allowing users to save a record of the session’s activity, and machine-readable, allowing another tool to reconstruct the tool-usage report.
 
@@ -23,7 +23,8 @@ This project uses the default in-memory store, so session state remains availabl
 
 `get_conversation_report` exports the report and includes the generic browser
 upload URL. The separate `replay_report` tool accepts an active `session_id`
-and returns a session-specific URL that loads the report server-side.
+and returns a session-specific URL that loads the report server-side. See
+[Replay Report](report-replay.md) for its contract and usage.
 
 ## Parameters
 
@@ -103,4 +104,4 @@ This server does not currently authenticate users. A session ID therefore acts a
   original session.
 - No authentication of user before returning tool report.
 - Limited control over return formatting: Claude does not consistently provide JSONL output as a downloadable file. Instead, users must either open the tool-call payload manually or explicitly ask Claude to create a downloadable file.
-- Forces every tool call to include session ID
+- Analysis tool calls require a session ID so they can be recorded.
