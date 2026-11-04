@@ -129,28 +129,30 @@ Run the server directly:
 uv run encoding-music-mcp
 ```
 
-### Replay a conversation report
-
-Ask your MCP client to download a conversation report, then upload the returned
-`conversation-report.jsonl` file at:
-
-```text
-https://encoding-music.drdanielrb.com/reports/replay
-```
-
-This replay URL is a browser upload page; it is separate from the remote MCP
-endpoint. Local Claude Desktop configurations can continue to use stdio and do
-not need to be changed to HTTP.
-
-To run both the MCP endpoint and replay page locally over HTTP:
+### Running locally over HTTP
+This is necessary for using tools which return urls locally.
 
 ```bash
 MCP_TRANSPORT=http \
-MCP_HOST=127.0.0.1 \
+MCP_HOST=localhost \
 MCP_PORT=8000 \
 uv run encoding-music-mcp
 ```
 
+update claude config:
+```json
+{
+  "mcpServers": {
+    "encoding-music-mcp": {
+      "command": "uv",
+      "args": [
+        "--directory", "/Users/YOU/path/to/encoding-music-mcp",
+        "run", "fastmcp", "run", "http://localhost:8000/mcp"
+      ]
+    }
+  }
+}
+```
 The MCP endpoint is then `http://localhost:8000/mcp`, and the browser upload
 page is `http://localhost:8000/reports/replay`.
 

@@ -1,7 +1,7 @@
 """HTML page for uploading or replaying a conversation report."""
 
 from .parser import MAX_REPORT_BYTES
-from .settings import REPLAY_APP_CALL_PATH
+from .settings import REPLAY_APP_CALL_PATH, REPLAY_APP_RESOURCE_PATH
 
 
 def render_upload_page(*, session_mode: bool = False) -> str:
@@ -137,6 +137,7 @@ def render_upload_page(*, session_mode: bool = False) -> str:
         this.transport = null;
         this.onsizechange = null;
         this.oncalltool = null;
+        this.onreadresource = null;
         this.oninitialized = null;
       }}
 
@@ -169,18 +170,24 @@ def render_upload_page(*, session_mode: bool = False) -> str:
             return;
           }}
 
-          if (data.method === "tools/call") {{
-            if (this.oncalltool) {{
+          if (data.method === "tools/call" || data.method === "resources/read") {{
+            const handler = data.method === "tools/call" ? this.oncalltool : this.onreadresource;
+            if (handler) {{
               try {{
-                const res = await this.oncalltool(data.params || {{}});
+                const res = await handler(data.params || {{}});
                 transport.send({{ jsonrpc: "2.0", id: data.id, result: res }});
               }} catch (err) {{
                 transport.send({{
                   jsonrpc: "2.0",
                   id: data.id,
-                  error: {{ code: -32603, message: err.message || "Tool execution failed" }}
+                  error: {{ code: -32603, message: err.message || "Server request failed" }}
                 }});
               }}
+            }} else {{
+              transport.send({{
+                jsonrpc: "2.0", id: data.id,
+                error: {{ code: -32601, message: "No handler for " + data.method }}
+              }});
             }}
             return;
           }}
@@ -287,7 +294,7 @@ def render_upload_page(*, session_mode: bool = False) -> str:
         bridge = new AppBridge(
           null,
           {{ name: "encoding-music-report-replay", version: "1.0.0" }},
-          {{ serverTools: {{}}, logging: {{}} }},
+          {{ serverTools: {{}}, serverResources: {{}}, logging: {{}} }},
           {{
             hostContext: {{
               displayMode: "inline",
@@ -303,6 +310,16 @@ def render_upload_page(*, session_mode: bool = False) -> str:
             frame.style.height = `${{Math.min(1200, Math.max(240, size.height))}}px`;
           }}
         }};
+        bridge.onreadresource = async (params) => {{
+          const response = await fetch("{REPLAY_APP_RESOURCE_PATH}", {{
+            method: "POST",
+            headers: {{ "Content-Type": "application/json" }},
+            body: JSON.stringify({{ uri: params.uri }})
+          }});
+          const payload = await response.json();
+          if (!response.ok) throw new Error(payload.error || "Could not load notation page.");
+          return payload;
+        }};
         bridge.oncalltool = async (params) => {{
           const appResponse = await fetch("{REPLAY_APP_CALL_PATH}", {{
             method: "POST",
@@ -311,6 +328,7 @@ def render_upload_page(*, session_mode: bool = False) -> str:
               "Content-Type": "application/json"
             }},
             body: JSON.stringify({{
+              source_tool: call.tool_name,
               tool_name: params.name,
               arguments: params.arguments || {{}}
             }})

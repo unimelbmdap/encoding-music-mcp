@@ -8,6 +8,24 @@ from src.encoding_music_mcp.tools.report_replay import replay_report
 from src.encoding_music_mcp.tools.reports import settings
 
 
+def test_mcp_app_tool_list_matches_registered_app_tools():
+    assert settings.MCP_APP_TOOLS == [
+        "show_notation",
+        "show_notation_highlight",
+        "plot_voice_ranges",
+        "plot_weighted_note_distribution",
+        "plot_melodic_ngram_heatmap",
+        "plot_sonority_ngram_progress",
+        "play_excerpt",
+    ]
+    assert set(settings.MCP_APP_ALLOWED_CALLS) == set(settings.MCP_APP_TOOLS)
+    assert settings.MCP_APP_ALLOWED_CALLS["show_notation"] == {"show_notation"}
+    assert settings.MCP_APP_ALLOWED_CALLS["show_notation_highlight"] == {
+        "show_notation_highlight"
+    }
+    assert settings.MCP_APP_ALLOWED_CALLS["play_excerpt"] == {"load_audio_resource"}
+
+
 def test_replay_report_derives_url_from_http_request(monkeypatch):
     monkeypatch.setattr(
         settings,

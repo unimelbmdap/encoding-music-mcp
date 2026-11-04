@@ -7,12 +7,17 @@ from fastmcp.apps import AppConfig, ResourceCSP
 
 from ..server import mcp
 from .mei import mei_collections_list, mei_file_content
+from .notation import notation_page
 from ..tools.play_excerpt import get_registered_audio
 
 # Register all resources here
 # To add a new resource: import it, then add mcp.resource(uri)(your_resource) below
 mcp.resource("mei://collections/list")(mei_collections_list)
 mcp.resource("mei://files/{filename}")(mei_file_content)
+mcp.resource(
+    "notation://pages/{filename}/{page}{?start_measure,end_measure}",
+    mime_type="application/json",
+)(notation_page)
 
 _templates_dir = Path(__file__).parent / "templates"
 _notation_html_path = _templates_dir / "notation_app.html"

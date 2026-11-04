@@ -71,14 +71,14 @@ class FakeMCP:
                         "value": {"type": "integer"},
                         "session_id": {"type": "string"},
                     },
-                    "required": ["value"],
+                    "required": ["value", "session_id"],
                 }
             ),
             "fails": SimpleNamespace(
                 parameters={
                     "type": "object",
                     "properties": {"session_id": {"type": "string"}},
-                    "required": [],
+                    "required": ["session_id"],
                 }
             ),
             "register_mei_file_from_path": SimpleNamespace(
@@ -88,7 +88,7 @@ class FakeMCP:
                         "file_path": {"type": "string"},
                         "session_id": {"type": "string"},
                     },
-                    "required": [],
+                    "required": ["session_id"],
                 }
             ),
             "plot_voice_ranges": SimpleNamespace(
@@ -99,7 +99,7 @@ class FakeMCP:
                         "filename": {"type": "string"},
                         "session_id": {"type": "string"},
                     },
-                    "required": ["filename"],
+                    "required": ["filename", "session_id"],
                 },
             ),
             "show_notation": SimpleNamespace(
@@ -111,7 +111,7 @@ class FakeMCP:
                         "page": {"type": "integer"},
                         "session_id": {"type": "string"},
                     },
-                    "required": ["filename"],
+                    "required": ["filename", "session_id"],
                 },
             ),
         }
@@ -127,6 +127,14 @@ class FakeMCP:
         run_middleware: bool,
     ):
         self.calls.append((name, dict(arguments), run_middleware))
+        if name == "create_session":
+            return SimpleNamespace(
+                structured_content={"result": "fresh-session"},
+                content=[],
+                is_error=False,
+            )
+        if name == "end_session":
+            return SimpleNamespace(structured_content={}, content=[], is_error=False)
         if name == "fails":
             raise RuntimeError("known failure")
         if name == "plot_voice_ranges":
@@ -166,7 +174,7 @@ class FakeMCP:
         )
 
 
-def test_replay_without_session_continues_after_error_and_skips_unsafe_call():
+def test_replay_uses_fresh_session_continues_after_error_and_skips_unsafe_call():
     source = _report(
         {"tool_name": "fails", "args": {}},
         {"tool_name": "first", "args": {"value": 7}},
@@ -182,13 +190,13 @@ def test_replay_without_session_continues_after_error_and_skips_unsafe_call():
     assert [call.status for call in result.calls] == ["error", "success", "skipped"]
     assert result.status == "partial"
     replayed = next(args for name, args, _ in fake.calls if name == "first")
-    assert replayed == {"value": 7}
+    assert replayed == {"value": 7, "session_id": "fresh-session"}
     assert "historical-session" not in json.dumps(fake.calls)
     assert not any(
         name == "register_mei_file_from_path" for name, _args, _run in fake.calls
     )
     assert all(run_middleware is False for _name, _args, run_middleware in fake.calls)
-    assert [name for name, _, _ in fake.calls] == ["fails", "first"]
+    assert fake.calls[-1][0] == "end_session"
 
 
 def test_unknown_tool_is_visible_and_does_not_prevent_later_replay():
@@ -420,10 +428,10 @@ def test_app_resource_route_serves_registered_html_and_rejects_non_app():
         }
     )
     rejected = asyncio.run(handler(non_app_request))
-    assert rejected.status_code == 500
+    assert rejected.status_code == 404
 
 
-def test_app_call_route_dispatches_registered_tools_without_session():
+def test_app_call_route_allows_only_scoped_tools_and_injects_fresh_session():
     class RouteRegistry(FakeMCP):
         def __init__(self):
             super().__init__()
@@ -462,6 +470,7 @@ def test_app_call_route_dispatches_registered_tools_without_session():
         post(
             handler,
             {
+                "source_tool": "show_notation",
                 "tool_name": "show_notation",
                 "arguments": {"filename": "Bach_BWV_0772.mei", "page": 2},
             },
@@ -473,29 +482,38 @@ def test_app_call_route_dispatches_registered_tools_without_session():
     notation_args = next(
         args for name, args, _run in registry.calls if name == "show_notation"
     )
-    assert notation_args == {"filename": "Bach_BWV_0772.mei", "page": 2}
-    assert [name for name, _, _ in registry.calls] == ["show_notation"]
+    assert notation_args["session_id"] == "fresh-session"
+    assert registry.calls[-1][0] == "end_session"
 
-    other_tool = asyncio.run(
+    forbidden = asyncio.run(
         post(
             handler,
             {
+                "source_tool": "show_notation",
                 "tool_name": "first",
                 "arguments": {"value": 1},
             },
         )
     )
-    assert other_tool.status_code == 200
+    assert forbidden.status_code == 403
 
-    for invalid_payload in ([], {}, {"tool_name": "first", "arguments": None}):
-        failed = asyncio.run(post(handler, invalid_payload))
-        assert failed.status_code == 500
-        assert json.loads(failed.body)["error"]
+    injected = asyncio.run(
+        post(
+            handler,
+            {
+                "source_tool": "show_notation",
+                "tool_name": "show_notation",
+                "arguments": {"session_id": "stolen"},
+            },
+        )
+    )
+    assert injected.status_code == 400
 
 
-def test_replay_calls_decorated_tool_without_session_or_middleware():
+def test_replay_calls_decorated_tool_with_internal_session_id():
     from fastmcp import FastMCP
     from fastmcp.server.middleware import Middleware
+    from fastmcp.server.sessions import SessionProvider
     from src.encoding_music_mcp.tools.decorators import expose_session_id
 
     middleware_calls = []
@@ -507,6 +525,7 @@ def test_replay_calls_decorated_tool_without_session_or_middleware():
 
     server = FastMCP("session-schema-test")
     server.add_middleware(TrackCalls())
+    server.add_provider(SessionProvider())
 
     async def example(value: int) -> int:
         return value
@@ -515,8 +534,7 @@ def test_replay_calls_decorated_tool_without_session_or_middleware():
 
     async def check():
         tool = await server.get_tool("example")
-        assert "session_id" not in tool.parameters["required"]
-        # No session provider is registered: replay must not call create_session.
+        assert "session_id" in tool.parameters["required"]
         report = parse_report_jsonl(
             _report({"tool_name": "example", "args": {"value": 7}})
         )

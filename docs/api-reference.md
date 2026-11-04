@@ -2,6 +2,9 @@
 
 Complete reference for all encoding-music-mcp tools.
 
+Every tool except `create_session` and `replay_report` requires a `session_id`.
+Call `create_session` to obtain one. `replay_report` accepts it optionally.
+
 ## Tool Catalog
 
 | Tool | Parameters | Returns | Documentation |

@@ -112,7 +112,14 @@ The tool returns a `ToolResult` with:
 4. If `start_measure`/`end_measure` are specified, the MEI XML is filtered to include only those measures
 5. Verovio renders the MEI to SVG server-side (one system per page, ~50-60KB per page)
 6. The SVG is sent to the notation viewer app, which displays it in a sandboxed iframe
-7. Pagination buttons in the viewer call `show_notation` again with a different `page` parameter
+7. Pagination buttons read `notation://pages/{filename}/{page}` resources. Optional
+   `start_measure` and `end_measure` query parameters preserve the excerpt, and
+   the highlight viewer retains its selected note IDs locally. Resource reads
+   require no session ID and do not add tool calls to the conversation report.
+
+The initial `show_notation` or `show_notation_highlight` tool call still requires
+`session_id`. Both Claude's widget and the replay HTML use resource reads for
+subsequent pages.
 
 ## Technical Details
 

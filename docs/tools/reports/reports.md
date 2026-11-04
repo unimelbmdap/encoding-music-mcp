@@ -32,10 +32,13 @@ calls exports empty text, which the parser rejects.
 Opening the URL does not execute tools: **Replay tools** sends
 the POST request (from html.py to routes.py). The parser validates the report, then calls execute in order.
 
-Replay and app follow-up calls use `run_middleware=False`: they neither record
-new history nor create, inject, or clean up sessions. `expose_session_id` makes
-the recording parameter optional on ordinary tools. The header's original ID
-is metadata only; retrieving an active report still requires its session ID.
+Replay and app follow-up tool calls use `run_middleware=False`, so they do not
+record new history. Replay creates a fresh session, supplies its ID to tools,
+and deletes it in cleanup, including after call failures. Permitted app tool
+calls likewise create and clean up a temporary session when needed.
+`expose_session_id` makes the recording parameter required on ordinary tools.
+The header's original ID is metadata only; retrieving an active report still
+requires its session ID. Notation pagination reads resources without a session.
 
 ## JSONL contract
 
@@ -61,10 +64,14 @@ Paths below are relative to `/reports/replay`.
 | (base path) | GET / POST | Serve upload HTML / replay UTF-8 JSONL from the request body. |
 | `/{session_id}` | GET / POST | Serve session HTML / retrieve and replay the stored report. |
 | `/apps/{tool_name}` | GET | Read `tool.meta["ui"]["resourceUri"]` and return the app HTML. |
-| `/app-call` | POST | Execute `{ "tool_name": "…", "arguments": {} }`; return MCP-shaped `content`, `structuredContent`, and `isError`. |
+| `/app-call` | POST | Validate `{ "source_tool": "…", "tool_name": "…", "arguments": {} }` against the permitted-call list; return MCP-shaped `content`, `structuredContent`, and `isError`. |
+| `/app-resource` | POST | Read a `notation://pages/…` URI and return MCP-shaped resource `contents`, without a session ID. |
 
-Register `/app-call` before `/{session_id}` so it is not interpreted as a session
-ID. Both app endpoints convert exceptions to HTTP 500 with `{"error": "…"}`.
+Register `/app-call` and `/app-resource` before `/{session_id}` so they are not
+interpreted as session IDs. App tool calls return 400 for invalid input, 403 for
+disallowed calls, 404 for missing tools, 504 for timeouts, and 500 for other failures.
+Clients cannot inject session IDs into replay app calls. App HTML is served only
+for the registered app allowlist.
 Upload/session parsing and retrieval exceptions currently propagate to the
 server rather than receiving that JSON error wrapper.
 
@@ -100,7 +107,8 @@ structured results; these summary limits do not bound app payloads.
 
 The iframe URL loads app HTML; the parent bridge then sends saved arguments and
 new results over `postMessage`. The bridge handles initialization, resizing,
-pings, and tool calls forwarded through `/app-call`. App heights are clamped to
+pings, tool calls forwarded through `/app-call`, and notation page reads through
+`/app-resource`. App heights are clamped to
 240–1,200 px. Load/initialization failures fall back to JSON after at most a
 10-second initialization wait. JSON is rendered as text, not HTML.
 
@@ -108,8 +116,10 @@ Iframes use `sandbox="allow-scripts"` and no referrer. The CSP blocks resources
 by default, allows inline scripts/styles and scripts/connections to unpkg,
 data/blob images, and blob media. App templates load their SDK from the CDN;
 the parent bridge is implemented inline. These browser restrictions do not
-restrict server-side tools: app follow-up calls can invoke any registered tool,
-without a per-app allowlist or the saved-report skip list.
+restrict server-side tools. The replay host separately enforces a per-app tool
+allowlist: notation apps may call their own notation tool, and the audio player
+may call `load_audio_resource`. The resource endpoint permits only notation page
+URIs. The inline bridge forwards both `tools/call` and `resources/read` requests.
 
 ## Limitations and development
 
