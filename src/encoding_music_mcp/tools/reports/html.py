@@ -1,7 +1,7 @@
 """HTML page for uploading or replaying a conversation report."""
 
 from .parser import MAX_REPORT_BYTES
-from .settings import MCP_APPS_SDK_VERSION, REPLAY_APP_CALL_PATH
+from .settings import REPLAY_APP_CALL_PATH
 
 
 def render_upload_page(*, session_mode: bool = False) -> str:
@@ -15,7 +15,7 @@ def render_upload_page(*, session_mode: bool = False) -> str:
         else "<p>This session's conversation report is ready to replay.</p>"
     )
     button_disabled = "" if session_mode else " disabled"
-    #session_mode determines whether the page is for replaying the current session or uploading a report file.
+    # session_mode determines whether the page is for replaying the current session or uploading a report file.
     session_mode_json = "true" if session_mode else "false"
 
     return f"""<!doctype html>
@@ -24,39 +24,68 @@ def render_upload_page(*, session_mode: bool = False) -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
   <title>Replay a conversation report</title>
   <style>
-    body {{ max-width: 72rem; margin: 3rem auto; padding: 0 1rem; font: 1rem/1.5 sans-serif; }}
+    :root {{
+      color-scheme: light dark;
+      --paper: #f5efe3; --surface: #fbf7ef; --ink: #2b241b;
+      --muted: #6f5d47; --border: #dbcdb4; --accent: #6a5438;
+      --error: #8b0000;
+    }}
+    * {{ box-sizing: border-box; }}
+    body {{ max-width: 72rem; margin: 3rem auto; padding: 0 1rem; background: var(--paper); color: var(--ink); font: 1rem/1.6 Georgia, "Times New Roman", serif; }}
     main {{ display: grid; gap: 1rem; }}
-    label, button {{ font: inherit; }}
-    button {{ width: fit-content; padding: .5rem .8rem; }}
-    .replay-results {{ display: grid; grid-template-columns: 14rem minmax(0, 1fr); gap: 1rem; align-items: start; }}
+    h1 {{ margin: 0; font-size: clamp(1.75rem, 4vw, 2.25rem); line-height: 1.2; }}
+    main > p {{ max-width: 70ch; margin: 0; color: var(--muted); }}
+    label, input, button {{ font: inherit; }}
+    label {{ font-weight: bold; }}
+    button, input::file-selector-button {{ padding: .5rem 1rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }}
+    button {{ width: fit-content; }}
+    input[type="file"] {{ width: 100%; max-width: 36rem; min-width: 0; padding: .75rem; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }}
+    input::file-selector-button {{ margin-right: .75rem; font: inherit; }}
+    #open-report {{ background: var(--accent); border-color: var(--accent); color: var(--surface); }}
+    button:disabled {{ opacity: .5; cursor: default; }}
+    button:not(:disabled):hover, input::file-selector-button:hover {{ filter: brightness(.93); }}
+    :focus-visible {{ outline: 2px solid var(--accent); outline-offset: 3px; }}
+    .replay-results {{ display: grid; grid-template-columns: 14rem minmax(0, 1fr); gap: 1.5rem; align-items: start; margin-top: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }}
     [hidden] {{ display: none !important; }}
     .tool-index {{ position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow: auto; overflow-wrap: anywhere; }}
     .tool-index ol {{ margin: .5rem 0; padding-left: 2rem; }}
-    .tool-index a {{ display: block; padding: .25rem; color: inherit; }}
+    .tool-index li::marker {{ color: var(--muted); }}
+    .tool-index a {{ display: block; padding: .25rem; color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: .2em; }}
+    .tool-index a:hover {{ background: var(--surface); }}
     .tool-calls {{ display: grid; gap: 1rem; min-width: 0; }}
     .tool-call {{ scroll-margin-top: 1rem; }}
-    .tool-call:target {{ outline: 2px solid #476b9b; }}
+    .tool-call:target {{ outline: 2px solid var(--accent); outline-offset: 3px; }}
     @media (max-width: 48rem) {{
+      body {{ margin: 1.5rem auto; }}
       .replay-results {{ grid-template-columns: 1fr; }}
       .tool-index {{ position: static; max-height: 12rem; }}
     }}
-    .tool-call {{ border: 1px solid #c8cdd3; border-radius: .4rem; overflow: hidden; }}
-    .tool-call header {{ padding: 1rem; background: #f3f5f7; }}
-    .tool-call h2 {{ margin: 0; font-size: 1.1rem; }}
+    .tool-call {{ border: 1px solid var(--border); border-radius: 18px; overflow: hidden; background: var(--surface); }}
+    .tool-call header {{ padding: 1rem; }}
+    .tool-call h2 {{ margin: 0; font-size: 1.125rem; overflow-wrap: anywhere; }}
     .tool-call h2:has([aria-expanded="true"]) {{ margin-bottom: .75rem; }}
     .tool-arguments, .tool-response {{ padding: 1rem; }}
     .tool-arguments {{ padding: 0; }}
-    .tool-response {{ border-top: 1px solid #c8cdd3; }}
-    .tool-call h3 {{ margin: 0 0 .5rem; font-size: 1rem; }}
+    .tool-response {{ border-top: 1px solid var(--border); }}
+    .tool-call h3 {{ margin: 0 0 .5rem; font-size: 1rem; color: var(--muted); }}
     .collapse-toggle {{ padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }}
     .collapse-toggle::before {{ content: "▾"; display: inline-block; width: 1.2em; }}
     .collapse-toggle[aria-expanded="false"]::before {{ content: "▸"; }}
-    .tool-app-frame {{ width: 100%; min-height: 28rem; border: 0; background: white; }}
+    .tool-app-frame {{ width: 100%; min-height: 28rem; border: 0; border-radius: 12px; background: var(--surface); }}
     .app-fallback-note {{ margin: 0 0 .75rem; }}
-    pre {{ overflow: auto; margin: 0; white-space: pre-wrap; }}
-    .error {{ color: #a12622; }}
+    pre {{ overflow: auto; margin: 0; padding: .75rem; border-radius: 6px; background: var(--paper); font: .875rem/1.6 ui-monospace, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }}
+    .error, main > .error {{ color: var(--error); }}
+    #client-error:empty {{ display: none; }}
+    @media (prefers-color-scheme: dark) {{
+      :root {{
+        --paper: #201914; --surface: #241c16; --ink: #f4ead8;
+        --muted: #cdb79c; --border: #5e4937; --accent: #d0bea3;
+        --error: #ffb4a8;
+      }}
+    }}
   </style>
 </head>
 <body>
@@ -282,7 +311,6 @@ def render_upload_page(*, session_mode: bool = False) -> str:
               "Content-Type": "application/json"
             }},
             body: JSON.stringify({{
-              source_tool: call.tool_name,
               tool_name: params.name,
               arguments: params.arguments || {{}}
             }})
@@ -356,7 +384,7 @@ def render_upload_page(*, session_mode: bool = False) -> str:
         const response = document.createElement("div");
         response.className = "tool-response";
         const responseHeading = document.createElement("h3");
-        responseHeading.textContent = `Response (${{call.status}})`;
+        responseHeading.textContent = call.status === "success" ? "Response" : `Response (${{call.status}})`;
         const responseContent = document.createElement("div");
         response.append(responseHeading, responseContent);
         makeCollapsible(responseHeading, responseContent);
@@ -413,7 +441,6 @@ def render_upload_page(*, session_mode: bool = False) -> str:
           error.textContent = result.error || "The report could not be replayed.";
           return;
         }}
-        // Display the JSON result. #TODO improve formatting
         renderResults(result);
       }} catch {{
         error.textContent = "The report could not be sent to the replay server.";

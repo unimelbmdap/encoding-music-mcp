@@ -24,7 +24,7 @@ This project uses the default in-memory store, so session state remains availabl
 `get_conversation_report` exports the report and includes the generic browser
 upload URL. The separate `replay_report` tool accepts an active `session_id`
 and returns a session-specific URL that loads the report server-side. See
-[Replay Report (Beta)](report-replay.md) for its contract and usage.
+[Replay Report](report-replay.md) for its contract and usage.
 
 ## Parameters
 
@@ -104,4 +104,4 @@ This server does not currently authenticate users. A session ID therefore acts a
   original session.
 - No authentication of user before returning tool report.
 - Limited control over return formatting: Claude does not consistently provide JSONL output as a downloadable file. Instead, users must either open the tool-call payload manually or explicitly ask Claude to create a downloadable file.
-- Forces every tool call to include session ID
+- Analysis tool calls can omit the session ID, but those calls are not recorded.

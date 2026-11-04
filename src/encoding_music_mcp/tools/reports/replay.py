@@ -5,7 +5,6 @@ import time
 from typing import Any
 
 from .models import ConversationReport, ReplayResult, ReplayedCall
-from .settings import MCP_APP_TOOLS
 
 CALL_TIMEOUT_SECONDS = 120
 TOTAL_TIMEOUT_SECONDS = 600
@@ -30,138 +29,101 @@ async def replay_report(
     call_timeout: float = CALL_TIMEOUT_SECONDS,
     total_timeout: float = TOTAL_TIMEOUT_SECONDS,
 ) -> ReplayResult:
-    """Replay valid calls in order using a fresh, isolated session."""
+    """Replay valid calls in order without middleware or session state."""
 
     started = time.monotonic()
-    prepared: list[tuple[Any, Any]] = []
+    calls: list[ReplayedCall] = []
 
     for source in report.calls:
         tool = await mcp.get_tool(source.tool_name)
-        prepared.append((source, tool))
+        elapsed = time.monotonic() - started
+        remaining = total_timeout - elapsed
 
-    needs_session = any(
-        tool is not None and source.tool_name not in NON_REPLAYABLE_TOOLS
-        for source, tool in prepared
-    )
-    replay_session_id: str | None = None
-    calls: list[ReplayedCall] = []
-
-    try:
-        if needs_session:
-            create_result = await asyncio.wait_for(
-                mcp.call_tool("create_session", {}, run_middleware=False),
-                timeout=min(call_timeout, total_timeout),
+        if tool is None:
+            calls.append(
+                ReplayedCall(
+                    source=source,
+                    status="skipped",
+                    message="This tool is not registered in the current server.",
+                )
             )
-            replay_session_id = (create_result.structured_content or {}).get("result")
-            if not isinstance(replay_session_id, str) or not replay_session_id:
-                raise RuntimeError("Could not create an isolated replay session.")
-
-        for source, tool in prepared:
-            elapsed = time.monotonic() - started
-            remaining = total_timeout - elapsed
-
-            if tool is None:
-                calls.append(
-                    ReplayedCall(
-                        source=source,
-                        status="skipped",
-                        message="This tool is not registered in the current server.",
-                    )
-                )
-                continue
-            if source.tool_name in NON_REPLAYABLE_TOOLS:
-                calls.append(
-                    ReplayedCall(
-                        source=source,
-                        status="skipped",
-                        message=(
-                            "This filesystem, resource, report, or session-management "
-                            "call is preserved but is not executed from an uploaded report."
-                        ),
-                    )
-                )
-                continue
-            if remaining <= 0:
-                calls.append(
-                    ReplayedCall(
-                        source=source,
-                        status="skipped",
-                        message="The total replay time limit was reached.",
-                    )
-                )
-                continue
-
-            arguments = dict(source.arguments)
-            tool_properties = getattr(tool, "parameters", {}).get("properties", {})
-            if "session_id" in tool_properties:
-                arguments["session_id"] = replay_session_id
-            resource_uri = app_resource_uri(source.tool_name, tool)
-
-            try:
-                result = await asyncio.wait_for(
-                    mcp.call_tool(
-                        source.tool_name,
-                        arguments,
-                        run_middleware=False,
+            continue
+        if source.tool_name in NON_REPLAYABLE_TOOLS:
+            calls.append(
+                ReplayedCall(
+                    source=source,
+                    status="skipped",
+                    message=(
+                        "This filesystem, resource, report, or session-management "
+                        "call is preserved but is not executed from an uploaded report."
                     ),
-                    timeout=min(call_timeout, remaining),
                 )
-                text_output = _text_output(result)
-                structured_output = (
-                    _app_output(result.structured_content)
-                    if resource_uri and not result.is_error
-                    else _summarize_output(result.structured_content)
+            )
+            continue
+        if remaining <= 0:
+            calls.append(
+                ReplayedCall(
+                    source=source,
+                    status="skipped",
+                    message="The total replay time limit was reached.",
                 )
-                if result.is_error:
-                    calls.append(
-                        ReplayedCall(
-                            source=source,
-                            status="error",
-                            text_output=text_output,
-                            structured_output=structured_output,
-                            message="The tool returned an error.",
-                        )
-                    )
-                else:
-                    calls.append(
-                        ReplayedCall(
-                            source=source,
-                            status="success",
-                            text_output=text_output,
-                            structured_output=structured_output,
-                            app_resource_uri=resource_uri,
-                        )
-                    )
-            except asyncio.TimeoutError:
+            )
+            continue
+
+        arguments = dict(source.arguments)
+        resource_uri = app_resource_uri(tool)
+
+        try:
+            result = await asyncio.wait_for(
+                mcp.call_tool(
+                    source.tool_name,
+                    arguments,
+                    run_middleware=False,
+                ),
+                timeout=min(call_timeout, remaining),
+            )
+            text_output = _text_output(result)
+            structured_output = (
+                _app_output(result.structured_content)
+                if resource_uri and not result.is_error
+                else _summarize_output(result.structured_content)
+            )
+            if result.is_error:
                 calls.append(
                     ReplayedCall(
                         source=source,
                         status="error",
-                        message=f"The tool exceeded the {call_timeout:g}-second time limit.",
+                        text_output=text_output,
+                        structured_output=structured_output,
+                        message="The tool returned an error.",
                     )
                 )
-            except Exception as exc:
+            else:
                 calls.append(
                     ReplayedCall(
                         source=source,
-                        status="error",
-                        message=str(exc) or type(exc).__name__,
+                        status="success",
+                        text_output=text_output,
+                        structured_output=structured_output,
+                        app_resource_uri=resource_uri,
                     )
                 )
-    finally:
-        if replay_session_id is not None:
-            try:
-                await asyncio.wait_for(
-                    mcp.call_tool(
-                        "end_session",
-                        {"session_id": replay_session_id},
-                        run_middleware=False,
-                    ),
-                    timeout=5,
+        except asyncio.TimeoutError:
+            calls.append(
+                ReplayedCall(
+                    source=source,
+                    status="error",
+                    message=f"The tool exceeded the {call_timeout:g}-second time limit.",
                 )
-            except Exception:
-                # Cleanup must not replace the replay result.
-                pass
+            )
+        except Exception as exc:
+            calls.append(
+                ReplayedCall(
+                    source=source,
+                    status="error",
+                    message=str(exc) or type(exc).__name__,
+                )
+            )
 
     statuses = [call.status for call in calls]
     if not statuses:
@@ -181,10 +143,10 @@ async def replay_report(
     )
 
 
-def app_resource_uri(tool_name: str, tool: Any) -> str | None:
-    """Return the registered MCP App resource URI for a known app tool."""
+def app_resource_uri(tool: Any) -> str | None:
+    """Return the MCP App resource URI from registered tool metadata."""
 
-    if tool_name not in MCP_APP_TOOLS or tool is None:
+    if tool is None:
         return None
     meta = getattr(tool, "meta", None)
     if not isinstance(meta, dict):

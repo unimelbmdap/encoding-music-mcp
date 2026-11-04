@@ -33,7 +33,9 @@ def test_tool_schemas_survive_mcp_protocol_listing():
     metadata_schema = tools["get_mei_metadata"].inputSchema
 
     assert missing_schemas == set()
-    assert metadata_schema["required"] == ["filename", "session_id"]
+    assert metadata_schema["required"] == ["filename"]
+    assert metadata_schema["properties"]["session_id"]["default"] is None
+    assert tools["get_conversation_report"].inputSchema["required"] == ["session_id"]
     assert metadata_schema["properties"]["filename"]["type"] == "string"
 
 

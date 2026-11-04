@@ -1,13 +1,13 @@
-# Replay Report (Beta)
+# Replay Report
 
-The `replay_report` tool returns the browser URL used to replay a conversation
-report. It does not execute the report itself.
-
+The `replay_report` tool returns a browser URL which can replay tool calls from conversation report. It does not execute the report itself.
+>[!NOTE]
+This tool is only supported when the MCP server uses HTTP transport, not stdio. 
 ## Parameters
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `session_id` | `str` | No | Active session to replay. Omit it to open the JSONL upload page. |
+| `session_id` | `str` | No | When provided, all tool calls from the corresponding session are automatically uploaded for replay, eliminating the need to manually download and upload the file. |
 
 ## Return Value
 
@@ -30,7 +30,7 @@ as `/reports/replay/session-123`.
 
 For an active session:
 
-1. Ask the client to call `replay_report` with the current `session_id`.
+1. Ask the AI to replay the conversations tool calls.
 2. Open the returned URL.
 3. Select **Replay tools**.
 
@@ -42,5 +42,5 @@ The replay runs saved calls against the current server. Ordinary results are
 shown as JSON, while successful MCP App tools use their interactive iframe.
 If an app cannot load, its JSON response is shown instead. Results may differ
 from the original run. See the
-[beta development notes](../development/report-replay-plan.md) for limits,
+[reports package documentation](../packages/reports.md) for limits,
 skipped tools, and security details.

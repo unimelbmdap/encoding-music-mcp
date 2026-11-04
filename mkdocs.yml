@@ -67,7 +67,7 @@ nav:
           - Sonority N-gram Progress: tools/visualisation/sonority-ngram-progress.md
       - Play Excerpt: tools/play-excerpt.md
       - Conversation Report: tools/conversation-report.md
-      - Replay Report (Beta): tools/report-replay.md
+      - Replay Report: tools/report-replay.md
       - Intervals:
           - Overview: tools/intervals/index.md
           - Notes: tools/intervals/notes.md
@@ -88,7 +88,7 @@ nav:
       - Contributing: development/contributing.md
       - Testing: development/testing.md
       - Project Structure: development/structure.md
-      - Report Replay Plan: development/report-replay-plan.md
+      - Reports Package: packages/reports.md
   - API Reference: api-reference.md
 
 plugins:

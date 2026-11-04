@@ -239,3 +239,6 @@ Uses `uv_build` backend with src-layout:
 
 - [Contributing Guide](contributing.md)
 - [Testing Guide](testing.md)
+
+For report parsing, replay routes, and browser apps, see the
+[Reports package](../packages/reports.md).

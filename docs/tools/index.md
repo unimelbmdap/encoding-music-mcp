@@ -65,7 +65,7 @@ encoding-music-mcp provides a suite of tools for analyzing MEI files. Tools work
 | Tool | Purpose | Learn More |
 |------|---------|------------|
 | [`get_conversation_report`](conversation-report.md) | Export the successful tool calls recorded for a session as JSONL | [Documentation](conversation-report.md) |
-| [`replay_report`](report-replay.md) **Beta** | Return the browser URL for replaying an active or uploaded report | [Documentation](report-replay.md) |
+| [`replay_report`](report-replay.md) | Return the browser URL for replaying an active or uploaded report | [Documentation](report-replay.md) |
 
 ## Tool Categories
 
@@ -119,7 +119,7 @@ Tools for listening to rendered score audio:
 ### Conversation Reports
 
 - **[get_conversation_report](conversation-report.md)**: Export a session's recorded tool calls as a JSONL report
-- **[replay_report](report-replay.md)**: Open the beta browser replay workflow
+- **[replay_report](report-replay.md)**: Open the browser replay workflow
 
 ## Tool Design Philosophy
 
