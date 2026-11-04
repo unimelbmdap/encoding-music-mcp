@@ -132,6 +132,31 @@ in an ordinary browser can return HTTP 406 because browsers do not send MCP
 streaming headers; this is expected. The `/health` endpoint is available for a
 simple browser or uptime check.
 
+The same deployment provides a browser page for replaying an exported
+conversation report:
+
+```text
+https://encoding-music.drdanielrb.com/reports/replay
+```
+
+Download `conversation-report.jsonl` from `get_conversation_report`, open this
+replay URL, and upload the JSONL file. The replay page is not an MCP endpoint,
+so do not use it as the connector URL. Local Claude Desktop configurations may
+continue to use stdio; no HTTP transport change is required to use the page.
+
+To run the server locally with HTTP transport instead, use:
+
+```bash
+MCP_TRANSPORT=http \
+MCP_HOST=127.0.0.1 \
+MCP_PORT=8000 \
+uv run encoding-music-mcp
+```
+
+This exposes MCP at `http://localhost:8000/mcp` and the replay page at
+`http://localhost:8000/reports/replay`. `get_conversation_report` returns the
+JSONL report attachment together with this browser upload URL.
+
 ## Standalone Mode
 
 You can also run the server directly without an MCP client (useful for testing):

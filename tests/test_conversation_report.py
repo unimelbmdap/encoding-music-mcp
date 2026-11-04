@@ -113,7 +113,7 @@ def test_report_as_jsonl_serializes_events_in_order(monkeypatch):
     )
 
 
-def test_get_conversation_report_returns_named_jsonl_attachment(monkeypatch):
+def test_get_conversation_report_returns_attachment_and_replay_url(monkeypatch):
     """The export should contain a user-facing message and JSONL resource."""
     jsonl = '{"type":"conversation_report","version":"1","session_id":"session-123"}'
 
@@ -126,16 +126,24 @@ def test_get_conversation_report_returns_named_jsonl_attachment(monkeypatch):
         "report_as_jsonl",
         classmethod(fake_report_as_jsonl),
     )
-
+    monkeypatch.setattr(
+        conversation_report,
+        "base_url",
+        lambda: "https://example.test/reports/replay/",
+    )
     result = asyncio.run(ConversationReport.get_conversation_report("session-123"))
 
     assert result.structured_content == {
         "filename": "conversation-report.jsonl",
         "mime_type": "application/jsonl",
+        "replay_url": "https://example.test/reports/replay/",
     }
     assert len(result.content) == 2
     assert isinstance(result.content[0], TextContent)
-    assert result.content[0].text == "The conversation report is attached."
+    assert result.content[0].text == (
+        "The conversation report is attached. Upload it for replay at "
+        "https://example.test/reports/replay/"
+    )
     assert isinstance(result.content[1], EmbeddedResource)
     assert isinstance(result.content[1].resource, TextResourceContents)
     assert result.content[1].resource.uri == "file:///conversation-report.jsonl"

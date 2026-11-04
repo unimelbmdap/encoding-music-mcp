@@ -39,6 +39,7 @@ from .visualisation.weighted_note_distribution import plot_weighted_note_distrib
 from .visualisation.melodic_ngram_heatmap import plot_melodic_ngram_heatmap
 from .visualisation.sonority_ngram_progress import plot_sonority_ngram_progress
 from .conversation_report import ConversationReport
+from .report_replay import replay_report
 from .decorators import expose_session_id
 
 # Register all tools here
@@ -88,3 +89,4 @@ mcp.tool(
     output_schema=PLAY_EXCERPT_OUTPUT_SCHEMA,
 )(expose_session_id(play_excerpt))
 mcp.tool()(ConversationReport.get_conversation_report)
+mcp.tool()(replay_report)
